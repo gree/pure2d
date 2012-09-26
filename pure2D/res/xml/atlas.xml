@@ -1,0 +1,648 @@
+<TextureAtlas
+    height="2048"
+    width="2048" >
+
+    <Image
+        name="mayan_symbol_bonus_treasurebox_ipad3_00000"
+        bottom="141"
+        left="1"
+        right="141"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00000"
+        bottom="141"
+        left="142"
+        right="282"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00001"
+        bottom="141"
+        left="283"
+        right="423"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00002"
+        bottom="141"
+        left="424"
+        right="564"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00003"
+        bottom="141"
+        left="565"
+        right="705"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00004"
+        bottom="141"
+        left="706"
+        right="846"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00005"
+        bottom="141"
+        left="847"
+        right="987"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00006"
+        bottom="141"
+        left="988"
+        right="1128"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00007"
+        bottom="141"
+        left="1129"
+        right="1269"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00008"
+        bottom="141"
+        left="1270"
+        right="1410"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00009"
+        bottom="141"
+        left="1411"
+        right="1551"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00010"
+        bottom="141"
+        left="1552"
+        right="1692"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00011"
+        bottom="141"
+        left="1693"
+        right="1833"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00012"
+        bottom="141"
+        left="1834"
+        right="1974"
+        top="1" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00013"
+        bottom="282"
+        left="1"
+        right="141"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00014"
+        bottom="423"
+        left="1"
+        right="141"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00015"
+        bottom="564"
+        left="1"
+        right="141"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00016"
+        bottom="705"
+        left="1"
+        right="141"
+        top="565" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00017"
+        bottom="846"
+        left="1"
+        right="141"
+        top="706" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00018"
+        bottom="987"
+        left="1"
+        right="141"
+        top="847" />
+    <Image
+        name="mayan_symbol_major_priest_ipad3_00019"
+        bottom="1128"
+        left="1"
+        right="141"
+        top="988" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00000"
+        bottom="1269"
+        left="1"
+        right="141"
+        top="1129" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00001"
+        bottom="1410"
+        left="1"
+        right="141"
+        top="1270" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00002"
+        bottom="1551"
+        left="1"
+        right="141"
+        top="1411" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00003"
+        bottom="1692"
+        left="1"
+        right="141"
+        top="1552" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00004"
+        bottom="1833"
+        left="1"
+        right="141"
+        top="1693" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00005"
+        bottom="1974"
+        left="1"
+        right="141"
+        top="1834" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00006"
+        bottom="282"
+        left="142"
+        right="282"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00007"
+        bottom="282"
+        left="283"
+        right="423"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00008"
+        bottom="282"
+        left="424"
+        right="564"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00009"
+        bottom="282"
+        left="565"
+        right="705"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00010"
+        bottom="282"
+        left="706"
+        right="846"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00011"
+        bottom="282"
+        left="847"
+        right="987"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00012"
+        bottom="282"
+        left="988"
+        right="1128"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00013"
+        bottom="282"
+        left="1129"
+        right="1269"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00014"
+        bottom="282"
+        left="1270"
+        right="1410"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00015"
+        bottom="282"
+        left="1411"
+        right="1551"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00016"
+        bottom="282"
+        left="1552"
+        right="1692"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00017"
+        bottom="282"
+        left="1693"
+        right="1833"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00018"
+        bottom="282"
+        left="1834"
+        right="1974"
+        top="142" />
+    <Image
+        name="mayan_symbol_major_princess_ipad3_00019"
+        bottom="423"
+        left="142"
+        right="282"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00000"
+        bottom="564"
+        left="142"
+        right="282"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00001"
+        bottom="705"
+        left="142"
+        right="282"
+        top="565" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00002"
+        bottom="846"
+        left="142"
+        right="282"
+        top="706" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00003"
+        bottom="987"
+        left="142"
+        right="282"
+        top="847" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00004"
+        bottom="1128"
+        left="142"
+        right="282"
+        top="988" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00005"
+        bottom="1269"
+        left="142"
+        right="282"
+        top="1129" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00006"
+        bottom="1410"
+        left="142"
+        right="282"
+        top="1270" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00007"
+        bottom="1551"
+        left="142"
+        right="282"
+        top="1411" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00008"
+        bottom="1692"
+        left="142"
+        right="282"
+        top="1552" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00009"
+        bottom="1833"
+        left="142"
+        right="282"
+        top="1693" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00010"
+        bottom="1974"
+        left="142"
+        right="282"
+        top="1834" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00011"
+        bottom="423"
+        left="283"
+        right="423"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00012"
+        bottom="423"
+        left="424"
+        right="564"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00013"
+        bottom="423"
+        left="565"
+        right="705"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00014"
+        bottom="423"
+        left="706"
+        right="846"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00015"
+        bottom="423"
+        left="847"
+        right="987"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00016"
+        bottom="423"
+        left="988"
+        right="1128"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00017"
+        bottom="423"
+        left="1129"
+        right="1269"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00018"
+        bottom="423"
+        left="1270"
+        right="1410"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_snake_ipad3_00019"
+        bottom="423"
+        left="1411"
+        right="1551"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00000"
+        bottom="423"
+        left="1552"
+        right="1692"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00001"
+        bottom="423"
+        left="1693"
+        right="1833"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00002"
+        bottom="423"
+        left="1834"
+        right="1974"
+        top="283" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00003"
+        bottom="564"
+        left="283"
+        right="423"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00004"
+        bottom="705"
+        left="283"
+        right="423"
+        top="565" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00005"
+        bottom="846"
+        left="283"
+        right="423"
+        top="706" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00006"
+        bottom="987"
+        left="283"
+        right="423"
+        top="847" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00007"
+        bottom="1128"
+        left="283"
+        right="423"
+        top="988" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00008"
+        bottom="1269"
+        left="283"
+        right="423"
+        top="1129" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00009"
+        bottom="1410"
+        left="283"
+        right="423"
+        top="1270" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00010"
+        bottom="1551"
+        left="283"
+        right="423"
+        top="1411" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00011"
+        bottom="1692"
+        left="283"
+        right="423"
+        top="1552" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00012"
+        bottom="1833"
+        left="283"
+        right="423"
+        top="1693" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00013"
+        bottom="1974"
+        left="283"
+        right="423"
+        top="1834" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00014"
+        bottom="564"
+        left="424"
+        right="564"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00015"
+        bottom="564"
+        left="565"
+        right="705"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00016"
+        bottom="564"
+        left="706"
+        right="846"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00017"
+        bottom="564"
+        left="847"
+        right="987"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00018"
+        bottom="564"
+        left="988"
+        right="1128"
+        top="424" />
+    <Image
+        name="mayan_symbol_major_stonehead_ipad3_00019"
+        bottom="564"
+        left="1129"
+        right="1269"
+        top="424" />
+    <Image
+        name="mayan_symbol_minor_10_ipad3"
+        bottom="564"
+        left="1270"
+        right="1410"
+        top="424" />
+    <Image
+        name="mayan_symbol_minor_A_ipad3"
+        bottom="564"
+        left="1411"
+        right="1551"
+        top="424" />
+    <Image
+        name="mayan_symbol_minor_J_ipad3"
+        bottom="564"
+        left="1552"
+        right="1692"
+        top="424" />
+    <Image
+        name="mayan_symbol_minor_K_ipad3"
+        bottom="564"
+        left="1693"
+        right="1833"
+        top="424" />
+    <Image
+        name="mayan_symbol_minor_Q_ipad3"
+        bottom="564"
+        left="1834"
+        right="1974"
+        top="424" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00000"
+        bottom="705"
+        left="424"
+        right="564"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00001"
+        bottom="846"
+        left="424"
+        right="564"
+        top="706" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00002"
+        bottom="987"
+        left="424"
+        right="564"
+        top="847" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00003"
+        bottom="1128"
+        left="424"
+        right="564"
+        top="988" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00004"
+        bottom="1269"
+        left="424"
+        right="564"
+        top="1129" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00005"
+        bottom="1410"
+        left="424"
+        right="564"
+        top="1270" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00006"
+        bottom="1551"
+        left="424"
+        right="564"
+        top="1411" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00007"
+        bottom="1692"
+        left="424"
+        right="564"
+        top="1552" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00008"
+        bottom="1833"
+        left="424"
+        right="564"
+        top="1693" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00009"
+        bottom="1974"
+        left="424"
+        right="564"
+        top="1834" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00010"
+        bottom="705"
+        left="565"
+        right="705"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00011"
+        bottom="705"
+        left="706"
+        right="846"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00012"
+        bottom="705"
+        left="847"
+        right="987"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00013"
+        bottom="705"
+        left="988"
+        right="1128"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00014"
+        bottom="705"
+        left="1129"
+        right="1269"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00015"
+        bottom="705"
+        left="1270"
+        right="1410"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00016"
+        bottom="705"
+        left="1411"
+        right="1551"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00017"
+        bottom="705"
+        left="1552"
+        right="1692"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00018"
+        bottom="705"
+        left="1693"
+        right="1833"
+        top="565" />
+    <Image
+        name="mayan_symbol_scatter_calendar_ipad3_00019"
+        bottom="705"
+        left="1834"
+        right="1974"
+        top="565" />
+    <Image
+        name="mayan_symbol_wild_jaguar_ipad3_00000"
+        bottom="846"
+        left="565"
+        right="705"
+        top="706" />
+
+</TextureAtlas>

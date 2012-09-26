@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.funzio.pure2D"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <service
+            android:name="com.funzio.pure2D.samples.activities.loaders.HelloLoaderService"
+            android:exported="true"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.funzio.pure2D.samples.activities.loaders.HelloLoaderService.INTENT_START" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".samples.activities.MainMenuActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".samples.activities.objects.ObjectMenuActivity"
+            android:label="@string/display_objects"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.objects.HelloObjectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.objects.MultipleObjectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.objects.JumperActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.objects.BouncerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.ContainerMenuActivity"
+            android:label="@string/containers"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.DisplayGroupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.VGroupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.HGroupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.VWheelActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.HWheelActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.TextureMenuActivity"
+            android:label="@string/textures"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.HelloTextureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.RepeatingTextureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.MultipleTextureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.TextureMaskingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.FrameBufferActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.textures.ImageSequenceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.text.TextMenuActivity"
+            android:label="@string/display_objects"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.text.HelloTextActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.camera.CameraMenuActivity"
+            android:label="@string/camera"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.camera.HelloCameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.particles.ParticleMenuActivity"
+            android:label="@string/particles"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.particles.SimpleSmokeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.particles.MotionTrailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.particles.DynamicEmitterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.physics.PhysicsMenuActivity"
+            android:label="@string/physics"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.physics.HelloPhysicsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.loaders.LoaderMenuActivity"
+            android:label="@string/loaders"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.loaders.LoaderServiceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.mw.MWMenuActivity"
+            android:label="@string/modern_war"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.mw.ExplosionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.mw.GroundUnitsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.mw.GroundAttackerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.mw.AirUnitsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.mw.SeaUnitsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.animations.AnimationMenuActivity"
+            android:label="@string/animations"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.animations.HelloAtlasActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.animations.TweenAnimationsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.animations.SkeletonActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.animations.SkeletonCacheActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.casino.CasinoMenuActivity"
+            android:label="@string/casino"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.casino.SlotMachineActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+    </application>
+
+</manifest>

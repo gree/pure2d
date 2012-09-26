@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Funzio 2D Engine</string>
+
+    <!-- display objects -->
+    <string name="display_objects">Display Objects</string>
+    <string name="hello_display_object">Hello Display Object!</string>
+    <string name="multiple_objects">Multiple Objects</string>
+    <string name="still_objects">Still Objects</string>
+    <string name="jumping_objects">Jumping Objects</string>
+    <string name="bouncing_objects">Bouncing Objects</string>
+    <string name="sprite">Sprite</string>
+    <string name="frame_buffer">Frame Buffer</string>
+
+    <!-- display groups -->
+    <string name="containers">Containers</string>
+    <string name="display_groups">Display Groups</string>
+    <string name="vertical_groups">Vertical Groups</string>
+    <string name="horizontal_groups">Horizontal Groups</string>
+
+    <!-- camera -->
+    <string name="camera">Camera</string>
+    <string name="hello_camera">Hello Camera!</string>
+
+    <!-- particles -->
+    <string name="particles">Particles</string>
+    <string name="simple_smoke">Simple Smoke</string>
+    <string name="motion_trails">Motion Trails</string>
+    <string name="dynamic_emitters">Dynamic Emitters</string>
+    <string name="random_1">Random Set #1</string>
+    <string name="random_2">Random Set #2</string>
+
+    <!-- mw particles -->
+    <string name="modern_war">Modern War</string>
+    <string name="mw_explosions">Explosions</string>
+    <string name="mw_units">Units</string>
+    <string name="explosion">Explosion</string>
+    <string name="black_explosion">Black Explosion</string>
+    <string name="explosion_combo">Explosion Combo</string>
+    <string name="gunshots">Gunshots</string>
+    <string name="tank_fire">Tank Fire</string>
+    <string name="smoke_puff">Smoke Puff</string>
+    <string name="abrams">Abrams</string>
+    <string name="leopard">Leopard</string>
+    <string name="m2bradley">M2Bradley</string>
+    <string name="humvee">Humvee</string>
+    <string name="ground_units">Ground Units</string>
+    <string name="sea_units">Sea Units</string>
+    <string name="air_units">Air Units</string>
+    <string name="f15">F15</string>
+    <string name="stealth_bomber">Stealth Bomber</string>
+    <string name="b52">B52</string>
+    <string name="rah">RAH</string>
+    <string name="harrier">Harrier</string>
+    <string name="v22">V22</string>
+    <string name="submarine">Submarine</string>
+    <string name="frigate">Frigate</string>
+    <string name="aircraft_carrier">Aifcraft Carrier</string>
+
+    <!-- textures -->
+    <string name="textures">Textures</string>
+    <string name="hello_texture">Hello Texture!</string>
+    <string name="multiple_texture">Multiple Textures</string>
+    <string name="masking">Masking / Blending</string>
+    <string name="zeus">Zeus</string>
+    <string name="rock_checker">Rock Checker</string>
+    <string name="checker">Checker</string>
+
+    <!-- physic -->
+    <string name="physics">Physics</string>
+    <string name="hello_physics">Hello Physics!</string>
+
+    <!-- textures -->
+    <string name="animations">Animations</string>
+    <string name="texture_atlas">Texture Atlas</string>
+    <string name="repeating">Repeating</string>
+    <string name="vertical_wheel">Vertical Wheel</string>
+    <string name="horizontal_wheel">Horizontal Wheel</string>
+    <string name="atlas_generator">Atlas Generator</string>
+    <string name="image_sequence">Image Sequence</string>
+    <string name="slot_machine">Slot Machine</string>
+    <string name="casino">Casino</string>
+    <string name="show_atlas">Show Atlas</string>
+    <string name="tween_animations">Tween Animations</string>
+    <string name="linear">Linear</string>
+    <string name="accelerate">Accelerate</string>
+    <string name="decelerate">Decelerate</string>
+    <string name="bounce">Bounce</string>
+    <string name="none">None</string>
+    <string name="circling">Circling</string>
+    <string name="no_looping">No looping</string>
+    <string name="accelerate_decelerate">Accelerate-Decelerate</string>
+    <string name="hello_text">Hello Text</string>
+    <string name="text">Text</string>
+    <string name="repeating_texture">Repeating Texture</string>
+    <string name="repeat_x">Repeat X</string>
+    <string name="repeat_y">Repeat Y</string>
+    <string name="loaders">Loaders</string>
+    <string name="loader_service">Loader Service</string>
+    <string name="start_loading">Start Loading</string>
+    <string name="skeleton_animation">Skeleton Animation</string>
+    <string name="skeleton_animation_cache">Skeleton Animation Cache</string>
+
+</resources>
