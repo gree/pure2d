@@ -153,6 +153,7 @@ public class AniFile {
                 // set into vertex buffers
                 if (buffers[i] == null) {
                     buffers[i] = new VertexBuffer(GL10.GL_TRIANGLE_STRIP, PART_POINTS, mVertexFloats);
+                    buffers[i].setVertexPointerSize(3); // xyz
                 } else {
                     buffers[i].setValues(mVertexFloats);
                 }

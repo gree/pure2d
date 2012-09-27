@@ -32,10 +32,10 @@ public class Rectangular extends Shape {
         super.setSize(w, h);
 
         final float vertices[] = {
-                0.0f, h, 0.0f, // TL
-                0.0f, 0.0f, 0.0f, // BL
-                w, h, 0.0f, // TR
-                w, 0.0f, 0.0f, // BR
+                0.0f, h, // TL
+                0.0f, 0.0f, // BL
+                w, h, // TR
+                w, 0.0f, // BR
         };
 
         if (mVertexBuffer == null) {

@@ -19,7 +19,7 @@ public class VertexBuffer extends GLFloatBuffer {
     private int mIndicesNum = 0;
     private ShortBuffer mIndexBuffer;
     private int mPrimitive = GL10.GL_TRIANGLES;
-    private int mVertexPointerSize = 3;
+    private int mVertexPointerSize = 2; // only x & y
 
     public VertexBuffer(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
         setVertices(primitive, verticesNum, vertices, indices);
