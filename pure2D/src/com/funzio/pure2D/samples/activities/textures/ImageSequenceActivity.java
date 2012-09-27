@@ -17,6 +17,7 @@ import com.funzio.pure2D.shapes.Sprite;
 
 public class ImageSequenceActivity extends StageActivity {
     private static final String IMAGE_DIR = "mayan/symbols/majors/priest";
+    // private static final String IMAGE_DIR = Environment.getExternalStorageDirectory() + "/funzio/casino/FarmRiches/images/symbols/majors/bonus";
 
     private Texture mTexture;
     private ImageSequenceAtlas mAtlas;
@@ -52,6 +53,7 @@ public class ImageSequenceActivity extends StageActivity {
 
     private void createAtlas() {
         mAtlas = new ImageSequenceAtlas(mScene.getGLState(), getAssets(), IMAGE_DIR, null);
+        // mAtlas = new ImageSequenceAtlas(mScene.getGLState(), IMAGE_DIR, null);
         mTexture = mAtlas.getTexture();
 
         mAtlasSprite = new Sprite();
