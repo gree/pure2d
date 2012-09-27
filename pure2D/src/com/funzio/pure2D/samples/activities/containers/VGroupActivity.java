@@ -59,7 +59,7 @@ public class VGroupActivity extends StageActivity {
 
         for (int id : ids) {
             // add texture to list
-            mTextures.add(mScene.getTextureManager().createTexture(id, null));
+            mTextures.add(mScene.getTextureManager().createDrawableTexture(id, null));
         }
     }
 

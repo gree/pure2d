@@ -71,10 +71,10 @@ public class DynamicEmitterActivity extends StageActivity {
         options.inMipmaps = 1;
 
         // smoke
-        mSmokeTexture = mScene.getTextureManager().createTexture(R.drawable.smoke_small, options);
+        mSmokeTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.smoke_small, options);
 
         // fire
-        mFireTexture = mScene.getTextureManager().createTexture(R.drawable.fireball_small, options);
+        mFireTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.fireball_small, options);
     }
 
     @Override

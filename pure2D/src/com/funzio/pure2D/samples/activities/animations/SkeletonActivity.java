@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,10 +43,9 @@ public class SkeletonActivity extends StageActivity {
     }
 
     private void loadTexture() {
-        final AssetManager asset = getAssets();
         final List<String> images = mAniFile.mRequiredImages;
         for (String image : images) {
-            mTextures.put(image, mScene.getTextureManager().createTexture(asset, image, null));
+            mTextures.put(image, mScene.getTextureManager().createAssetTexture(image, null));
             break; // XXX just display naked body
         }
 

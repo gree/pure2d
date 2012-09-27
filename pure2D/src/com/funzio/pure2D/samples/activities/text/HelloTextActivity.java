@@ -30,7 +30,7 @@ public class HelloTextActivity extends StageActivity {
     }
 
     private void createTexture() {
-        mTexture = mScene.getTextureManager().createTexture("Hello World!", null);
+        mTexture = mScene.getTextureManager().createTextTexture("Hello World!", null);
     }
 
     private void addObject(final float x, final float y) {

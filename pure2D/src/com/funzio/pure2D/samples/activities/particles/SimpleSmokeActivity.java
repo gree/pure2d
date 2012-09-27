@@ -48,7 +48,7 @@ public class SimpleSmokeActivity extends StageActivity {
         TextureOptions options = TextureOptions.getDefault();
         options.inMipmaps = 1;
         // smoke
-        mTexture = mScene.getTextureManager().createTexture(R.drawable.smoke_small, options);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.smoke_small, options);
     }
 
     private void addEmitter(final float x, final float y) {

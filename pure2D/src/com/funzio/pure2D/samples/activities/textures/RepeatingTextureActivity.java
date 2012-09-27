@@ -54,7 +54,7 @@ public class RepeatingTextureActivity extends StageActivity {
 
     private void loadTexture() {
         // create texture
-        mTexture = mScene.getTextureManager().createTexture(R.drawable.cc_128, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_128, null);
         // tell texture to repeat on both directions when necessary
         mTexture.setRepeat(GL10.GL_REPEAT, GL10.GL_REPEAT);
     }

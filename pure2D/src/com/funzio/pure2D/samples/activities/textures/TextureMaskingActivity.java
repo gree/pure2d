@@ -41,14 +41,14 @@ public class TextureMaskingActivity extends StageActivity {
 
     private void addObjects() {
         mChecker = new Sprite();
-        mChecker.setTexture(mScene.getTextureManager().createTexture(R.drawable.checker, null));
+        mChecker.setTexture(mScene.getTextureManager().createDrawableTexture(R.drawable.checker, null));
         mChecker.setOriginAtCenter();
         mChecker.setScale(4, 4);
         mChecker.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
         mScene.addChild(mChecker);
 
         mGirl = new Sprite();
-        mGirl.setTexture(mScene.getTextureManager().createTexture(R.drawable.mw_girl, null));
+        mGirl.setTexture(mScene.getTextureManager().createDrawableTexture(R.drawable.mw_girl, null));
         mGirl.setOriginAtCenter();
         mGirl.setScale(4, 4);
         mGirl.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
@@ -56,7 +56,7 @@ public class TextureMaskingActivity extends StageActivity {
         mScene.addChild(mGirl);
 
         mGuy = new Sprite();
-        mGuy.setTexture(mScene.getTextureManager().createTexture(R.drawable.mw_guy, null));
+        mGuy.setTexture(mScene.getTextureManager().createDrawableTexture(R.drawable.mw_guy, null));
         mGuy.setOriginAtCenter();
         mGuy.setScale(4, 4);
         mGuy.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);

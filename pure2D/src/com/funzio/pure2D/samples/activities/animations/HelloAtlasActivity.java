@@ -56,7 +56,7 @@ public class HelloAtlasActivity extends StageActivity {
 
     private void loadTexture() {
         // create texture
-        mTexture = mScene.getTextureManager().createTexture(R.drawable.atlas, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
 
         mAtlasSprite = new Sprite();
         mAtlasSprite.setTexture(mTexture);

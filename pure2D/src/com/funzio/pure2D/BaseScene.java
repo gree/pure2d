@@ -155,12 +155,18 @@ public class BaseScene implements Scene {
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
         // Enable Smooth Shading, default not really needed.
         gl.glShadeModel(GL10.GL_SMOOTH);
+
         // Depth buffer setup.
         gl.glClearDepthf(1.0f);
         // Enables depth testing.
         gl.glEnable(GL10.GL_DEPTH_TEST);
-        // The type of depth testing to do.
-        gl.glDepthFunc(GL10.GL_LEQUAL);
+        gl.glDepthFunc(GL10.GL_LEQUAL); // The type of depth testing to do.
+
+        // or disable depth test completely
+        // this does NOT necessary increase any FPS based on my test
+        // gl.glDisable(GL10.GL_DEPTH_TEST);
+        // gl.glDepthFunc(GL10.GL_NEVER);
+
         // Really nice perspective calculations.
         // gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 

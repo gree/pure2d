@@ -38,9 +38,9 @@ public class ParticleTextureManager extends TextureManager {
 
         TextureOptions options = TextureOptions.getDefault();
         options.inMipmaps = 1; // enable mipmapping for particles
-        mFireTexture = createTexture(R.drawable.fireball_small, options);
-        mFireGreyTexture = createTexture(R.drawable.fireball_grey, options);
-        mSmokeTexture = createTexture(R.drawable.smoke_small, options);
+        mFireTexture = createDrawableTexture(R.drawable.fireball_small, options);
+        mFireGreyTexture = createDrawableTexture(R.drawable.fireball_grey, options);
+        mSmokeTexture = createDrawableTexture(R.drawable.smoke_small, options);
     }
 
     public Texture getUnitTexture(final String textureKey, final CCMapDirection direction) {
@@ -68,7 +68,7 @@ public class ParticleTextureManager extends TextureManager {
 
         if (drawable > 0) {
             // create and cache
-            Texture texture = createTexture(drawable, null);
+            Texture texture = createDrawableTexture(drawable, null);
             mUnitTextures.put(key, texture);
 
             return texture;

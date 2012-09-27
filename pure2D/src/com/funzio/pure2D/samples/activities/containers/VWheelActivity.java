@@ -49,7 +49,7 @@ public class VWheelActivity extends StageActivity {
 
     private void loadTextures() {
         // create texture
-        mTexture = mScene.getTextureManager().createTexture(R.drawable.atlas, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
     }
 
     private void addWheel(final float x, final float y) {

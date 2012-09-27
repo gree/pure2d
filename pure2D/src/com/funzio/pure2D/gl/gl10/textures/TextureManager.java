@@ -69,14 +69,55 @@ public class TextureManager {
     /**
      * Create a new Texture from a Drawable
      * 
+     * @deprecated Replaced by {@link #createDrawableTexture(int, TextureOptions)}
      * @param drawable
      * @param config
      * @return
      */
+    @Deprecated
     public DrawableTexture createTexture(final int drawable, final TextureOptions options) {
         Log.v(TAG, String.format("createTexture(%d, %s)", drawable, options));
 
         final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new Texture from a Drawable
+     * 
+     * @param drawable
+     * @param config
+     * @return
+     */
+    public DrawableTexture createDrawableTexture(final int drawable, final TextureOptions options) {
+        Log.v(TAG, String.format("createTexture(%d, %s)", drawable, options));
+
+        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new Texture from an AssetManager
+     * 
+     * @deprecated Replaced by {@link #createAssetTexture(String, TextureOptions)}
+     * @param assetManager
+     * @param filePath
+     * @param config
+     * @return
+     */
+    @Deprecated
+    public AssetTexture createTexture(final AssetManager assetManager, final String filePath, final TextureOptions options) {
+        Log.v(TAG, String.format("createTexture(%s, %s, %s)", assetManager, filePath, options));
+
+        final AssetTexture texture = new AssetTexture(mGLState, assetManager, filePath, options, true);
 
         // add to list
         addTexture(texture);
@@ -92,10 +133,10 @@ public class TextureManager {
      * @param config
      * @return
      */
-    public AssetTexture createTexture(final AssetManager assetManager, final String filePath, final TextureOptions options) {
-        Log.v(TAG, String.format("createTexture(%s, %s, %s)", assetManager, filePath, options));
+    public AssetTexture createAssetTexture(final String filePath, final TextureOptions options) {
+        Log.v(TAG, String.format("createAssetTexture(%s, %s)", filePath, options));
 
-        final AssetTexture texture = new AssetTexture(mGLState, assetManager, filePath, options, true);
+        final AssetTexture texture = new AssetTexture(mGLState, mAssets, filePath, options, true);
 
         // add to list
         addTexture(texture);
@@ -110,7 +151,7 @@ public class TextureManager {
      * @param config
      * @return
      */
-    public FileTexture createTexture(final String filePath, final TextureOptions options) {
+    public FileTexture createFileTexture(final String filePath, final TextureOptions options) {
         Log.v(TAG, String.format("createTexture( %s, %s)", filePath, options));
 
         final FileTexture texture = new FileTexture(mGLState, filePath, options, true);
@@ -128,7 +169,7 @@ public class TextureManager {
      * @param options
      * @return
      */
-    public TextTexture createTexture(final String text, final TextOptions options) {
+    public TextTexture createTextTexture(final String text, final TextOptions options) {
         Log.v(TAG, String.format("createTexture( %s, %s)", text, options));
 
         final TextTexture texture = new TextTexture(mGLState, text, options, true);
@@ -146,7 +187,7 @@ public class TextureManager {
      * @param height
      * @return
      */
-    public BufferTexture createTexture(final int width, final int height) {
+    public BufferTexture createBufferTexture(final int width, final int height) {
         return new BufferTexture(mGLState, width, height);
     }
 

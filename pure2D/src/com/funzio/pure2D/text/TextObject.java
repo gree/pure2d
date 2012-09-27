@@ -39,7 +39,7 @@ public class TextObject extends Rectangular {
 
         Scene scene = getScene();
         if (scene != null) {
-            setTexture(scene.getTextureManager().createTexture(mText, mOptions));
+            setTexture(scene.getTextureManager().createTextTexture(mText, mOptions));
         }
     }
 

@@ -55,7 +55,7 @@ public class HWheelActivity extends StageActivity {
 
     private void loadTextures() {
         // create texture
-        mTexture = mScene.getTextureManager().createTexture(R.drawable.atlas, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
     }
 
     private void addWheels(final float x, final float y) {

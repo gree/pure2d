@@ -100,7 +100,7 @@ public class HelloPhysicsActivity extends StageActivity implements SensorEventLi
         };
 
         for (int id : ids) {
-            mTextures.add(mScene.getTextureManager().createTexture(id, null));
+            mTextures.add(mScene.getTextureManager().createDrawableTexture(id, null));
         }
     }
 

@@ -71,8 +71,8 @@ public class CasinoTextureManager extends TextureManager {
         mTextureOptions.inScaleY = mTextureScaleY;
 
         // load the textures and atlas
-        mBackTexture = createTexture(mAssets, mTheme + "/" + "mayan_machine_back.jpg", mTextureOptions);
-        mFrontTexture = createTexture(mAssets, mTheme + "/" + "mayan_machine_front.png", mTextureOptions);
+        mBackTexture = createAssetTexture(mTheme + "/" + "mayan_machine_back.jpg", mTextureOptions);
+        mFrontTexture = createAssetTexture(mTheme + "/" + "mayan_machine_front.png", mTextureOptions);
 
         loadMajorSymbols();
         // loadMinorSymbols();

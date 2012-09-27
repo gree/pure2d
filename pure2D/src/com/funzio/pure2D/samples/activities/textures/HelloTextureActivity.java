@@ -42,7 +42,7 @@ public class HelloTextureActivity extends StageActivity {
 
     private void loadTexture() {
         // create texture
-        mTexture = mScene.getTextureManager().createTexture(R.drawable.cc_128, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_128, null);
     }
 
     private void addObject(final float x, final float y, final boolean useTexture) {

@@ -58,7 +58,7 @@ public class LoaderServiceActivity extends StageActivity {
     }
 
     private void addObject(final String textureFile, final float x, final float y) {
-        final Texture texture = mScene.getTextureManager().createTexture(textureFile, (TextureOptions) null);
+        final Texture texture = mScene.getTextureManager().createFileTexture(textureFile, (TextureOptions) null);
 
         // create object
         Sprite obj = new Sprite();
