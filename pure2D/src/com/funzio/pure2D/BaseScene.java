@@ -610,12 +610,12 @@ public class BaseScene implements Scene {
     }
 
     /**
-     * @param local
+     * @param global
      * @return
      * @see #globalToScreen(float, float)
      */
-    public PointF globalToScreen(final PointF local) {
-        return globalToScreen(local.x, local.y);
+    public PointF globalToScreen(final PointF global) {
+        return globalToScreen(global.x, global.y);
     }
 
     /**

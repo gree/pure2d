@@ -21,6 +21,18 @@ public interface DisplayObject extends Manipulatable {
 
     public boolean draw(final GLState glState);
 
+    public void setX(final float x);
+
+    public float getX();
+
+    public void setY(final float y);
+
+    public float getY();
+
+    public void setZ(final float z);
+
+    public float getZ();
+
     public PointF getOrigin();
 
     public void setOrigin(final PointF origin);

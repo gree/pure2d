@@ -28,6 +28,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected PointF mSize = new PointF(1, 1);
     protected PointF mScale = new PointF(1, 1);
     protected float mRotation = 0;
+    protected float mZ = 0;// z-order
 
     // life
     protected boolean mVisible = true;
@@ -63,7 +64,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         glState.mGL.glPushMatrix();
 
         // translating
-        glState.mGL.glTranslatef(mPosition.x, mPosition.y, 0);
+        glState.mGL.glTranslatef(mPosition.x, mPosition.y, mZ);
         // scaling
         if (mScale.x != 1 || mScale.y != 1) {
             glState.mGL.glScalef(mScale.x, mScale.y, 0);
@@ -167,14 +168,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mPosition;
     }
 
-    public float getX() {
-        return mPosition.x;
-    }
-
-    public float getY() {
-        return mPosition.y;
-    }
-
     /**
      * @param position the position to set
      */
@@ -189,6 +182,33 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mPosition.x = x;
         mPosition.y = y;
         invalidate(InvalidateFlags.POSITION);
+    }
+
+    public void setX(final float x) {
+        mPosition.x = x;
+        invalidate(InvalidateFlags.POSITION);
+    }
+
+    public float getX() {
+        return mPosition.x;
+    }
+
+    public void setY(final float y) {
+        mPosition.y = y;
+        invalidate(InvalidateFlags.POSITION);
+    }
+
+    public float getY() {
+        return mPosition.y;
+    }
+
+    public void setZ(final float z) {
+        mZ = z;
+        invalidate(InvalidateFlags.POSITION);
+    }
+
+    public float getZ() {
+        return mZ;
     }
 
     public void moveTo(final float x, final float y) {

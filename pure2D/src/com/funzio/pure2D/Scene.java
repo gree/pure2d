@@ -5,6 +5,7 @@ package com.funzio.pure2D;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.opengl.GLSurfaceView.Renderer;
 
 import com.funzio.pure2D.containers.Container;
@@ -31,6 +32,14 @@ public interface Scene extends Renderer, Container {
     public GLState getGLState();
 
     public TextureManager getTextureManager();
+
+    public PointF globalToScreen(final float globalX, final float globalY);
+
+    public PointF globalToScreen(final PointF global);
+
+    public PointF screenToGlobal(final float screenX, final float screenY);
+
+    public PointF screenToGlobal(final PointF screen);
 
     public void queueEvent(Runnable r);
 
