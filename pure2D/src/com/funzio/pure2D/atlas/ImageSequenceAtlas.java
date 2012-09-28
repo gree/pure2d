@@ -68,6 +68,10 @@ public class ImageSequenceAtlas extends Atlas {
         try {
             // list the files in assetDir
             String[] files = assetManager.list(assetDir);
+            if (files == null || files.length == 0) {
+                Log.e(TAG, assetDir + " is empty!");
+                return;
+            }
 
             // find the frame dimensions based on the first image
             Bitmap bitmap = Pure2DUtils.getStreamBitmap(assetManager.open(assetDir + "/" + files[0]), mOptions, false, null);
