@@ -42,6 +42,14 @@ public class TextureManager {
         mAssets = mResources.getAssets();
     }
 
+    public Scene getScene() {
+        return mScene;
+    }
+
+    public GLState getGLState() {
+        return mGLState;
+    }
+
     /**
      * Call this when GL changed
      * 
