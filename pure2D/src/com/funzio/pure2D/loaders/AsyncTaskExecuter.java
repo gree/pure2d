@@ -55,11 +55,11 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T
     // }
     // }
 
-    public TaskListener getTaskCompleteListener() {
+    public TaskListener getTaskListener() {
         return mTaskListener;
     }
 
-    public void setTaskCompleteListener(final TaskListener taskListener) {
+    public void setTaskListener(final TaskListener taskListener) {
         mTaskListener = taskListener;
     }
 
