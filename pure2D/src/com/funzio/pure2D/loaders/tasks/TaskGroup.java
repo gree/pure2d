@@ -52,13 +52,13 @@ public class TaskGroup implements Task {
                 mTaskListener.onTaskComplete(mCurrentTask);
             }
 
-            if (mTaskDelay > 0) {
-                try {
-                    Thread.sleep(mTaskDelay);
-                } catch (InterruptedException ex) {
-                    Log.e(TAG, "INTERRUPTED ERROR!", ex);
-                }
+            // if (mTaskDelay > 0) {
+            try {
+                Thread.sleep(mTaskDelay);
+            } catch (InterruptedException ex) {
+                Log.e(TAG, "INTERRUPTED ERROR!", ex);
             }
+            // }
         }
 
         // clear
