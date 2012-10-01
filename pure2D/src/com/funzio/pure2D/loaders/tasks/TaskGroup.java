@@ -65,6 +65,12 @@ public class TaskGroup implements Task {
         return mTasks;
     }
 
+    protected boolean addTasks(final List<Task> tasks) {
+        Log.v(TAG, "addTasks(), " + tasks.size());
+
+        return mTasks.addAll(tasks);
+    }
+
     public long getTaskDelay() {
         return mTaskDelay;
     }
