@@ -67,6 +67,7 @@ public class TaskGroup implements Task, Task.Stoppable {
 
             // interrupted?
             if (!mRunning) {
+                Log.v("long", "bingoooooooooooo!");
                 return false;
             }
 
@@ -96,6 +97,7 @@ public class TaskGroup implements Task, Task.Stoppable {
      */
     @Override
     public boolean stop() {
+        Log.v("long", "awesomeeeeeeeeeee stop()");
         if (!mRunning) {
             return false;
         }

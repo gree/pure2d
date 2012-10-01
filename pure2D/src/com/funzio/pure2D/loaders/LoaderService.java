@@ -125,7 +125,6 @@ public class LoaderService extends IntentService {
             // stop current task if there's any
             if (mCurrentTask instanceof Stoppable) {
                 ((Stoppable) mCurrentTask).stop();
-                mCurrentTask = null;
             }
 
             if (mHandler != null) {
