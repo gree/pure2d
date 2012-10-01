@@ -9,4 +9,8 @@ package com.funzio.pure2D.loaders.tasks;
  */
 public interface Task {
     public boolean run();
+
+    public static interface TaskListener {
+        void onTaskComplete(final Task task);
+    }
 }

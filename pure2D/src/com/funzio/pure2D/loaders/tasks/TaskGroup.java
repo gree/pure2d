@@ -6,17 +6,17 @@ package com.funzio.pure2D.loaders.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.util.Log;
 
 /**
  * @author long
  */
-public class TaskGroup implements IntentTask {
+public class TaskGroup implements Task {
     private static final String TAG = TaskGroup.class.getSimpleName();
 
     private List<Task> mTasks = new ArrayList<Task>();
     private long mTaskDelay = 0;
+    private TaskListener mTaskListener;
 
     public void addTask(final Task task) {
         mTasks.add(task);
@@ -36,6 +36,11 @@ public class TaskGroup implements IntentTask {
         for (int i = 0; i < size; i++) {
             final Task task = mTasks.get(i);
             task.run();
+
+            if (mTaskListener != null) {
+                // callback
+                mTaskListener.onTaskComplete(task);
+            }
 
             if (mTaskDelay > 0) {
                 try {
@@ -57,8 +62,11 @@ public class TaskGroup implements IntentTask {
         mTaskDelay = taskDelay;
     }
 
-    public Intent getCompleteIntent() {
-        return null;
+    public TaskListener getTaskListener() {
+        return mTaskListener;
     }
 
+    public void setTaskListener(final TaskListener taskListener) {
+        mTaskListener = taskListener;
+    }
 }
