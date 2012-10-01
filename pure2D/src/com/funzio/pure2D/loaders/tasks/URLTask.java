@@ -64,16 +64,6 @@ public abstract class URLTask implements IntentTask {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.Task#stop()
-     */
-    @Override
-    public boolean stop() {
-        // this is unstoppable
-        return false;
-    }
-
     abstract protected void onProgress(final byte[] data, final int count) throws Exception;
 
     @Override

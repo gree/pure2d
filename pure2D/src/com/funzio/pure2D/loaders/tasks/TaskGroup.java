@@ -11,14 +11,34 @@ import android.util.Log;
 /**
  * @author long
  */
-public class TaskGroup implements Task {
+public class TaskGroup implements Task, Task.Stoppable {
     private static final String TAG = TaskGroup.class.getSimpleName();
 
     private List<Task> mTasks = new ArrayList<Task>();
     private long mTaskDelay = 0;
     private TaskListener mTaskListener;
-    private boolean mRunning = false;
+
     private Task mCurrentTask;
+
+    private boolean mRunning = false;
+
+    // private Handler mHandler;
+    //
+    // private int mCurrentIndex = -1;
+    //
+    // private Runnable mNextTaskRunnable = new Runnable() {
+    //
+    // @Override
+    // public void run() {
+    // final Task task = mTasks.get(++mCurrentIndex);
+    // task.run();
+    //
+    // if (mTasks.size() > 0) {
+    // // schedule next task
+    // mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
+    // }
+    // }
+    // };
 
     public void addTask(final Task task) {
         mTasks.add(task);
@@ -34,10 +54,21 @@ public class TaskGroup implements Task {
 
     @Override
     public boolean run() {
+        final int size = mTasks.size();
+
+        if (size == 0) {
+            // no task to run
+            return false;
+        }
+
         mRunning = true;
 
-        final int size = mTasks.size();
         for (int i = 0; i < size; i++) {
+
+            // interrupted?
+            if (!mRunning) {
+                return false;
+            }
 
             mCurrentTask = mTasks.get(i);
             mCurrentTask.run();
@@ -56,15 +87,12 @@ public class TaskGroup implements Task {
             }
         }
 
-        // clear
-        mCurrentTask = null;
-
         return true;
     }
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.Task#stop()
+     * @see com.funzio.pure2D.loaders.tasks.Task.Stoppable#stop()
      */
     @Override
     public boolean stop() {
@@ -72,13 +100,10 @@ public class TaskGroup implements Task {
             return false;
         }
 
-        // unflag
         mRunning = false;
 
-        // stop current task if there's any
-        if (mCurrentTask != null) {
-            mCurrentTask.stop();
-            mCurrentTask = null;
+        if (mCurrentTask instanceof Stoppable) {
+            ((Stoppable) mCurrentTask).stop();
         }
 
         return true;

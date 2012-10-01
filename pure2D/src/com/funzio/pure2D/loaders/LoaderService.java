@@ -12,10 +12,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.Handler;
 import android.util.Log;
 
 import com.funzio.pure2D.loaders.tasks.IntentTask;
 import com.funzio.pure2D.loaders.tasks.Task;
+import com.funzio.pure2D.loaders.tasks.Task.Stoppable;
 
 /**
  * @author long
@@ -49,6 +51,35 @@ public class LoaderService extends IntentService {
         }
     };
 
+    private Handler mHandler;
+    private Runnable mNextTaskRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            mCurrentTask = mTasks.remove(0);
+            mCurrentTask.run();
+
+            // if there is complete intent
+            if (mCurrentTask instanceof IntentTask) {
+                final Intent taskCompleteIntent = ((IntentTask) mCurrentTask).getCompleteIntent();
+                if (taskCompleteIntent != null) {
+                    // broadcast task complete
+                    sendBroadcast(taskCompleteIntent);
+                }
+            }
+
+            if (mTasks.size() > 0) {
+                // schedule next task
+                mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
+            } else {
+                mCurrentTask = null;
+                mRunning = false;
+                // broadcast finished event
+                sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
+            }
+        }
+    };
+
     public LoaderService(final String name) {
         super(name);
 
@@ -61,6 +92,8 @@ public class LoaderService extends IntentService {
         Log.v(TAG, "onCreate(), " + mName);
 
         super.onCreate();
+
+        mHandler = new Handler();
 
         // listen to some events
         registerReceiver(mBatteryInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -92,10 +125,12 @@ public class LoaderService extends IntentService {
             mRunning = false;
 
             // stop current task if there's any
-            if (mCurrentTask != null) {
-                mCurrentTask.stop();
+            if (mCurrentTask instanceof Stoppable) {
+                ((Stoppable) mCurrentTask).stop();
                 mCurrentTask = null;
             }
+
+            mHandler.removeCallbacksAndMessages(null);
 
             // broadcast stopped event
             sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
@@ -131,34 +166,7 @@ public class LoaderService extends IntentService {
         sendBroadcast(new Intent(getIntentAction(INTENT_ON_STARTED)));
 
         // run the tasks
-        for (int i = 0; i < size; i++) {
-
-            mCurrentTask = mTasks.remove(0);
-            mCurrentTask.run();
-
-            // if there is complete intent
-            if (mCurrentTask instanceof IntentTask) {
-                final Intent taskCompleteIntent = ((IntentTask) mCurrentTask).getCompleteIntent();
-                if (taskCompleteIntent != null) {
-                    // broadcast task complete
-                    sendBroadcast(taskCompleteIntent);
-                }
-            }
-
-            if (mTaskDelay > 0) {
-                try {
-                    Thread.sleep(mTaskDelay);
-                } catch (InterruptedException ex) {
-                    Log.e(TAG, "INTERRUPTED ERROR!", ex);
-                }
-            }
-        }
-
-        // clear
-        mCurrentTask = null;
-
-        // broadcast finished event
-        sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
+        mHandler.post(mNextTaskRunnable);
 
         return true;
     }

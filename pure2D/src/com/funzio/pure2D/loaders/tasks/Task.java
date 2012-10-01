@@ -9,9 +9,11 @@ package com.funzio.pure2D.loaders.tasks;
 public interface Task {
     public boolean run();
 
-    public boolean stop();
-
     public static interface TaskListener {
         void onTaskComplete(final Task task);
+    }
+
+    public static interface Stoppable {
+        public boolean stop();
     }
 }
