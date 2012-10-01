@@ -166,6 +166,7 @@ public class BaseScene implements Scene {
         // this does NOT necessary increase any FPS based on my test
         // gl.glDisable(GL10.GL_DEPTH_TEST);
         // gl.glDepthFunc(GL10.GL_NEVER);
+        // gl.glDepthMask(false);
 
         // Really nice perspective calculations.
         // gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
