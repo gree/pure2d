@@ -17,6 +17,8 @@ public class TaskGroup implements Task {
     private List<Task> mTasks = new ArrayList<Task>();
     private long mTaskDelay = 0;
     private TaskListener mTaskListener;
+    private boolean mRunning = false;
+    private Task mCurrentTask;
 
     public void addTask(final Task task) {
         mTasks.add(task);
@@ -32,14 +34,22 @@ public class TaskGroup implements Task {
 
     @Override
     public boolean run() {
+        mRunning = true;
+
         final int size = mTasks.size();
         for (int i = 0; i < size; i++) {
-            final Task task = mTasks.get(i);
-            task.run();
+
+            // interrupted?
+            if (!mRunning) {
+                return false;
+            }
+
+            mCurrentTask = mTasks.get(i);
+            mCurrentTask.run();
 
             if (mTaskListener != null) {
                 // callback
-                mTaskListener.onTaskComplete(task);
+                mTaskListener.onTaskComplete(mCurrentTask);
             }
 
             if (mTaskDelay > 0) {
@@ -49,6 +59,31 @@ public class TaskGroup implements Task {
                     Log.e(TAG, "INTERRUPTED ERROR!", ex);
                 }
             }
+        }
+
+        // clear
+        mCurrentTask = null;
+
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.loaders.tasks.Task#stop()
+     */
+    @Override
+    public boolean stop() {
+        if (!mRunning) {
+            return false;
+        }
+
+        // unflag
+        mRunning = false;
+
+        // stop current task if there's any
+        if (mCurrentTask != null) {
+            mCurrentTask.stop();
+            mCurrentTask = null;
         }
 
         return true;

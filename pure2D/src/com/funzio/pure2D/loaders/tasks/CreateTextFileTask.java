@@ -96,6 +96,16 @@ public class CreateTextFileTask implements IntentTask {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.loaders.tasks.Task#stop()
+     */
+    @Override
+    public boolean stop() {
+        // this is unstoppable
+        return false;
+    }
+
     @Override
     public Intent getCompleteIntent() {
         final Intent intent = new Intent(INTENT_COMPLETE);

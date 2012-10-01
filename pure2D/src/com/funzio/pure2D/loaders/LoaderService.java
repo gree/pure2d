@@ -37,6 +37,7 @@ public class LoaderService extends IntentService {
     private Vector<Task> mTasks = new Vector<Task>();
     private volatile boolean mRunning = false;
     protected int mTaskDelay = DEFAULT_TASK_DELAY;
+    private Task mCurrentTask;
 
     // low battery handling
     private final String mName;
@@ -89,6 +90,14 @@ public class LoaderService extends IntentService {
         } else if (intent.getAction().equals(getIntentAction(INTENT_STOP))) {
             // flag
             mRunning = false;
+
+            // stop current task if there's any
+            if (mCurrentTask != null) {
+                mCurrentTask.stop();
+                mCurrentTask = null;
+            }
+
+            // stop me
             stopSelf();
         }
     }
@@ -128,11 +137,12 @@ public class LoaderService extends IntentService {
                 return false;
             }
 
-            final Task task = mTasks.remove(0);
-            task.run();
+            mCurrentTask = mTasks.remove(0);
+            mCurrentTask.run();
+
             // if there is complete intent
-            if (task instanceof IntentTask) {
-                final Intent taskCompleteIntent = ((IntentTask) task).getCompleteIntent();
+            if (mCurrentTask instanceof IntentTask) {
+                final Intent taskCompleteIntent = ((IntentTask) mCurrentTask).getCompleteIntent();
                 if (taskCompleteIntent != null) {
                     // broadcast task complete
                     sendBroadcast(taskCompleteIntent);
@@ -147,6 +157,9 @@ public class LoaderService extends IntentService {
                 }
             }
         }
+
+        // clear
+        mCurrentTask = null;
 
         // broadcast finished event
         sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
