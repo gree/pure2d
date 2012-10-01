@@ -39,11 +39,6 @@ public class TaskGroup implements Task {
         final int size = mTasks.size();
         for (int i = 0; i < size; i++) {
 
-            // interrupted?
-            if (!mRunning) {
-                return false;
-            }
-
             mCurrentTask = mTasks.get(i);
             mCurrentTask.run();
 
@@ -52,13 +47,13 @@ public class TaskGroup implements Task {
                 mTaskListener.onTaskComplete(mCurrentTask);
             }
 
-            // if (mTaskDelay > 0) {
-            try {
-                Thread.sleep(mTaskDelay);
-            } catch (InterruptedException ex) {
-                Log.e(TAG, "INTERRUPTED ERROR!", ex);
+            if (mTaskDelay > 0) {
+                try {
+                    Thread.sleep(mTaskDelay);
+                } catch (InterruptedException ex) {
+                    Log.e(TAG, "INTERRUPTED ERROR!", ex);
+                }
             }
-            // }
         }
 
         // clear

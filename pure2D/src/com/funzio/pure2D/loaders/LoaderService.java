@@ -97,6 +97,9 @@ public class LoaderService extends IntentService {
                 mCurrentTask = null;
             }
 
+            // broadcast stopped event
+            sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
+
             // stop me
             stopSelf();
         }
@@ -130,13 +133,6 @@ public class LoaderService extends IntentService {
         // run the tasks
         for (int i = 0; i < size; i++) {
 
-            // interrupted?
-            if (!mRunning) {
-                // broadcast stopped event
-                sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
-                return false;
-            }
-
             mCurrentTask = mTasks.remove(0);
             mCurrentTask.run();
 
@@ -149,13 +145,13 @@ public class LoaderService extends IntentService {
                 }
             }
 
-            // if (mTaskDelay > 0) {
-            try {
-                Thread.sleep(mTaskDelay);
-            } catch (InterruptedException ex) {
-                Log.e(TAG, "INTERRUPTED ERROR!", ex);
+            if (mTaskDelay > 0) {
+                try {
+                    Thread.sleep(mTaskDelay);
+                } catch (InterruptedException ex) {
+                    Log.e(TAG, "INTERRUPTED ERROR!", ex);
+                }
             }
-            // }
         }
 
         // clear
