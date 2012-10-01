@@ -89,6 +89,7 @@ public class LoaderService extends IntentService {
         } else if (intent.getAction().equals(getIntentAction(INTENT_STOP))) {
             // flag
             mRunning = false;
+            stopSelf();
         }
     }
 
