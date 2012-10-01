@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.funzio.pure2D.loaders;
+package com.funzio.pure2D.loaders.tasks;
 
 import android.content.Intent;
 

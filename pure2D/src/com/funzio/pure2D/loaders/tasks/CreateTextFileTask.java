@@ -1,13 +1,14 @@
 /**
  * 
  */
-package com.funzio.pure2D.loaders;
+package com.funzio.pure2D.loaders.tasks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import android.content.Intent;
 import android.util.Log;
@@ -15,24 +16,24 @@ import android.util.Log;
 /**
  * @author long
  */
-public class DownloadTask extends URLTask {
-    public static final String TAG = DownloadTask.class.getSimpleName();
-    public static final String CLASS_NAME = DownloadTask.class.getName();
+public class CreateTextFileTask implements IntentTask {
+    public static final String TAG = CreateTextFileTask.class.getSimpleName();
+    public static final String CLASS_NAME = CreateTextFileTask.class.getName();
     public static final String INTENT_COMPLETE = CLASS_NAME + ".INTENT_COMPLETE";
 
     public static String EXTRA_FILE_PATH = "filePath";
 
+    protected final String mContent;
     protected final String mFilePath;
     protected final boolean mOverriding;
 
     protected boolean mIsFinished;
-    protected boolean mIsSuccessfull; //whether the execution was successful or not. 
+    protected boolean mIsSuccessfull; // whether the execution was successful or not.
 
     private OutputStream mOutputStream;
 
-    public DownloadTask(final String srcURL, final String dstFilePath, final boolean overriding) {
-        super(srcURL);
-
+    public CreateTextFileTask(final String content, final String dstFilePath, final boolean overriding) {
+        mContent = content;
         mFilePath = dstFilePath;
         mOverriding = overriding;
         mIsFinished = false;
@@ -40,7 +41,7 @@ public class DownloadTask extends URLTask {
 
     @Override
     public boolean run() {
-        Log.v(TAG, "run(), " + mURL + ", " + mFilePath);
+        Log.v(TAG, "run(), " + mFilePath);
         mIsSuccessfull = doWork();
         mIsFinished = true;
 
@@ -56,7 +57,7 @@ public class DownloadTask extends URLTask {
                 return false;
             }
 
-            // create the dirs if not existings
+            // create the dirs if not existing
             final File parentFile = file.getParentFile();
             if (parentFile != null && !parentFile.exists()) {
                 parentFile.mkdirs();
@@ -68,15 +69,21 @@ public class DownloadTask extends URLTask {
             return false;
         }
 
-        // run now
-        final boolean success = super.run();
-
+        boolean success = true;
         try {
+            // write text now
+            if (mContent != null && !mContent.equalsIgnoreCase("")) {
+                final OutputStreamWriter writer = new OutputStreamWriter(mOutputStream);
+                writer.write(mContent);
+                writer.flush();
+            }
+
             // finalize
             mOutputStream.flush();
             mOutputStream.close();
         } catch (IOException e) {
-            Log.e(TAG, "CLOSE ERROR!", e);
+            Log.e(TAG, "WRITE ERROR!", e);
+            success = false;
         }
 
         if (!success) {
@@ -90,14 +97,8 @@ public class DownloadTask extends URLTask {
     }
 
     @Override
-    protected void onProgress(final byte[] data, final int count) throws Exception {
-        mOutputStream.write(data, 0, count);
-    }
-
-    @Override
     public Intent getCompleteIntent() {
-        final Intent intent = super.getCompleteIntent();
-        intent.setAction(INTENT_COMPLETE);
+        final Intent intent = new Intent(INTENT_COMPLETE);
         intent.putExtra(EXTRA_FILE_PATH, mFilePath);
         return intent;
     }
@@ -114,12 +115,16 @@ public class DownloadTask extends URLTask {
         return mFilePath;
     }
 
+    public String getContent() {
+        return mContent;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "[DownloadTask " + mURL + ", " + mFilePath + " ]";
+        return "[WriteFileTask " + mFilePath + " ]";
     }
 }

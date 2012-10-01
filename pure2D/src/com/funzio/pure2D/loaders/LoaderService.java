@@ -14,6 +14,9 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.util.Log;
 
+import com.funzio.pure2D.loaders.tasks.IntentTask;
+import com.funzio.pure2D.loaders.tasks.Task;
+
 /**
  * @author long
  */

@@ -6,8 +6,8 @@ package com.funzio.pure2D.samples.activities.loaders;
 import android.content.Intent;
 import android.os.Environment;
 
-import com.funzio.pure2D.loaders.DownloadTask;
 import com.funzio.pure2D.loaders.LoaderService;
+import com.funzio.pure2D.loaders.tasks.DownloadTask;
 
 /**
  * @author long

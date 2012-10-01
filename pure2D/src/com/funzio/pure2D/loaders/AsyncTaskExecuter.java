@@ -8,11 +8,13 @@ import java.util.List;
 
 import android.os.AsyncTask;
 
+import com.funzio.pure2D.loaders.tasks.Task;
+
 /**
  * @author sajjadtabib
  *
  */
-public class TaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T>> {
+public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T>> {
 
     private OnTaskCompleteListener<T> mTaskCompleteListener;
 

@@ -12,7 +12,7 @@ import android.view.View;
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
-import com.funzio.pure2D.loaders.DownloadTask;
+import com.funzio.pure2D.loaders.tasks.DownloadTask;
 import com.funzio.pure2D.samples.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
 
