@@ -128,7 +128,9 @@ public class LoaderService extends IntentService {
                 mCurrentTask = null;
             }
 
-            mHandler.removeCallbacksAndMessages(null);
+            if (mHandler != null) {
+                mHandler.removeCallbacksAndMessages(null);
+            }
 
             // broadcast stopped event
             sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
