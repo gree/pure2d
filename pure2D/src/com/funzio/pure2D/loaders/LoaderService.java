@@ -93,8 +93,6 @@ public class LoaderService extends IntentService {
 
         super.onCreate();
 
-        mHandler = new Handler();
-
         // listen to some events
         registerReceiver(mBatteryInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
@@ -166,6 +164,9 @@ public class LoaderService extends IntentService {
         sendBroadcast(new Intent(getIntentAction(INTENT_ON_STARTED)));
 
         // run the tasks
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
         mHandler.post(mNextTaskRunnable);
 
         return true;
