@@ -41,10 +41,10 @@ public class CreateTextFileTask implements IntentTask {
 
     @Override
     public boolean run() {
-        Log.v(TAG, "run(), " + mFilePath);
         mIsSuccessfull = doWork();
         mIsFinished = true;
 
+        Log.v(TAG, "run(), " + mFilePath + ", success: " + mIsSuccessfull);
         return mIsSuccessfull;
     }
 
