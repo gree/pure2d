@@ -11,34 +11,12 @@ import android.util.Log;
 /**
  * @author long
  */
-public class TaskGroup implements Task, Task.Stoppable {
+public class TaskGroup implements Task {
     private static final String TAG = TaskGroup.class.getSimpleName();
 
     private List<Task> mTasks = new ArrayList<Task>();
     private long mTaskDelay = 0;
     private TaskListener mTaskListener;
-
-    private Task mCurrentTask;
-
-    private boolean mRunning = false;
-
-    // private Handler mHandler;
-    //
-    // private int mCurrentIndex = -1;
-    //
-    // private Runnable mNextTaskRunnable = new Runnable() {
-    //
-    // @Override
-    // public void run() {
-    // final Task task = mTasks.get(++mCurrentIndex);
-    // task.run();
-    //
-    // if (mTasks.size() > 0) {
-    // // schedule next task
-    // mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
-    // }
-    // }
-    // };
 
     public void addTask(final Task task) {
         mTasks.add(task);
@@ -61,22 +39,14 @@ public class TaskGroup implements Task, Task.Stoppable {
             return false;
         }
 
-        mRunning = true;
-
         for (int i = 0; i < size; i++) {
 
-            // interrupted?
-            if (!mRunning) {
-                Log.v("long", "bingoooooooooooo!");
-                return false;
-            }
-
-            mCurrentTask = mTasks.get(i);
-            mCurrentTask.run();
+            final Task task = mTasks.get(i);
+            task.run();
 
             if (mTaskListener != null) {
                 // callback
-                mTaskListener.onTaskComplete(mCurrentTask);
+                mTaskListener.onTaskComplete(task);
             }
 
             if (mTaskDelay > 0) {
@@ -91,24 +61,8 @@ public class TaskGroup implements Task, Task.Stoppable {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.Task.Stoppable#stop()
-     */
-    @Override
-    public boolean stop() {
-        Log.v("long", "awesomeeeeeeeeeee stop()");
-        if (!mRunning) {
-            return false;
-        }
-
-        mRunning = false;
-
-        if (mCurrentTask instanceof Stoppable) {
-            ((Stoppable) mCurrentTask).stop();
-        }
-
-        return true;
+    public List<Task> getTasks() {
+        return mTasks;
     }
 
     public long getTaskDelay() {

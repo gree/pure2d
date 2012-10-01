@@ -4,6 +4,7 @@
 package com.funzio.pure2D.loaders;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.List;
 import java.util.Vector;
 
 import android.app.IntentService;
@@ -17,7 +18,6 @@ import android.util.Log;
 
 import com.funzio.pure2D.loaders.tasks.IntentTask;
 import com.funzio.pure2D.loaders.tasks.Task;
-import com.funzio.pure2D.loaders.tasks.Task.Stoppable;
 
 /**
  * @author long
@@ -39,7 +39,6 @@ public class LoaderService extends IntentService {
     private Vector<Task> mTasks = new Vector<Task>();
     private volatile boolean mRunning = false;
     protected int mTaskDelay = DEFAULT_TASK_DELAY;
-    private Task mCurrentTask;
 
     // low battery handling
     private final String mName;
@@ -56,12 +55,12 @@ public class LoaderService extends IntentService {
 
         @Override
         public void run() {
-            mCurrentTask = mTasks.remove(0);
-            mCurrentTask.run();
+            final Task task = mTasks.remove(0);
+            task.run();
 
             // if there is complete intent
-            if (mCurrentTask instanceof IntentTask) {
-                final Intent taskCompleteIntent = ((IntentTask) mCurrentTask).getCompleteIntent();
+            if (task instanceof IntentTask) {
+                final Intent taskCompleteIntent = ((IntentTask) task).getCompleteIntent();
                 if (taskCompleteIntent != null) {
                     // broadcast task complete
                     sendBroadcast(taskCompleteIntent);
@@ -72,7 +71,6 @@ public class LoaderService extends IntentService {
                 // schedule next task
                 mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
             } else {
-                mCurrentTask = null;
                 mRunning = false;
                 // broadcast finished event
                 sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
@@ -122,11 +120,6 @@ public class LoaderService extends IntentService {
             // flag
             mRunning = false;
 
-            // stop current task if there's any
-            if (mCurrentTask instanceof Stoppable) {
-                ((Stoppable) mCurrentTask).stop();
-            }
-
             if (mHandler != null) {
                 mHandler.removeCallbacksAndMessages(null);
             }
@@ -143,6 +136,12 @@ public class LoaderService extends IntentService {
         Log.v(TAG, "addTask(), " + task.toString());
 
         return mTasks.add(task);
+    }
+
+    protected boolean addTasks(final List<Task> tasks) {
+        Log.v(TAG, "addTasks(), " + tasks.size());
+
+        return mTasks.addAll(tasks);
     }
 
     protected boolean removeTask(final Task task) {
