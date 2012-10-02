@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.os.Handler;
 import android.util.Log;
 
 import com.funzio.pure2D.loaders.tasks.IntentTask;
@@ -50,33 +49,33 @@ public class LoaderService extends IntentService {
         }
     };
 
-    private Handler mHandler;
-    private Runnable mNextTaskRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-            final Task task = mTasks.remove(0);
-            task.run();
-
-            // if there is complete intent
-            if (task instanceof IntentTask) {
-                final Intent taskCompleteIntent = ((IntentTask) task).getCompleteIntent();
-                if (taskCompleteIntent != null) {
-                    // broadcast task complete
-                    sendBroadcast(taskCompleteIntent);
-                }
-            }
-
-            if (mTasks.size() > 0) {
-                // schedule next task
-                mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
-            } else {
-                mRunning = false;
-                // broadcast finished event
-                sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
-            }
-        }
-    };
+    // private Handler mHandler;
+    // private Runnable mNextTaskRunnable = new Runnable() {
+    //
+    // @Override
+    // public void run() {
+    // final Task task = mTasks.remove(0);
+    // task.run();
+    //
+    // // if there is complete intent
+    // if (task instanceof IntentTask) {
+    // final Intent taskCompleteIntent = ((IntentTask) task).getCompleteIntent();
+    // if (taskCompleteIntent != null) {
+    // // broadcast task complete
+    // sendBroadcast(taskCompleteIntent);
+    // }
+    // }
+    //
+    // if (mTasks.size() > 0) {
+    // // schedule next task
+    // mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
+    // } else {
+    // mRunning = false;
+    // // broadcast finished event
+    // sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
+    // }
+    // }
+    // };
 
     public LoaderService(final String name) {
         super(name);
@@ -120,12 +119,12 @@ public class LoaderService extends IntentService {
             // flag
             mRunning = false;
 
-            if (mHandler != null) {
-                mHandler.removeCallbacksAndMessages(null);
-            }
+            // if (mHandler != null) {
+            // mHandler.removeCallbacksAndMessages(null);
+            // }
 
-            // broadcast stopped event
-            sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
+            // // broadcast stopped event
+            // sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
 
             // stop me
             stopSelf();
@@ -164,10 +163,42 @@ public class LoaderService extends IntentService {
         sendBroadcast(new Intent(getIntentAction(INTENT_ON_STARTED)));
 
         // run the tasks
-        if (mHandler == null) {
-            mHandler = new Handler();
+        for (int i = 0; i < size; i++) {
+
+            // interrupted?
+            if (!mRunning) {
+                // broadcast stopped event
+                sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
+                return false;
+            }
+
+            final Task task = mTasks.remove(0);
+            task.run();
+            // if there is complete intent
+            if (task instanceof IntentTask) {
+                final Intent taskCompleteIntent = ((IntentTask) task).getCompleteIntent();
+                if (taskCompleteIntent != null) {
+                    // broadcast task complete
+                    sendBroadcast(taskCompleteIntent);
+                }
+            }
+
+            if (mTaskDelay > 0) {
+                try {
+                    Thread.sleep(mTaskDelay);
+                } catch (InterruptedException ex) {
+                    Log.e(TAG, "INTERRUPTED ERROR!", ex);
+                }
+            }
         }
-        mHandler.post(mNextTaskRunnable);
+
+        // if (mHandler == null) {
+        // mHandler = new Handler();
+        // }
+        // mHandler.post(mNextTaskRunnable);
+
+        // broadcast finished event
+        sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
 
         return true;
     }
