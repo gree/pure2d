@@ -15,8 +15,9 @@ public class TaskGroup implements Task {
     private static final String TAG = TaskGroup.class.getSimpleName();
 
     private List<Task> mTasks = new ArrayList<Task>();
-    private long mTaskDelay = 0;
-    private TaskListener mTaskListener;
+
+    protected TaskListener mTaskListener;
+    protected long mTaskDelay = 0;
 
     public void addTask(final Task task) {
         mTasks.add(task);
