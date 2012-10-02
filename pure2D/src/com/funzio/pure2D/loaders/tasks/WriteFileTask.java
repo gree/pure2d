@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 import android.content.Intent;
 import android.util.Log;
@@ -16,14 +15,13 @@ import android.util.Log;
 /**
  * @author long
  */
-public class CreateTextFileTask implements IntentTask {
-    public static final String TAG = CreateTextFileTask.class.getSimpleName();
-    public static final String CLASS_NAME = CreateTextFileTask.class.getName();
+public abstract class WriteFileTask implements IntentTask {
+    public static final String TAG = WriteFileTask.class.getSimpleName();
+    public static final String CLASS_NAME = WriteFileTask.class.getName();
     public static final String INTENT_COMPLETE = CLASS_NAME + ".INTENT_COMPLETE";
 
     public static String EXTRA_FILE_PATH = "filePath";
 
-    protected final String mContent;
     protected final String mFilePath;
     protected final boolean mOverriding;
 
@@ -32,8 +30,7 @@ public class CreateTextFileTask implements IntentTask {
 
     private OutputStream mOutputStream;
 
-    public CreateTextFileTask(final String content, final String dstFilePath, final boolean overriding) {
-        mContent = content;
+    public WriteFileTask(final String dstFilePath, final boolean overriding) {
         mFilePath = dstFilePath;
         mOverriding = overriding;
         mIsFinished = false;
@@ -72,11 +69,7 @@ public class CreateTextFileTask implements IntentTask {
         boolean success = true;
         try {
             // write text now
-            if (mContent != null && !mContent.equalsIgnoreCase("")) {
-                final OutputStreamWriter writer = new OutputStreamWriter(mOutputStream);
-                writer.write(mContent);
-                writer.flush();
-            }
+            writeContent(mOutputStream);
 
             // finalize
             mOutputStream.flush();
@@ -96,6 +89,8 @@ public class CreateTextFileTask implements IntentTask {
 
     }
 
+    abstract protected void writeContent(OutputStream out) throws IOException;
+
     @Override
     public Intent getCompleteIntent() {
         final Intent intent = new Intent(INTENT_COMPLETE);
@@ -113,10 +108,6 @@ public class CreateTextFileTask implements IntentTask {
 
     public String getFilePath() {
         return mFilePath;
-    }
-
-    public String getContent() {
-        return mContent;
     }
 
     /*
