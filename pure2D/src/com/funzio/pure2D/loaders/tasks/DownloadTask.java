@@ -57,7 +57,9 @@ public class DownloadTask extends URLTask {
         final File file = new File(mFilePath);
         try {
             if (file.exists() && !mOverriding) {
-                Log.v(TAG, mFilePath + " already exists. Skip!");
+                if (LOG_ENABLED) {
+                    Log.v(TAG, mFilePath + " already exists. Skip!");
+                }
                 return false;
             }
 
