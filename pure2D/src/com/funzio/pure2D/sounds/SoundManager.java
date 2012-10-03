@@ -20,11 +20,11 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
     protected Context mContext;
     protected AudioManager mAudioManager;
 
-    protected SoundManager(final Context context) {
+    protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
         mSoundMap = new SparseArray<Soundable>();
 
-        mSoundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        mSoundPool = new SoundPool(maxStream, AudioManager.STREAM_MUSIC, 0);
         mSoundPool.setOnLoadCompleteListener(this);
 
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
