@@ -40,7 +40,10 @@ public class DownloadTask extends URLTask {
 
     @Override
     public boolean run() {
-        Log.v(TAG, "run(), " + mURL + ", " + mFilePath);
+        if (Task.LOGGING) {
+            Log.v(TAG, "run(), " + mURL + ", " + mFilePath);
+        }
+
         mIsSuccessfull = doWork();
         mIsFinished = true;
 
