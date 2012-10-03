@@ -3,6 +3,7 @@
  */
 package com.funzio.pure2D.sounds;
 
+
 /**
  * @author long
  */
@@ -39,5 +40,4 @@ public abstract class AbstractSound implements Soundable {
     public void setLoop(final int loop) {
         mLoop = loop;
     }
-
 }

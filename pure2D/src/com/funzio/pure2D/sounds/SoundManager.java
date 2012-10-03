@@ -9,7 +9,7 @@ import android.os.Build;
 import android.util.Log;
 import android.util.SparseArray;
 
-public class SoundManager {
+public class SoundManager implements SoundPool.OnLoadCompleteListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
 
     protected volatile SparseArray<Soundable> mSoundMap;
@@ -105,8 +105,15 @@ public class SoundManager {
         return mContext;
     }
 
-    public void destroyPool() {
+    public void dispose() {
+        mSoundMap.clear();
+
         mSoundPool.release();
         mSoundPool = null;
     }
+
+    public void onLoadComplete(final SoundPool soundPool, final int sampleId, final int status) {
+        Log.v(TAG, "onLoadComplete(" + sampleId + ", " + status + ")");
+    }
+
 }
