@@ -13,7 +13,13 @@ public interface Soundable {
 
     public int getSoundID();
 
+    public int load(SoundPool soundPool);
+
+    public int getPriority();
+
+    public void setPriority(final int priority);
+
     public int getLoop();
 
-    public int load(SoundPool soundPool);
+    public void setLoop(final int loop);
 }
