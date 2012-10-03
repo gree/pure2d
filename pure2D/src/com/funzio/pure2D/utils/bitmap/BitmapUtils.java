@@ -27,6 +27,19 @@ public class BitmapUtils {
         return BitmapFactory.decodeResource(res, resourceId, options);
     }
 
+    public static Bitmap getSubSampledBitmap(final String fileName, final int reqWidth, final int reqHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(fileName, options);
+
+        int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
+
+        options.inSampleSize = sampleSize; //use sample size
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(fileName, options);
+    }
+
     private static int calculateSampleSize(final int reqWidth, final int reqHeight, final BitmapFactory.Options options) {
 
         int actualImageHeight = options.outHeight;
