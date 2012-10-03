@@ -14,6 +14,8 @@ import android.util.Log;
  * @author long
  */
 public abstract class URLTask implements IntentTask {
+    public static boolean LOG_ENABLED = true;
+
     private static final String TAG = URLTask.class.getSimpleName();
     private static final String CLASS_NAME = URLTask.class.getName();
 
@@ -42,7 +44,9 @@ public abstract class URLTask implements IntentTask {
             final URL address = new URL(mURL);
             conn = address.openConnection();
         } catch (Exception e) {
-            Log.e(TAG, "CONNECTION ERROR!", e);
+            if (LOG_ENABLED) {
+                Log.e(TAG, "CONNECTION ERROR!", e);
+            }
             return false;
         }
 
@@ -57,7 +61,9 @@ public abstract class URLTask implements IntentTask {
             }
             inputStream.close();
         } catch (Exception e) {
-            Log.e(TAG, "READ ERROR!", e);
+            if (LOG_ENABLED) {
+                Log.e(TAG, "READ ERROR!", e);
+            }
             return false;
         }
 
