@@ -79,7 +79,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
      * @return a non-zero as the Stream ID if success
      */
     public int play(final Soundable sound) {
-        Log.v(TAG, "play(" + sound + ")");
+        // Log.v(TAG, "play(" + sound + ")");
 
         if (mSoundEnabled && sound != null && sound.getSoundID() > 0) {
             final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -90,7 +90,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
     }
 
     protected int playByID(final int soundID) {
-        Log.v(TAG, "playByID(" + soundID + ")");
+        // Log.v(TAG, "playByID(" + soundID + ")");
 
         if (mSoundEnabled && soundID > 0) {
             final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
