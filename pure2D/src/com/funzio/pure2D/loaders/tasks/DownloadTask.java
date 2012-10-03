@@ -16,6 +16,8 @@ import android.util.Log;
  * @author long
  */
 public class DownloadTask extends URLTask {
+    public static boolean LOG_ENABLED = true;
+
     public static final String TAG = DownloadTask.class.getSimpleName();
     public static final String CLASS_NAME = DownloadTask.class.getName();
     public static final String INTENT_COMPLETE = CLASS_NAME + ".INTENT_COMPLETE";
@@ -40,7 +42,7 @@ public class DownloadTask extends URLTask {
 
     @Override
     public boolean run() {
-        if (Task.LOGGING) {
+        if (LOG_ENABLED) {
             Log.v(TAG, "run(), " + mURL + ", " + mFilePath);
         }
 
