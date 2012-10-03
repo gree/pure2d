@@ -69,7 +69,9 @@ public class DownloadTask extends URLTask {
 
             mOutputStream = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "OPEN ERROR!", e);
+            if (LOG_ENABLED) {
+                Log.e(TAG, "OPEN ERROR!", e);
+            }
             return false;
         }
 
@@ -81,7 +83,9 @@ public class DownloadTask extends URLTask {
             mOutputStream.flush();
             mOutputStream.close();
         } catch (IOException e) {
-            Log.e(TAG, "CLOSE ERROR!", e);
+            if (LOG_ENABLED) {
+                Log.e(TAG, "CLOSE ERROR!", e);
+            }
         }
 
         if (!success) {
