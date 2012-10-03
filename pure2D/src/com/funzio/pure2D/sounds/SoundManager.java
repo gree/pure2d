@@ -61,40 +61,44 @@ public class SoundManager {
         }
     }
 
-    public boolean play(final int key) {
+    /**
+     * @param key
+     * @return a non-zero as the Stream ID if success
+     */
+    public int play(final int key) {
         // Log.v(TAG, "play(" + key + ")");
 
         return play(mSoundMap.get(key));
     }
 
-    public boolean play(final Soundable sound) {
+    /**
+     * @param sound
+     * @return a non-zero as the Stream ID if success
+     */
+    public int play(final Soundable sound) {
         Log.v(TAG, "play(" + sound + ")");
 
         if (mSoundEnabled && sound != null && sound.getSoundID() > 0) {
             final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            if (volume > 0) {
-                mSoundPool.play(sound.getSoundID(), volume, volume, 1, sound.getLoop(), 1f);
-            }
-
-            return true;
+            return mSoundPool.play(sound.getSoundID(), volume, volume, 1, sound.getLoop(), 1f);
         }
 
-        return false;
+        return 0;
     }
 
-    protected boolean playByID(final int soundID) {
+    protected int playByID(final int soundID) {
         Log.v(TAG, "playByID(" + soundID + ")");
 
         if (mSoundEnabled && soundID > 0) {
             final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            if (volume > 0) {
-                mSoundPool.play(soundID, volume, volume, 1, 0, 1f);
-            }
-
-            return true;
+            return mSoundPool.play(soundID, volume, volume, 1, 0, 1f);
         }
 
-        return false;
+        return 0;
+    }
+
+    public void stop(final int streamID) {
+        mSoundPool.stop(streamID);
     }
 
     public Context getContext() {
