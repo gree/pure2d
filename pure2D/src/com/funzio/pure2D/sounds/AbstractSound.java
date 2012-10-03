@@ -3,14 +3,13 @@
  */
 package com.funzio.pure2D.sounds;
 
-
 /**
  * @author long
  */
 public abstract class AbstractSound implements Soundable {
     protected final int mKey;
     protected int mSoundID = 0;
-    protected int mPriority = 1;
+    protected int mPriority = 0;
     protected int mLoop = 0;
 
     public AbstractSound(final int key) {
