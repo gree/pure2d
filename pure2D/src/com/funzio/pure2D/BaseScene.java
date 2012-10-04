@@ -353,6 +353,10 @@ public class BaseScene implements Scene {
         }
     }
 
+    public void invalidateBuffers(final int numBuffers) {
+        mInvalidated = numBuffers;
+    }
+
     /**
      * @return the color
      */
