@@ -4,6 +4,7 @@
 package com.funzio.pure2D.utils.bitmap;
 
 import java.io.FileDescriptor;
+import java.io.InputStream;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -53,6 +54,19 @@ public class BitmapUtils {
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFileDescriptor(fd, null, options);
+    }
+
+    public static Bitmap getSubSampledBitmap(final InputStream is, final int reqWidth, final int reqHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(is, null, options);
+
+        int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
+
+        options.inSampleSize = sampleSize; //use sample size
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeStream(is, null, options);
     }
 
     private static int calculateSampleSize(final int reqWidth, final int reqHeight, final BitmapFactory.Options options) {
