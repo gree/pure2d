@@ -78,8 +78,7 @@ public class DownloadTask extends URLTask {
         }
 
         // run now
-        final boolean success = super.run();
-
+        boolean success = super.run();
         try {
             // finalize
             mOutputStream.flush();
@@ -88,15 +87,17 @@ public class DownloadTask extends URLTask {
             if (LOG_ENABLED) {
                 Log.e(TAG, "CLOSE ERROR!", e);
             }
+
+            // uh oh!
+            success = false;
         }
 
         if (!success) {
             // remove the file
             file.delete();
-            return false;
         }
 
-        return true;
+        return success;
 
     }
 
