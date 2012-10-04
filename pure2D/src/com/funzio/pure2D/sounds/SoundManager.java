@@ -112,7 +112,6 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
         mSoundMap.clear();
 
         mSoundPool.release();
-        mSoundPool = null;
     }
 
     public void onLoadComplete(final SoundPool soundPool, final int sampleId, final int status) {
