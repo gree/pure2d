@@ -24,8 +24,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureManager;
  */
 public class BaseScene implements Scene {
     public static final String TAG = BaseScene.class.getSimpleName();
-    public static final int NUM_BUFFERS = 4; // number of buffer to invalidate. 2 for old devices but 3+ for Jelly Bean or later
 
+    protected int mBuffersToInvalidate = 4; // number of buffer to invalidate. 2 for old devices but 3+ for Jelly Bean or later
     protected Stage mStage;
     protected GLState mGLState;
     protected TextureManager mTextureManager;
@@ -342,14 +342,14 @@ public class BaseScene implements Scene {
     }
 
     public void invalidate() {
-        if (mInvalidated < NUM_BUFFERS) {
-            mInvalidated = NUM_BUFFERS;
+        if (mInvalidated < mBuffersToInvalidate) {
+            mInvalidated = mBuffersToInvalidate;
         }
     }
 
     public void invalidate(final int flags) {
-        if (mInvalidated < NUM_BUFFERS) {
-            mInvalidated = NUM_BUFFERS;
+        if (mInvalidated < mBuffersToInvalidate) {
+            mInvalidated = mBuffersToInvalidate;
         }
     }
 
@@ -662,6 +662,15 @@ public class BaseScene implements Scene {
      */
     public Matrix getMatrix() {
         return null;
+    }
+
+    public int getBuffersToInvalidate() {
+        return mBuffersToInvalidate;
+    }
+
+    public void setBuffersToInvalidate(final int buffersToInvalidate) {
+        mBuffersToInvalidate = buffersToInvalidate;
+        invalidate();
     }
 
     /**
