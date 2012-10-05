@@ -52,7 +52,7 @@ public abstract class WriteFileTask implements IntentTask {
         try {
             if (file.exists() && !mOverriding) {
                 Log.v(TAG, mFilePath + " already exists. Skip!");
-                return false;
+                return true; // early success
             }
 
             // create the dirs if not existing

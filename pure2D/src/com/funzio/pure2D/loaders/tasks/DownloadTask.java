@@ -84,7 +84,7 @@ public class DownloadTask extends URLTask implements Retriable {
                 if (LOG_ENABLED) {
                     Log.v(TAG, mFilePath + " already exists. Skip!");
                 }
-                return true;
+                return true; // early success
             }
 
             // create the dirs if not existing
