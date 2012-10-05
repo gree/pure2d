@@ -26,17 +26,19 @@ public class LoaderServiceActivity extends StageActivity {
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(final Context context, final Intent intent) {
-                Log.v("long", "DONE! " + intent.getAction());
+                Log.v("long", "ALL TASKS ARE DONE! " + intent.getAction());
                 mLoading = false;
             }
         }, new IntentFilter(HelloLoaderService.getOnFinishAction()));
 
+        // listen to every single task
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(final Context context, final Intent intent) {
-                Log.v("long", "task done! " + intent.getAction());
+                Log.v("long", "Some task is done! " + intent.getAction());
                 final String filePath = intent.getStringExtra(DownloadTask.EXTRA_FILE_PATH);
 
+                // add the the scene
                 mScene.queueEvent(new Runnable() {
 
                     @Override
