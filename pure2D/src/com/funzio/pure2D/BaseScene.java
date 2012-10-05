@@ -248,53 +248,57 @@ public class BaseScene implements Scene {
         final float delta = ((now - mStartTime) / 1000000f);
         mStartTime = now;
 
-        int sleepTime = 0;
-        // compensate the framerate around the target fps
-        if (mTargetFps > 0) {
-            float targetDelta = (mTargetDuration - delta);
-            if (targetDelta > 0) { // too fast?
-                if (mDownTime > targetDelta) {
-                    mDownTime -= targetDelta;
-                } else {
-                    sleepTime = (int) targetDelta - mDownTime;
-                    mDownTime = 0;
-                    if (sleepTime > mTargetDurationJitter) {
-                        try {
-                            Thread.sleep(sleepTime);
-                        } catch (Exception e) {
-                            // TODO: nothing
-                        }
-                    } else {
-                        sleepTime = 0;
-                    }
-                }
-            } else if (targetDelta < 0) { // too slow?
-                mDownTime -= targetDelta;
-            }
-        }
-
-        // calculate frame rate
-        mFrameCountDuration += delta + sleepTime;
-        if (mFrameCountDuration <= 1000) {
-            mFrameCount++;
+        if ((int) delta == 0) {
+            // NOTE: some devices such as S2, S3... cause delta = 0 when nothing draws. We need to force invalidate!
+            invalidate();
         } else {
-            mCurrentFps = mFrameCount;
-            mFrameCount = 0;
-            mFrameCountDuration = 0;
-        }
+            int sleepTime = 0;
+            // compensate the framerate around the target fps
+            if (mTargetFps > 0) {
+                float targetDelta = (mTargetDuration - delta);
+                if (targetDelta > 0) { // too fast?
+                    if (mDownTime > targetDelta) {
+                        mDownTime -= targetDelta;
+                    } else {
+                        sleepTime = (int) targetDelta - mDownTime;
+                        mDownTime = 0;
+                        if (sleepTime > mTargetDurationJitter) {
+                            try {
+                                Thread.sleep(sleepTime);
+                            } catch (Exception e) {
+                                // TODO: nothing
+                            }
+                        } else {
+                            sleepTime = 0;
+                        }
+                    }
+                } else if (targetDelta < 0) { // too slow?
+                    mDownTime -= targetDelta;
+                }
+            }
 
-        // update children
-        for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
-            if (child.isAlive()) {
-                // heart beat
-                child.update((int) delta);
+            // calculate frame rate
+            mFrameCountDuration += delta + sleepTime;
+            if (mFrameCountDuration <= 1000) {
+                mFrameCount++;
+            } else {
+                mCurrentFps = mFrameCount;
+                mFrameCount = 0;
+                mFrameCountDuration = 0;
+            }
+
+            // update children
+            for (int i = 0; i < mNumChildren; i++) {
+                DisplayObject child = mChildren.get(i);
+                if (child.isAlive()) {
+                    // heart beat
+                    child.update((int) delta);
+                }
             }
         }
 
         // draw children if needed
-        // NOTE: some devices such as S2, S3... cause delta = 0 when nothing draws. We need to force invalidate!
-        if (mInvalidated > 0 || (int) delta == 0) {
+        if (mInvalidated > 0) {
             // camera
             if (mCamera != null && mCamera.isInvalidated()) {
                 // validate the camera
