@@ -246,12 +246,13 @@ public class BaseScene implements Scene {
         // delta time
         final long now = System.nanoTime();
         final float delta = ((now - mStartTime) / 1000000f);
-        mStartTime = now;
 
         if ((int) delta == 0) {
             // NOTE: some devices such as S2, S3... cause delta = 0 when nothing draws. We need to force invalidate!
             invalidate();
         } else {
+            mStartTime = now;
+
             int sleepTime = 0;
             // compensate the framerate around the target fps
             if (mTargetFps > 0) {
