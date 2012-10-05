@@ -248,7 +248,8 @@ public class BaseScene implements Scene {
         final float delta = ((now - mStartTime) / 1000000f);
 
         if ((int) delta == 0) {
-            // NOTE: some devices such as S2, S3... cause delta = 0 when nothing draws. We need to force invalidate!
+            // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
+            // We need to force invalidate!
             invalidate();
         } else {
             mStartTime = now;
@@ -286,6 +287,12 @@ public class BaseScene implements Scene {
                 mCurrentFps = mFrameCount;
                 mFrameCount = 0;
                 mFrameCountDuration = 0;
+            }
+
+            // camera update
+            if (mCamera != null) {
+                // update the camera
+                mCamera.update((int) delta);
             }
 
             // update children

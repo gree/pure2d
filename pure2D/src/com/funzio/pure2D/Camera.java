@@ -3,12 +3,16 @@
  */
 package com.funzio.pure2D;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
@@ -26,6 +30,9 @@ public class Camera implements Manipulatable {
     private RectF mRect = new RectF();
     private PointF mHalfSize = new PointF(0, 0);
     private boolean mInvalidated;
+
+    protected List<Manipulator> mManipulators;
+    protected int mNumManipulators = 0;
 
     private boolean mClipping = false;
     private RectF mBounds = new RectF(); // the bounds that contains the rect (with/without rotation)
@@ -228,6 +235,18 @@ public class Camera implements Manipulatable {
         }
     }
 
+    public boolean update(final int deltaTime) {
+        // update the manipulators if there's any
+        if (mNumManipulators > 0) {
+            for (int i = 0; i < mNumManipulators; i++) {
+                mManipulators.get(i).update(deltaTime);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
     public void validate(final GLState glState) {
         // prepare the rect
         mRect.left = mCenter.x - mHalfSize.x / mZoom.x;
@@ -346,5 +365,38 @@ public class Camera implements Manipulatable {
         }
 
         return new PointF(worldPoint[0] - mRect.left, worldPoint[1] - mRect.top);
+    }
+
+    public boolean addManipulator(final Manipulator manipulator) {
+        if (mManipulators == null) {
+            // init
+            mManipulators = new ArrayList<Manipulator>();
+        }
+
+        if (mManipulators.add(manipulator)) {
+            manipulator.setTarget(this);
+            mNumManipulators++;
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean removeManipulator(final Manipulator manipulator) {
+        if (mManipulators.remove(manipulator)) {
+            manipulator.setTarget(null);
+            mNumManipulators--;
+            return true;
+        }
+
+        return false;
+    }
+
+    public int removeAllManipulators() {
+        final int n = mNumManipulators;
+        mManipulators.clear();
+        mNumManipulators = 0;
+
+        return n;
     }
 }
