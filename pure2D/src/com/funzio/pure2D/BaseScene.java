@@ -288,12 +288,13 @@ public class BaseScene implements Scene {
             DisplayObject child = mChildren.get(i);
             if (child.isAlive()) {
                 // heart beat
-                child.update(delta < DEFAULT_MSPF ? DEFAULT_MSPF : (int) delta);
+                child.update((int) delta);
             }
         }
 
         // draw children if needed
-        if (mInvalidated > 0) {
+        // NOTE: some devices such as S2, S3... cause delta = 0 when nothing draws. We need to force invalidate!
+        if (mInvalidated > 0 || (int) delta == 0) {
             // camera
             if (mCamera != null && mCamera.isInvalidated()) {
                 // validate the camera
