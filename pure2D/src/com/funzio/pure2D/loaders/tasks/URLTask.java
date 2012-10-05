@@ -35,8 +35,7 @@ public abstract class URLTask implements IntentTask {
         return mURL;
     }
 
-    @Override
-    public boolean run() {
+    protected boolean openURL() {
         // Log.v(TAG, "run(), " + mURL);
 
         final URLConnection conn;

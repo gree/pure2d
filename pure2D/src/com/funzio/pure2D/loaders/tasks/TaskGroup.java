@@ -11,13 +11,36 @@ import android.util.Log;
 /**
  * @author long
  */
-public class TaskGroup implements Task {
+public class TaskGroup implements Task, Retriable {
     private static final String TAG = TaskGroup.class.getSimpleName();
 
     private List<Task> mTasks = new ArrayList<Task>();
 
     protected TaskListener mTaskListener;
     protected long mTaskDelay = 0;
+
+    private boolean mSucceeded = false;
+
+    private int mRetriedAlready = 0; // number of times already retried
+    private int mRetryMax = 0; // max number of retries
+    private int mRetryDelay = 0; // delay between retries
+
+    public TaskGroup() {
+    }
+
+    public TaskGroup(final int retryMax) {
+        mRetryMax = retryMax;
+    }
+
+    public TaskGroup(final int retryMax, final int retryDelay) {
+        mRetryMax = retryMax;
+        mRetryDelay = retryDelay;
+    }
+
+    public void reset() {
+        mSucceeded = false;
+        mRetriedAlready = 0;
+    }
 
     public void addTask(final Task task) {
         mTasks.add(task);
@@ -33,18 +56,35 @@ public class TaskGroup implements Task {
 
     @Override
     public boolean run() {
+
+        mSucceeded = runTasks();
+        if (!mSucceeded) {
+            mSucceeded = retry();
+        }
+
+        return mSucceeded;
+    }
+
+    protected boolean runTasks() {
         final int size = mTasks.size();
 
         if (size == 0) {
-            // no task to run
-            return false;
+            // no task to run, done!
+            return true;
         }
 
+        boolean success = true;
         for (int i = 0; i < size; i++) {
 
             final Task task = mTasks.get(i);
-            task.run();
 
+            // only run task that has not succeeded yet
+            if (task.isSucceeded()) {
+                continue;
+            }
+
+            // run now
+            success &= task.run();
             if (mTaskListener != null) {
                 // callback
                 mTaskListener.onTaskComplete(task);
@@ -59,7 +99,34 @@ public class TaskGroup implements Task {
             }
         }
 
-        return true;
+        return success;
+    }
+
+    protected boolean retry() {
+        if (mRetriedAlready < mRetryMax || mRetryMax == RETRY_UNLIMITED) {
+            if (mRetryDelay > 0) {
+                try {
+                    Thread.sleep(mRetryDelay);
+                } catch (InterruptedException e) {
+                    // TODO nothing
+                }
+            }
+            mRetriedAlready++;
+
+            // run the failed tasks again
+            if (runTasks()) {
+                return true;
+            } else {
+                // recursively retry
+                return retry();
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isSucceeded() {
+        return mSucceeded;
     }
 
     public List<Task> getTasks() {

@@ -25,24 +25,25 @@ public abstract class WriteFileTask implements IntentTask {
     protected final String mFilePath;
     protected final boolean mOverriding;
 
-    protected boolean mIsFinished;
-    protected boolean mIsSuccessfull; // whether the execution was successful or not.
+    protected boolean mSucceeded; // whether the execution was successful or not.
 
     private OutputStream mOutputStream;
 
     public WriteFileTask(final String dstFilePath, final boolean overriding) {
         mFilePath = dstFilePath;
         mOverriding = overriding;
-        mIsFinished = false;
+    }
+
+    public void reset() {
+        mSucceeded = false;
     }
 
     @Override
     public boolean run() {
-        mIsSuccessfull = doWork();
-        mIsFinished = true;
+        mSucceeded = doWork();
 
-        Log.v(TAG, "run(), " + mFilePath + ", success: " + mIsSuccessfull);
-        return mIsSuccessfull;
+        Log.v(TAG, "run(), " + mFilePath + ", success: " + mSucceeded);
+        return mSucceeded;
     }
 
     private boolean doWork() {
@@ -98,12 +99,8 @@ public abstract class WriteFileTask implements IntentTask {
         return intent;
     }
 
-    public boolean isSuccessful() {
-        return mIsSuccessfull;
-    }
-
-    public boolean isFinished() {
-        return mIsFinished;
+    public boolean isSucceeded() {
+        return mSucceeded;
     }
 
     public String getFilePath() {
