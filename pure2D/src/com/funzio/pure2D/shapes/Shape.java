@@ -26,7 +26,8 @@ public class Shape extends BaseDisplayObject {
     protected TextureCoordBuffer mTextureCoordBufferScaled;
     protected ColorBuffer mColorBuffer;
 
-    private boolean mTextureFlipped = false;
+    // for axis system
+    private boolean mTextureFlippedForAxis = false;
 
     public Shape() {
         // TODO nothing
@@ -67,10 +68,10 @@ public class Shape extends BaseDisplayObject {
     protected void invalidateTextureCoordBuffer() {
         // match texture coordinates with the Axis system
         final Scene scene = getScene();
-        if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlipped) {
+        if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
             // flip vertically
             mTextureCoordBuffer.flipVertical();
-            mTextureFlipped = true;
+            mTextureFlippedForAxis = true;
         }
 
         // scale to match with the Texture scale, for optimization
@@ -104,7 +105,7 @@ public class Shape extends BaseDisplayObject {
         }
 
         // invalidate texture coords
-        mTextureFlipped = false;
+        mTextureFlippedForAxis = false;
         invalidateTextureCoordBuffer();
     }
 
@@ -117,7 +118,7 @@ public class Shape extends BaseDisplayObject {
         mTextureCoordBuffer = coords;
 
         // invalidate texture coords
-        mTextureFlipped = false;
+        mTextureFlippedForAxis = false;
         invalidateTextureCoordBuffer();
     }
 
@@ -201,12 +202,39 @@ public class Shape extends BaseDisplayObject {
         if (mTextureCoordBuffer != null) {
             mTextureCoordBuffer.dispose();
             mTextureCoordBuffer = null;
-            mTextureFlipped = false;
+            mTextureFlippedForAxis = false;
         }
 
         if (mTextureCoordBufferScaled != null) {
             mTextureCoordBufferScaled.dispose();
             mTextureCoordBufferScaled = null;
+        }
+    }
+
+    /**
+     * @param flips can be #DisplayObject.FLIP_X and/or #DisplayObject.FLIP_Y
+     * @see #DisplayObject
+     */
+    public void flipTextureCoordBuffer(final int flips) {
+        // null check
+        if (mTextureCoordBuffer == null) {
+            return;
+        }
+
+        boolean flipped = false;
+
+        if ((flips & FLIP_X) > 0) {
+            mTextureCoordBuffer.flipHorizontal();
+            flipped = true;
+        }
+
+        if ((flips & FLIP_Y) > 0) {
+            mTextureCoordBuffer.flipVertical();
+            flipped = true;
+        }
+
+        if (flipped) {
+            invalidateTextureCoordBuffer();
         }
     }
 
