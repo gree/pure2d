@@ -59,7 +59,9 @@ public abstract class Texture {
         mCoordScaleY = bitmap == null ? 1 : mSize.y / bitmap.getHeight();
 
         final int[] ids = new int[1];
-        mGL.glGetError(); // clear the previous error, to make sure
+        // clear the previous error(s), to make sure
+        while (mGL.glGetError() != GL10.GL_NO_ERROR) {
+        }
         mGL.glGenTextures(1, ids, 0);
         mTextureID = ids[0];
 
