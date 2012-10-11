@@ -162,6 +162,10 @@ public class BaseScene implements Scene {
         gl.glEnable(GL10.GL_DEPTH_TEST);
         gl.glDepthFunc(GL10.GL_LEQUAL); // The type of depth testing to do.
 
+        // this is helpful for depth-rendering but tremendously reduces framerate, should be disabled by default!
+        // gl.glEnable(GL10.GL_ALPHA_TEST);
+        gl.glAlphaFunc(GL10.GL_GREATER, 0f);
+
         // or disable depth test completely
         // this does NOT necessary increase any FPS based on my test
         // gl.glDisable(GL10.GL_DEPTH_TEST);
