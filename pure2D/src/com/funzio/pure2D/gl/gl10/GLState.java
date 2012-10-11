@@ -29,6 +29,7 @@ public class GLState {
 
     // colors
     private boolean mColorArrayEnabled = false;
+    private boolean mAlphaTestEnabled = false;
     private GLColor mColor = new GLColor(1f, 1f, 1f, 1f);
     private BlendFunc mBlendFunc = new BlendFunc();
 
@@ -55,6 +56,7 @@ public class GLState {
         mVertexArrayEnabled = false;
 
         mColorArrayEnabled = false;
+        mAlphaTestEnabled = false;
         mColor = new GLColor(1f, 1f, 1f, 1f);
 
         // find the max texture size
@@ -99,7 +101,7 @@ public class GLState {
         }
 
         mLineWidth = width;
-        mGL.glLineWidth(mLineWidth);
+        mGL.glLineWidth(width);
     }
 
     public float getLineWidth() {
@@ -154,7 +156,7 @@ public class GLState {
 
         // apply
         mVertexArrayEnabled = vertexArrayEnabled;
-        if (mVertexArrayEnabled) {
+        if (vertexArrayEnabled) {
             mGL.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         } else {
             mGL.glDisableClientState(GL10.GL_VERTEX_ARRAY);
@@ -181,7 +183,7 @@ public class GLState {
 
         mTextureEnabled = textureEnabled;
 
-        if (mTextureEnabled) {
+        if (textureEnabled) {
             // Enable Texture
             mGL.glEnable(GL10.GL_TEXTURE_2D);
         } else {
@@ -230,7 +232,7 @@ public class GLState {
 
         // apply
         mTextureCoordArrayEnabled = textureCoordArrayEnabled;
-        if (mTextureCoordArrayEnabled) {
+        if (textureCoordArrayEnabled) {
             mGL.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         } else {
             mGL.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -257,13 +259,32 @@ public class GLState {
 
         // apply
         mColorArrayEnabled = colorArrayEnabled;
-        if (mColorArrayEnabled) {
+        if (colorArrayEnabled) {
             mGL.glEnableClientState(GL10.GL_COLOR_ARRAY);
         } else {
             mGL.glDisableClientState(GL10.GL_COLOR_ARRAY);
         }
 
         return true;
+    }
+
+    public boolean isAlphaTestEnabled() {
+        return mAlphaTestEnabled;
+    }
+
+    public void setAlphaTestEnabled(final boolean alphaTestEnabled) {
+        // diff check
+        if (mAlphaTestEnabled == alphaTestEnabled) {
+            return;
+        }
+
+        mAlphaTestEnabled = alphaTestEnabled;
+
+        if (alphaTestEnabled) {
+            mGL.glEnable(GL10.GL_ALPHA_TEST);
+        } else {
+            mGL.glDisable(GL10.GL_ALPHA_TEST);
+        }
     }
 
     /**
@@ -338,7 +359,7 @@ public class GLState {
         // apply
         mBlendFunc.src = blendFunc.src;
         mBlendFunc.dst = blendFunc.dst;
-        mGL.glBlendFunc(mBlendFunc.src, mBlendFunc.dst);
+        mGL.glBlendFunc(blendFunc.src, blendFunc.dst);
 
         return true;
     }

@@ -17,7 +17,7 @@ public class Rectangular extends Shape {
     private static final int VERTICES_NUM = 4;
 
     public Rectangular() {
-        super(VERTICES_NUM);
+        super();
 
         // use default texture coordinates
         setTextureCoordBuffer(TextureCoordBuffer.getDefault());

@@ -46,6 +46,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected GLColor mColor = null;// new GLColor(1f, 0f, 0f, 1f);
     protected float mAlpha = 1;
     protected BlendFunc mBlendFunc;
+    private boolean mAlphaTestEnabled = false;
 
     private boolean mHasOrigin = false;
     private GLColor mSumColor;
@@ -78,6 +79,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mHasOrigin) {
             glState.mGL.glTranslatef(-mOrigin.x, -mOrigin.y, 0);
         }
+
+        // check and turn on alpha test
+        glState.setAlphaTestEnabled(mAlphaTestEnabled);
     }
 
     protected void drawEnd(final GLState glState) {
@@ -202,6 +206,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mPosition.y;
     }
 
+    /**
+     * Set the Z-depth
+     * 
+     * @see #setAlphaTestEnabled(boolean)
+     */
     public void setZ(final float z) {
         mZ = z;
         invalidate(InvalidateFlags.POSITION);
@@ -439,6 +448,22 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setBlendFunc(final BlendFunc blendFunc) {
         mBlendFunc = blendFunc;
         invalidate(InvalidateFlags.BLEND);
+    }
+
+    public boolean isAlphaTestEnabled() {
+        return mAlphaTestEnabled;
+    }
+
+    /**
+     * Enable Alpha Test. This can be useful when doing depth sorting but also a Performance-Killer. Make sure you know what you're doing!
+     * 
+     * @param alphaTestEnabled
+     * @see #setZ(float)
+     */
+    public void setAlphaTestEnabled(final boolean alphaTestEnabled) {
+        mAlphaTestEnabled = alphaTestEnabled;
+
+        invalidate(InvalidateFlags.ALPHA);
     }
 
     private Scene findScene() {

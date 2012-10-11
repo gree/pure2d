@@ -18,7 +18,6 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 public class Shape extends BaseDisplayObject {
     public final static String TAG = Shape.class.getSimpleName();
 
-    protected int mNumVertices = 0;
     protected VertexBuffer mVertexBuffer;
 
     protected Texture mTexture;
@@ -31,10 +30,6 @@ public class Shape extends BaseDisplayObject {
 
     public Shape() {
         // TODO nothing
-    }
-
-    public Shape(final int verticesNum) {
-        mNumVertices = verticesNum;
     }
 
     public void setVertexBuffer(final VertexBuffer buffer) {

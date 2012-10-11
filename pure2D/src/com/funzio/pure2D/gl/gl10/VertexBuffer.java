@@ -62,6 +62,10 @@ public class VertexBuffer extends GLFloatBuffer {
         }
     }
 
+    public int getVerticesNum() {
+        return mVerticesNum;
+    }
+
     public int getPrimitive() {
         return mPrimitive;
     }
