@@ -154,4 +154,20 @@ public class TaskGroup implements Task, Retriable {
     public void setTaskListener(final TaskListener taskListener) {
         mTaskListener = taskListener;
     }
+
+    public int getRetryMax() {
+        return mRetryMax;
+    }
+
+    public void setRetryMax(int retryMax) {
+        mRetryMax = retryMax;
+    }
+
+    public int getRetryDelay() {
+        return mRetryDelay;
+    }
+
+    public void setRetryDelay(int retryDelay) {
+        mRetryDelay = retryDelay;
+    }
 }
