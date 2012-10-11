@@ -59,6 +59,10 @@ public class GLState {
         mAlphaTestEnabled = false;
         mColor = new GLColor(1f, 1f, 1f, 1f);
 
+        mLineWidth = 0;
+
+        clearErrors();
+
         // find the max texture size
         int[] textureSize = new int[1];
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, textureSize, 0);
@@ -362,6 +366,16 @@ public class GLState {
         mGL.glBlendFunc(blendFunc.src, blendFunc.dst);
 
         return true;
+    }
+
+    public int getError() {
+        return mGL.glGetError();
+    }
+
+    public void clearErrors() {
+        // clear the previous error(s), to make sure
+        while (mGL.glGetError() != GL10.GL_NO_ERROR) {
+        }
     }
 
     /**

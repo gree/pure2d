@@ -60,8 +60,7 @@ public abstract class Texture {
 
         final int[] ids = new int[1];
         // clear the previous error(s), to make sure
-        while (mGL.glGetError() != GL10.GL_NO_ERROR) {
-        }
+        mGLState.clearErrors();
         mGL.glGenTextures(1, ids, 0);
         mTextureID = ids[0];
 
