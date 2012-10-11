@@ -28,10 +28,6 @@ public class Shape extends BaseDisplayObject {
     // for axis system
     private boolean mTextureFlippedForAxis = false;
 
-    public Shape() {
-        // TODO nothing
-    }
-
     public void setVertexBuffer(final VertexBuffer buffer) {
         mVertexBuffer = buffer;
     }

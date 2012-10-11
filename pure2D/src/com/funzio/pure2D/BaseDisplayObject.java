@@ -128,9 +128,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Toggles the heart-beat. If set to false, the update() does NOT get called. This can be used for optimization.
+     * 
      * @see com.funzio.pure2D.IDisplayObject#setAlive(boolean)
+     * @see #update(int)
      */
     @Override
     public void setAlive(final boolean value) {
