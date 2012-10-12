@@ -5,7 +5,7 @@ package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
 import android.util.FloatMath;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 
 /**
  * @author long
@@ -18,8 +18,8 @@ public class MoveSinAnimator extends TweenAnimator {
     protected PointF mDelta = new PointF();
     protected float mFactor;
 
-    public MoveSinAnimator(final float factor) {
-        super(new DecelerateInterpolator(factor));
+    public MoveSinAnimator(final Interpolator interpolator, final float factor) {
+        super(interpolator);
 
         mFactor = factor;
     }
