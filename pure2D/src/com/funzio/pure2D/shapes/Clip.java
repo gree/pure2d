@@ -100,6 +100,9 @@ public class Clip extends Sprite implements Playable {
                         // done, stop at last frame
                         mCurrentFrame = mNumFrames - 1;
                         stop();
+
+                        // callback
+                        onClipEnd(mFrameSet);
                     }
                 }
             }
@@ -163,5 +166,9 @@ public class Clip extends Sprite implements Playable {
 
     public boolean isPlaying() {
         return mPlaying;
+    }
+
+    protected void onClipEnd(final AtlasFrameSet frameSet) {
+        // TODO
     }
 }
