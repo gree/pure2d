@@ -97,6 +97,11 @@ public class TrajectoryAnimator extends BaseAnimator {
                 mTarget.setPosition(x, y);
             }
 
+            // callback
+            if (mListener != null) {
+                mListener.onAnimationUpdate(this);
+            }
+
             if (mElapsedTime >= mDuration) {
                 // force end
                 end();
