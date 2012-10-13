@@ -63,6 +63,10 @@ public class Sprite extends Rectangular {
         mAtlasFrame = frame;
     }
 
+    public AtlasFrame getAtlasFrame() {
+        return mAtlasFrame;
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.shapes.Shape#draw(com.funzio.pure2D.gl.gl10.GLState)
