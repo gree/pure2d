@@ -10,9 +10,9 @@ import android.util.FloatMath;
  * @author long
  */
 public class TrajectoryAnimator extends BaseAnimator {
-    public static float GRAVITY = 10f;
     public static float TIME_FACTOR = 100;
 
+    protected float mGravity = 10f;
     protected float mSrcX = 0;
     protected float mSrcY = 0;
 
@@ -42,7 +42,7 @@ public class TrajectoryAnimator extends BaseAnimator {
         // pre-cals
         final float vcos = mVelocity * mCos;
         final float vsin = mVelocity * mSin;
-        mDistance = (vcos / GRAVITY) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * GRAVITY * (mSrcY - mGround)));
+        mDistance = (vcos / mGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
         mDuration = TIME_FACTOR * mDistance / vcos;
 
         start();
@@ -65,7 +65,7 @@ public class TrajectoryAnimator extends BaseAnimator {
 
         final float v2 = mVelocity * mVelocity;
         // find the angle to hit the destination
-        mAngle = (float) Math.atan((v2 + FloatMath.sqrt(v2 * v2 - GRAVITY * (GRAVITY * deltaX * deltaX + 2 * deltaY * v2))) / (GRAVITY * deltaX));
+        mAngle = (float) Math.atan((v2 + FloatMath.sqrt(v2 * v2 - mGravity * (mGravity * deltaX * deltaX + 2 * deltaY * v2))) / (mGravity * deltaX));
         mSin = FloatMath.sin(mAngle);
         mCos = FloatMath.cos(mAngle);
 
@@ -93,7 +93,7 @@ public class TrajectoryAnimator extends BaseAnimator {
             if (mTarget != null) {
                 final float t = Math.min(mElapsedTime, mDuration) / TIME_FACTOR;
                 final float x = mSrcX + mVelocity * t * mCos;
-                final float y = mSrcY + mVelocity * t * mSin - 0.5f * GRAVITY * t * t;
+                final float y = mSrcY + mVelocity * t * mSin - 0.5f * mGravity * t * t;
                 mTarget.setPosition(x, y);
             }
 
@@ -106,5 +106,13 @@ public class TrajectoryAnimator extends BaseAnimator {
         }
 
         return false;
+    }
+
+    public float getGravity() {
+        return mGravity;
+    }
+
+    public void setGravity(final float gravity) {
+        mGravity = gravity;
     }
 }
