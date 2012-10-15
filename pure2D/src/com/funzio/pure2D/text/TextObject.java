@@ -13,8 +13,7 @@ public class TextObject extends Rectangular {
     protected TextOptions mOptions;
     protected String mText = "";
 
-    public TextObject(final String text) {
-        mText = text;
+    public TextObject() {
     }
 
     /**
