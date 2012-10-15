@@ -40,6 +40,10 @@ public class TextObject extends Rectangular {
         Scene scene = getScene();
         if (scene != null) {
             setTexture(scene.getTextureManager().createTextTexture(mText, mOptions));
+            // match the size with the texture
+            if (mTexture != null) {
+                setSize(mTexture.getSize());
+            }
         }
     }
 
