@@ -597,7 +597,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // find the bounds
         if (changed || parentMatrix != null) {
             // apply the parent's matrix
-            mMatrix.postConcat(parentMatrix);
+            if (parentMatrix != null) {
+                mMatrix.postConcat(parentMatrix);
+            }
 
             // apply to the bounds
             mMatrix.mapRect(mBounds);
