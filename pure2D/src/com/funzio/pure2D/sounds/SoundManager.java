@@ -109,7 +109,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
     }
 
     public boolean unload(final Soundable sound) {
-        return mSoundPool.unload(sound.getSoundID());
+        return sound == null ? false : mSoundPool.unload(sound.getSoundID());
     }
 
     public Soundable getSound(final int key) {
