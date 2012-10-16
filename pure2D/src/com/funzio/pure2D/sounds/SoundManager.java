@@ -104,6 +104,14 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
         mSoundPool.stop(streamID);
     }
 
+    public boolean unload(final int soundID) {
+        return mSoundPool.unload(soundID);
+    }
+
+    public boolean unload(final Soundable sound) {
+        return mSoundPool.unload(sound.getSoundID());
+    }
+
     public Context getContext() {
         return mContext;
     }
