@@ -43,7 +43,10 @@ public abstract class URLTask implements IntentTask {
         final URLConnection conn;
         try {
             final URL address = new URL(mURL);
+
             conn = address.openConnection();
+            conn.setDoOutput(true);
+
         } catch (Exception e) {
             if (LOG_ENABLED) {
                 Log.v(TAG, "CONNECTION ERROR!", e);
