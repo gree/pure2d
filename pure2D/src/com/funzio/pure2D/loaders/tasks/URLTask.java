@@ -4,6 +4,8 @@
 package com.funzio.pure2D.loaders.tasks;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -44,7 +46,7 @@ public abstract class URLTask implements IntentTask {
             conn = address.openConnection();
         } catch (Exception e) {
             if (LOG_ENABLED) {
-                Log.e(TAG, "CONNECTION ERROR!", e);
+                Log.v(TAG, "CONNECTION ERROR!", e);
             }
             return false;
         }
@@ -61,7 +63,37 @@ public abstract class URLTask implements IntentTask {
             inputStream.close();
         } catch (Exception e) {
             if (LOG_ENABLED) {
-                Log.e(TAG, "READ ERROR!", e);
+                Log.v(TAG, "READ ERROR!", e);
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean postURL(final String data) {
+        final URLConnection conn;
+
+        try {
+            URL address = new URL(mURL);
+            conn = address.openConnection();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return false;
+        }
+
+        //now that connection is open send data
+        try {
+            OutputStream os = conn.getOutputStream();
+            os.write(data.getBytes());
+            os.close();
+
+        } catch (IOException e) {
+
+            if (LOG_ENABLED) {
+                Log.v(TAG, "WRITE ERROR!", e);
             }
             return false;
         }
