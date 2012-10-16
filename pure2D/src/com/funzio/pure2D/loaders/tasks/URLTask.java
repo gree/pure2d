@@ -79,6 +79,7 @@ public abstract class URLTask implements IntentTask {
         try {
             URL address = new URL(mURL);
             conn = address.openConnection();
+            conn.setDoOutput(true);
 
         } catch (IOException e) {
 
