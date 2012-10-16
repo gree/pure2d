@@ -112,6 +112,10 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
         return mSoundPool.unload(sound.getSoundID());
     }
 
+    public Soundable getSound(final int key) {
+        return mSoundMap.get(key);
+    }
+
     public Context getContext() {
         return mContext;
     }
