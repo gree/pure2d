@@ -12,7 +12,7 @@ import android.content.res.AssetManager;
  * @author sajjadtabib
  *
  */
-public class MediaAssetSound extends AssetSound {
+public class MediaAsset extends AbstractMedia {
 
     private AssetFileDescriptor mAssetFd;
 
@@ -21,8 +21,8 @@ public class MediaAssetSound extends AssetSound {
      * @param assets
      * @param filePath
      */
-    public MediaAssetSound(final int key, final AssetManager assets, final String filePath) {
-        super(key, assets, filePath);
+    public MediaAsset(final int key, final AssetManager assets, final String filePath) {
+        super(key);
 
         try {
             mAssetFd = assets.openFd(filePath);

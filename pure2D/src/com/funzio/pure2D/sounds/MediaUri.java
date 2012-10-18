@@ -9,9 +9,9 @@ import android.net.Uri;
 
 /**
  * @author sajjadtabib
- * Acts similar to the FileSound, but uses the media player instead of the soundpool
+ * 
  */
-public class MediaFileSound extends FileSound {
+public class MediaUri extends AbstractMedia {
 
     protected Uri mUri;
 
@@ -19,10 +19,16 @@ public class MediaFileSound extends FileSound {
      * @param key
      * @param filePath
      */
-    public MediaFileSound(final int key, final String filePath) {
-        super(key, filePath);
+    public MediaUri(final int key, final String filePath) {
+        super(key);
 
         mUri = Uri.fromFile(new File(filePath));
+
+    }
+
+    public MediaUri(final int key, final Uri uri) {
+        super(key);
+        mUri = uri;
 
     }
 

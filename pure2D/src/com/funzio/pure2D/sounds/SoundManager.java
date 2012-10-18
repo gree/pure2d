@@ -97,19 +97,19 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         return 0;
     }
 
-    public void playMediaFile(final Soundable mediaFile) {
+    public void play(final Media media) {
         try {
             mMediaPlayer.reset(); //reset the mediaplayer state
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //set tye type
-            mMediaPlayer.setLooping(mediaFile.getLoop() == -1 ? true : false);
+            mMediaPlayer.setLooping(media.isLooping());
             mMediaPlayer.setOnPreparedListener(this);
 
-            if (mediaFile instanceof MediaAssetSound) {
-                MediaAssetSound assetMedia = (MediaAssetSound) mediaFile;
+            if (media instanceof MediaAsset) {
+                MediaAsset assetMedia = (MediaAsset) media;
                 mMediaPlayer.setDataSource(assetMedia.getAssetFileDescriptor().getFileDescriptor(), assetMedia.getStartOffset(), assetMedia.getLength());
 
-            } else if (mediaFile instanceof MediaFileSound) {
-                mMediaPlayer.setDataSource(mContext, ((MediaFileSound) mediaFile).getMediaUri());
+            } else if (media instanceof MediaUri) {
+                mMediaPlayer.setDataSource(mContext, ((MediaUri) media).getMediaUri());
             }
 
             mMediaPlayer.prepareAsync();
