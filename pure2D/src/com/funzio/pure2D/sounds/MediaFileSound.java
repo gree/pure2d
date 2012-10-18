@@ -3,8 +3,6 @@
  */
 package com.funzio.pure2D.sounds;
 
-import java.io.File;
-
 import android.net.Uri;
 
 /**
@@ -13,16 +11,16 @@ import android.net.Uri;
  */
 public class MediaFileSound extends FileSound {
 
-    private Uri mUri;
+    protected Uri mUri;
 
     /**
      * @param key
      * @param filePath
      */
-    public MediaFileSound(final int key, final String filePath) {
-        super(key, filePath);
+    public MediaFileSound(final int key, final Uri uri) {
+        super(key, null);
 
-        mUri = Uri.fromFile(new File(filePath));
+        mUri = uri;
     }
 
     public Uri getMediaUri() {

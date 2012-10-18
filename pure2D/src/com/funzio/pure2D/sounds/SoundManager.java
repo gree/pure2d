@@ -99,11 +99,12 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
 
     public void play(final MediaFileSound mediaFile) {
         try {
-            mMediaPlayer.reset(); //release resources held on to the media player
+            mMediaPlayer.reset(); //reset the mediaplayer state
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //set tye type
             mMediaPlayer.setLooping(mediaFile.getLoop() == -1 ? true : false);
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setDataSource(mContext, mediaFile.getMediaUri());
+
             mMediaPlayer.prepareAsync();
 
         } catch (IllegalArgumentException e) {
@@ -119,6 +120,10 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void stopMediaPlayback() {
+        mMediaPlayer.reset();
     }
 
     protected int playByID(final int soundID) {
