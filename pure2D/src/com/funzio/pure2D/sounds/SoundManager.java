@@ -1,15 +1,19 @@
 package com.funzio.pure2D.sounds;
 
+import java.io.IOException;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.util.SparseArray;
 
-public class SoundManager implements SoundPool.OnLoadCompleteListener {
+public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPreparedListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
 
     protected volatile SparseArray<Soundable> mSoundMap;
@@ -20,6 +24,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
     protected Context mContext;
     protected AudioManager mAudioManager;
 
+    protected MediaPlayer mMediaPlayer;
+
     protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
         mSoundMap = new SparseArray<Soundable>();
@@ -28,6 +34,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
         mSoundPool.setOnLoadCompleteListener(this);
 
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
+        mMediaPlayer = new MediaPlayer();
     }
 
     public boolean isSoundEnabled() {
@@ -89,6 +97,30 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
         return 0;
     }
 
+    public void play(final MediaFileSound mediaFile) {
+        try {
+            mMediaPlayer.reset(); //release resources held on to the media player
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //set tye type
+            mMediaPlayer.setLooping(mediaFile.getLoop() == -1 ? true : false);
+            mMediaPlayer.setOnPreparedListener(this);
+            mMediaPlayer.setDataSource(mContext, mediaFile.getMediaUri());
+            mMediaPlayer.prepareAsync();
+
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     protected int playByID(final int soundID) {
         // Log.v(TAG, "playByID(" + soundID + ")");
 
@@ -128,6 +160,15 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener {
 
     public void onLoadComplete(final SoundPool soundPool, final int sampleId, final int status) {
         Log.v(TAG, "onLoadComplete(" + sampleId + ", " + status + ")");
+    }
+
+    /* (non-Javadoc)
+     * @see android.media.MediaPlayer.OnPreparedListener#onPrepared(android.media.MediaPlayer)
+     */
+    @Override
+    public void onPrepared(final MediaPlayer mp) {
+        mp.start();
+
     }
 
 }
