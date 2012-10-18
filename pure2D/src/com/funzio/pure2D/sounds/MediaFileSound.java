@@ -3,7 +3,9 @@
  */
 package com.funzio.pure2D.sounds;
 
-import java.io.FileDescriptor;
+import java.io.File;
+
+import android.net.Uri;
 
 /**
  * @author sajjadtabib
@@ -11,20 +13,21 @@ import java.io.FileDescriptor;
  */
 public class MediaFileSound extends FileSound {
 
-    //    protected Uri mUri;
-    protected FileDescriptor mFd;
+    protected Uri mUri;
 
     /**
      * @param key
      * @param filePath
      */
-    public MediaFileSound(final int key, final FileDescriptor fd) {
-        super(key, null);
+    public MediaFileSound(final int key, final String filePath) {
+        super(key, filePath);
+
+        mUri = Uri.fromFile(new File(filePath));
 
     }
 
-    public FileDescriptor getMediaFileDescriptor() {
-        return mFd;
+    public Uri getMediaUri() {
+        return mUri;
     }
 
 }
