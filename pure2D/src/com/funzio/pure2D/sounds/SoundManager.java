@@ -18,13 +18,13 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
 
     protected volatile SparseArray<Soundable> mSoundMap;
 
-    protected SoundPool mSoundPool;
+    protected final SoundPool mSoundPool;
     protected volatile boolean mSoundEnabled = true;
 
-    protected Context mContext;
-    protected AudioManager mAudioManager;
+    protected final Context mContext;
+    protected final AudioManager mAudioManager;
 
-    protected MediaPlayer mMediaPlayer;
+    protected final MediaPlayer mMediaPlayer;
 
     protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
@@ -99,8 +99,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
 
     public void play(final Media media) {
         try {
-            mMediaPlayer.reset(); //reset the mediaplayer state
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //set tye type
+            mMediaPlayer.reset(); // reset the mediaplayer state
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set tye type
             mMediaPlayer.setLooping(media.isLooping());
             mMediaPlayer.setOnPreparedListener(this);
 
@@ -174,7 +174,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         Log.v(TAG, "onLoadComplete(" + sampleId + ", " + status + ")");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see android.media.MediaPlayer.OnPreparedListener#onPrepared(android.media.MediaPlayer)
      */
     @Override
