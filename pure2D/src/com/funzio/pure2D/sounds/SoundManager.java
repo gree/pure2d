@@ -98,6 +98,10 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     }
 
     public void play(final Media media) {
+        if (!mSoundEnabled) {
+            return;
+        }
+
         try {
             mMediaPlayer.reset(); // reset the mediaplayer state
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set tye type
@@ -181,7 +185,6 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     @Override
     public void onPrepared(final MediaPlayer mp) {
         mp.start();
-
     }
 
 }
