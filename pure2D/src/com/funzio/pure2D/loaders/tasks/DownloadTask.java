@@ -80,7 +80,7 @@ public class DownloadTask extends URLTask implements Retriable {
 
         final File file = new File(mFilePath);
         try {
-            if (file.exists() && !mOverriding) {
+            if (file.exists() && file.length() > 0 && !mOverriding) {
                 if (LOG_ENABLED) {
                     Log.v(TAG, mFilePath + " already exists. Skip!");
                 }
