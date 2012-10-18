@@ -103,7 +103,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //set tye type
             mMediaPlayer.setLooping(mediaFile.getLoop() == -1 ? true : false);
             mMediaPlayer.setOnPreparedListener(this);
-            mMediaPlayer.setDataSource(mContext, mediaFile.getMediaUri());
+            mMediaPlayer.setDataSource(mediaFile.getMediaFileDescriptor());
 
             mMediaPlayer.prepareAsync();
 
