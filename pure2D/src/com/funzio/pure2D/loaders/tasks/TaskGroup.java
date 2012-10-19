@@ -125,6 +125,22 @@ public class TaskGroup implements Task, Retriable {
         return false;
     }
 
+    public List<Task> getFailedTasks() {
+        final int size = mTasks.size();
+        final ArrayList<Task> list = new ArrayList<Task>();
+        for (int i = 0; i < size; i++) {
+
+            final Task task = mTasks.get(i);
+            // only get the task that has not succeeded yet
+            if (!task.isSucceeded()) {
+                list.add(task);
+            }
+
+        }
+
+        return list;
+    }
+
     public boolean isSucceeded() {
         return mSucceeded;
     }
@@ -159,7 +175,7 @@ public class TaskGroup implements Task, Retriable {
         return mRetryMax;
     }
 
-    public void setRetryMax(int retryMax) {
+    public void setRetryMax(final int retryMax) {
         mRetryMax = retryMax;
     }
 
@@ -167,7 +183,7 @@ public class TaskGroup implements Task, Retriable {
         return mRetryDelay;
     }
 
-    public void setRetryDelay(int retryDelay) {
+    public void setRetryDelay(final int retryDelay) {
         mRetryDelay = retryDelay;
     }
 }
