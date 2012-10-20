@@ -133,7 +133,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         }
     }
 
-    public void stopMediaPlayback() {
+    public void stopMedia() {
         mMediaPlayer.reset();
     }
 
