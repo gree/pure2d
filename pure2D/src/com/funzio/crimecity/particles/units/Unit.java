@@ -82,12 +82,12 @@ public class Unit extends DisplayGroup {
             if (mDirection.equals(CCMapDirection.NORTHWEST) || mDirection.equals(CCMapDirection.SOUTHWEST)) {
                 if (!mFlipped) {
                     mFlipped = true;
-                    mSprite.getTextureCoordBuffer().flipHorizontal();
+                    mSprite.flipTextureCoordBuffer(FLIP_X);
                 }
             } else {
                 if (mFlipped) {
                     mFlipped = false;
-                    mSprite.getTextureCoordBuffer().flipHorizontal();
+                    mSprite.flipTextureCoordBuffer(FLIP_X);
                 }
             }
         }
