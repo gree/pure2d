@@ -31,6 +31,13 @@ public class GLColor {
         this.a = (float) a / 255;
     }
 
+    public GLColor(final GLColor color) {
+        this.r = color.r;
+        this.g = color.g;
+        this.b = color.b;
+        this.a = color.a;
+    }
+
     public void setValues(final float r, final float g, final float b, final float a) {
         this.r = r;
         this.g = g;

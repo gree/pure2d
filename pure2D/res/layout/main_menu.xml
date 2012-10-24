@@ -41,12 +41,28 @@
         android:onClick="onClickButton"
         android:text="@string/camera" />
 
-    <Button
-        android:id="@+id/btn_particles"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/particles" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_particles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/particles" />
+
+        <Button
+            android:id="@+id/btn_effects"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/effects" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_animations"

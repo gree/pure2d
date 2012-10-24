@@ -1,14 +1,15 @@
-package com.funzio.pure2D.samples.activities.objects;
+package com.funzio.pure2D.samples.activities.effects;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.effects.sparks.SparkGroup;
+import com.funzio.pure2D.effects.sparks.TriangleSpark;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.samples.activities.StageActivity;
-import com.funzio.pure2D.shapes.Rectangular;
 
-public class HelloObjectActivity extends StageActivity {
+public class SparksActivity extends StageActivity {
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -19,15 +20,14 @@ public class HelloObjectActivity extends StageActivity {
 
     private void addObject(final float x, final float y) {
         // create object
-        Rectangular obj = new Rectangular();
-        obj.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
-        obj.setSize(128, 128);
-
-        // center origin
-        obj.setOriginAtCenter();
+        SparkGroup obj = new SparkGroup(TriangleSpark.class, 20, 200, 250, 50, 70);
 
         // position
         obj.setPosition(x, y);
+        final GLColor color1 = new GLColor(RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
+        final GLColor color2 = new GLColor(color1);
+        color2.a = 0;
+        obj.setColors(color1, color2, color2);
 
         // add to scene
         mScene.addChild(obj);

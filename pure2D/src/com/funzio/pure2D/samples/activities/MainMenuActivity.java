@@ -11,6 +11,7 @@ import com.funzio.pure2D.samples.activities.animations.AnimationMenuActivity;
 import com.funzio.pure2D.samples.activities.camera.CameraMenuActivity;
 import com.funzio.pure2D.samples.activities.casino.CasinoMenuActivity;
 import com.funzio.pure2D.samples.activities.containers.ContainerMenuActivity;
+import com.funzio.pure2D.samples.activities.effects.EffectsMenuActivity;
 import com.funzio.pure2D.samples.activities.loaders.LoaderMenuActivity;
 import com.funzio.pure2D.samples.activities.mw.MWMenuActivity;
 import com.funzio.pure2D.samples.activities.objects.ObjectMenuActivity;
@@ -40,6 +41,8 @@ public class MainMenuActivity extends Activity {
             startActivity(new Intent(this, TextureMenuActivity.class));
         } else if (view.getId() == R.id.btn_particles) {
             startActivity(new Intent(this, ParticleMenuActivity.class));
+        } else if (view.getId() == R.id.btn_effects) {
+            startActivity(new Intent(this, EffectsMenuActivity.class));
         } else if (view.getId() == R.id.btn_animations) {
             startActivity(new Intent(this, AnimationMenuActivity.class));
         } else if (view.getId() == R.id.btn_physics) {

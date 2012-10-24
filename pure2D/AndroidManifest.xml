@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <service
-            android:name="com.funzio.pure2D.samples.activities.loaders.HelloLoaderService"
+            android:name=".samples.activities.loaders.HelloLoaderService"
             android:exported="true"
             android:label="@string/app_name" >
             <intent-filter>
@@ -158,6 +158,16 @@
         </activity>
         <activity
             android:name=".samples.activities.particles.DynamicEmitterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.effects.EffectsMenuActivity"
+            android:label="@string/effects"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.effects.SparksActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>

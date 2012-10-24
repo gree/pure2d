@@ -67,9 +67,13 @@
     <string name="rock_checker">Rock Checker</string>
     <string name="checker">Checker</string>
 
-    <!-- physic -->
+    <!-- physics -->
     <string name="physics">Physics</string>
     <string name="hello_physics">Hello Physics!</string>
+
+    <!-- effects -->
+    <string name="effects">Effects</string>
+    <string name="sparks">Sparks</string>
 
     <!-- textures -->
     <string name="animations">Animations</string>
