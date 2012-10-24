@@ -14,14 +14,15 @@ import com.funzio.pure2D.gl.GLColor;
 public class SparkGroup extends DisplayGroup {
     protected static final Random RANDOM = new Random();
 
+    protected Class<? extends Sparkable> mSparkClass;
     protected int mNumSparks = 0;
     protected int mRadius1;
     protected int mRadius2;
     protected int mWeight1;
     protected int mWeight2;
-    private Class<? extends Sparkable> mSparkClass;
+    protected GLColor[] mColors;
 
-    public SparkGroup(final Class<? extends Sparkable> sparkClass, final int numSparks, final int r1, final int r2, final int weight1, final int weight2) {
+    public SparkGroup(final Class<? extends Sparkable> sparkClass, final int numSparks, final int r1, final int r2, final int weight1, final int weight2, final GLColor... colors) {
         super();
 
         mSparkClass = sparkClass;
@@ -29,6 +30,7 @@ public class SparkGroup extends DisplayGroup {
         mRadius2 = r2;
         mWeight1 = weight1;
         mWeight2 = weight2;
+        mColors = colors;
         setNumSparks(numSparks);
     }
 
@@ -43,6 +45,7 @@ public class SparkGroup extends DisplayGroup {
             for (int i = 0; i < diff; i++) {
                 try {
                     final Sparkable spark = mSparkClass.newInstance();
+                    spark.setColors(mColors);
                     spark.setSize(mRadius1 + RANDOM.nextInt(mRadius2 - mRadius1 + 1), mWeight1 + RANDOM.nextInt(mWeight2 - mWeight1 + 1));
                     addChild(spark);
                 } catch (Exception e) {

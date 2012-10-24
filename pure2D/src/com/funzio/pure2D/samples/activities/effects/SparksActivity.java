@@ -19,15 +19,15 @@ public class SparksActivity extends StageActivity {
     }
 
     private void addObject(final float x, final float y) {
+        final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
+        final GLColor color2 = new GLColor(color1);
+        color2.a = 0;
+
         // create object
-        SparkGroup obj = new SparkGroup(TriangleSpark.class, 20, 200, 250, 50, 70);
+        SparkGroup obj = new SparkGroup(TriangleSpark.class, 20, 200, 250, 50, 70, color1, color2, color2);
 
         // position
         obj.setPosition(x, y);
-        final GLColor color1 = new GLColor(RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
-        final GLColor color2 = new GLColor(color1);
-        color2.a = 0;
-        obj.setColors(color1, color2, color2);
 
         // add to scene
         mScene.addChild(obj);
