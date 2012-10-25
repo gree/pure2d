@@ -4,6 +4,7 @@
 package com.funzio.pure2D.text;
 
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.shapes.Rectangular;
 
 /**
@@ -12,16 +13,6 @@ import com.funzio.pure2D.shapes.Rectangular;
 public class TextObject extends Rectangular {
     protected TextOptions mOptions;
     protected String mText = "";
-
-    public TextObject() {
-    }
-
-    /**
-     * @return the text
-     */
-    public String getText() {
-        return mText;
-    }
 
     /**
      * @param text the text to set
@@ -47,9 +38,37 @@ public class TextObject extends Rectangular {
     }
 
     /**
+     * @return the text
+     */
+    public String getText() {
+        return mText;
+    }
+
+    /**
      * @return the options
      */
     public TextOptions getOptions() {
         return mOptions;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.shapes.Shape#onAdded(com.funzio.pure2D.containers.Container)
+     */
+    @Override
+    public void onAdded(final Container parent) {
+        super.onAdded(parent);
+
+        // if there is no texture yet
+        if (mTexture == null) {
+            Scene scene = getScene();
+            if (scene != null) {
+                setTexture(scene.getTextureManager().createTextTexture(mText, mOptions));
+                // match the size with the texture
+                if (mTexture != null) {
+                    setSize(mTexture.getSize());
+                }
+            }
+        }
     }
 }
