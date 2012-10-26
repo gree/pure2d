@@ -48,6 +48,10 @@ public class Clip extends Sprite implements Playable {
         }
     }
 
+    public AtlasFrameSet getAtlasFrameSet() {
+        return mFrameSet;
+    }
+
     @Override
     public RectF getFrameRect(final int frame) {
         if (mFrameSet == null) {
