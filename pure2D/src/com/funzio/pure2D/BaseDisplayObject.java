@@ -42,6 +42,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected Container mParent;
     protected Scene mScene;
 
+    protected Maskable mMask;
+
     // extra
     protected GLColor mColor = null;// new GLColor(1f, 0f, 0f, 1f);
     protected float mAlpha = 1;
@@ -82,9 +84,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // check and turn on alpha test
         glState.setAlphaTestEnabled(mAlphaTestEnabled);
+
+        // check mask
+        if (mMask != null) {
+            mMask.enableMask();
+        }
     }
 
     protected void drawEnd(final GLState glState) {
+
+        // check mask
+        if (mMask != null) {
+            mMask.disableMask();
+        }
+
         // restore the matrix
         glState.mGL.glPopMatrix();
     }
@@ -466,6 +479,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mAlphaTestEnabled = alphaTestEnabled;
 
         invalidate(InvalidateFlags.ALPHA);
+    }
+
+    public Maskable getMask() {
+        return mMask;
+    }
+
+    public void setMask(final Maskable mask) {
+        mMask = mask;
     }
 
     private Scene findScene() {

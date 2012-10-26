@@ -105,5 +105,7 @@
     <string name="start_loading">Start Loading</string>
     <string name="skeleton_animation">Skeleton Animation</string>
     <string name="skeleton_animation_cache">Skeleton Animation Cache</string>
+    <string name="buffers">Buffers</string>
+    <string name="stencil_buffer">Stencil Buffer</string>
 
 </resources>

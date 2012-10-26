@@ -8,6 +8,7 @@ import android.view.WindowManager.LayoutParams;
 
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.samples.activities.animations.AnimationMenuActivity;
+import com.funzio.pure2D.samples.activities.buffers.BufferMenuActivity;
 import com.funzio.pure2D.samples.activities.camera.CameraMenuActivity;
 import com.funzio.pure2D.samples.activities.casino.CasinoMenuActivity;
 import com.funzio.pure2D.samples.activities.containers.ContainerMenuActivity;
@@ -39,6 +40,8 @@ public class MainMenuActivity extends Activity {
             startActivity(new Intent(this, CameraMenuActivity.class));
         } else if (view.getId() == R.id.btn_textures) {
             startActivity(new Intent(this, TextureMenuActivity.class));
+        } else if (view.getId() == R.id.btn_buffers) {
+            startActivity(new Intent(this, BufferMenuActivity.class));
         } else if (view.getId() == R.id.btn_particles) {
             startActivity(new Intent(this, ParticleMenuActivity.class));
         } else if (view.getId() == R.id.btn_effects) {

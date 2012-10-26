@@ -20,12 +20,28 @@
         android:onClick="onClickButton"
         android:text="@string/containers" />
 
-    <Button
-        android:id="@+id/btn_textures"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/textures" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_textures"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/textures" />
+
+        <Button
+            android:id="@+id/btn_buffers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/buffers" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_text"

@@ -8,6 +8,7 @@ import android.view.WindowManager.LayoutParams;
 
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.samples.activities.animations.HelloAtlasActivity;
+import com.funzio.pure2D.samples.activities.buffers.FrameBufferActivity;
 
 public class TextureMenuActivity extends Activity {
 

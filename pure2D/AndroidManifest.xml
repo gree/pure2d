@@ -112,12 +112,22 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".samples.activities.textures.FrameBufferActivity"
+            android:name=".samples.activities.buffers.FrameBufferActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
             android:name=".samples.activities.textures.ImageSequenceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.buffers.BufferMenuActivity"
+            android:label="@string/textures"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.buffers.StencilBufferActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
