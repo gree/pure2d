@@ -20,6 +20,7 @@ public class BitmapUtils {
     public static BitmapFactory.Options getBitmapOptionsForSubSampling(final InputStream is) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        options.inPurgeable = true;
         BitmapFactory.decodeStream(is, null, options);
         return options;
     }
@@ -29,7 +30,7 @@ public class BitmapUtils {
 
         options.inSampleSize = sampleSize; //use sample size
         options.inJustDecodeBounds = false;
-
+        options.inPurgeable = true;
         return BitmapFactory.decodeStream(is, null, options);
     }
 
@@ -37,6 +38,7 @@ public class BitmapUtils {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        options.inPurgeable = true;
         BitmapFactory.decodeResource(res, resourceId, options);
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
@@ -50,6 +52,7 @@ public class BitmapUtils {
     public static Bitmap getSubSampledBitmap(final String fileName, final int reqWidth, final int reqHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        options.inPurgeable = true;
         BitmapFactory.decodeFile(fileName, options);
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
@@ -63,6 +66,7 @@ public class BitmapUtils {
     public static Bitmap getSubSampledBitmap(final FileDescriptor fd, final int reqWidth, final int reqHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        options.inPurgeable = true;
         BitmapFactory.decodeFileDescriptor(fd, null, options);
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
@@ -76,6 +80,7 @@ public class BitmapUtils {
     public static Bitmap getSubSampledBitmap(final InputStream is, final int reqWidth, final int reqHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        options.inPurgeable = true;
         BitmapFactory.decodeStream(is, null, options);
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
