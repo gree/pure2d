@@ -4,6 +4,7 @@
 package com.funzio.pure2D.atlas;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public class AtlasFrameSet {
 
     public int getNumFrames() {
         return mFrames.size();
+    }
+
+    public void reverseFrames() {
+        Collections.reverse(mFrames);
     }
 
     @Override
