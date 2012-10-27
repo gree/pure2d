@@ -5,7 +5,8 @@ package com.funzio.pure2D.loaders.tasks;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -74,12 +75,17 @@ public abstract class URLTask implements IntentTask {
     }
 
     protected boolean postURL(final String data) {
-        final URLConnection conn;
+        final HttpURLConnection conn;
 
         try {
             URL address = new URL(mURL);
-            conn = address.openConnection();
+            conn = (HttpURLConnection) address.openConnection();
             conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=" + "utf-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setFixedLengthStreamingMode(data.getBytes().length);
 
         } catch (IOException e) {
 
@@ -89,9 +95,12 @@ public abstract class URLTask implements IntentTask {
 
         //now that connection is open send data
         try {
-            OutputStream os = conn.getOutputStream();
-            os.write(data.getBytes());
+            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
+            os.write(data);
             os.close();
+            conn.getResponseCode();
+
+            //TODO: Add support to save or return http response
 
         } catch (IOException e) {
 
