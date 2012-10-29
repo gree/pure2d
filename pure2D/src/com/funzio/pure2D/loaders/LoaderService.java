@@ -81,7 +81,6 @@ public class LoaderService extends IntentService {
         super(name);
 
         mName = name;
-        Thread.setDefaultUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
     }
 
     @Override
@@ -107,6 +106,8 @@ public class LoaderService extends IntentService {
     @Override
     protected void onHandleIntent(final Intent intent) {
         Log.v(TAG, "onHandleIntent(), " + intent.getAction());
+        //This is the background thread uncaught exception handler. Do not move to UI thread.
+        Thread.currentThread().setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
 
         if (mBatteryLow) {
             stopSelf();
