@@ -213,6 +213,7 @@ public class ImageSequenceAtlas extends Atlas {
             texture.unload();
         }
         mFrameBuffer.unbind();
+        mFrameBuffer.unload();
 
         // callback
         if (mListener != null) {
@@ -291,6 +292,7 @@ public class ImageSequenceAtlas extends Atlas {
             texture.unload();
         }
         mFrameBuffer.unbind();
+        mFrameBuffer.unload();
 
         // callback
         if (mListener != null) {
@@ -343,6 +345,7 @@ public class ImageSequenceAtlas extends Atlas {
             texture.unload();
         }
         mFrameBuffer.unbind();
+        mFrameBuffer.unload();
 
         // done
         mTextures = null;
@@ -425,7 +428,7 @@ public class ImageSequenceAtlas extends Atlas {
         return mTexture;
     }
 
-    public FrameBuffer getFrameBuffer() {
-        return mFrameBuffer;
-    }
+    // public FrameBuffer getFrameBuffer() {
+    // return mFrameBuffer;
+    // }
 }
