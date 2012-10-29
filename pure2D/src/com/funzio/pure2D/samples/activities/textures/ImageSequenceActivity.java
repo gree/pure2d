@@ -3,12 +3,14 @@ package com.funzio.pure2D.samples.activities.textures;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.atlas.Atlas;
 import com.funzio.pure2D.atlas.ImageSequenceAtlas;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.samples.activities.StageActivity;
@@ -17,12 +19,27 @@ import com.funzio.pure2D.shapes.Sprite;
 
 public class ImageSequenceActivity extends StageActivity {
     private static final String IMAGE_DIR = "mayan/symbols/majors/priest";
-    // private static final String IMAGE_DIR = Environment.getExternalStorageDirectory() + "/funzio/casino/FarmRiches/images/symbols/majors/bonus";
+    private static final String SDCARD_IMAGE_DIR = Environment.getExternalStorageDirectory() + "/funzio/casino/FarmRiches/images/symbols/majors/bonus";
 
     private Texture mTexture;
     private ImageSequenceAtlas mAtlas;
 
     private Sprite mAtlasSprite;
+    private Atlas.Listener mAtlasListener = new Atlas.Listener() {
+
+        @Override
+        public void onAtlasLoad(final Atlas atlas) {
+            // get the generated texture
+            mTexture = mAtlas.getTexture();
+
+            // create the big sprite for fun
+            mAtlasSprite = new Sprite();
+            mAtlasSprite.setTexture(mTexture);
+            float scale = mDisplaySize.x / mTexture.getSize().x;
+            mAtlasSprite.setScale(scale);
+            mScene.addChild(mAtlasSprite);
+        }
+    };
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -52,18 +69,17 @@ public class ImageSequenceActivity extends StageActivity {
     }
 
     private void createAtlas() {
-        mAtlas = new ImageSequenceAtlas(mScene.getGLState(), getAssets(), IMAGE_DIR, null);
-        // mAtlas = new ImageSequenceAtlas(mScene.getGLState(), IMAGE_DIR, null);
-        mTexture = mAtlas.getTexture();
-
-        mAtlasSprite = new Sprite();
-        mAtlasSprite.setTexture(mTexture);
-        float scale = mDisplaySize.x / mTexture.getSize().x;
-        mAtlasSprite.setScale(scale);
-        mScene.addChild(mAtlasSprite);
+        mAtlas = new ImageSequenceAtlas(mScene.getGLState());
+        mAtlas.setListener(mAtlasListener);
+        mAtlas.load(getAssets(), IMAGE_DIR, null, true); // load of assets
+        // mAtlas.load(SDCARD_IMAGE_DIR, null, true); // load of sdcard
     }
 
     private void addObject(final float x, final float y) {
+        if (mTexture == null) {
+            return;
+        }
+
         // Rectangular temp = new Rectangular();
         // temp.setSize(30, 30);
         // temp.setColor(new GLColor(1f, 1f, 1f, 1f));

@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.Stage;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
@@ -17,6 +18,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  */
 public class GLState {
     public GL10 mGL;
+    private Stage mStage;
 
     // texture
     private Texture mTexture = null;
@@ -45,6 +47,11 @@ public class GLState {
         reset(gl);
     }
 
+    public GLState(final GL10 gl, final Stage stage) {
+        reset(gl);
+        mStage = stage;
+    }
+
     public void reset(final GL10 gl) {
         mGL = gl;
 
@@ -67,6 +74,12 @@ public class GLState {
         int[] textureSize = new int[1];
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, textureSize, 0);
         mMaxTextureSize = textureSize[0];
+    }
+
+    public void queueEvent(final Runnable r) {
+        if (mStage != null) {
+            mStage.queueEvent(r);
+        }
     }
 
     public int getAxisSystem() {

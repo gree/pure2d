@@ -18,6 +18,8 @@ public class Atlas {
     private Map<String, AtlasFrameSet> mSubFrameSets = new HashMap<String, AtlasFrameSet>();
     private int mNumSubFrameSets = 0;
 
+    protected Listener mListener;
+
     public Atlas() {
     }
 
@@ -106,4 +108,15 @@ public class Atlas {
         return mNumSubFrameSets;
     }
 
+    public Listener getListener() {
+        return mListener;
+    }
+
+    public void setListener(final Listener listener) {
+        mListener = listener;
+    }
+
+    public static interface Listener {
+        public void onAtlasLoad(Atlas atlas);
+    }
 }

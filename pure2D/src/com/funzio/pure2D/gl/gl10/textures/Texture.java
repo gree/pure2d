@@ -20,8 +20,9 @@ import com.funzio.pure2D.gl.gl10.GLState;
 public abstract class Texture {
     public static final String TAG = Texture.class.getSimpleName();
 
-    private GLState mGLState;
-    private GL10 mGL;
+    protected GLState mGLState;
+    protected GL10 mGL;
+
     private int mMinFilter;
     private int mMagFilter;
     private int mRepeatS;
@@ -33,6 +34,7 @@ public abstract class Texture {
     public float mCoordScaleY = 1;
 
     protected PointF mSize = new PointF(0, 0);
+    protected Listener mListener;
 
     public Texture(final GLState glState) {
         mGLState = glState;
@@ -51,6 +53,14 @@ public abstract class Texture {
         load(bitmap, actualWidth, actualHeight, mipmaps);
     }
 
+    /**
+     * This MUST be executed on GL Thread.
+     * 
+     * @param bitmap
+     * @param actualWidth
+     * @param actualHeight
+     * @param mipmaps
+     */
     public void load(final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
         mSize.x = actualWidth == 0 && bitmap != null ? bitmap.getWidth() : actualWidth;
         mSize.y = actualHeight == 0 && bitmap != null ? bitmap.getHeight() : actualHeight;
@@ -101,6 +111,11 @@ public abstract class Texture {
         } else {
             Log.e(TAG, "Failed to generate Texture: " + GLU.gluErrorString(error) + "\n" + Log.getStackTraceString(new Exception()));
             // TODO maybe throw an Exception here
+        }
+
+        // callback, regardless whether it's successful or not
+        if (mListener != null) {
+            mListener.onTextureLoad(this);
         }
     }
 
@@ -184,4 +199,16 @@ public abstract class Texture {
     }
 
     public abstract void reload();
+
+    public Listener getListener() {
+        return mListener;
+    }
+
+    public void setListener(final Listener listener) {
+        mListener = listener;
+    }
+
+    public static interface Listener {
+        public void onTextureLoad(Texture texture);
+    }
 }

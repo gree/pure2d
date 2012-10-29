@@ -127,6 +127,7 @@ public class Clip extends Sprite implements Playable {
 
     public void playAt(final int frame) {
         mCurrentFrame = frame;
+        mPendingTime = 0;
         play();
     }
 

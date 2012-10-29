@@ -9,7 +9,6 @@ import java.io.IOException;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -44,116 +43,106 @@ public class ImageSequenceAtlas extends Atlas {
     private int mFrameIndex = 0;
     private Sprite mDrawer;
 
+    // textures to load
+    private Texture[] mTextures;
+    private int mTexturesLoaded = 0;
+    private Texture.Listener mTextureListener = new Texture.Listener() {
+        @Override
+        public void onTextureLoad(final Texture texture) {
+
+            // init the buffer based on the first texture
+            if (mTexturesLoaded == 0) {
+                initBuffer(texture, mTextures.length);
+            }
+
+            // all textures are loaded?
+            if (++mTexturesLoaded == mTextures.length) {
+                // create the frames
+                createFrames();
+            }
+        }
+    };
+
     /**
      * Inits and loads images from an Asset folder
+     * 
+     * @param glState
+     */
+    public ImageSequenceAtlas(final GLState glState) {
+        Log.v(TAG, "ImageSequenceAtlas()");
+
+        mGLState = glState;
+        mGL = mGLState.mGL;
+
+        if (!FrameBuffer.isSupported(mGL)) {
+            Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
+            return;
+        }
+    }
+
+    /**
+     * Loads images from an Asset folder
      * 
      * @param glState
      * @param assetManager
      * @param assetDir
      * @param options
      */
-    public ImageSequenceAtlas(final GLState glState, final AssetManager assetManager, final String assetDir, final TextureOptions options) {
-        Log.v(TAG, "ImageSequenceAtlas() " + assetDir);
-
-        mGLState = glState;
-        mGL = mGLState.mGL;
-
-        if (!FrameBuffer.isSupported(mGL)) {
-            Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
-            return;
-        }
+    public void load(final AssetManager assetManager, final String assetDir, final TextureOptions options, final boolean async) {
+        Log.v(TAG, "load() " + assetDir);
 
         mOptions = options;
 
-        try {
-            // list the files in assetDir
-            String[] files = assetManager.list(assetDir);
-            if (files == null || files.length == 0) {
-                Log.e(TAG, assetDir + " is empty!");
-                return;
-            }
-
-            // find the frame dimensions based on the first image
-            Bitmap bitmap = Pure2DUtils.getStreamBitmap(assetManager.open(assetDir + "/" + files[0]), mOptions, false, null);
-            // find the atlas texture size that fits all the frames, assuming all the images have the same dimensions
-            Point textureSize = Pure2DUtils.getSmallestTextureSize(bitmap.getWidth(), bitmap.getHeight(), files.length, glState.getMaxTextureSize());
-            // clean it up
-            bitmap.recycle();
-
-            // init texture and frame buffer
-            initBuffer(textureSize.x, textureSize.y);
-
-            // start loading the images
+        // start loading the images
+        if (async) {
+            loadImagesAsync(assetManager, assetDir);
+        } else {
             loadImages(assetManager, assetDir);
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage() + "\n" + Log.getStackTraceString(e));
         }
     }
 
     /**
-     * Inits and loads images from a system file folder
+     * Loads images from a system file folder
      * 
      * @param glState
      * @param folder
      * @param options
      */
-    public ImageSequenceAtlas(final GLState glState, final String folder, final TextureOptions options) {
-        Log.v(TAG, "ImageSequenceAtlas() " + folder);
-
-        mGLState = glState;
-        mGL = mGLState.mGL;
-
-        if (!FrameBuffer.isSupported(mGL)) {
-            Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
-            return;
-        }
+    public void load(final String folder, final TextureOptions options, final boolean async) {
+        Log.v(TAG, "load() " + folder);
 
         mOptions = options;
 
-        // list the files in assetDir
-        final File file = new File(folder);
-        File[] files = file.listFiles();
-        if (files == null) {
-            Log.e(TAG, folder + " is empty!");
-            return;
-        }
-
-        // find the frame dimensions based on the first image
-        Bitmap bitmap = Pure2DUtils.getFileBitmap(files[0].getAbsolutePath(), mOptions, false, null);
-        // find the atlas texture size that fits all the frames, assuming all the images have the same dimensions
-        Point textureSize = Pure2DUtils.getSmallestTextureSize(bitmap.getWidth(), bitmap.getHeight(), files.length, glState.getMaxTextureSize());
-        // clean it up
-        bitmap.recycle();
-
-        // init texture and frame buffer
-        initBuffer(textureSize.x, textureSize.y);
-
         // start loading the images
-        loadImages(files);
-    }
-
-    public ImageSequenceAtlas(final GLState glState, final int width, final int height) {
-        Log.v(TAG, "ImageSequenceAtlas() " + width + " " + height);
-
-        mGLState = glState;
-        mGL = mGLState.mGL;
-
-        if (!FrameBuffer.isSupported(mGL)) {
-            Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
-            return;
+        if (async) {
+            loadImagesAsync(folder);
+        } else {
+            loadImages(folder);
         }
-
-        // init texture and frame buffer
-        initBuffer(width, height);
     }
 
-    public void reset(final GLState glState, final int width, final int height) {
-        mGLState = glState;
-        mGL = mGLState.mGL;
+    // public ImageSequenceAtlas(final GLState glState, final int width, final int height) {
+    // Log.v(TAG, "ImageSequenceAtlas() " + width + " " + height);
+    //
+    // mGLState = glState;
+    // mGL = mGLState.mGL;
+    //
+    // if (!FrameBuffer.isSupported(mGL)) {
+    // Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
+    // return;
+    // }
+    //
+    // // init texture and frame buffer
+    // initBuffer(width, height);
+    // }
 
-        // init texture and frame buffer
-        initBuffer(width, height);
-    }
+    // public void reset(final GLState glState, final int width, final int height) {
+    // mGLState = glState;
+    // mGL = mGLState.mGL;
+    //
+    // // init texture and frame buffer
+    // initBuffer(width, height);
+    // }
 
     /**
      * Creates a buffer texture to bind to the frame buffer
@@ -173,37 +162,99 @@ public class ImageSequenceAtlas extends Atlas {
         mTexture = (BufferTexture) mFrameBuffer.getTexture();
     }
 
+    private void initBuffer(final Texture firstTexture, final int numFrames) {
+        // find the atlas texture size that fits all the frames, assuming all the images have the same dimensions
+        final PointF size = firstTexture.getSize();
+        final Point textureSize = Pure2DUtils.getSmallestTextureSize((int) size.x, (int) size.y, numFrames, mGLState.getMaxTextureSize());
+
+        // init texture and frame buffer
+        initBuffer(textureSize.x, textureSize.y);
+    }
+
     /**
-     * This loads all of the images in a specific Assets's directory and draws them into the frame buffer.
+     * This loads all of the images in a specific Assets's directory and draws them into the frame buffer, and blocks GL Thread.
      * 
      * @param assetManager
      * @param assetDir
      * @param gl
      */
-    public void loadImages(final AssetManager assetManager, final String assetDir) {
-        String[] files;
+    protected void loadImages(final AssetManager assetManager, final String assetDir) {
+
+        String[] filenames;
         try {
             // list the files in assetDir
-            files = assetManager.list(assetDir);
+            filenames = assetManager.list(assetDir);
+            if (filenames == null || filenames.length == 0) {
+                Log.e(TAG, assetDir + " is empty!");
+                return;
+            }
         } catch (IOException e) {
             Log.e(TAG, e.getMessage() + "\n" + Log.getStackTraceString(e));
             return;
         }
 
-        // start drawing images to the frame buffer
-        mFrameBuffer.bind();
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < filenames.length; i++) {
 
             // create a temp texture for the image
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + files[i], mOptions, true);
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], mOptions, true);
+
+            // init the buffer based on the first texture
+            if (i == 0) {
+                initBuffer(texture, filenames.length);
+
+                // start drawing images to the frame buffer
+                mFrameBuffer.bind();
+            }
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, files[i].split("\\.")[0], false);
+            addFrame(texture, filenames[i].split("\\.")[0], false);
 
             // unload the texture
             texture.unload();
         }
         mFrameBuffer.unbind();
+
+        // callback
+        if (mListener != null) {
+            mListener.onAtlasLoad(this);
+        }
+    }
+
+    /**
+     * This asynchronously loads all of the images in a specific Assets's directory and draws them into the frame buffer, without blocking GL Thread.
+     * 
+     * @param assetManager
+     * @param assetDir
+     * @param gl
+     */
+    protected void loadImagesAsync(final AssetManager assetManager, final String assetDir) {
+
+        String[] filenames;
+        try {
+            // list the files in assetDir
+            filenames = assetManager.list(assetDir);
+            if (filenames == null || filenames.length == 0) {
+                Log.e(TAG, assetDir + " is empty!");
+                return;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage() + "\n" + Log.getStackTraceString(e));
+            return;
+        }
+
+        // prepare
+        mTextures = new Texture[filenames.length];
+        mTexturesLoaded = 0;
+
+        for (int i = 0; i < filenames.length; i++) {
+            // load the texture asynchronously
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], mOptions, true, true); // async
+            // listen to it
+            texture.setListener(mTextureListener);
+
+            // for ref later
+            mTextures[i] = texture;
+        }
     }
 
     /**
@@ -211,13 +262,27 @@ public class ImageSequenceAtlas extends Atlas {
      * 
      * @param files
      */
-    public void loadImages(final File[] files) {
-        // start drawing images to the frame buffer
-        mFrameBuffer.bind();
+    protected void loadImages(final String folder) {
+        // list the files in assetDir
+        final File file = new File(folder);
+        File[] files = file.listFiles();
+        if (files == null) {
+            Log.e(TAG, folder + " is empty!");
+            return;
+        }
+
         for (int i = 0; i < files.length; i++) {
 
             // create a temp texture for the image
             final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), mOptions, true);
+
+            // init the buffer based on the first texture
+            if (i == 0) {
+                initBuffer(texture, files.length);
+
+                // start drawing images to the frame buffer
+                mFrameBuffer.bind();
+            }
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             addFrame(texture, files[i].getName().split("\\.")[0], false);
@@ -226,6 +291,66 @@ public class ImageSequenceAtlas extends Atlas {
             texture.unload();
         }
         mFrameBuffer.unbind();
+
+        // callback
+        if (mListener != null) {
+            mListener.onAtlasLoad(this);
+        }
+    }
+
+    /**
+     * This asynchronously loads all of the images in a specific file system's directory and draws them into the frame buffer, without blocking GL Thread.
+     * 
+     * @param assetManager
+     * @param assetDir
+     * @param gl
+     */
+    protected void loadImagesAsync(final String folder) {
+
+        // list the files in assetDir
+        final File file = new File(folder);
+        File[] files = file.listFiles();
+        if (files == null) {
+            Log.e(TAG, folder + " is empty!");
+            return;
+        }
+
+        // prepare
+        mTextures = new Texture[files.length];
+        mTexturesLoaded = 0;
+
+        for (int i = 0; i < files.length; i++) {
+            // load the texture asynchronously
+            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), mOptions, true, true); // async
+            // listen to it
+            texture.setListener(mTextureListener);
+
+            // for ref later
+            mTextures[i] = texture;
+        }
+    }
+
+    protected void createFrames() {
+        // start drawing images to the frame buffer
+        mFrameBuffer.bind();
+        for (final Texture texture : mTextures) {
+
+            Log.v("long", "texture: " + texture);
+            // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
+            addFrame(texture, texture.toString().split("\\.")[0], false);
+
+            // unload the texture
+            texture.unload();
+        }
+        mFrameBuffer.unbind();
+
+        // done
+        mTextures = null;
+
+        // callback
+        if (mListener != null) {
+            mListener.onAtlasLoad(this);
+        }
     }
 
     /**
@@ -235,7 +360,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @param frameName
      * @return
      */
-    public AtlasFrame addFrame(final Texture texture, final String frameName, final boolean autoBind) {
+    protected AtlasFrame addFrame(final Texture texture, final String frameName, final boolean autoBind) {
         PointF frameSize = texture.getSize();
         // find the max frame height to define the row height
         if (frameSize.y > mCurrentRowHeight) {
@@ -250,11 +375,6 @@ public class ImageSequenceAtlas extends Atlas {
         if (mDrawer == null) {
             // init the drawer
             mDrawer = new Sprite();
-
-            // if (mGLState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
-            // // framebuffer starts from bottom-left (not top-left)
-            // mDrawer.getTextureCoordBuffer().flipVertical();
-            // }
         }
         // use the texture
         mDrawer.setTexture(texture);
@@ -284,22 +404,22 @@ public class ImageSequenceAtlas extends Atlas {
         return frame;
     }
 
-    public AtlasFrame addFrame(final Bitmap bitmap, final String frameName) {
-        // create a temp texture from the given bitmap
-        Texture texture = new Texture(mGLState, bitmap) {
-            @Override
-            public void reload() {
-                // TODO Auto-generated method stub
-            }
-        };
-
-        // draw the texture into the frame buffer
-        AtlasFrame frame = addFrame(texture, frameName, true);
-        // and unload it
-        texture.unload();
-
-        return frame;
-    }
+    // protected AtlasFrame addFrame(final Bitmap bitmap, final String frameName) {
+    // // create a temp texture from the given bitmap
+    // Texture texture = new Texture(mGLState, bitmap) {
+    // @Override
+    // public void reload() {
+    // // TODO Auto-generated method stub
+    // }
+    // };
+    //
+    // // draw the texture into the frame buffer
+    // AtlasFrame frame = addFrame(texture, frameName, true);
+    // // and unload it
+    // texture.unload();
+    //
+    // return frame;
+    // }
 
     public BufferTexture getTexture() {
         return mTexture;
