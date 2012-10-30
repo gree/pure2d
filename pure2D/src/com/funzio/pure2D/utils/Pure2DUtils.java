@@ -59,7 +59,9 @@ public class Pure2DUtils {
 
         // resize to the specified size
         if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            bitmap.recycle();
+            bitmap = newBitmap;
         }
 
         if (po2) {
@@ -89,7 +91,9 @@ public class Pure2DUtils {
 
         // resize to the specified size
         if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            bitmap.recycle();
+            bitmap = newBitmap;
         }
 
         if (bitmap == null) {
@@ -123,7 +127,9 @@ public class Pure2DUtils {
 
         // resize to the specified size
         if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            bitmap.recycle();
+            bitmap = newBitmap;
         }
 
         if (po2) {
@@ -183,7 +189,9 @@ public class Pure2DUtils {
 
         // resize to the specified size
         if (textOptions != null && (textOptions.inScaleX != 1 || textOptions.inScaleY != 1)) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * textOptions.inScaleX), Math.round(bitmap.getHeight() * textOptions.inScaleY), true);
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            bitmap.recycle();
+            bitmap = newBitmap;
         }
 
         if (po2) {
