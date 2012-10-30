@@ -138,6 +138,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @param gl
      */
     public void loadDir(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
+        Log.d(TAG, "loadDir() | " + assetDir);
 
         String[] filenames;
         try {
@@ -188,6 +189,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @param gl
      */
     public void loadDirAsync(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
+        Log.d(TAG, "loadDirAsync() | " + assetDir);
 
         String[] filenames;
         try {
@@ -225,6 +227,8 @@ public class ImageSequenceAtlas extends Atlas {
      * @param files
      */
     public void loadDir(final String dir, final TextureOptions options) {
+        Log.d(TAG, "loadDir() | " + dir);
+
         // list the files in assetDir
         final File file = new File(dir);
         File[] files = file.listFiles();
@@ -269,6 +273,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @param gl
      */
     public void loadDirAsync(final String dir, final TextureOptions options) {
+        Log.d(TAG, "loadDirAsync() | " + dir);
 
         // list the files in assetDir
         final File file = new File(dir);
