@@ -18,7 +18,7 @@ public class TextureOptions extends BitmapFactory.Options {
         TextureOptions options = new TextureOptions();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inScaled = false;
-        options.inPurgeable = true;
+        options.inPurgeable = true; // for gc
         options.inScaleX = options.inScaleY = 1;
         options.inMipmaps = 0;
 

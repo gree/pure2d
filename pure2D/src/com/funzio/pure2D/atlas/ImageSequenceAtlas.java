@@ -45,6 +45,7 @@ public class ImageSequenceAtlas extends Atlas {
 
     // textures to load
     private Texture[] mTextures;
+    private String[] mTextureNames;
     private int mTexturesLoaded = 0;
     private Texture.Listener mTextureListener = new Texture.Listener() {
         @Override
@@ -245,6 +246,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         // prepare
         mTextures = new Texture[filenames.length];
+        mTextureNames = new String[filenames.length];
         mTexturesLoaded = 0;
 
         for (int i = 0; i < filenames.length; i++) {
@@ -255,6 +257,7 @@ public class ImageSequenceAtlas extends Atlas {
 
             // for ref later
             mTextures[i] = texture;
+            mTextureNames[i] = filenames[i];
         }
     }
 
@@ -319,6 +322,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         // prepare
         mTextures = new Texture[files.length];
+        mTextureNames = new String[files.length];
         mTexturesLoaded = 0;
 
         for (int i = 0; i < files.length; i++) {
@@ -329,25 +333,27 @@ public class ImageSequenceAtlas extends Atlas {
 
             // for ref later
             mTextures[i] = texture;
+            mTextureNames[i] = files[i].getName();
         }
     }
 
     protected void createFrames() {
         // start drawing images to the frame buffer
         mFrameBuffer.bind();
-        for (final Texture texture : mTextures) {
+        for (int i = 0; i < mTextures.length; i++) {
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, texture.toString().split("\\.")[0], false);
+            addFrame(mTextures[i], mTextureNames[i].split("\\.")[0], false);
 
             // unload the texture
-            texture.unload();
+            mTextures[i].unload();
         }
         mFrameBuffer.unbind();
         mFrameBuffer.unload();
 
         // done
         mTextures = null;
+        mTextureNames = null;
 
         // callback
         if (mListener != null) {
