@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.utils.Pure2DUtils;
@@ -61,7 +62,11 @@ public class AssetTexture extends Texture {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
         } else {
-            // TODO
+            Log.e(TAG, "Unable to load bitmap: " + filePath);
+            // callback, regardless whether it's successful or not
+            if (mListener != null) {
+                mListener.onTextureLoad(this);
+            }
         }
     }
 
@@ -109,7 +114,11 @@ public class AssetTexture extends Texture {
                         load(bitmap, dimensions[0], dimensions[1], mOptions != null ? mOptions.inMipmaps : 0);
                         bitmap.recycle();
                     } else {
-                        // TODO
+                        Log.e(TAG, "Unable to load bitmap: " + mFilePath);
+                        // callback, regardless whether it's successful or not
+                        if (mListener != null) {
+                            mListener.onTextureLoad(AssetTexture.this);
+                        }
                     }
                 }
             });
