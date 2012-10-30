@@ -337,7 +337,6 @@ public class ImageSequenceAtlas extends Atlas {
         mFrameBuffer.bind();
         for (final Texture texture : mTextures) {
 
-            Log.v("long", "texture: " + texture);
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             addFrame(texture, texture.toString().split("\\.")[0], false);
 

@@ -92,7 +92,6 @@ public class CasinoTextureManager extends TextureManager {
             String files[] = mAssets.list(dir);
             mMajorSymbols = new ImageSequenceAtlas[files.length];
             for (int i = 0; i < files.length; i++) {
-                Log.v("long", dir + "/" + files[i]);
                 mMajorSymbols[i] = new ImageSequenceAtlas(mScene.getGLState());
                 mMajorSymbols[i].load(mAssets, dir + "/" + files[i], mTextureOptions, false);
             }
