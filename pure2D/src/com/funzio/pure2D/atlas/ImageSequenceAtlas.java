@@ -42,6 +42,7 @@ public class ImageSequenceAtlas extends Atlas {
     private int mFrameIndex = 0;
     private Sprite mDrawer;
 
+    private String mImageDir;
     // textures to load
     private Texture[] mTextures;
     private String[] mTextureNames;
@@ -140,6 +141,7 @@ public class ImageSequenceAtlas extends Atlas {
     public void loadDir(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
         Log.d(TAG, "loadDir() | " + assetDir);
 
+        mImageDir = assetDir;
         String[] filenames;
         try {
             // list the files in assetDir
@@ -176,6 +178,7 @@ public class ImageSequenceAtlas extends Atlas {
         mFrameBuffer.unload();
 
         // callback
+        Log.d(TAG, "loadDir() | done: " + assetDir);
         if (mListener != null) {
             mListener.onAtlasLoad(this);
         }
@@ -191,6 +194,7 @@ public class ImageSequenceAtlas extends Atlas {
     public void loadDirAsync(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
         Log.d(TAG, "loadDirAsync() | " + assetDir);
 
+        mImageDir = assetDir;
         String[] filenames;
         try {
             // list the files in assetDir
@@ -229,9 +233,10 @@ public class ImageSequenceAtlas extends Atlas {
     public void loadDir(final String dir, final TextureOptions options) {
         Log.d(TAG, "loadDir() | " + dir);
 
+        mImageDir = dir;
         // list the files in assetDir
         final File file = new File(dir);
-        File[] files = file.listFiles();
+        final File[] files = file.listFiles();
         if (files == null) {
             Log.e(TAG, dir + " is empty!");
             return;
@@ -260,6 +265,7 @@ public class ImageSequenceAtlas extends Atlas {
         mFrameBuffer.unload();
 
         // callback
+        Log.d(TAG, "loadDir() | done: " + dir);
         if (mListener != null) {
             mListener.onAtlasLoad(this);
         }
@@ -275,9 +281,10 @@ public class ImageSequenceAtlas extends Atlas {
     public void loadDirAsync(final String dir, final TextureOptions options) {
         Log.d(TAG, "loadDirAsync() | " + dir);
 
+        mImageDir = dir;
         // list the files in assetDir
         final File file = new File(dir);
-        File[] files = file.listFiles();
+        final File[] files = file.listFiles();
         if (files == null) {
             Log.e(TAG, dir + " is empty!");
             return;
@@ -319,6 +326,7 @@ public class ImageSequenceAtlas extends Atlas {
         mTextureNames = null;
 
         // callback
+        Log.d(TAG, "createFrames() | done: " + mImageDir);
         if (mListener != null) {
             mListener.onAtlasLoad(this);
         }
@@ -332,7 +340,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @return
      */
     protected AtlasFrame addFrame(final Texture texture, final String frameName, final boolean autoBind) {
-        PointF frameSize = texture.getSize();
+        final PointF frameSize = texture.getSize();
         // find the max frame height to define the row height
         if (frameSize.y > mCurrentRowHeight) {
             mCurrentRowHeight = (int) frameSize.y;
@@ -360,7 +368,7 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         // create frame
-        AtlasFrame frame = new AtlasFrame(this, mFrameIndex++, frameName, new Rect(mStartX, mStartY, mStartX + (int) frameSize.x - 1, mStartY + (int) frameSize.y - 1));
+        final AtlasFrame frame = new AtlasFrame(this, mFrameIndex++, frameName, new Rect(mStartX, mStartY, mStartX + (int) frameSize.x - 1, mStartY + (int) frameSize.y - 1));
         addFrame(frame);
 
         // find next position
