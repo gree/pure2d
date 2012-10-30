@@ -33,7 +33,6 @@ public class ImageSequenceAtlas extends Atlas {
 
     private GLState mGLState;
     private GL10 mGL;
-    private TextureOptions mOptions;
     private BufferTexture mTexture;
     private FrameBuffer mFrameBuffer;
 
@@ -78,47 +77,6 @@ public class ImageSequenceAtlas extends Atlas {
         if (!FrameBuffer.isSupported(mGL)) {
             Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
             return;
-        }
-    }
-
-    /**
-     * Loads images from an Asset folder
-     * 
-     * @param glState
-     * @param assetManager
-     * @param assetDir
-     * @param options
-     */
-    public void load(final AssetManager assetManager, final String assetDir, final TextureOptions options, final boolean async) {
-        Log.v(TAG, "load() " + assetDir);
-
-        mOptions = options;
-
-        // start loading the images
-        if (async) {
-            loadImagesAsync(assetManager, assetDir);
-        } else {
-            loadImages(assetManager, assetDir);
-        }
-    }
-
-    /**
-     * Loads images from a system file folder
-     * 
-     * @param glState
-     * @param folder
-     * @param options
-     */
-    public void load(final String folder, final TextureOptions options, final boolean async) {
-        Log.v(TAG, "load() " + folder);
-
-        mOptions = options;
-
-        // start loading the images
-        if (async) {
-            loadImagesAsync(folder);
-        } else {
-            loadImages(folder);
         }
     }
 
@@ -179,7 +137,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @param assetDir
      * @param gl
      */
-    protected void loadImages(final AssetManager assetManager, final String assetDir) {
+    public void loadDir(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
 
         String[] filenames;
         try {
@@ -197,7 +155,7 @@ public class ImageSequenceAtlas extends Atlas {
         for (int i = 0; i < filenames.length; i++) {
 
             // create a temp texture for the image
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], mOptions, true);
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true);
 
             // init the buffer based on the first texture
             if (i == 0) {
@@ -229,7 +187,7 @@ public class ImageSequenceAtlas extends Atlas {
      * @param assetDir
      * @param gl
      */
-    protected void loadImagesAsync(final AssetManager assetManager, final String assetDir) {
+    public void loadDirAsync(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
 
         String[] filenames;
         try {
@@ -251,7 +209,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < filenames.length; i++) {
             // load the texture asynchronously
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], mOptions, true, true); // async
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true, true); // async
             // listen to it
             texture.setListener(mTextureListener);
 
@@ -266,19 +224,19 @@ public class ImageSequenceAtlas extends Atlas {
      * 
      * @param files
      */
-    protected void loadImages(final String folder) {
+    public void loadDir(final String dir, final TextureOptions options) {
         // list the files in assetDir
-        final File file = new File(folder);
+        final File file = new File(dir);
         File[] files = file.listFiles();
         if (files == null) {
-            Log.e(TAG, folder + " is empty!");
+            Log.e(TAG, dir + " is empty!");
             return;
         }
 
         for (int i = 0; i < files.length; i++) {
 
             // create a temp texture for the image
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), mOptions, true);
+            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true);
 
             // init the buffer based on the first texture
             if (i == 0) {
@@ -310,13 +268,13 @@ public class ImageSequenceAtlas extends Atlas {
      * @param assetDir
      * @param gl
      */
-    protected void loadImagesAsync(final String folder) {
+    public void loadDirAsync(final String dir, final TextureOptions options) {
 
         // list the files in assetDir
-        final File file = new File(folder);
+        final File file = new File(dir);
         File[] files = file.listFiles();
         if (files == null) {
-            Log.e(TAG, folder + " is empty!");
+            Log.e(TAG, dir + " is empty!");
             return;
         }
 
@@ -327,7 +285,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < files.length; i++) {
             // load the texture asynchronously
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), mOptions, true, true); // async
+            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true, true); // async
             // listen to it
             texture.setListener(mTextureListener);
 
