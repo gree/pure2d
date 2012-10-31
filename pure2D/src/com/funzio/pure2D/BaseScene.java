@@ -72,6 +72,19 @@ public class BaseScene implements Scene {
         }
     }
 
+    public void queueEvent(final Runnable r, final int delayMillis) {
+        if (mStage != null) {
+            mStage.getHandler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // queue on GL thread
+                    queueEvent(r);
+                }
+            }, delayMillis);
+        }
+    }
+
     /**
      * @param stage the stage to set
      */
@@ -145,6 +158,9 @@ public class BaseScene implements Scene {
      */
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+        // this might help but I have not seen any difference yet!
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
         mStartTime = System.nanoTime();
         mDownTime = 0;
         mFrameCount = 0;
