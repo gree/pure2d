@@ -107,11 +107,11 @@ public class Shape extends BaseDisplayObject {
         validate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    protected void setTextureCoordBuffer(final float[] values) {
+    protected boolean setTextureCoordBuffer(final float[] values) {
         if (mTextureCoordBuffer != null) {
             // diff check
             if (Arrays.equals(mTextureCoordBuffer.getValues(), values)) {
-                return;
+                return false;
             }
 
             mTextureCoordBuffer.setValues(values);
@@ -124,6 +124,8 @@ public class Shape extends BaseDisplayObject {
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
         // validateTextureCoordBuffer();
+
+        return true;
     }
 
     public void setTextureCoordBuffer(final TextureCoordBuffer coords) {

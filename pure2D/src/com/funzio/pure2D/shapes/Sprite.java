@@ -58,12 +58,16 @@ public class Sprite extends Rectangular {
             final PointF newSize = frame.getSize();
             if (newSize.x != mSize.x || newSize.y != mSize.y) {
                 setSize(newSize);
+            } else {
+                invalidate();
             }
         } else {
             setTextureCoordBuffer(TextureCoordBuffer.getDefault());
             // fit size to texture
             if (mTexture != null && mSizeToTexture) {
                 setSize(mTexture.getSize());
+            } else {
+                invalidate();
             }
         }
 
