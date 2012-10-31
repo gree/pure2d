@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.shapes;
 
+import java.util.Arrays;
+
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
@@ -90,6 +92,11 @@ public class Shape extends BaseDisplayObject {
 
     protected void setTextureCoordBuffer(final float[] values) {
         if (mTextureCoordBuffer != null) {
+            // diff check
+            if (Arrays.equals(mTextureCoordBuffer.getValues(), values)) {
+                return;
+            }
+
             mTextureCoordBuffer.setValues(values);
         } else {
             mTextureCoordBuffer = new TextureCoordBuffer(values);
