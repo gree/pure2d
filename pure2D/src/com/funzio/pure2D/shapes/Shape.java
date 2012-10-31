@@ -6,6 +6,7 @@ package com.funzio.pure2D.shapes;
 import java.util.Arrays;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
@@ -51,14 +52,30 @@ public class Shape extends BaseDisplayObject {
     public void setTexture(final Texture texture) {
         mTexture = texture;
 
+        invalidate(InvalidateFlags.TEXTURE | InvalidateFlags.TEXTURE_COORDS);
+
         // texture coordinates might need to change
-        invalidateTextureCoordBuffer();
+        // validateTextureCoordBuffer();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#drawStart(com.funzio.pure2D.gl.gl10.GLState)
+     */
+    @Override
+    protected void drawStart(final GLState glState) {
+        // texture coordinates changed?
+        if ((mInvalidateFlags & InvalidateFlags.TEXTURE_COORDS) != 0) {
+            validateTextureCoordBuffer();
+        }
+
+        super.drawStart(glState);
     }
 
     /**
-     * Invalidate texture coords
+     * validate texture coords
      */
-    protected void invalidateTextureCoordBuffer() {
+    private void validateTextureCoordBuffer() {
         // match texture coordinates with the Axis system
         final Scene scene = getScene();
         if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
@@ -86,8 +103,8 @@ public class Shape extends BaseDisplayObject {
             mTextureCoordBufferScaled = null;
         }
 
-        // something has changed
-        invalidate();
+        // clear flag: texture coords
+        validate(InvalidateFlags.TEXTURE_COORDS);
     }
 
     protected void setTextureCoordBuffer(final float[] values) {
@@ -104,7 +121,9 @@ public class Shape extends BaseDisplayObject {
 
         // invalidate texture coords
         mTextureFlippedForAxis = false;
-        invalidateTextureCoordBuffer();
+
+        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        // validateTextureCoordBuffer();
     }
 
     public void setTextureCoordBuffer(final TextureCoordBuffer coords) {
@@ -117,7 +136,9 @@ public class Shape extends BaseDisplayObject {
 
         // invalidate texture coords
         mTextureFlippedForAxis = false;
-        invalidateTextureCoordBuffer();
+
+        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        // validateTextureCoordBuffer();
     }
 
     public TextureCoordBuffer getTextureCoordBuffer() {
@@ -232,7 +253,8 @@ public class Shape extends BaseDisplayObject {
         }
 
         if (flipped) {
-            invalidateTextureCoordBuffer();
+            invalidate(InvalidateFlags.TEXTURE_COORDS);
+            // validateTextureCoordBuffer();
         }
     }
 
@@ -244,6 +266,7 @@ public class Shape extends BaseDisplayObject {
     public void onAdded(final Container parent) {
         super.onAdded(parent);
 
-        invalidateTextureCoordBuffer();
+        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        // validateTextureCoordBuffer();
     }
 }

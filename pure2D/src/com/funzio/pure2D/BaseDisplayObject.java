@@ -57,7 +57,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected int mNumManipulators = 0;
 
     // rect and bounds
-    private int mInvalidateFlags = 0;
+    protected int mInvalidateFlags = 0;
     protected Matrix mMatrix = new Matrix();
     protected boolean mAutoUpdateBounds = false;
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x, -mOrigin.y + mSize.y);;
@@ -100,6 +100,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // restore the matrix
         glState.mGL.glPopMatrix();
+
+        // clear all visual flags
+        validate(InvalidateFlags.VISUAL);
     }
 
     /*
@@ -111,10 +114,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mAutoUpdateBounds && (mInvalidateFlags & InvalidateFlags.BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
-        }
 
-        // clear flags
-        mInvalidateFlags = 0;
+            // clear flags: bounds
+            validate(InvalidateFlags.BOUNDS);
+        }
 
         // update the manipulators if there's any
         if (mNumManipulators > 0) {
@@ -139,6 +142,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mParent != null) {
             mParent.invalidate(mInvalidateFlags);
         }
+    }
+
+    protected void validate(final int flags) {
+        mInvalidateFlags &= ~flags;
     }
 
     /**

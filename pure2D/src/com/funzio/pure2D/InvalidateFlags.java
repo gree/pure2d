@@ -18,7 +18,9 @@ public interface InvalidateFlags {
     public static final int COLOR = 1 << 6;
     public static final int ALPHA = 1 << 7;
     public static final int BLEND = 1 << 8;
-    public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND;
+    public static final int TEXTURE = 1 << 9;
+    public static final int TEXTURE_COORDS = 1 << 10;
+    public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS;
 
     public static final int ALL = BOUNDS | VISUAL;
 }
