@@ -28,19 +28,16 @@ public class ImageSequenceAtlas extends Atlas {
 
     private String mImageDir;
     // textures to load
-    private int mTexturesNum = 0;
+    private Texture[] mTextures;
+    private String[] mTextureNames;
     private int mTexturesLoaded = 0;
     private Texture.Listener mTextureListener = new Texture.Listener() {
         @Override
         public void onTextureLoad(final Texture texture) {
 
             // all textures are loaded?
-            if (++mTexturesLoaded == mTexturesNum) {
-                // callback
-                Log.d(TAG, "createFrames() | done: " + mImageDir);
-                if (mListener != null) {
-                    mListener.onAtlasLoad(ImageSequenceAtlas.this);
-                }
+            if (++mTexturesLoaded == mTextures.length) {
+                createFrames();
             }
         }
     };
@@ -84,7 +81,7 @@ public class ImageSequenceAtlas extends Atlas {
             // create a temp texture for the image
             final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true);
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, filenames[i].split("\\.")[0]);
+            createFrame(texture, filenames[i].split("\\.")[0]);
         }
 
         // callback
@@ -119,7 +116,8 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         // prepare
-        mTexturesNum = filenames.length;
+        mTextures = new Texture[filenames.length];
+        mTextureNames = filenames;
         mTexturesLoaded = 0;
 
         for (int i = 0; i < filenames.length; i++) {
@@ -128,8 +126,8 @@ public class ImageSequenceAtlas extends Atlas {
             // listen to it
             texture.setListener(mTextureListener);
 
-            // add to frame set
-            addFrame(texture, filenames[i].split("\\.")[0]);
+            // for ref later
+            mTextures[i] = texture;
         }
     }
 
@@ -155,7 +153,7 @@ public class ImageSequenceAtlas extends Atlas {
             final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true);
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, files[i].getName().split("\\.")[0]);
+            createFrame(texture, files[i].getName().split("\\.")[0]);
         }
 
         // callback
@@ -185,7 +183,8 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         // prepare
-        mTexturesNum = files.length;
+        mTextures = new Texture[files.length];
+        mTextureNames = new String[files.length];
         mTexturesLoaded = 0;
 
         for (int i = 0; i < files.length; i++) {
@@ -194,23 +193,31 @@ public class ImageSequenceAtlas extends Atlas {
             // listen to it
             texture.setListener(mTextureListener);
 
-            // add to frame set
-            addFrame(texture, files[i].getName().split("\\.")[0]);
+            // for ref later
+            mTextures[i] = texture;
+            mTextureNames[i] = files[i].getName();
         }
     }
 
-    /**
-     * Draws the texture to the FrameBuffer and creates a new Frame
-     * 
-     * @param texture
-     * @param frameName
-     * @return
-     */
-    protected AtlasFrame addFrame(final Texture texture, final String frameName) {
-        // create frame
-        final AtlasFrame frame = new AtlasFrame(texture, mFrameIndex++, frameName);
-        addFrame(frame);
+    private void createFrames() {
+        for (int i = 0; i < mTextures.length; i++) {
+            // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
+            createFrame(mTextures[i], mTextureNames[i].split("\\.")[0]);
+        }
 
-        return frame;
+        // done
+        mTextures = null;
+        mTextureNames = null;
+
+        // callback
+        Log.d(TAG, "createFrames() | done: " + mImageDir);
+        if (mListener != null) {
+            mListener.onAtlasLoad(this);
+        }
+    }
+
+    private void createFrame(final Texture texture, final String frameName) {
+        // create frame
+        addFrame(new AtlasFrame(texture, mFrameIndex++, frameName));
     }
 }

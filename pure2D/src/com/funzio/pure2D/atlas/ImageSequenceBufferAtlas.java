@@ -169,7 +169,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
             }
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, filenames[i].split("\\.")[0], false);
+            createFrame(texture, filenames[i].split("\\.")[0], false);
 
             // unload the texture
             texture.unload();
@@ -210,7 +210,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
 
         // prepare
         mTextures = new Texture[filenames.length];
-        mTextureNames = new String[filenames.length];
+        mTextureNames = filenames;
         mTexturesLoaded = 0;
 
         for (int i = 0; i < filenames.length; i++) {
@@ -221,7 +221,6 @@ public class ImageSequenceBufferAtlas extends Atlas {
 
             // for ref later
             mTextures[i] = texture;
-            mTextureNames[i] = filenames[i];
         }
     }
 
@@ -256,7 +255,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
             }
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, files[i].getName().split("\\.")[0], false);
+            createFrame(texture, files[i].getName().split("\\.")[0], false);
 
             // unload the texture
             texture.unload();
@@ -313,7 +312,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         for (int i = 0; i < mTextures.length; i++) {
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(mTextures[i], mTextureNames[i].split("\\.")[0], false);
+            createFrame(mTextures[i], mTextureNames[i].split("\\.")[0], false);
 
             // unload the texture
             mTextures[i].unload();
@@ -332,14 +331,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         }
     }
 
-    /**
-     * Draws the texture to the FrameBuffer and creates a new Frame
-     * 
-     * @param texture
-     * @param frameName
-     * @return
-     */
-    protected AtlasFrame addFrame(final Texture texture, final String frameName, final boolean autoBind) {
+    private void createFrame(final Texture texture, final String frameName, final boolean autoBind) {
         final PointF frameSize = texture.getSize();
         // find the max frame height to define the row height
         if (frameSize.y > mCurrentRowHeight) {
@@ -379,8 +371,6 @@ public class ImageSequenceBufferAtlas extends Atlas {
             mStartY += mCurrentRowHeight;
             mCurrentRowHeight = 0;
         }
-
-        return frame;
     }
 
     // protected AtlasFrame addFrame(final Bitmap bitmap, final String frameName) {
