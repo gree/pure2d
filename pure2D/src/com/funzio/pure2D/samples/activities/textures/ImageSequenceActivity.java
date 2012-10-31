@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.Atlas;
-import com.funzio.pure2D.atlas.ImageSequenceAtlas;
+import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.samples.activities.StageActivity;
 import com.funzio.pure2D.shapes.Clip;
@@ -22,7 +22,7 @@ public class ImageSequenceActivity extends StageActivity {
     private static final String SDCARD_IMAGE_DIR = Environment.getExternalStorageDirectory() + "/funzio/casino/FarmRiches/images/symbols/majors/bonus";
 
     private Texture mTexture;
-    private ImageSequenceAtlas mAtlas;
+    private ImageSequenceBufferAtlas mAtlas;
 
     private Sprite mAtlasSprite;
     private Atlas.Listener mAtlasListener = new Atlas.Listener() {
@@ -69,7 +69,7 @@ public class ImageSequenceActivity extends StageActivity {
     }
 
     private void createAtlas() {
-        mAtlas = new ImageSequenceAtlas(mScene.getGLState());
+        mAtlas = new ImageSequenceBufferAtlas(mScene.getGLState());
         mAtlas.setListener(mAtlasListener);
         mAtlas.loadDirAsync(getAssets(), IMAGE_DIR, null); // load of assets
         // mAtlas.loadDirAsync(SDCARD_IMAGE_DIR, null); // load of sdcard
@@ -90,7 +90,6 @@ public class ImageSequenceActivity extends StageActivity {
         // obj.setTexture(mTexture);
         // obj.setScale(0.5f, 0.5f);
         Clip obj = new Clip(mAtlas.getMasterFrameSet());
-        obj.setTexture(mTexture);
 
         // center origin
         obj.setOriginAtCenter();

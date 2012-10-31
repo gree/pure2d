@@ -46,6 +46,13 @@ public class Sprite extends Rectangular {
 
     public void setAtlasFrame(final AtlasFrame frame) {
         if (frame != null) {
+
+            // if there is a specific texture
+            final Texture frameTexture = frame.getTexture();
+            if (frameTexture != null) {
+                mTexture = frameTexture;
+            }
+
             setTextureCoordBuffer(frame.getTextureCoords());
             // size changed?
             final PointF newSize = frame.getSize();

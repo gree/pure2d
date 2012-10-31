@@ -6,6 +6,8 @@ package com.funzio.pure2D.atlas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 
+import com.funzio.pure2D.gl.gl10.textures.Texture;
+
 /**
  * @author long
  */
@@ -14,7 +16,9 @@ public class AtlasFrame {
     private Rect mRect = new Rect();
     private float[] mTextureCoords = new float[8];
     private PointF mSize = new PointF();
+
     public PointF mOffset = null;
+    private Texture mTexture;
 
     private final int mIndex;
     private final String mName;
@@ -30,6 +34,20 @@ public class AtlasFrame {
         this(atlas, index, name, rect.left, rect.top, rect.right, rect.bottom);
     }
 
+    public AtlasFrame(final Texture texture, final int index, final String name, final Rect rect) {
+        mIndex = index;
+        mTexture = texture;
+        setRect(rect);
+        mName = name;
+    }
+
+    public AtlasFrame(final Texture texture, final int index, final String name) {
+        mIndex = index;
+        mTexture = texture;
+        setRect(0, 0, (int) mTexture.getSize().x - 1, (int) mTexture.getSize().y - 1);
+        mName = name;
+    }
+
     public void setRect(final int left, final int top, final int right, final int bottom) {
         mRect.left = left;
         mRect.right = right;
@@ -40,18 +58,34 @@ public class AtlasFrame {
         mSize.x = right - left + 1;
         mSize.y = bottom - top + 1;
 
-        // TL
-        mTextureCoords[0] = (float) left / mAtlas.mWidth;
-        mTextureCoords[1] = (float) top / mAtlas.mHeight;
-        // BL
-        mTextureCoords[2] = (float) left / mAtlas.mWidth;
-        mTextureCoords[3] = (float) bottom / mAtlas.mHeight;
-        // TR
-        mTextureCoords[4] = (float) right / mAtlas.mWidth;
-        mTextureCoords[5] = (float) top / mAtlas.mHeight;
-        // BR
-        mTextureCoords[6] = (float) right / mAtlas.mWidth;
-        mTextureCoords[7] = (float) bottom / mAtlas.mHeight;
+        if (mTexture != null) {
+            final PointF size = mTexture.getSize();
+            // TL
+            mTextureCoords[0] = left / size.x;
+            mTextureCoords[1] = top / size.y;
+            // BL
+            mTextureCoords[2] = left / size.x;
+            mTextureCoords[3] = bottom / size.y;
+            // TR
+            mTextureCoords[4] = right / size.x;
+            mTextureCoords[5] = top / size.y;
+            // BR
+            mTextureCoords[6] = right / size.x;
+            mTextureCoords[7] = bottom / size.y;
+        } else {
+            // TL
+            mTextureCoords[0] = (float) left / mAtlas.mWidth;
+            mTextureCoords[1] = (float) top / mAtlas.mHeight;
+            // BL
+            mTextureCoords[2] = (float) left / mAtlas.mWidth;
+            mTextureCoords[3] = (float) bottom / mAtlas.mHeight;
+            // TR
+            mTextureCoords[4] = (float) right / mAtlas.mWidth;
+            mTextureCoords[5] = (float) top / mAtlas.mHeight;
+            // BR
+            mTextureCoords[6] = (float) right / mAtlas.mWidth;
+            mTextureCoords[7] = (float) bottom / mAtlas.mHeight;
+        }
     }
 
     public void setRect(final Rect rect) {
@@ -96,6 +130,10 @@ public class AtlasFrame {
      */
     public String getName() {
         return mName;
+    }
+
+    public Texture getTexture() {
+        return mTexture;
     }
 
     @Override

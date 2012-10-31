@@ -6,23 +6,14 @@ package com.funzio.pure2D.atlas;
 import java.io.File;
 import java.io.IOException;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.content.res.AssetManager;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.Rect;
 import android.util.Log;
 
-import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
-import com.funzio.pure2D.gl.gl10.textures.BufferTexture;
 import com.funzio.pure2D.gl.gl10.textures.FileTexture;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
-import com.funzio.pure2D.shapes.Sprite;
-import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
@@ -32,34 +23,24 @@ public class ImageSequenceAtlas extends Atlas {
     public static final String TAG = ImageSequenceAtlas.class.getSimpleName();
 
     private GLState mGLState;
-    private GL10 mGL;
-    private BufferTexture mTexture;
-    private FrameBuffer mFrameBuffer;
 
-    private int mStartX = 0;
-    private int mStartY = 0;
-    private int mCurrentRowHeight = 0;
     private int mFrameIndex = 0;
-    private Sprite mDrawer;
 
     private String mImageDir;
     // textures to load
-    private Texture[] mTextures;
-    private String[] mTextureNames;
+    private int mTexturesNum = 0;
     private int mTexturesLoaded = 0;
     private Texture.Listener mTextureListener = new Texture.Listener() {
         @Override
         public void onTextureLoad(final Texture texture) {
 
-            // init the buffer based on the first texture
-            if (mTexturesLoaded == 0) {
-                initBuffer(texture, mTextures.length);
-            }
-
             // all textures are loaded?
-            if (++mTexturesLoaded == mTextures.length) {
-                // create the frames
-                createFrames();
+            if (++mTexturesLoaded == mTexturesNum) {
+                // callback
+                Log.d(TAG, "createFrames() | done: " + mImageDir);
+                if (mListener != null) {
+                    mListener.onAtlasLoad(ImageSequenceAtlas.this);
+                }
             }
         }
     };
@@ -73,62 +54,6 @@ public class ImageSequenceAtlas extends Atlas {
         Log.v(TAG, "ImageSequenceAtlas()");
 
         mGLState = glState;
-        mGL = mGLState.mGL;
-
-        if (!FrameBuffer.isSupported(mGL)) {
-            Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
-            return;
-        }
-    }
-
-    // public ImageSequenceAtlas(final GLState glState, final int width, final int height) {
-    // Log.v(TAG, "ImageSequenceAtlas() " + width + " " + height);
-    //
-    // mGLState = glState;
-    // mGL = mGLState.mGL;
-    //
-    // if (!FrameBuffer.isSupported(mGL)) {
-    // Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
-    // return;
-    // }
-    //
-    // // init texture and frame buffer
-    // initBuffer(width, height);
-    // }
-
-    // public void reset(final GLState glState, final int width, final int height) {
-    // mGLState = glState;
-    // mGL = mGLState.mGL;
-    //
-    // // init texture and frame buffer
-    // initBuffer(width, height);
-    // }
-
-    /**
-     * Creates a buffer texture to bind to the frame buffer
-     * 
-     * @param width
-     * @param height
-     */
-    private void initBuffer(final int width, final int height) {
-        Log.v(TAG, String.format("initBuffer(%d, %d)", width, height));
-
-        // make sure the size is power of 2
-        mWidth = Pure2DUtils.getNextPO2(width);
-        mHeight = Pure2DUtils.getNextPO2(height);
-
-        // create a new texture
-        mFrameBuffer = new FrameBuffer(mGLState, mWidth, mHeight);
-        mTexture = (BufferTexture) mFrameBuffer.getTexture();
-    }
-
-    private void initBuffer(final Texture firstTexture, final int numFrames) {
-        // find the atlas texture size that fits all the frames, assuming all the images have the same dimensions
-        final PointF size = firstTexture.getSize();
-        final Point textureSize = Pure2DUtils.getSmallestTextureSize((int) size.x, (int) size.y, numFrames, mGLState.getMaxTextureSize());
-
-        // init texture and frame buffer
-        initBuffer(textureSize.x, textureSize.y);
     }
 
     /**
@@ -156,26 +81,11 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         for (int i = 0; i < filenames.length; i++) {
-
             // create a temp texture for the image
             final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true);
-
-            // init the buffer based on the first texture
-            if (i == 0) {
-                initBuffer(texture, filenames.length);
-
-                // start drawing images to the frame buffer
-                mFrameBuffer.bind();
-            }
-
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, filenames[i].split("\\.")[0], false);
-
-            // unload the texture
-            texture.unload();
+            addFrame(texture, filenames[i].split("\\.")[0]);
         }
-        mFrameBuffer.unbind();
-        mFrameBuffer.unload();
 
         // callback
         Log.d(TAG, "loadDir() | done: " + assetDir);
@@ -209,8 +119,7 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         // prepare
-        mTextures = new Texture[filenames.length];
-        mTextureNames = new String[filenames.length];
+        mTexturesNum = filenames.length;
         mTexturesLoaded = 0;
 
         for (int i = 0; i < filenames.length; i++) {
@@ -219,9 +128,8 @@ public class ImageSequenceAtlas extends Atlas {
             // listen to it
             texture.setListener(mTextureListener);
 
-            // for ref later
-            mTextures[i] = texture;
-            mTextureNames[i] = filenames[i];
+            // add to frame set
+            addFrame(texture, filenames[i].split("\\.")[0]);
         }
     }
 
@@ -243,26 +151,12 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         for (int i = 0; i < files.length; i++) {
-
             // create a temp texture for the image
             final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true);
 
-            // init the buffer based on the first texture
-            if (i == 0) {
-                initBuffer(texture, files.length);
-
-                // start drawing images to the frame buffer
-                mFrameBuffer.bind();
-            }
-
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(texture, files[i].getName().split("\\.")[0], false);
-
-            // unload the texture
-            texture.unload();
+            addFrame(texture, files[i].getName().split("\\.")[0]);
         }
-        mFrameBuffer.unbind();
-        mFrameBuffer.unload();
 
         // callback
         Log.d(TAG, "loadDir() | done: " + dir);
@@ -291,8 +185,7 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         // prepare
-        mTextures = new Texture[files.length];
-        mTextureNames = new String[files.length];
+        mTexturesNum = files.length;
         mTexturesLoaded = 0;
 
         for (int i = 0; i < files.length; i++) {
@@ -301,34 +194,8 @@ public class ImageSequenceAtlas extends Atlas {
             // listen to it
             texture.setListener(mTextureListener);
 
-            // for ref later
-            mTextures[i] = texture;
-            mTextureNames[i] = files[i].getName();
-        }
-    }
-
-    protected void createFrames() {
-        // start drawing images to the frame buffer
-        mFrameBuffer.bind();
-        for (int i = 0; i < mTextures.length; i++) {
-
-            // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
-            addFrame(mTextures[i], mTextureNames[i].split("\\.")[0], false);
-
-            // unload the texture
-            mTextures[i].unload();
-        }
-        mFrameBuffer.unbind();
-        mFrameBuffer.unload();
-
-        // done
-        mTextures = null;
-        mTextureNames = null;
-
-        // callback
-        Log.d(TAG, "createFrames() | done: " + mImageDir);
-        if (mListener != null) {
-            mListener.onAtlasLoad(this);
+            // add to frame set
+            addFrame(texture, files[i].getName().split("\\.")[0]);
         }
     }
 
@@ -339,72 +206,11 @@ public class ImageSequenceAtlas extends Atlas {
      * @param frameName
      * @return
      */
-    protected AtlasFrame addFrame(final Texture texture, final String frameName, final boolean autoBind) {
-        final PointF frameSize = texture.getSize();
-        // find the max frame height to define the row height
-        if (frameSize.y > mCurrentRowHeight) {
-            mCurrentRowHeight = (int) frameSize.y;
-        }
-
-        if (autoBind) {
-            // start drawing to the frame buffer
-            mFrameBuffer.bind();
-        }
-
-        if (mDrawer == null) {
-            // init the drawer
-            mDrawer = new Sprite();
-        }
-        // use the texture
-        mDrawer.setTexture(texture);
-        // move to the right position
-        mDrawer.moveTo(mStartX, mHeight - mStartY - frameSize.y);
-        // draw onto frame buffer
-        mDrawer.draw(mGLState);
-
-        if (autoBind) {
-            // done drawing
-            mFrameBuffer.unbind();
-        }
-
+    protected AtlasFrame addFrame(final Texture texture, final String frameName) {
         // create frame
-        final AtlasFrame frame = new AtlasFrame(this, mFrameIndex++, frameName, new Rect(mStartX, mStartY, mStartX + (int) frameSize.x - 1, mStartY + (int) frameSize.y - 1));
+        final AtlasFrame frame = new AtlasFrame(texture, mFrameIndex++, frameName);
         addFrame(frame);
-
-        // find next position
-        mStartX += frameSize.x;
-        if (mStartX + frameSize.x > mWidth) {
-            // go to new row
-            mStartX = 0;
-            mStartY += mCurrentRowHeight;
-            mCurrentRowHeight = 0;
-        }
 
         return frame;
     }
-
-    // protected AtlasFrame addFrame(final Bitmap bitmap, final String frameName) {
-    // // create a temp texture from the given bitmap
-    // Texture texture = new Texture(mGLState, bitmap) {
-    // @Override
-    // public void reload() {
-    // // TODO Auto-generated method stub
-    // }
-    // };
-    //
-    // // draw the texture into the frame buffer
-    // AtlasFrame frame = addFrame(texture, frameName, true);
-    // // and unload it
-    // texture.unload();
-    //
-    // return frame;
-    // }
-
-    public BufferTexture getTexture() {
-        return mTexture;
-    }
-
-    // public FrameBuffer getFrameBuffer() {
-    // return mFrameBuffer;
-    // }
 }

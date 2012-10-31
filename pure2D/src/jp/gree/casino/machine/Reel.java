@@ -3,7 +3,7 @@
  */
 package jp.gree.casino.machine;
 
-import com.funzio.pure2D.atlas.ImageSequenceAtlas;
+import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
 import com.funzio.pure2D.containers.VWheel;
 
 /**
@@ -24,7 +24,7 @@ public class Reel extends VWheel {
         }
     }
 
-    protected void createSymbol(final int index, final ImageSequenceAtlas atlas) {
+    protected void createSymbol(final int index, final ImageSequenceBufferAtlas atlas) {
         Symbol symbol = new Symbol(atlas);
         // symbol.stop();
         addChild(symbol);
