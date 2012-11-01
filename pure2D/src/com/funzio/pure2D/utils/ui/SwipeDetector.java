@@ -15,9 +15,12 @@ public class SwipeDetector implements View.OnTouchListener {
     private int mMinDistance = 100;
     private float mDownX, mDownY;
 
-    public SwipeDetector(final SwipeListener listener, final int minDistance) {
+    public SwipeDetector(final SwipeListener listener, final View view) {
         mListener = listener;
-        mMinDistance = minDistance;
+
+        if (view != null) {
+            view.setOnTouchListener(this);
+        }
     }
 
     public SwipeDetector(final SwipeListener listener) {
@@ -33,6 +36,14 @@ public class SwipeDetector implements View.OnTouchListener {
 
     public void setListener(final SwipeListener listener) {
         mListener = listener;
+    }
+
+    public int getMinDistance() {
+        return mMinDistance;
+    }
+
+    public void setMinDistance(final int minDistance) {
+        mMinDistance = minDistance;
     }
 
     public boolean onTouch(final View view, final MotionEvent event) {
