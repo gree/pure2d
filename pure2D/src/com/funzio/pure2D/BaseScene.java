@@ -43,7 +43,7 @@ public class BaseScene implements Scene {
     // frame rate
     private int mFrameCount = 0;
     private float mFrameCountDuration = 0;
-    private int mCurrentFps = 0;
+    private volatile int mCurrentFps = 0; // thread independent
     private int mTargetFps = 0; // 0 = unlimited
     private int mTargetDuration = 1000 / (mTargetFps > 0 ? mTargetFps : DEFAULT_FPS);
     private int mTargetDurationJitter = (int) (mTargetDuration * 0.15f);
@@ -62,17 +62,17 @@ public class BaseScene implements Scene {
     /**
      * @return the stage
      */
-    public Stage getStage() {
+    final public Stage getStage() {
         return mStage;
     }
 
-    public void queueEvent(final Runnable r) {
+    final public void queueEvent(final Runnable r) {
         if (mStage != null) {
             mStage.queueEvent(r);
         }
     }
 
-    public void queueEvent(final Runnable r, final int delayMillis) {
+    final public void queueEvent(final Runnable r, final int delayMillis) {
         if (mStage != null) {
             mStage.getHandler().postDelayed(new Runnable() {
 
@@ -107,18 +107,18 @@ public class BaseScene implements Scene {
         }
     }
 
-    public int getAxisSystem() {
+    final public int getAxisSystem() {
         return mAxisSystem;
     }
 
-    public int getCurrentFps() {
+    final public int getCurrentFps() {
         return mCurrentFps;
     }
 
     /**
      * @return the target fps
      */
-    public int getTargetFps() {
+    final public int getTargetFps() {
         return mTargetFps;
     }
 
@@ -136,7 +136,7 @@ public class BaseScene implements Scene {
         mListener = listener;
     }
 
-    public GLState getGLState() {
+    final public GLState getGLState() {
         return mGLState;
     }
 
@@ -148,7 +148,7 @@ public class BaseScene implements Scene {
         mTextureManager = textureManager;
     }
 
-    public TextureManager getTextureManager() {
+    final public TextureManager getTextureManager() {
         return mTextureManager;
     }
 
@@ -159,7 +159,7 @@ public class BaseScene implements Scene {
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
         // this might help but I have not seen any difference yet!
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         mStartTime = System.nanoTime();
         mDownTime = 0;
@@ -374,26 +374,26 @@ public class BaseScene implements Scene {
         // TODO
     }
 
-    public void invalidate() {
+    final public void invalidate() {
         if (mInvalidated < mBuffersToInvalidate) {
             mInvalidated = mBuffersToInvalidate;
         }
     }
 
-    public void invalidate(final int flags) {
+    final public void invalidate(final int flags) {
         if (mInvalidated < mBuffersToInvalidate) {
             mInvalidated = mBuffersToInvalidate;
         }
     }
 
-    public void invalidateBuffers(final int numBuffers) {
+    final public void invalidateBuffers(final int numBuffers) {
         mInvalidated = numBuffers;
     }
 
     /**
      * @return the color
      */
-    public GLColor getColor() {
+    final public GLColor getColor() {
         return mColor;
     }
 
@@ -413,7 +413,7 @@ public class BaseScene implements Scene {
     /**
      * @return the autoClear
      */
-    public boolean isAutoClear() {
+    final public boolean isAutoClear() {
         return mAutoClear;
     }
 
@@ -541,22 +541,22 @@ public class BaseScene implements Scene {
         return n;
     }
 
-    public PointF getSize() {
+    final public PointF getSize() {
         return mSize;
     }
 
-    public float getWidth() {
+    final public float getWidth() {
         return mSize.x;
     }
 
-    public float getHeight() {
+    final public float getHeight() {
         return mSize.y;
     }
 
     /**
      * @return the camera
      */
-    public Camera getCamera() {
+    final public Camera getCamera() {
         return mCamera;
     }
 
@@ -601,7 +601,7 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
-    public PointF localToGlobal(final PointF pt) {
+    final public PointF localToGlobal(final PointF pt) {
         return new PointF(pt.x, pt.y);
     }
 
@@ -610,7 +610,7 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
-    public PointF globalToLocal(final PointF pt) {
+    final public PointF globalToLocal(final PointF pt) {
         return new PointF(pt.x, pt.y);
     }
 
@@ -621,7 +621,7 @@ public class BaseScene implements Scene {
      * @param globalY
      * @return
      */
-    public PointF globalToScreen(final float globalX, final float globalY) {
+    final public PointF globalToScreen(final float globalX, final float globalY) {
         final Rect stageRect = mStage.getRect();
         final PointF screen;
         // check the camera
@@ -652,7 +652,7 @@ public class BaseScene implements Scene {
      * @return
      * @see #globalToScreen(float, float)
      */
-    public PointF globalToScreen(final PointF global) {
+    final public PointF globalToScreen(final PointF global) {
         return globalToScreen(global.x, global.y);
     }
 
@@ -663,7 +663,7 @@ public class BaseScene implements Scene {
      * @param screenY
      * @return
      */
-    public PointF screenToGlobal(final float screenX, final float screenY) {
+    final public PointF screenToGlobal(final float screenX, final float screenY) {
         final Rect stageRect = mStage.getRect();
         float localX = screenX - stageRect.left;
         float localY;
@@ -690,18 +690,18 @@ public class BaseScene implements Scene {
      * @return
      * @see BaseScene#screenToGlobal(float, float)
      */
-    public PointF screenToGlobal(final PointF screen) {
+    final public PointF screenToGlobal(final PointF screen) {
         return screenToGlobal(screen.x, screen.y);
     }
 
     /**
      * Scene got no matrix
      */
-    public Matrix getMatrix() {
+    final public Matrix getMatrix() {
         return null;
     }
 
-    public int getBuffersToInvalidate() {
+    final public int getBuffersToInvalidate() {
         return mBuffersToInvalidate;
     }
 

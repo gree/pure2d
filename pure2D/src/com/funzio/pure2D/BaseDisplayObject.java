@@ -130,13 +130,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return false;
     }
 
-    public void invalidate() {
+    final public void invalidate() {
         if (mParent != null) {
             mParent.invalidate();
         }
     }
 
-    public void invalidate(final int flags) {
+    final public void invalidate(final int flags) {
         mInvalidateFlags |= flags;
 
         if (mParent != null) {
@@ -144,7 +144,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
     }
 
-    protected void validate(final int flags) {
+    final protected void validate(final int flags) {
         mInvalidateFlags &= ~flags;
     }
 
@@ -164,7 +164,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @see com.funzio.pure2D.IDisplayObject#getAlive()
      */
     @Override
-    public boolean isAlive() {
+    final public boolean isAlive() {
         return mAlive;
     }
 
@@ -183,14 +183,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @see com.funzio.pure2D.IDisplayObject#getVisible()
      */
     @Override
-    public boolean isVisible() {
+    final public boolean isVisible() {
         return mVisible;
     }
 
     /**
      * @return the position
      */
-    public PointF getPosition() {
+    final public PointF getPosition() {
         return mPosition;
     }
 
@@ -215,7 +215,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.POSITION);
     }
 
-    public float getX() {
+    final public float getX() {
         return mPosition.x;
     }
 
@@ -224,7 +224,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.POSITION);
     }
 
-    public float getY() {
+    final public float getY() {
         return mPosition.y;
     }
 
@@ -238,7 +238,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.POSITION);
     }
 
-    public float getZ() {
+    final public float getZ() {
         return mZ;
     }
 
@@ -257,7 +257,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the origin
      */
-    public PointF getOrigin() {
+    final public PointF getOrigin() {
         return mOrigin;
     }
 
@@ -281,15 +281,15 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the size
      */
-    public PointF getSize() {
+    final public PointF getSize() {
         return mSize;
     }
 
-    public float getWidth() {
+    final public float getWidth() {
         return mSize.x;
     }
 
-    public float getHeight() {
+    final public float getHeight() {
         return mSize.y;
     }
 
@@ -326,7 +326,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.SCALE);
     }
 
-    public PointF getScale() {
+    final public PointF getScale() {
         return mScale;
     }
 
@@ -340,7 +340,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.ROTATION);
     }
 
-    public float getRotation() {
+    final public float getRotation() {
         return mRotation;
     }
 
@@ -351,7 +351,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the color
      */
-    public GLColor getColor() {
+    final public GLColor getColor() {
         return mColor;
     }
 
@@ -366,7 +366,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    protected GLColor getSumColor() {
+    final protected GLColor getSumColor() {
         if (mSumColor == null) {
             // init the mSumColor
             mSumColor = (mColor == null) ? new GLColor(1f, 1f, 1f, mAlpha) : new GLColor(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
@@ -397,7 +397,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the alpha
      */
-    public float getAlpha() {
+    final public float getAlpha() {
         return mAlpha;
     }
 
@@ -412,7 +412,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the fps
      */
-    public int getFps() {
+    final public int getFps() {
         return mFps;
     }
 
@@ -472,7 +472,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.BLEND);
     }
 
-    public boolean isAlphaTestEnabled() {
+    final public boolean isAlphaTestEnabled() {
         return mAlphaTestEnabled;
     }
 
@@ -488,7 +488,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.ALPHA);
     }
 
-    public Maskable getMask() {
+    final public Maskable getMask() {
         return mMask;
     }
 
@@ -506,7 +506,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return null;
     }
 
-    public Scene getScene() {
+    final public Scene getScene() {
         if (mScene == null) {
             mScene = findScene();
         }
@@ -514,11 +514,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mScene;
     }
 
-    public Container getParent() {
+    final public Container getParent() {
         return mParent;
     }
 
-    protected void queueEvent(final Runnable r) {
+    final protected void queueEvent(final Runnable r) {
         if (getScene() != null) {
             mScene.queueEvent(r);
         } else if (Pure2D.ADAPTER != null) {
@@ -540,7 +540,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param pt
      * @return
      */
-    public PointF localToGlobal(final PointF pt) {
+    final public PointF localToGlobal(final PointF pt) {
         // final PointF temp = new PointF(pt.x + mPosition.x - mOrigin.x, pt.y + mPosition.y - mOrigin.y);
         final PointF temp = new PointF(pt.x + mPosition.x, pt.y + mPosition.y);
         if (mParent != null && !(mParent instanceof Scene)) {
@@ -556,7 +556,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param pt
      * @return
      */
-    public PointF globalToLocal(final PointF pt) {
+    final public PointF globalToLocal(final PointF pt) {
         final PointF local;
         if (mParent != null && !(mParent instanceof Scene)) {
             local = mParent.globalToLocal(pt);
@@ -572,7 +572,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * Find the global bounds of this object that takes position, scale, rotation... into account. Used mainly for Camera clipping.
      */
-    public RectF updateBounds() {
+    final public RectF updateBounds() {
         // init
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
         boolean changed = false;
@@ -636,7 +636,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mBounds;
     }
 
-    public Matrix getMatrix() {
+    final public Matrix getMatrix() {
         return mMatrix;
     }
 
@@ -645,14 +645,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * 
      * @return
      */
-    public RectF getBounds() {
+    final public RectF getBounds() {
         return mBounds;
     }
 
     /**
      * @return the autoUpdateBounds
      */
-    public boolean isAutoUpdateBounds() {
+    final public boolean isAutoUpdateBounds() {
         return mAutoUpdateBounds;
     }
 
