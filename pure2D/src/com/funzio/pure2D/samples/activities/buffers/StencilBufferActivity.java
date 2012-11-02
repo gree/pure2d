@@ -45,13 +45,16 @@ public class StencilBufferActivity extends StageActivity {
      */
     @Override
     protected BaseScene createScene() {
-        // mStage.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+        // NOTE: this is needed for some certain devices such as Galaxy Tab
+        // and need to be set before Scene assignment
+        mStage.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+
         return super.createScene();
     }
 
     private void createMask() {
         mMask = new MaskGroup();
-        mMask.setShowContent(true);
+        mMask.setRenderChildren(true);
         mMask.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
         mScene.addChild(mMask);
 

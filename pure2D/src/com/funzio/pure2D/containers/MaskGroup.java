@@ -15,7 +15,7 @@ import com.funzio.pure2D.gl.gl10.StencilBuffer;
 public class MaskGroup extends DisplayGroup implements Maskable {
 
     private StencilBuffer mStencilBuffer = new StencilBuffer();
-    private boolean mShowContent = false;
+    private boolean mRenderChildren = false;
 
     public MaskGroup() {
         super();
@@ -30,7 +30,7 @@ public class MaskGroup extends DisplayGroup implements Maskable {
         mStencilBuffer.endMask();
 
         // if show children
-        if (mShowContent) {
+        if (mRenderChildren) {
             super.draw(glState);
         }
 
@@ -50,11 +50,11 @@ public class MaskGroup extends DisplayGroup implements Maskable {
         mStencilBuffer.endTest();
     }
 
-    public boolean getShowContent() {
-        return mShowContent;
+    public boolean getRenderChildren() {
+        return mRenderChildren;
     }
 
-    public void setShowContent(final boolean show) {
-        mShowContent = show;
+    public void setRenderChildren(final boolean show) {
+        mRenderChildren = show;
     }
 }
