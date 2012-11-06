@@ -98,9 +98,9 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     }
 
     public void play(final Media media) {
-        if (!mSoundEnabled) {
-            return;
-        }
+        // if (!mSoundEnabled && !forcePlay) {
+        // return;
+        // }
 
         try {
             mMediaPlayer.reset(); // reset the mediaplayer state
