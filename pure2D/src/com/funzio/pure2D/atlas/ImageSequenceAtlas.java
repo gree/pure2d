@@ -216,8 +216,15 @@ public class ImageSequenceAtlas extends Atlas {
         }
     }
 
-    private void createFrame(final Texture texture, final String frameName) {
+    private boolean createFrame(final Texture texture, final String frameName) {
         // create frame
-        addFrame(new AtlasFrame(texture, mFrameIndex++, frameName));
+        if (texture.isLoaded()) {
+            addFrame(new AtlasFrame(texture, mFrameIndex++, frameName));
+        } else {
+            Log.e(TAG, "Texture not loaded! " + frameName);
+            return false;
+        }
+
+        return true;
     }
 }

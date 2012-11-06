@@ -89,15 +89,15 @@ public class Pure2DUtils {
     public static Bitmap getFileBitmap(final String filePath, final TextureOptions options, final boolean po2, final int[] outDimensions) {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath, (options == null) ? TextureOptions.getDefault() : options);
 
+        if (bitmap == null) {
+            return null;
+        }
+
         // resize to the specified size
         if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
             final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
             bitmap.recycle();
             bitmap = newBitmap;
-        }
-
-        if (bitmap == null) {
-            return null;
         }
 
         if (po2) {
@@ -124,6 +124,10 @@ public class Pure2DUtils {
      */
     public static Bitmap getStreamBitmap(final InputStream stream, final TextureOptions options, final boolean po2, final int[] outDimensions) {
         Bitmap bitmap = BitmapFactory.decodeStream(stream, null, (options == null) ? TextureOptions.getDefault() : options);
+
+        if (bitmap == null) {
+            return null;
+        }
 
         // resize to the specified size
         if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {

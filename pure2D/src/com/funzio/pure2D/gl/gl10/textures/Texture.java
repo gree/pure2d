@@ -191,6 +191,10 @@ public abstract class Texture {
         return mTextureID;
     }
 
+    public boolean isLoaded() {
+        return mTextureID != 0;
+    }
+
     public void reload(final GLState glState) {
         mGLState = glState;
         mGL = mGLState.mGL;
