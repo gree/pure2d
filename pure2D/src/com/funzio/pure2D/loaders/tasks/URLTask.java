@@ -18,6 +18,7 @@ import android.util.Log;
  */
 public abstract class URLTask implements IntentTask {
     public static boolean LOG_ENABLED = true;
+    protected static final int DEFAULT_BUFFER = 1024;
 
     private static final String TAG = URLTask.class.getSimpleName();
     private static final String CLASS_NAME = URLTask.class.getName();
@@ -25,13 +26,18 @@ public abstract class URLTask implements IntentTask {
     public static final String INTENT_COMPLETE = CLASS_NAME + ".INTENT_COMPLETE";
     public static String EXTRA_URL = "url";
 
-    protected static final int BUFFER = 1024;
-
+    protected int mBufferSize = DEFAULT_BUFFER;
     protected final String mURL;
+    protected int mContentLength = -1;
     protected int mTotalBytesLoaded;
 
     public URLTask(final String url) {
         mURL = url;
+    }
+
+    public URLTask(final String url, final int bufferSize) {
+        mURL = url;
+        mBufferSize = bufferSize;
     }
 
     public String getURL() {
@@ -46,6 +52,7 @@ public abstract class URLTask implements IntentTask {
             final URL address = new URL(mURL);
 
             conn = address.openConnection();
+            mContentLength = conn.getContentLength();
 
         } catch (Exception e) {
             if (LOG_ENABLED) {
@@ -58,7 +65,7 @@ public abstract class URLTask implements IntentTask {
         mTotalBytesLoaded = 0;
         try {
             final BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            final byte[] data = new byte[BUFFER];
+            final byte[] data = new byte[mBufferSize];
             while ((count = inputStream.read(data)) != -1) {
                 mTotalBytesLoaded += count;
                 onProgress(data, count);
@@ -71,7 +78,8 @@ public abstract class URLTask implements IntentTask {
             return false;
         }
 
-        return true;
+        // verify the size if it's specified
+        return mContentLength < 0 || (mContentLength == mTotalBytesLoaded);
     }
 
     protected boolean postURL(final String data) {
@@ -93,14 +101,14 @@ public abstract class URLTask implements IntentTask {
             return false;
         }
 
-        //now that connection is open send data
+        // now that connection is open send data
         try {
             OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
             os.write(data);
             os.close();
             conn.getResponseCode();
 
-            //TODO: Add support to save or return http response
+            // TODO: Add support to save or return http response
 
         } catch (IOException e) {
 

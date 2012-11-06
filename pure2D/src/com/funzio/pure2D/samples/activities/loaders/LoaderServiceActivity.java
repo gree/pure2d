@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
@@ -18,6 +19,7 @@ import com.funzio.pure2D.shapes.Sprite;
 
 public class LoaderServiceActivity extends StageActivity {
     private boolean mLoading = false;
+    private long mStartTime;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -27,7 +29,10 @@ public class LoaderServiceActivity extends StageActivity {
             @Override
             public void onReceive(final Context context, final Intent intent) {
                 Log.v("long", "ALL TASKS ARE DONE! " + intent.getAction());
+                Log.v("long", "Load time: " + (System.currentTimeMillis() - mStartTime));
+
                 mLoading = false;
+                ((Button) findViewById(R.id.btn_load)).setText(R.string.start_loading);
             }
         }, new IntentFilter(HelloLoaderService.getOnFinishAction()));
 
@@ -102,8 +107,11 @@ public class LoaderServiceActivity extends StageActivity {
                     }
                 });
 
+                mStartTime = System.currentTimeMillis();
                 startService(HelloLoaderService.getStartIntent());
                 mLoading = true;
+
+                ((Button) view).setText(R.string.loading);
             }
         }
     }
