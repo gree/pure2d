@@ -24,6 +24,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
 
     protected final MediaPlayer mMediaPlayer;
 
+    private boolean mMediaLoaded = false;
+
     protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
         mSoundMap = new SparseArray<Soundable>();
@@ -105,6 +107,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
             mMediaPlayer.stop();
         }
 
+        mMediaLoaded = true;
         mMediaPlayer.reset(); // reset the mediaplayer state
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
         mMediaPlayer.setLooping(media.isLooping());
@@ -116,12 +119,13 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     }
 
     public void stopMedia() {
-        if (mMediaPlayer.isPlaying()) {
+        if (mMediaLoaded && mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
         }
     }
 
     public void releaseMedia() {
+        mMediaLoaded = false;
         mMediaPlayer.release();
     }
 
