@@ -100,7 +100,11 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         // return;
         // }
 
-        mMediaPlayer.stop();
+        // stop first
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
+
         mMediaPlayer.reset(); // reset the mediaplayer state
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
         mMediaPlayer.setLooping(media.isLooping());
@@ -112,7 +116,9 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     }
 
     public void stopMedia() {
-        mMediaPlayer.stop();
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
     }
 
     public void releaseMedia() {
