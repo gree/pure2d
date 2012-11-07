@@ -83,6 +83,7 @@ public abstract class URLTask implements IntentTask {
         return mContentLength < 0 || (mContentLength == mTotalBytesLoaded);
     }
 
+    @Deprecated
     protected boolean postURL(final String data) {
         final HttpURLConnection conn;
 
