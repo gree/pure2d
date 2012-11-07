@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 import android.content.Intent;
 import android.util.Log;
@@ -93,6 +94,51 @@ public abstract class URLTask implements IntentTask {
 
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=" + "utf-8");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setFixedLengthStreamingMode(data.getBytes().length);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return false;
+        }
+
+        // now that connection is open send data
+        try {
+            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
+            os.write(data);
+            os.close();
+            conn.getResponseCode();
+
+            // TODO: Add support to save or return http response
+
+        } catch (IOException e) {
+
+            if (LOG_ENABLED) {
+                Log.v(TAG, "WRITE ERROR!", e);
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean postURL(final String data, final Map<String, String> properties) {
+        final HttpURLConnection conn;
+
+        try {
+            URL address = new URL(mURL);
+            conn = (HttpURLConnection) address.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+
+            //add properties to the post http request
+            for (String key : properties.keySet()) {
+                String value = properties.get(key);
+                if (value != null) {
+                    conn.setRequestProperty(key, value);
+                }
+            }
+
             conn.setFixedLengthStreamingMode(data.getBytes().length);
 
         } catch (IOException e) {
