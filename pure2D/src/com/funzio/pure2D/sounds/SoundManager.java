@@ -22,9 +22,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     protected final Context mContext;
     protected final AudioManager mAudioManager;
 
-    protected final MediaPlayer mMediaPlayer;
-
-    private boolean mMediaLoaded = false;
+    protected MediaPlayer mMediaPlayer;
 
     protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
@@ -34,8 +32,6 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         mSoundPool.setOnLoadCompleteListener(this);
 
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-
-        mMediaPlayer = new MediaPlayer();
     }
 
     public boolean isSoundEnabled() {
@@ -102,7 +98,10 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         // return;
         // }
 
-        mMediaLoaded = true;
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        }
+
         mMediaPlayer.reset(); // reset the mediaplayer state
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
         mMediaPlayer.setLooping(media.isLooping());
@@ -114,14 +113,16 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     }
 
     public void stopMedia() {
-        if (mMediaLoaded && mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
         }
     }
 
     public void releaseMedia() {
-        mMediaLoaded = false;
-        mMediaPlayer.release();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     protected int playByID(final int soundID) {
@@ -159,7 +160,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         mSoundMap.clear();
 
         mSoundPool.release();
-        mMediaPlayer.release();
+
+        releaseMedia();
     }
 
     public void onLoadComplete(final SoundPool soundPool, final int sampleId, final int status) {
