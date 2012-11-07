@@ -102,11 +102,6 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         // return;
         // }
 
-        // stop first
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
-        }
-
         mMediaLoaded = true;
         mMediaPlayer.reset(); // reset the mediaplayer state
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
