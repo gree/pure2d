@@ -5,6 +5,8 @@ package com.funzio.pure2D.atlas;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -27,6 +29,12 @@ public class ImageSequenceAtlas extends Atlas {
     private int mFrameIndex = 0;
 
     private String mImageDir;
+    private static Comparator<? super File> mFileComparator = new Comparator<File>() {
+        public int compare(final File file1, final File file2) {
+            return file1.compareTo(file2);
+        }
+    };
+
     // textures to load
     private Texture[] mTextures;
     private String[] mTextureNames;
@@ -147,6 +155,8 @@ public class ImageSequenceAtlas extends Atlas {
             Log.e(TAG, dir + " is empty!");
             return;
         }
+        // sort the files by name
+        Arrays.sort(files, mFileComparator);
 
         for (int i = 0; i < files.length; i++) {
             // create a temp texture for the image
@@ -181,6 +191,8 @@ public class ImageSequenceAtlas extends Atlas {
             Log.e(TAG, dir + " is empty!");
             return;
         }
+        // sort the files by name
+        Arrays.sort(files, mFileComparator);
 
         // prepare
         mTextures = new Texture[files.length];
