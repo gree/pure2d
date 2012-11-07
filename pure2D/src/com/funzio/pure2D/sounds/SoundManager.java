@@ -1,7 +1,5 @@
 package com.funzio.pure2D.sounds;
 
-import java.io.IOException;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
@@ -102,39 +100,19 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         // return;
         // }
 
-        try {
-            mMediaPlayer.reset(); // reset the mediaplayer state
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set tye type
-            mMediaPlayer.setLooping(media.isLooping());
-            mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.stop();
+        mMediaPlayer.reset(); // reset the mediaplayer state
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set tye type
+        mMediaPlayer.setLooping(media.isLooping());
+        mMediaPlayer.setOnPreparedListener(this);
 
-            if (media instanceof MediaAsset) {
-                MediaAsset assetMedia = (MediaAsset) media;
-                mMediaPlayer.setDataSource(assetMedia.getAssetFileDescriptor().getFileDescriptor(), assetMedia.getStartOffset(), assetMedia.getLength());
-
-            } else if (media instanceof MediaUri) {
-                mMediaPlayer.setDataSource(mContext, ((MediaUri) media).getMediaUri());
-            }
-
-            mMediaPlayer.prepareAsync();
-
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // load
+        media.load(mMediaPlayer, mContext);
+        mMediaPlayer.prepareAsync();
     }
 
     public void stopMedia() {
-        mMediaPlayer.reset();
+        mMediaPlayer.stop();
     }
 
     protected int playByID(final int soundID) {
