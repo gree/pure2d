@@ -13,6 +13,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
@@ -723,5 +724,9 @@ public class BaseScene implements Scene {
         mColor = null;
         mSize = null;
         mGLState = null;
+    }
+
+    public boolean onTouchEvent(final MotionEvent event) {
+        return false;
     }
 }

@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView.Renderer;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -50,6 +51,8 @@ public interface Scene extends Renderer, Container {
     public void resume();
 
     public void dispose();
+
+    public boolean onTouchEvent(final MotionEvent event);
 
     public interface Listener {
         void onSurfaceCreated(GL10 gl);

@@ -102,6 +102,6 @@ public class StageActivity extends Activity implements OnTouchListener {
     }
 
     public boolean onTouch(final View v, final MotionEvent event) {
-        return true;
+        return false;
     }
 }
