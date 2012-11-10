@@ -28,7 +28,7 @@ public class LoaderService extends IntentService {
     public static final int DEFAULT_TASK_DELAY = 0;
 
     public static final String INTENT_START = "INTENT_START";
-    public static final String INTENT_STOP = "INTENT_STOP";
+    // public static final String INTENT_STOP = "INTENT_STOP";
 
     public static final String INTENT_ON_STARTED = "INTENT_ON_STARTED";
     public static final String INTENT_ON_STOPPED = "INTENT_ON_STOPPED";
@@ -106,7 +106,7 @@ public class LoaderService extends IntentService {
     @Override
     protected void onHandleIntent(final Intent intent) {
         Log.v(TAG, "onHandleIntent(), " + intent.getAction());
-        //This is the background thread uncaught exception handler. Do not move to UI thread.
+        // This is the background thread uncaught exception handler. Do not move to UI thread.
         Thread.currentThread().setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
 
         if (mBatteryLow) {
@@ -116,20 +116,21 @@ public class LoaderService extends IntentService {
 
         if (intent.getAction().equals(getIntentAction(INTENT_START))) {
             runTasks(intent);
-        } else if (intent.getAction().equals(getIntentAction(INTENT_STOP))) {
-            // flag
-            mRunning = false;
-
-            // if (mHandler != null) {
-            // mHandler.removeCallbacksAndMessages(null);
-            // }
-
-            // // broadcast stopped event
-            // sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
-
-            // stop me
-            stopSelf();
         }
+        // } else if (intent.getAction().equals(getIntentAction(INTENT_STOP))) {
+        // // flag
+        // mRunning = false;
+        //
+        // // if (mHandler != null) {
+        // // mHandler.removeCallbacksAndMessages(null);
+        // // }
+        //
+        // // // broadcast stopped event
+        // // sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
+        //
+        // // stop me
+        // stopSelf();
+        // }
     }
 
     protected boolean addTask(final Task task) {
