@@ -40,6 +40,7 @@ public class BaseScene implements Scene {
     private boolean mPaused = false;
     private boolean mAutoClear = true;
     private int mInvalidated = 0;
+    private boolean mRenderContinueously = false;
 
     // frame rate
     private int mFrameCount = 0;
@@ -327,7 +328,7 @@ public class BaseScene implements Scene {
         }
 
         // draw children if needed
-        if (mInvalidated > 0) {
+        if (mInvalidated > 0 || mRenderContinueously) {
             // camera
             if (mCamera != null && mCamera.isInvalidated()) {
                 // validate the camera
@@ -389,6 +390,14 @@ public class BaseScene implements Scene {
 
     final public void invalidateBuffers(final int numBuffers) {
         mInvalidated = numBuffers;
+    }
+
+    public boolean isRenderContinueously() {
+        return mRenderContinueously;
+    }
+
+    public void setRenderContinueously(boolean renderContinueously) {
+        mRenderContinueously = renderContinueously;
     }
 
     /**
