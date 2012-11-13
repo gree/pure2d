@@ -29,10 +29,10 @@ public class BaseScene implements Scene {
     protected int mBuffersToInvalidate = 4; // number of buffer to invalidate. 2 for old devices but 3+ for Jelly Bean or later
     protected Stage mStage;
     protected GLState mGLState;
+    protected Camera mCamera;
     protected TextureManager mTextureManager;
     protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     private int mNumChildren;
-    private Camera mCamera;
 
     private PointF mSize = new PointF();
 
@@ -396,7 +396,7 @@ public class BaseScene implements Scene {
         return mRenderContinueously;
     }
 
-    public void setRenderContinueously(boolean renderContinueously) {
+    public void setRenderContinueously(final boolean renderContinueously) {
         mRenderContinueously = renderContinueously;
     }
 
