@@ -5,6 +5,8 @@ package com.funzio.pure2D.atlas;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -43,6 +45,12 @@ public class ImageSequenceBufferAtlas extends Atlas {
     private Sprite mDrawer;
 
     private String mImageDir;
+    private static Comparator<? super File> mFileComparator = new Comparator<File>() {
+        public int compare(final File file1, final File file2) {
+            return file1.compareTo(file2);
+        }
+    };
+
     // textures to load
     private Texture[] mTextures;
     private String[] mTextureNames;
@@ -240,6 +248,8 @@ public class ImageSequenceBufferAtlas extends Atlas {
             Log.e(TAG, dir + " is empty!");
             return;
         }
+        // sort the files by name
+        Arrays.sort(files, mFileComparator);
 
         for (int i = 0; i < files.length; i++) {
 
@@ -288,6 +298,8 @@ public class ImageSequenceBufferAtlas extends Atlas {
             Log.e(TAG, dir + " is empty!");
             return;
         }
+        // sort the files by name
+        Arrays.sort(files, mFileComparator);
 
         // prepare
         mTextures = new Texture[files.length];
@@ -331,7 +343,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         }
     }
 
-    private void createFrame(final Texture texture, final String frameName, final boolean autoBind) {
+    protected void createFrame(final Texture texture, final String frameName, final boolean autoBind) {
         final PointF frameSize = texture.getSize();
         // find the max frame height to define the row height
         if (frameSize.y > mCurrentRowHeight) {

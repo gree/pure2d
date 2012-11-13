@@ -211,7 +211,7 @@ public class ImageSequenceAtlas extends Atlas {
         }
     }
 
-    private void createFrames() {
+    protected void createFrames() {
         for (int i = 0; i < mTextures.length; i++) {
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             createFrame(mTextures[i], mTextureNames[i].split("\\.")[0]);
@@ -228,7 +228,7 @@ public class ImageSequenceAtlas extends Atlas {
         }
     }
 
-    private boolean createFrame(final Texture texture, final String frameName) {
+    protected boolean createFrame(final Texture texture, final String frameName) {
         // create frame
         if (texture.isLoaded()) {
             addFrame(new AtlasFrame(texture, mFrameIndex++, frameName));
