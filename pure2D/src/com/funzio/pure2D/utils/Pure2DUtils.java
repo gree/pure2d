@@ -39,7 +39,7 @@ public class Pure2DUtils {
         try {
             return getStreamBitmap(assetManager.open(assetPath), options, po2, outDimensions);
         } catch (IOException e) {
-            Log.e(Pure2D.TAG, e.getMessage());
+            Log.e(Pure2D.TAG, "BITMAP LOADING ERROR: " + e.getMessage());
             return null;
         }
     }
@@ -241,6 +241,7 @@ public class Pure2DUtils {
                 bitmap.recycle();
                 return po2Bitmap;
             } catch (OutOfMemoryError e) {
+                Log.e(Pure2D.TAG, "BITMAP CREATION ERROR: " + e.getMessage());
                 // crash prevention
                 return null;
             }
