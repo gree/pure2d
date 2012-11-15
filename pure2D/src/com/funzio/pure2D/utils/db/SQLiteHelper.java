@@ -35,12 +35,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      */
-    public void checkAndCreate(final String assetPath, final String systemPath) {
+    public boolean checkAndCreate(final String assetPath, final String systemPath) {
         Log.v(TAG, "checkAndCreate()");
         mSystemPath = systemPath;
 
         if (isExisting(systemPath)) {
             Log.v(TAG, systemPath + " already exists!");
+            return false;
         } else {
 
             // By calling this method and empty database will be created into the default system path
@@ -51,8 +52,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 copy(assetPath, systemPath);
             } catch (IOException e) {
                 Log.e(TAG, "Error copying database! " + assetPath);
+                return false;
             }
         }
+
+        return true;
     }
 
     /**
