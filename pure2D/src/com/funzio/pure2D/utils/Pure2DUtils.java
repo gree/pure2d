@@ -234,13 +234,16 @@ public class Pure2DUtils {
         if (originalWidth == powWidth && originalHeight == powHeight) {
             return bitmap;
         } else {
-            // return Bitmap.createScaledBitmap(bitmap, powWidth, powHeight, true);
-
-            final Bitmap po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
-            final Canvas canvas = new Canvas(po2Bitmap);
-            canvas.drawBitmap(bitmap, 0, 0, null);
-            bitmap.recycle();
-            return po2Bitmap;
+            try {
+                final Bitmap po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
+                final Canvas canvas = new Canvas(po2Bitmap);
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                bitmap.recycle();
+                return po2Bitmap;
+            } catch (OutOfMemoryError e) {
+                // crash prevention
+                return null;
+            }
         }
     }
 
