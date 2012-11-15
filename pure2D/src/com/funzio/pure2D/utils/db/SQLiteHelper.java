@@ -41,7 +41,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         if (isExisting(systemPath)) {
             Log.v(TAG, systemPath + " already exists!");
-            return false;
+            return true;
         } else {
 
             // By calling this method and empty database will be created into the default system path
