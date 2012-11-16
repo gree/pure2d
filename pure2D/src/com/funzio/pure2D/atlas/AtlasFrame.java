@@ -55,8 +55,8 @@ public class AtlasFrame {
         mRect.bottom = bottom;
 
         // pre-cal
-        mSize.x = right - left + 1;
-        mSize.y = bottom - top + 1;
+        mSize.x = Math.abs(right - left + 1);
+        mSize.y = Math.abs(bottom - top + 1);
 
         if (mTexture != null) {
             final PointF size = mTexture.getSize();
