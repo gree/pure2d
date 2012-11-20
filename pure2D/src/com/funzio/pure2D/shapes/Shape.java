@@ -168,7 +168,7 @@ public class Shape extends BaseDisplayObject {
         drawStart(glState);
 
         // blend mode
-        boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+        final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
 
         // color and alpha
         glState.setColor(getSumColor());

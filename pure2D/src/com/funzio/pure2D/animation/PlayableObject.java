@@ -82,7 +82,22 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
     public boolean draw(final GLState glState) {
         if (mNumFrames > 0) {
             drawStart(glState);
+
+            // blend mode
+            final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+            // color and alpha
+            glState.setColor(getSumColor());
+            // color buffer
+            glState.setColorArrayEnabled(false);
+
+            // now draw the children
             drawChildren(glState);
+
+            if (blendChanged) {
+                // recover the blending
+                glState.setBlendFunc(null);
+            }
+
             drawEnd(glState);
 
             return true;
