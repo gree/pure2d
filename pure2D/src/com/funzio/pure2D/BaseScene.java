@@ -597,7 +597,7 @@ public class BaseScene implements Scene {
 
             // testing perspective
             // GLU.gluPerspective(mGLState.mGL, 60, mSize.x / mSize.y, 0.1f, 1000f);
-            // GLU.gluLookAt(mGLState.mGL, mSize.x / 2, mSize.y / 2, 1000, mSize.x / 2, mSize.y / 2, 0, 0, 1, 0);
+            // GLU.gluLookAt(mGLState.mGL, mSize.x / 2, mSize.y / 2, 1000f, mSize.x / 2, mSize.y / 2, 0, 0, 1, 0);
 
             // back to model
             mGLState.mGL.glMatrixMode(GL10.GL_MODELVIEW);

@@ -262,6 +262,13 @@ public class Camera implements Manipulatable {
             mBounds.set(mRect);
         }
 
+        // projection
+        project(glState);
+
+        mInvalidated = false;
+    }
+
+    protected void project(final GLState glState) {
         final GL10 gl = glState.mGL;
         // Select the projection matrix
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -285,8 +292,6 @@ public class Camera implements Manipulatable {
 
         // set matrix back to model view
         gl.glMatrixMode(GL10.GL_MODELVIEW);
-
-        mInvalidated = false;
     }
 
     public boolean isInvalidated() {
