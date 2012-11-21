@@ -93,7 +93,7 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         return 0;
     }
 
-    public void play(final Media media) {
+    public void play(final Media media) throws IllegalStateException {
         // if (!mSoundEnabled && !forcePlay) {
         // return;
         // }
