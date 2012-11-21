@@ -19,13 +19,13 @@ public class Wheel3D extends DisplayGroup {
     protected int mOrientation = ORIENTATION_X;
     protected float mRadius = 0;
 
+    // alpha range
     protected float mAlpha1 = 0.5f;
     protected float mAlpha2 = 1f;
 
-    // spining
+    // spinning
     protected float mAcceleration = -0.002f;
     protected float mVelocity = 0;
-
     private int mMaxSpinTime = 0; // 0: unlimited
     private int mElapsedSpinTime = 0;
 
@@ -66,6 +66,7 @@ public class Wheel3D extends DisplayGroup {
             return;
         }
 
+        // bring the selected child to center-front
         mStartAngle = -childIndex * mGapAngle + 90;
 
         // reposition the children
@@ -96,19 +97,25 @@ public class Wheel3D extends DisplayGroup {
     }
 
     public void scrollByDistance(final float deltaDistance) {
-        mStartAngle += 180 * deltaDistance / mRadius;
+        mStartAngle += 180 * deltaDistance / (mRadius * 2);
 
         // reposition the children
         positionChildren();
     }
 
     public void scrollToDistance(final float distance) {
-        mStartAngle = 180 * distance / mRadius;
+        mStartAngle = 180 * distance / (mRadius * 2);
 
         // reposition the children
         positionChildren();
     }
 
+    /**
+     * Set alpha range. To ignore alpha, set either alpha1 or alpha2 to a negative number.
+     * 
+     * @param alpha1
+     * @param alpha2
+     */
     public void setAlphaRange(final float alpha1, final float alpha2) {
         mAlpha1 = alpha1;
         mAlpha2 = alpha2;
@@ -166,7 +173,7 @@ public class Wheel3D extends DisplayGroup {
             final float z = (xy[1] / mRadius);
             child.setZ(z);
 
-            if (mAlpha1 != 1 || mAlpha2 != 0) {
+            if (mAlpha1 > 0 && mAlpha2 > 0) {
                 child.setAlpha(mAlpha1 + alphaRange * ((z + 1) / 2f));
             }
 
