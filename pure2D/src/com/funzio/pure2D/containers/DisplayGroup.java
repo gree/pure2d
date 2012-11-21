@@ -170,6 +170,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container {
         return index < mNumChildren ? mChildren.get(index) : null;
     }
 
+    public int getChildIndex(final DisplayObject child) {
+        return mChildren.indexOf(child);
+    }
+
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
      * 

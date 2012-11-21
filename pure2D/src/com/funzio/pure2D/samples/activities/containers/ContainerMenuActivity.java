@@ -29,6 +29,10 @@ public class ContainerMenuActivity extends Activity {
             startActivity(new Intent(this, VWheelActivity.class));
         } else if (view.getId() == R.id.btn_hwheel) {
             startActivity(new Intent(this, HWheelActivity.class));
+        } else if (view.getId() == R.id.btn_vwheel_3d) {
+            startActivity(new Intent(this, VWheel3DActivity.class));
+        } else if (view.getId() == R.id.btn_hwheel_3d) {
+            startActivity(new Intent(this, HWheel3DActivity.class));
         }
     }
 }

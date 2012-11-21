@@ -87,6 +87,16 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".samples.activities.containers.VWheel3DActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".samples.activities.containers.HWheel3DActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".samples.activities.textures.TextureMenuActivity"
             android:label="@string/textures"
             android:screenOrientation="portrait" >
