@@ -110,5 +110,6 @@
     <string name="stencil_buffer">Stencil Buffer</string>
     <string name="horizontal_wheel_3d">Horizontal Wheel 3D</string>
     <string name="vertical_wheel_3d">Vertical Wheel 3D</string>
+    <string name="perspective_camera">Perspective Camera</string>
 
 </resources>

@@ -13,4 +13,11 @@
         android:onClick="onClickButton"
         android:text="@string/hello_camera" />
 
+    <Button
+        android:id="@+id/btn_perspective_camera"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/perspective_camera" />
+
 </LinearLayout>

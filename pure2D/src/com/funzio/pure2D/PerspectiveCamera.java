@@ -55,7 +55,7 @@ public class PerspectiveCamera extends Camera {
         gl.glLoadIdentity();
 
         // perspective projection
-        GLU.gluPerspective(gl, 60, mSize.x / mSize.y, 0.1f, mZFar);
+        GLU.gluPerspective(gl, 60 / mZoom.x, mSize.x / mSize.y, 0.1f, mZFar);
         GLU.gluLookAt(gl, mCenter.x, mCenter.y, mZFar, mCenter.x, mCenter.y, 0, 0, 1, 0);
 
         // camera rotation

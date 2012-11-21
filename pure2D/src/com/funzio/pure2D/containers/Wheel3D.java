@@ -22,9 +22,9 @@ public class Wheel3D extends DisplayGroup {
     // alpha range
     protected float mAlpha1 = 0.5f;
     protected float mAlpha2 = 1f;
-    // z range
-    protected float mZ1 = -1f;
-    protected float mZ2 = 1f;
+    // z/depth range
+    protected float mDepth1 = -1f;
+    protected float mDepth2 = 1f;
 
     // spinning
     protected float mAcceleration = -0.002f;
@@ -126,9 +126,9 @@ public class Wheel3D extends DisplayGroup {
         positionChildren();
     }
 
-    public void setZRange(final float z1, final float z2) {
-        mZ1 = z1;
-        mZ2 = z2;
+    public void setDepthRange(final float z1, final float z2) {
+        mDepth1 = z1;
+        mDepth2 = z2;
 
         positionChildren();
     }
@@ -172,7 +172,7 @@ public class Wheel3D extends DisplayGroup {
         float x, z, z2, radian;
         DisplayObject child;
         final float alphaRange = mAlpha2 - mAlpha1;
-        final float zRange = mZ2 - mZ1;
+        final float zRange = mDepth2 - mDepth1;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             radian = (float) ((angle / 180f) * Math.PI);
@@ -188,7 +188,7 @@ public class Wheel3D extends DisplayGroup {
             }
 
             // set z
-            child.setZ(mZ1 + zRange * z2);
+            child.setZ(mDepth1 + zRange * z2);
 
             // set alpha
             if (mAlpha1 > 0 && mAlpha2 > 0) {

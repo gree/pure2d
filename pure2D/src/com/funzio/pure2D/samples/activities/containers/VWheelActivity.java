@@ -61,7 +61,7 @@ public class VWheelActivity extends StageActivity {
             // create object
             Clip obj = new Clip(mAtlas.getSubFrameSet(mFrameSetNames[n % mFrameSetNames.length]));
             obj.setTexture(mTexture);
-            obj.stop();
+            // obj.stop();
 
             // add to container
             mWheel.addChild(obj);

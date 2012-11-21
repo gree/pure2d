@@ -6,7 +6,7 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -63,9 +63,9 @@ public class StageActivity extends Activity implements OnTouchListener {
         // start recording frame rate
         startFrameRate();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        mDisplaySize.x = display.getWidth();
-        mDisplaySize.y = display.getHeight();
+        final DisplayMetrics metrics = getResources().getDisplayMetrics();
+        mDisplaySize.x = metrics.widthPixels;
+        mDisplaySize.y = metrics.heightPixels;
         mDisplaySizeDiv2.x = mDisplaySize.x / 2;
         mDisplaySizeDiv2.y = mDisplaySize.y / 2;
     }

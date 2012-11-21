@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.PerspectiveCamera;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.samples.Bouncer;
 import com.funzio.pure2D.samples.activities.StageActivity;
 
-public class HelloCameraActivity extends StageActivity {
-    private Camera mCamera;
+public class PerspectiveCameraActivity extends StageActivity {
+    private PerspectiveCamera mCamera;
     protected PointF mRegisteredVector;
     protected PointF mRegisteredCenter;
     protected float mRegisteredZoom = 1;
@@ -21,7 +21,7 @@ public class HelloCameraActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mCamera = new Camera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
+        mCamera = new PerspectiveCamera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
         mCamera.setClipping(true);
         mScene.setCamera(mCamera);
 
@@ -41,6 +41,7 @@ public class HelloCameraActivity extends StageActivity {
 
             // random positions
             sq.setPosition(mRandom.nextInt(mDisplaySize.x * 3), mRandom.nextInt(mDisplaySize.y * 3));
+            sq.setZ(mRandom.nextInt(1000));
 
             // add to scene
             mScene.addChild(sq);

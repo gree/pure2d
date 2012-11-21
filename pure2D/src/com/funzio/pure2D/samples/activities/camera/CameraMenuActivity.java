@@ -1,26 +1,17 @@
 package com.funzio.pure2D.samples.activities.camera;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager.LayoutParams;
-
 import com.funzio.pure2D.R;
+import com.funzio.pure2D.samples.activities.MenuActivity;
 
-public class CameraMenuActivity extends Activity {
-
+public class CameraMenuActivity extends MenuActivity {
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera_menu);
-
-        getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
+    protected int getLayout() {
+        return R.layout.camera_menu;
     }
 
-    public void onClickButton(final View view) {
-        if (view.getId() == R.id.btn_hello_camera) {
-            startActivity(new Intent(this, HelloCameraActivity.class));
-        }
+    @Override
+    protected void createMenus() {
+        addMenu(R.id.btn_hello_camera, HelloCameraActivity.class);
+        addMenu(R.id.btn_perspective_camera, PerspectiveCameraActivity.class);
     }
 }
