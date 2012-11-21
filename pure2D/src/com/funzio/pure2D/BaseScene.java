@@ -190,7 +190,7 @@ public class BaseScene implements Scene {
         // gl.glDepthFunc(GL10.GL_NEVER);
         // gl.glDepthMask(false);
 
-        // Really nice perspective calculations.
+        // perspective calculations.
         // gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
         // Enable alpha blending
@@ -594,6 +594,10 @@ public class BaseScene implements Scene {
             } else {
                 mGLState.mGL.glOrthof(0, mSize.x, 0, mSize.y, -1, 1);
             }
+
+            // testing perspective
+            // GLU.gluPerspective(mGLState.mGL, 60, mSize.x / mSize.y, 0.1f, 1000f);
+            // GLU.gluLookAt(mGLState.mGL, mSize.x / 2, mSize.y / 2, 1000, mSize.x / 2, mSize.y / 2, 0, 0, 1, 0);
 
             // back to model
             mGLState.mGL.glMatrixMode(GL10.GL_MODELVIEW);

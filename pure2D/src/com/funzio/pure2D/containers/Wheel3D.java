@@ -22,6 +22,9 @@ public class Wheel3D extends DisplayGroup {
     // alpha range
     protected float mAlpha1 = 0.5f;
     protected float mAlpha2 = 1f;
+    // z range
+    protected float mZ1 = -1f;
+    protected float mZ2 = 1f;
 
     // spinning
     protected float mAcceleration = -0.002f;
@@ -123,6 +126,13 @@ public class Wheel3D extends DisplayGroup {
         positionChildren();
     }
 
+    public void setZRange(final float z1, final float z2) {
+        mZ1 = z1;
+        mZ2 = z2;
+
+        positionChildren();
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.containers.DisplayGroup#onAddedChild(com.funzio.pure2D.DisplayObject)
@@ -153,30 +163,39 @@ public class Wheel3D extends DisplayGroup {
 
     protected void getAnglePoint(final float angle, final float xy[]) {
         final float radian = (float) ((angle / 180f) * Math.PI);
-        xy[0] = mRadius * FloatMath.cos(radian);
-        xy[1] = mRadius * FloatMath.sin(radian);
+        xy[0] = FloatMath.cos(radian);
+        xy[1] = FloatMath.sin(radian);
     }
 
     protected void positionChildren() {
         float angle = mStartAngle;
-        final float xy[] = new float[2];
+        float x, z, z2, radian;
+        DisplayObject child;
         final float alphaRange = mAlpha2 - mAlpha1;
+        final float zRange = mZ2 - mZ1;
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
-            getAnglePoint(angle, xy);
+            child = mChildren.get(i);
+            radian = (float) ((angle / 180f) * Math.PI);
+            x = FloatMath.cos(radian);
+            z = FloatMath.sin(radian);
+            z2 = (z + 1) / 2f;
 
+            // orientation
             if (mOrientation == ORIENTATION_X) {
-                child.setX(xy[0]);
+                child.setX(x * mRadius);
             } else {
-                child.setY(xy[0]);
+                child.setY(x * mRadius);
             }
-            final float z = (xy[1] / mRadius);
-            child.setZ(z);
 
+            // set z
+            child.setZ(mZ1 + zRange * z2);
+
+            // set alpha
             if (mAlpha1 > 0 && mAlpha2 > 0) {
-                child.setAlpha(mAlpha1 + alphaRange * ((z + 1) / 2f));
+                child.setAlpha(mAlpha1 + alphaRange * z2);
             }
 
+            // next
             angle += mGapAngle;
         }
     }
