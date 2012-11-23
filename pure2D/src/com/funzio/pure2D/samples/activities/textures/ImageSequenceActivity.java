@@ -71,7 +71,7 @@ public class ImageSequenceActivity extends StageActivity {
     private void createAtlas() {
         mAtlas = new ImageSequenceBufferAtlas(mScene.getGLState());
         mAtlas.setListener(mAtlasListener);
-        mAtlas.loadDirAsync(getAssets(), IMAGE_DIR, null); // load of assets
+        mAtlas.loadDir(getAssets(), IMAGE_DIR, null); // load of assets
         // mAtlas.loadDirAsync(SDCARD_IMAGE_DIR, null); // load of sdcard
     }
 

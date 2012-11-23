@@ -42,7 +42,7 @@ public class BaseAnimator implements Animator {
      */
     @Override
     public void start() {
-        start(0);
+        startElapse(0);
     }
 
     /**
@@ -50,7 +50,7 @@ public class BaseAnimator implements Animator {
      * 
      * @param elapsedTime
      */
-    public void start(final int elapsedTime) {
+    public void startElapse(final int elapsedTime) {
         if (mRunning) {
             end();
         }

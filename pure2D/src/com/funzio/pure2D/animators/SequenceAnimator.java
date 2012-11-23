@@ -105,9 +105,9 @@ public class SequenceAnimator extends BaseAnimator implements Animator.AnimatorL
      * @see com.funzio.pure2D.animators.Animator.AnimatorListener#onAnimationUpdate(com.funzio.pure2D.animators.Animator)
      */
     @Override
-    public void onAnimationUpdate(final Animator animator) {
+    public void onAnimationUpdate(final Animator animator, final float value) {
         if (mListener != null) {
-            mListener.onAnimationUpdate(animator);
+            mListener.onAnimationUpdate(animator, value);
         }
     }
 

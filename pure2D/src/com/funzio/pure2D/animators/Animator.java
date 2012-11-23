@@ -26,6 +26,6 @@ public interface Animator extends Manipulator {
 
         // public void onAnimationStart(Animator animator);
 
-        public void onAnimationUpdate(Animator animator);
+        public void onAnimationUpdate(Animator animator, float value);
     }
 }

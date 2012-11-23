@@ -90,16 +90,16 @@ public class TrajectoryAnimator extends BaseAnimator {
 
             mElapsedTime += deltaTime;
 
+            final float t = Math.min(mElapsedTime, mDuration) / TIME_FACTOR;
+            final float x = mSrcX + mVelocity * t * mCos;
+            final float y = mSrcY + mVelocity * t * mSin - 0.5f * mGravity * t * t;
             if (mTarget != null) {
-                final float t = Math.min(mElapsedTime, mDuration) / TIME_FACTOR;
-                final float x = mSrcX + mVelocity * t * mCos;
-                final float y = mSrcY + mVelocity * t * mSin - 0.5f * mGravity * t * t;
                 mTarget.setPosition(x, y);
             }
 
             // callback
             if (mListener != null) {
-                mListener.onAnimationUpdate(this);
+                mListener.onAnimationUpdate(this, t);
             }
 
             if (mElapsedTime >= mDuration) {

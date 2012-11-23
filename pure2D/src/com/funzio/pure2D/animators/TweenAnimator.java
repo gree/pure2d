@@ -121,7 +121,7 @@ public class TweenAnimator extends BaseAnimator {
 
     protected void onUpdate(final float value) {
         if (mListener != null) {
-            mListener.onAnimationUpdate(this);
+            mListener.onAnimationUpdate(this, value);
         }
     }
 }
