@@ -27,7 +27,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected PointF mOrigin = new PointF(0, 0);
     protected PointF mSize = new PointF(1, 1);
     protected PointF mScale = new PointF(1, 1);
+    // rotation
     protected float mRotation = 0;
+    protected float mRotationVectorX = 0;
+    protected float mRotationVectorY = 0;
+    protected float mRotationVectorZ = 1;
     protected float mZ = 0;// z-order
 
     // life
@@ -74,7 +78,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
         // rotating
         if (mRotation != 0) {
-            glState.mGL.glRotatef(mRotation, 0, 0, 1);
+            glState.mGL.glRotatef(mRotation, mRotationVectorX, mRotationVectorY, mRotationVectorZ);
         }
 
         // shift off the origin
@@ -103,6 +107,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // clear all visual flags
         validate(InvalidateFlags.VISUAL);
+    }
+
+    public void setRotationVector(final float x, final float y, final float z) {
+        mRotationVectorX = x;
+        mRotationVectorY = y;
+        mRotationVectorZ = z;
     }
 
     /*
