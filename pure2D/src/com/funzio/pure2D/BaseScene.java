@@ -109,6 +109,12 @@ public class BaseScene implements Scene {
         }
     }
 
+    public void setDepthRange(final float zNear, final float zFar) {
+        if (mGLState != null) {
+            mGLState.mGL.glDepthRangef(zNear, zFar);
+        }
+    }
+
     final public int getAxisSystem() {
         return mAxisSystem;
     }
@@ -191,13 +197,13 @@ public class BaseScene implements Scene {
         // gl.glDepthMask(false);
 
         // perspective calculations.
-        // gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
         // Enable alpha blending
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-        // Enable Texture
+        // Enable Texture, not here!
         // gl.glEnable(GL10.GL_TEXTURE_2D);
 
         // Counter-clockwise winding.

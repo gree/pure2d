@@ -12,6 +12,7 @@ import com.funzio.pure2D.samples.activities.mw.MWMenuActivity;
 import com.funzio.pure2D.samples.activities.objects.ObjectMenuActivity;
 import com.funzio.pure2D.samples.activities.particles.ParticleMenuActivity;
 import com.funzio.pure2D.samples.activities.physics.PhysicsMenuActivity;
+import com.funzio.pure2D.samples.activities.simple3D.Simple3DMenuActivity;
 import com.funzio.pure2D.samples.activities.text.TextMenuActivity;
 import com.funzio.pure2D.samples.activities.textures.TextureMenuActivity;
 
@@ -30,6 +31,7 @@ public class MainMenuActivity extends MenuActivity {
         addMenu(R.id.btn_camera, CameraMenuActivity.class);
         addMenu(R.id.btn_textures, TextureMenuActivity.class);
         addMenu(R.id.btn_buffers, BufferMenuActivity.class);
+        addMenu(R.id.btn_3d, Simple3DMenuActivity.class);
         addMenu(R.id.btn_particles, ParticleMenuActivity.class);
         addMenu(R.id.btn_effects, EffectsMenuActivity.class);
         addMenu(R.id.btn_animations, AnimationMenuActivity.class);

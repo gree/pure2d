@@ -169,6 +169,16 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".samples.activities.simple3D.Simple3DMenuActivity"
+            android:label="@string/simple_3d"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".samples.activities.simple3D.Rotation3DActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".samples.activities.particles.ParticleMenuActivity"
             android:label="@string/particles"
             android:screenOrientation="portrait" >

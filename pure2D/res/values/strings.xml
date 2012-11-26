@@ -111,5 +111,7 @@
     <string name="horizontal_wheel_3d">Horizontal Wheel 3D</string>
     <string name="vertical_wheel_3d">Vertical Wheel 3D</string>
     <string name="perspective_camera">Perspective Camera</string>
+    <string name="simple_3d">Simple 3D</string>
+    <string name="_3d_rotation">3D Rotation</string>
 
 </resources>

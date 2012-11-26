@@ -6,19 +6,28 @@
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
 
-    <Button
-        android:id="@+id/btn_display_objects"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/display_objects" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
 
-    <Button
-        android:id="@+id/btn_containers"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/containers" />
+        <Button
+            android:id="@+id/btn_display_objects"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/display_objects" />
+
+        <Button
+            android:id="@+id/btn_containers"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/containers" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -93,6 +102,13 @@
         android:layout_height="wrap_content"
         android:onClick="onClickButton"
         android:text="@string/physics" />
+
+    <Button
+        android:id="@+id/btn_3d"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/simple_3d" />
 
     <Button
         android:id="@+id/btn_loaders"
