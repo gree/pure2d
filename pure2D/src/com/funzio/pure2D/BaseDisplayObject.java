@@ -33,6 +33,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected float mRotationVectorY = 0;
     protected float mRotationVectorZ = 1;
     protected float mZ = 0;// z-order
+    // extra transformation
+    protected float[] mExtraTransformation;
 
     // life
     protected boolean mVisible = true;
@@ -81,6 +83,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
             glState.mGL.glRotatef(mRotation, mRotationVectorX, mRotationVectorY, mRotationVectorZ);
         }
 
+        // extra transformation
+        if (mExtraTransformation != null) {
+            glState.mGL.glMultMatrixf(mExtraTransformation, 0);
+        }
+
         // shift off the origin
         if (mHasOrigin) {
             glState.mGL.glTranslatef(-mOrigin.x, -mOrigin.y, 0);
@@ -107,12 +114,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // clear all visual flags
         validate(InvalidateFlags.VISUAL);
-    }
-
-    public void setRotationVector(final float x, final float y, final float z) {
-        mRotationVectorX = x;
-        mRotationVectorY = y;
-        mRotationVectorZ = z;
     }
 
     /*
@@ -354,9 +355,26 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mRotation;
     }
 
-    // public RectF getLocalRect() {
-    // return mLocalRect;
-    // }
+    public void setRotationVector(final float x, final float y, final float z) {
+        mRotationVectorX = x;
+        mRotationVectorY = y;
+        mRotationVectorZ = z;
+    }
+
+    public float[] getExtraTransformation() {
+        return mExtraTransformation;
+    }
+
+    /**
+     * Apply extra transformation
+     * 
+     * @param transformation
+     * @see com.funzio.pure2D.geom.Matrix, Matrix
+     */
+    public void setExtraTransformation(final float[] transformation) {
+        mExtraTransformation = transformation;
+        invalidate();
+    }
 
     /**
      * @return the color

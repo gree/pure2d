@@ -55,8 +55,15 @@ public class PerspectiveCamera extends Camera {
         gl.glLoadIdentity();
 
         // perspective projection
-        GLU.gluPerspective(gl, 60 / mZoom.x, mSize.x / mSize.y, 0.1f, mZFar);
-        GLU.gluLookAt(gl, mCenter.x, mCenter.y, mZFar, mCenter.x, mCenter.y, 0, 0, 1, 0);
+        GLU.gluPerspective(gl, 60 / mZoom.x, mSize.x / mSize.y, 0.001f, mZFar);
+
+        // camera view and axis system
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            // invert the y-axis
+            GLU.gluLookAt(gl, mCenter.x, mCenter.y, mZFar, mCenter.x, mCenter.y, 0, 0, -1, 0);
+        } else {
+            GLU.gluLookAt(gl, mCenter.x, mCenter.y, mZFar, mCenter.x, mCenter.y, 0, 0, 1, 0);
+        }
 
         // camera rotation
         if (mRotation != 0) {

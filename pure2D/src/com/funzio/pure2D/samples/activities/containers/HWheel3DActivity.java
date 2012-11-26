@@ -35,11 +35,12 @@ public class HWheel3DActivity extends StageActivity {
         mWheels = new Wheel3D[NUM_WHEELS];
 
         // need to get the GL reference first
+        // mScene.setCamera(new PerspectiveCamera(new PointF(mDisplaySize)));
         mScene.setListener(new BaseScene.Listener() {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
-
+                // mScene.setDepthRange(-100, 100);
                 // load the textures
                 loadTextures();
 
@@ -78,6 +79,7 @@ public class HWheel3DActivity extends StageActivity {
             }
             wheel.setRadius(mDisplaySizeDiv2.x - itemSize / 2);
             wheel.setPosition(mDisplaySizeDiv2.x, i * WHEEL_HEIGHT + (itemSize / 2f));
+            // wheel.setDepthRange(-100, 100);
 
             // add to scene
             mScene.addChild(wheel);
