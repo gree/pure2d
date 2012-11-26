@@ -43,7 +43,8 @@ public class UriMedia extends AbstractMedia {
         try {
             player.setDataSource(context, mUri);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            String message = e.getMessage();
+            Log.e(TAG, message == null ? "Failed to load AssetMedia" : message);
             return 0;
         }
 

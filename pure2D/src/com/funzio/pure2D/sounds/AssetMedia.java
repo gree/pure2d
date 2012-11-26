@@ -43,7 +43,8 @@ public class AssetMedia extends AbstractMedia {
         try {
             player.setDataSource(mAssetFd.getFileDescriptor(), mAssetFd.getStartOffset(), mAssetFd.getLength());
         } catch (Exception e) {
-            Log.e(TAG, "" + e.getMessage());
+            String message = e.getMessage();
+            Log.e(TAG, message == null ? "Failed to load AssetMedia" : message);
             return 0;
         }
 
