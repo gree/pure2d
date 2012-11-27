@@ -105,7 +105,9 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         mMediaPlayer.reset(); // reset the mediaplayer state - IDLE
 
         // load - Transitions to the INITIALIZED State
-        media.load(mMediaPlayer, mContext); // NOTE: Must be called before setting audio related stuff!
+        if (media.load(mMediaPlayer, mContext) == 0) { // NOTE: Must be called before setting audio related stuff!
+            return;
+        }
 
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
         mMediaPlayer.setLooping(media.isLooping());
