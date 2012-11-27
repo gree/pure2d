@@ -247,6 +247,26 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         mAnimator.start(veloc, acceleration, maxSpinTime);
     }
 
+    public void spinToChild(final int index, float acceleration, final int duration, final boolean rightDirection) {
+        // bring the selected index to center-front
+        final float newAngle = -index * mCurrentGapAngle + 90;
+
+        float distance2Travel = (mStartAngle - newAngle) % 360;
+        if (rightDirection) {
+            if (distance2Travel < 0) {
+                distance2Travel += 360;
+            }
+        } else {
+            acceleration = -acceleration; // the other way around
+            if (distance2Travel > 0) {
+                distance2Travel -= 360;
+            }
+        }
+
+        final float veloc = distance2Travel / duration - 0.5f * (acceleration) * duration; // Real physics, Newton's
+        spin(veloc, acceleration, duration);
+    }
+
     public void stop() {
         if (mAnimator != null) {
             mAnimator.stop();

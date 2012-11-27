@@ -92,6 +92,8 @@ public class HWheel3DActivity extends StageActivity {
         return mScene.getNumGrandChildren();
     }
 
+    // private int index = 0;
+
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         int action = event.getAction();
@@ -119,7 +121,10 @@ public class HWheel3DActivity extends StageActivity {
         } else if (action == MotionEvent.ACTION_UP) {
             if (mSelectedWheel != null) {
                 mSelectedWheel.spin(mDelta / BaseScene.DEFAULT_MSPF, mDelta > 0 ? -0.002f : 0.002f);
+
+                // mSelectedWheel.spinToChild(mSelectedWheel.getNumChildren() - 1 - (++index) % mSelectedWheel.getNumChildren(), -0.0001f, 500, false);
             }
+
         }
 
         return true;
