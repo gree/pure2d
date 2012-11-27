@@ -17,7 +17,8 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     public static final int ORIENTATION_Y = 1;
 
     protected float mStartAngle = 0;
-    protected float mGapAngle = 0;
+    protected float mGapAngle = -1;
+    protected float mCurrentGapAngle = 0;
     protected int mOrientation = ORIENTATION_X;
     protected float mRadius = 0;
 
@@ -31,6 +32,27 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     // spinning
     protected VelocityAnimator mAnimator;
 
+    private boolean mChildrenPositionInvalidated = false;
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.DisplayGroup#update(int)
+     */
+    @Override
+    public boolean update(final int deltaTime) {
+        if (mChildrenPositionInvalidated) {
+            positionChildren();
+            mChildrenPositionInvalidated = false;
+        }
+
+        return super.update(deltaTime);
+    }
+
+    protected void invalidateChildrenPosition() {
+        mChildrenPositionInvalidated = true;
+        invalidate();
+    }
+
     public float getRadius() {
         return mRadius;
     }
@@ -38,14 +60,23 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     public void setRadius(final float radius) {
         mRadius = radius;
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /**
-     * @return the gap
+     * @return the gap angle
      */
-    public float getGap() {
+    public float getGapAngle() {
         return mGapAngle;
+    }
+
+    public void setGapAngle(final float angle) {
+        mGapAngle = angle;
+
+        // angle
+        mCurrentGapAngle = (mGapAngle >= 0) ? mGapAngle : (mNumChildren == 0 ? 0 : (360f / mNumChildren));
+
+        invalidateChildrenPosition();
     }
 
     public float getStartAngle() {
@@ -56,7 +87,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         mStartAngle = angle;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void scrollToChild(final DisplayObject child) {
@@ -69,10 +100,10 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         }
 
         // bring the selected child to center-front
-        mStartAngle = -childIndex * mGapAngle + 90;
+        mStartAngle = -childIndex * mCurrentGapAngle + 90;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public int getOrientation() {
@@ -81,35 +112,35 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
 
     public void setOrientation(final int orientation) {
         mOrientation = orientation;
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void scrollToAngle(final float angle) {
         mStartAngle = angle;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void scrollByAngle(final float deltaAngle) {
         mStartAngle += deltaAngle;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void scrollByDistance(final float deltaDistance) {
         mStartAngle += 180 * deltaDistance / (mRadius * 2);
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void scrollToDistance(final float distance) {
         mStartAngle = 180 * distance / (mRadius * 2);
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /**
@@ -122,14 +153,14 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         mAlpha1 = alpha1;
         mAlpha2 = alpha2;
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void setDepthRange(final float z1, final float z2) {
         mDepth1 = z1;
         mDepth2 = z2;
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /*
@@ -141,9 +172,9 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         super.onAddedChild(child);
 
         // angle
-        mGapAngle = mNumChildren == 0 ? 0 : (360f / mNumChildren);
+        mCurrentGapAngle = (mGapAngle >= 0) ? mGapAngle : (mNumChildren == 0 ? 0 : (360f / mNumChildren));
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /*
@@ -155,9 +186,9 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         super.onRemovedChild(child);
 
         // angle
-        mGapAngle = mNumChildren == 0 ? 0 : (360f / mNumChildren);
+        mCurrentGapAngle = (mGapAngle >= 0) ? mGapAngle : (mNumChildren == 0 ? 0 : (360f / mNumChildren));
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     protected void getAnglePoint(final float angle, final float xy[]) {
@@ -195,7 +226,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
             }
 
             // next
-            angle += mGapAngle;
+            angle += mCurrentGapAngle;
         }
     }
 
