@@ -107,7 +107,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     }
 
     public int getFrontChildIndex() {
-        return (int) ((360 + 90 - mStartAngle % 360) / mCurrentGapAngle) % mNumChildren;
+        return (int) ((360 + 90 - mStartAngle % 360) / mCurrentGapAngle - mCurrentGapAngle / 2) % mNumChildren;
     }
 
     public int getOrientation() {
