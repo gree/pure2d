@@ -15,6 +15,7 @@ import com.funzio.pure2D.animators.VelocityAnimator;
 public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     public static final int ORIENTATION_X = 0;
     public static final int ORIENTATION_Y = 1;
+    public static final int VIEW_ANGLE = 90;
 
     protected float mStartAngle = 0;
     protected float mGapAngle = -1;
@@ -100,14 +101,18 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         }
 
         // bring the selected child to center-front
-        mStartAngle = -childIndex * mCurrentGapAngle + 90;
+        mStartAngle = -childIndex * mCurrentGapAngle + VIEW_ANGLE;
 
         // reposition the children
         invalidateChildrenPosition();
     }
 
+    public float getViewAngleAtChild(final int childIndex) {
+        return -childIndex * mCurrentGapAngle + VIEW_ANGLE;
+    }
+
     public int getFrontChildIndex() {
-        final float viewAngle = (360 + 90 - (mStartAngle % 360 - mCurrentGapAngle / 2)) % 360;
+        final float viewAngle = (360 + VIEW_ANGLE - (mStartAngle % 360 - mCurrentGapAngle / 2)) % 360;
         return (int) FloatMath.floor(viewAngle / mCurrentGapAngle);
     }
 
@@ -254,7 +259,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
 
     public void spinToChild(final int index, float acceleration, final int duration, final boolean rightDirection) {
         // bring the selected index to center-front
-        final float newAngle = -index * mCurrentGapAngle + 90;
+        final float newAngle = -index * mCurrentGapAngle + VIEW_ANGLE;
 
         float distance2Travel = (mStartAngle - newAngle) % 360;
         if (rightDirection) {
