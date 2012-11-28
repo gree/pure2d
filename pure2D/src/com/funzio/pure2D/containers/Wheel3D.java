@@ -107,13 +107,37 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         invalidateChildrenPosition();
     }
 
+    /**
+     * @param childIndex
+     * @return the view angle of a specified child's index
+     */
     public float getViewAngleAtChild(final int childIndex) {
         return (360 + (-childIndex * mCurrentGapAngle + VIEW_ANGLE) % 360) % 360;
     }
 
+    /**
+     * @return the child index of the item in front
+     */
     public int getFrontChildIndex() {
         final float viewAngle = (360 + VIEW_ANGLE - (mStartAngle % 360 - mCurrentGapAngle / 2)) % 360;
         return (int) FloatMath.floor(viewAngle / mCurrentGapAngle);
+    }
+
+    /**
+     * @param angle
+     * @return a positive angle in range of [0, 360)
+     */
+    protected float formatAngle(final float angle) {
+        return (360 + angle % 360) % 360;
+    }
+
+    /**
+     * @param ceiling
+     * @return the closest snapped angle
+     */
+    public float getSnapAngle(final boolean ceiling) {
+        final float segment = formatAngle(mStartAngle) / mCurrentGapAngle;
+        return mCurrentGapAngle * (ceiling ? FloatMath.ceil(segment) : FloatMath.floor(segment));
     }
 
     public int getOrientation() {
@@ -257,9 +281,14 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         mAnimator.start(veloc, acceleration, maxSpinTime);
     }
 
-    public void spinToChild(final int index, float acceleration, final int duration, final boolean rightDirection) {
+    public void spinToChild(final int index, final float acceleration, final int duration, final boolean rightDirection) {
         // bring the selected index to center-front
         final float newAngle = -index * mCurrentGapAngle + VIEW_ANGLE;
+
+        spinToAngle(newAngle, acceleration, duration, rightDirection);
+    }
+
+    public void spinToAngle(final float newAngle, float acceleration, final int duration, final boolean rightDirection) {
 
         float distance2Travel = (mStartAngle - newAngle) % 360;
         if (rightDirection) {
