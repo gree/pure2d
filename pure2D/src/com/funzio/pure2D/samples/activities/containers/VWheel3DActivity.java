@@ -98,11 +98,11 @@ public class VWheel3DActivity extends StageActivity {
             mWheel.stop();
         } else if (action == MotionEvent.ACTION_MOVE) {
             mDelta = -(y - mRegisteredPoint.y);
-            mWheel.scrollByDistance(-mDelta);
+            mWheel.scrollByDistance(mDelta);
             mRegisteredPoint.x = x;
             mRegisteredPoint.y = y;
         } else if (action == MotionEvent.ACTION_UP) {
-            mWheel.spin(mDelta / BaseScene.DEFAULT_MSPF, mDelta > 0 ? -0.002f : 0.002f);
+            mWheel.spin(-mDelta / BaseScene.DEFAULT_MSPF, mDelta > 0 ? 0.002f : -0.002f);
         }
 
         return true;

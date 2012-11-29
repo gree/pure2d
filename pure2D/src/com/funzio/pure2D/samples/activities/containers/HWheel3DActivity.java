@@ -77,6 +77,7 @@ public class HWheel3DActivity extends StageActivity {
                     itemSize = obj.getWidth();
                 }
             }
+            // wheel.setGapAngle(30);
             wheel.setRadius(mDisplaySizeDiv2.x - itemSize / 2);
             wheel.setPosition(mDisplaySizeDiv2.x, i * WHEEL_HEIGHT + (itemSize / 2f));
             // wheel.setDepthRange(-100, 100);
@@ -114,13 +115,13 @@ public class HWheel3DActivity extends StageActivity {
         } else if (action == MotionEvent.ACTION_MOVE) {
             if (mSelectedWheel != null) {
                 mDelta = x - mRegisteredPoint.x;
-                mSelectedWheel.scrollByDistance(-mDelta);
+                mSelectedWheel.scrollByDistance(mDelta);
                 mRegisteredPoint.x = x;
                 mRegisteredPoint.y = y;
             }
         } else if (action == MotionEvent.ACTION_UP) {
             if (mSelectedWheel != null) {
-                mSelectedWheel.spin(mDelta / BaseScene.DEFAULT_MSPF, mDelta > 0 ? -0.002f : 0.002f);
+                mSelectedWheel.spin(-mDelta / BaseScene.DEFAULT_MSPF, mDelta > 0 ? 0.002f : -0.002f);
 
                 // mSelectedWheel.spinToChild(mSelectedWheel.getNumChildren() - 1 - (++index) % mSelectedWheel.getNumChildren(), -0.0001f, 500, false);
             }

@@ -15,13 +15,13 @@ import com.funzio.pure2D.animators.VelocityAnimator;
 public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     public static final int ORIENTATION_X = 0;
     public static final int ORIENTATION_Y = 1;
-    public static final int VIEW_ANGLE = 90;
 
     protected float mStartAngle = 0;
     protected float mGapAngle = -1;
     protected float mCurrentGapAngle = 0;
     protected int mOrientation = ORIENTATION_X;
     protected float mRadius = 0;
+    protected int mViewAngle = -90;
 
     // alpha range
     protected float mAlpha1 = 0.5f;
@@ -101,7 +101,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         }
 
         // bring the selected child to center-front
-        mStartAngle = -childIndex * mCurrentGapAngle + VIEW_ANGLE;
+        mStartAngle = mViewAngle - childIndex * mCurrentGapAngle;
 
         // reposition the children
         invalidateChildrenPosition();
@@ -112,7 +112,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
      * @return the view angle of a specified child's index
      */
     public float getViewAngleAtChild(final int childIndex) {
-        return (360 + (-childIndex * mCurrentGapAngle + VIEW_ANGLE) % 360) % 360;
+        return formatAngle(mViewAngle - childIndex * mCurrentGapAngle);
     }
 
     /**
@@ -126,7 +126,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
      * @return the child index of the item in front
      */
     public int getFrontChildIndex(final float angle) {
-        final float viewAngle = (360 + VIEW_ANGLE - (angle % 360 - mCurrentGapAngle / 2)) % 360;
+        final float viewAngle = formatAngle(mViewAngle - (angle - mCurrentGapAngle / 2));
         return (int) FloatMath.floor(viewAngle / mCurrentGapAngle);
     }
 
@@ -238,6 +238,14 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         xy[1] = FloatMath.sin(radian);
     }
 
+    public int getViewAngle() {
+        return mViewAngle;
+    }
+
+    public void setViewAngle(final int viewAngle) {
+        mViewAngle = viewAngle;
+    }
+
     protected void positionChildren() {
         float angle = mStartAngle;
         float x, z, z2, radian;
@@ -248,7 +256,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
             child = mChildren.get(i);
             radian = (float) ((angle / 180f) * Math.PI);
             x = FloatMath.cos(radian);
-            z = FloatMath.sin(radian);
+            z = -FloatMath.sin(radian);
             z2 = (z + 1) / 2f;
 
             // orientation
@@ -290,22 +298,20 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
 
     public void spinToChild(final int index, final float acceleration, final int duration, final boolean rightDirection) {
         // bring the selected index to center-front
-        final float newAngle = -index * mCurrentGapAngle + VIEW_ANGLE;
-
-        spinToAngle(newAngle, acceleration, duration, rightDirection);
+        spinToAngle(mViewAngle - index * mCurrentGapAngle, acceleration, duration, rightDirection);
     }
 
     public void spinToAngle(final float newAngle, float acceleration, int durationPerDegree, final boolean rightDirection) {
 
         float degree2Travel = (mStartAngle - newAngle) % 360;
         if (rightDirection) {
-            if (degree2Travel < 0) {
-                degree2Travel += 360;
-            }
-        } else {
             acceleration = -acceleration; // the other way around
             if (degree2Travel > 0) {
                 degree2Travel -= 360;
+            }
+        } else {
+            if (degree2Travel < 0) {
+                degree2Travel += 360;
             }
         }
 
