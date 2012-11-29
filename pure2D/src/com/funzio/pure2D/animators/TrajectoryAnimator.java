@@ -120,4 +120,8 @@ public class TrajectoryAnimator extends BaseAnimator {
     public void setGravity(final float gravity) {
         mGravity = gravity;
     }
+
+    public float getDuration() {
+        return mDuration;
+    }
 }
