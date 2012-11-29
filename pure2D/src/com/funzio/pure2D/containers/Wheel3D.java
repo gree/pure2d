@@ -119,7 +119,14 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
      * @return the child index of the item in front
      */
     public int getFrontChildIndex() {
-        final float viewAngle = (360 + VIEW_ANGLE - (mStartAngle % 360 - mCurrentGapAngle / 2)) % 360;
+        return getFrontChildIndex(mStartAngle);
+    }
+
+    /**
+     * @return the child index of the item in front
+     */
+    public int getFrontChildIndex(final float angle) {
+        final float viewAngle = (360 + VIEW_ANGLE - (angle % 360 - mCurrentGapAngle / 2)) % 360;
         return (int) FloatMath.floor(viewAngle / mCurrentGapAngle);
     }
 
@@ -288,22 +295,23 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         spinToAngle(newAngle, acceleration, duration, rightDirection);
     }
 
-    public void spinToAngle(final float newAngle, float acceleration, final int duration, final boolean rightDirection) {
+    public void spinToAngle(final float newAngle, float acceleration, int durationPerDegree, final boolean rightDirection) {
 
-        float distance2Travel = (mStartAngle - newAngle) % 360;
+        float degree2Travel = (mStartAngle - newAngle) % 360;
         if (rightDirection) {
-            if (distance2Travel < 0) {
-                distance2Travel += 360;
+            if (degree2Travel < 0) {
+                degree2Travel += 360;
             }
         } else {
             acceleration = -acceleration; // the other way around
-            if (distance2Travel > 0) {
-                distance2Travel -= 360;
+            if (degree2Travel > 0) {
+                degree2Travel -= 360;
             }
         }
 
-        final float veloc = distance2Travel / duration - 0.5f * (acceleration) * duration; // Real physics, Newton's
-        spin(veloc, acceleration, duration);
+        durationPerDegree *= Math.abs(degree2Travel);
+        final float veloc = degree2Travel / durationPerDegree - 0.5f * (acceleration) * durationPerDegree; // Real physics, Newton's
+        spin(veloc, acceleration, durationPerDegree);
     }
 
     public void stop() {
