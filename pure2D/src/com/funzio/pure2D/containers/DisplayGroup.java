@@ -195,6 +195,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container {
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
+        invalidate();
 
         return true;
     }
@@ -220,6 +221,47 @@ public class DisplayGroup extends BaseDisplayObject implements Container {
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
+        invalidate();
+
+        return true;
+    }
+
+    public boolean sendChildToTop(final DisplayObject child) {
+        if (mNumChildren < 2) {
+            return false;
+        }
+        // check child 1
+        final int index = mChildren.indexOf(child);
+        if (index < 0) {
+            return false;
+        }
+
+        // shift other children down
+        for (int i = index; i < mNumChildren - 1; i++) {
+            mChildren.set(i, mChildren.get(i + 1));
+        }
+        mChildren.set(mNumChildren - 1, child);
+        invalidate();
+
+        return true;
+    }
+
+    public boolean sendChildToBottom(final DisplayObject child) {
+        if (mNumChildren < 2) {
+            return false;
+        }
+        // check child 1
+        final int index = mChildren.indexOf(child);
+        if (index < 0) {
+            return false;
+        }
+
+        // shift other children up
+        for (int i = index; i > 0; i--) {
+            mChildren.set(i, mChildren.get(i - 1));
+        }
+        mChildren.set(0, child);
+        invalidate();
 
         return true;
     }

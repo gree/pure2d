@@ -252,6 +252,10 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         DisplayObject child;
         final float alphaRange = mAlpha2 - mAlpha1;
         final float zRange = mDepth2 - mDepth1;
+
+        // DisplayObject frontChild = null;
+        // float maxZ = Float.MIN_VALUE;
+
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             radian = (float) ((angle / 180f) * Math.PI);
@@ -267,7 +271,12 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
             }
 
             // set z
-            child.setZ(mDepth1 + zRange * z2);
+            float childZ = mDepth1 + zRange * z2;
+            child.setZ(childZ);
+            // if (maxZ < childZ || frontChild == null) {
+            // maxZ = childZ;
+            // frontChild = child;
+            // }
 
             // set alpha
             if (mAlpha1 > 0 && mAlpha2 > 0) {
@@ -277,6 +286,10 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
             // next
             angle += mCurrentGapAngle;
         }
+
+        // if (frontChild != null) {
+        // sendChildToTop(frontChild);
+        // }
     }
 
     public void spin(final float veloc) {
