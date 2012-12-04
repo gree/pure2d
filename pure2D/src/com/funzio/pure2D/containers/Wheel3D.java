@@ -26,6 +26,9 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     // alpha range
     protected float mAlpha1 = 0.5f;
     protected float mAlpha2 = 1f;
+    // scale range
+    protected float mScale1 = 1f;
+    protected float mScale2 = 1f;
     // z/depth range
     protected float mDepth1 = -1f;
     protected float mDepth2 = 1f;
@@ -197,6 +200,13 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         invalidateChildrenPosition();
     }
 
+    public void setScaleRange(final float scale1, final float scale2) {
+        mScale1 = scale1;
+        mScale2 = scale2;
+
+        invalidateChildrenPosition();
+    }
+
     public void setDepthRange(final float z1, final float z2) {
         mDepth1 = z1;
         mDepth2 = z2;
@@ -251,6 +261,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         float x, z, z2, radian;
         DisplayObject child;
         final float alphaRange = mAlpha2 - mAlpha1;
+        final float scaleRange = mScale2 - mScale1;
         final float zRange = mDepth2 - mDepth1;
 
         // DisplayObject frontChild = null;
@@ -281,6 +292,11 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
             // set alpha
             if (mAlpha1 > 0 && mAlpha2 > 0) {
                 child.setAlpha(mAlpha1 + alphaRange * z2);
+            }
+
+            // set scale
+            if (mScale1 != 1 || mScale2 != 1) {
+                child.setScale(mScale1 + scaleRange * z2);
             }
 
             // next
