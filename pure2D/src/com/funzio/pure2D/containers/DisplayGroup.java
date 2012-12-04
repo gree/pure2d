@@ -25,7 +25,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected int mNumChildren = 0;
 
     // UI
-    protected List<Touchable> mVisibleTouchables = new ArrayList<Touchable>();
+    protected List<Touchable> mVisibleTouchables;
     protected boolean mTouchable = true; // true by default
 
     public DisplayGroup() {
@@ -100,7 +100,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     protected void drawChildren(final GLState glState) {
         if (mTouchable) {
-            mVisibleTouchables.clear();
+            if (mVisibleTouchables == null) {
+                mVisibleTouchables = new ArrayList<Touchable>();
+            } else {
+                mVisibleTouchables.clear();
+            }
         }
 
         // draw the children

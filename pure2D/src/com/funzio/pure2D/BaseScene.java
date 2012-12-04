@@ -60,7 +60,7 @@ public class BaseScene implements Scene {
 
     // UI
     private boolean mUIEnabled = false;
-    private List<Touchable> mVisibleTouchables = new ArrayList<Touchable>();
+    private List<Touchable> mVisibleTouchables;
     private MotionEvent mMotionEvent = null;
     private PointF mTouchedPoint;
 
@@ -353,7 +353,11 @@ public class BaseScene implements Scene {
             }
 
             if (mUIEnabled) {
-                mVisibleTouchables.clear();
+                if (mVisibleTouchables == null) {
+                    mVisibleTouchables = new ArrayList<Touchable>();
+                } else {
+                    mVisibleTouchables.clear();
+                }
             }
 
             for (int i = 0; i < mNumChildren; i++) {
