@@ -238,19 +238,26 @@ public class Pure2DUtils {
             try {
                 po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
             } catch (OutOfMemoryError e) {
-                if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
-                    try {
-                        Log.e(Pure2D.TAG, "BITMAP CREATION FALLBACK:\n" + Log.getStackTraceString(e));
-                        po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, Bitmap.Config.ARGB_4444);
-                    } catch (OutOfMemoryError e1) {
-                        Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e1));
+                try {
+                    // try again with GC, not a good way but...
+                    System.gc(); // FIXME this is not practical
+                    po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
+                } catch (OutOfMemoryError e1) {
+                    if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
+                        try {
+                            // try with lower quality
+                            Log.e(Pure2D.TAG, "BITMAP CREATION FALLBACK:\n" + Log.getStackTraceString(e1));
+                            po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, Bitmap.Config.ARGB_4444);
+                        } catch (OutOfMemoryError e2) {
+                            Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e2));
+                            // crash prevention
+                            return null;
+                        }
+                    } else {
+                        Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e));
                         // crash prevention
                         return null;
                     }
-                } else {
-                    Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e));
-                    // crash prevention
-                    return null;
                 }
             }
 
