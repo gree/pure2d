@@ -7,18 +7,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.Button;
 
 /**
  * @author long
  */
-public class DisplayGroup extends BaseDisplayObject implements Container {
+public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
 
     protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected int mNumChildren = 0;
+
+    // UI
+    protected List<Touchable> mVisibleTouchables = new ArrayList<Touchable>();
+    protected boolean mTouchable = true; // true by default
+
+    public DisplayGroup() {
+        super();
+
+        // auto update is enabled by default for Containers
+        setAutoUpdateBounds(true);
+    }
 
     /*
      * (non-Javadoc)
@@ -37,6 +52,25 @@ public class DisplayGroup extends BaseDisplayObject implements Container {
         }
 
         return ret || mNumChildren >= 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#updateBounds()
+     */
+    @Override
+    public RectF updateBounds() {
+        final RectF rect = super.updateBounds();
+
+        // if bounds changed, all children's bounds should also be changed
+        for (int i = 0; i < mNumChildren; i++) {
+            final DisplayObject child = mChildren.get(i);
+            if (child.isAutoUpdateBounds() || child instanceof Button) {
+                child.updateBounds();
+            }
+        }
+
+        return rect;
     }
 
     /*
@@ -65,12 +99,26 @@ public class DisplayGroup extends BaseDisplayObject implements Container {
     }
 
     protected void drawChildren(final GLState glState) {
+        if (mTouchable) {
+            mVisibleTouchables.clear();
+        }
+
         // draw the children
         for (int i = 0; i < mNumChildren; i++) {
             final DisplayObject child = mChildren.get(i);
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
+
+                // stack the visible child
+                if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                    float childZ = child.getZ();
+                    int j = mVisibleTouchables.size();
+                    while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                        j--;
+                    }
+                    mVisibleTouchables.add(j, (Touchable) child);
+                }
             }
         }
     }
@@ -290,6 +338,28 @@ public class DisplayGroup extends BaseDisplayObject implements Container {
         }
 
         return n;
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        // start from front to back
+        for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+            if (mVisibleTouchables.get(i).onTouchEvent(event)) {
+                // break here
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setTouchable(final boolean touchable) {
+        mTouchable = touchable;
+    }
+
+    @Override
+    public boolean isTouchable() {
+        return mTouchable;
     }
 
     protected void onAddedChild(final DisplayObject child) {

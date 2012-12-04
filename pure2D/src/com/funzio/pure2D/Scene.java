@@ -52,6 +52,12 @@ public interface Scene extends Renderer, Container {
 
     public void dispose();
 
+    public boolean isUIEnabled();
+
+    public void setUIEnabled(final boolean enabled);
+
+    public PointF getTouchedPoint();
+
     public boolean onTouchEvent(final MotionEvent event);
 
     public interface Listener {

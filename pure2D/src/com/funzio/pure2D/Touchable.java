@@ -10,4 +10,8 @@ import android.view.MotionEvent;
  */
 public interface Touchable {
     public boolean onTouchEvent(final MotionEvent event);
+
+    public void setTouchable(boolean touchable);
+
+    public boolean isTouchable();
 }

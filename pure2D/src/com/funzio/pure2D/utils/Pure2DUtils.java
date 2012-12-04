@@ -39,7 +39,7 @@ public class Pure2DUtils {
         try {
             return getStreamBitmap(assetManager.open(assetPath), options, po2, outDimensions);
         } catch (IOException e) {
-            Log.e(Pure2D.TAG, "BITMAP LOADING ERROR: " + e.getMessage());
+            Log.e(Pure2D.TAG, "BITMAP LOADING ERROR:\n" + Log.getStackTraceString(e));
             return null;
         }
     }
@@ -234,17 +234,30 @@ public class Pure2DUtils {
         if (originalWidth == powWidth && originalHeight == powHeight) {
             return bitmap;
         } else {
+            Bitmap po2Bitmap;
             try {
-                final Bitmap po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
-                final Canvas canvas = new Canvas(po2Bitmap);
-                canvas.drawBitmap(bitmap, 0, 0, null);
-                bitmap.recycle();
-                return po2Bitmap;
+                po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
             } catch (OutOfMemoryError e) {
-                Log.e(Pure2D.TAG, "BITMAP CREATION ERROR: " + e.getMessage());
-                // crash prevention
-                return null;
+                if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
+                    try {
+                        Log.e(Pure2D.TAG, "BITMAP CREATION FALLBACK:\n" + Log.getStackTraceString(e));
+                        po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, Bitmap.Config.ARGB_4444);
+                    } catch (OutOfMemoryError e1) {
+                        Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e1));
+                        // crash prevention
+                        return null;
+                    }
+                } else {
+                    Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e));
+                    // crash prevention
+                    return null;
+                }
             }
+
+            final Canvas canvas = new Canvas(po2Bitmap);
+            canvas.drawBitmap(bitmap, 0, 0, null);
+            bitmap.recycle();
+            return po2Bitmap;
         }
     }
 

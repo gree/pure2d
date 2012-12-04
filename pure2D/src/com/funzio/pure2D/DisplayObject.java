@@ -4,6 +4,7 @@
 package com.funzio.pure2D;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
@@ -74,6 +75,14 @@ public interface DisplayObject extends Manipulatable {
     public boolean removeFromParent();
 
     public void dispose();
+
+    public RectF getBounds();
+
+    public RectF updateBounds();
+
+    public boolean isAutoUpdateBounds();
+
+    public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
     public void onAdded(Container parent);
 

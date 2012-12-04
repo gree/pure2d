@@ -66,7 +66,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected int mInvalidateFlags = 0;
     protected Matrix mMatrix = new Matrix();
     protected boolean mAutoUpdateBounds = false;
-    protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x, -mOrigin.y + mSize.y);;
+    protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
 
     protected void drawStart(final GLState glState) {
         // keep the matrix
@@ -125,9 +125,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mAutoUpdateBounds && (mInvalidateFlags & InvalidateFlags.BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
-
-            // clear flags: bounds
-            validate(InvalidateFlags.BOUNDS);
         }
 
         // update the manipulators if there's any
@@ -600,7 +597,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * Find the global bounds of this object that takes position, scale, rotation... into account. Used mainly for Camera clipping.
      */
-    final public RectF updateBounds() {
+    public RectF updateBounds() {
         // init
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
         boolean changed = false;
@@ -623,19 +620,22 @@ public abstract class BaseDisplayObject implements DisplayObject {
             changed = true;
         }
 
+        // clear flags: bounds
+        validate(InvalidateFlags.BOUNDS);
+
         // translate later
-        if (mPosition.x != 0 || mPosition.y != 0) {
+        if ((mPosition.x - mOrigin.x) != 0 || (mPosition.y - mOrigin.y) != 0) {
             if (changed) {
-                mMatrix.postTranslate(mPosition.x, mPosition.y);
+                mMatrix.postTranslate(mPosition.x - mOrigin.x, mPosition.y - mOrigin.y);
             } else {
-                mMatrix.setTranslate(mPosition.x, mPosition.y);
+                mMatrix.setTranslate(mPosition.x - mOrigin.x, mPosition.y - mOrigin.y);
 
                 if (parentMatrix == null) {
                     // easy case: only translation needs to be applied. No need to use matrix!
                     mBounds.left = mPosition.x - mOrigin.x;
                     mBounds.top = mPosition.y - mOrigin.y;
-                    mBounds.right = mBounds.left + mSize.x;
-                    mBounds.bottom = mBounds.top + mSize.y;
+                    mBounds.right = mBounds.left + mSize.x - 1;
+                    mBounds.bottom = mBounds.top + mSize.y - 1;
                     // done, no need to go further!
                     return mBounds;
                 }
@@ -645,10 +645,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // prepare to map to the matrix
-        mBounds.left = -mOrigin.x;
-        mBounds.top = -mOrigin.y;
-        mBounds.right = mBounds.left + mSize.x;
-        mBounds.bottom = mBounds.top + mSize.y;
+        mBounds.left = 0;// -mOrigin.x;
+        mBounds.top = 0;// -mOrigin.y;
+        mBounds.right = mBounds.left + mSize.x - 1;
+        mBounds.bottom = mBounds.top + mSize.y - 1;
 
         // find the bounds
         if (changed || parentMatrix != null) {

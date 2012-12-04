@@ -58,6 +58,12 @@ public class BaseScene implements Scene {
     // axis system
     private int mAxisSystem = AXIS_BOTTOM_LEFT;
 
+    // UI
+    private boolean mUIEnabled = false;
+    private List<Touchable> mVisibleTouchables = new ArrayList<Touchable>();
+    private MotionEvent mMotionEvent = null;
+    private PointF mTouchedPoint;
+
     public BaseScene() {
     }
 
@@ -346,18 +352,44 @@ public class BaseScene implements Scene {
                 gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
             }
 
+            if (mUIEnabled) {
+                mVisibleTouchables.clear();
+            }
+
             for (int i = 0; i < mNumChildren; i++) {
                 DisplayObject child = mChildren.get(i);
                 final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
                 if (visible) {
                     // draw frame
                     child.draw(mGLState);
+
+                    // stack the visible child
+                    if (mUIEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                        float childZ = child.getZ();
+                        int j = mVisibleTouchables.size();
+                        while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                            j--;
+                        }
+                        mVisibleTouchables.add(j, (Touchable) child);
+                    }
                 }
             }
 
             // validated
             mInvalidated--;
             // mStage.requestRender();
+        }
+
+        if (mUIEnabled && mMotionEvent != null) {
+            // start from front to back
+            for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+                if (mVisibleTouchables.get(i).onTouchEvent(mMotionEvent)) {
+                    break;
+                }
+            }
+
+            // clear
+            mMotionEvent = null;
         }
     }
 
@@ -745,7 +777,34 @@ public class BaseScene implements Scene {
         mGLState = null;
     }
 
+    public boolean isUIEnabled() {
+        return mUIEnabled;
+    }
+
+    /**
+     * Enables the touch interface for UI objects
+     */
+    public void setUIEnabled(final boolean enabled) {
+        mUIEnabled = enabled;
+    }
+
+    public PointF getTouchedPoint() {
+        return mTouchedPoint;
+    }
+
     public boolean onTouchEvent(final MotionEvent event) {
+        if (mUIEnabled) {
+            // queue the touch event
+            queueEvent(new Runnable() {
+
+                @Override
+                public void run() {
+                    mTouchedPoint = screenToGlobal(event.getX(), event.getY());
+                    mMotionEvent = event;
+                }
+            });
+        }
+
         return false;
     }
 }
