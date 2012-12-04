@@ -122,15 +122,15 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
      * @return the child index of the item in front
      */
     public int getFrontChildIndex() {
-        return getFrontChildIndex(mStartAngle);
+        return getFrontChildIndex(mStartAngle, false);
     }
 
     /**
      * @return the child index of the item in front
      */
-    public int getFrontChildIndex(final float angle) {
+    public int getFrontChildIndex(final float angle, final boolean ceiling) {
         final float viewAngle = formatAngle(mViewAngle - (angle - mCurrentGapAngle / 2));
-        return (int) FloatMath.floor(viewAngle / mCurrentGapAngle);
+        return (int) (ceiling ? FloatMath.ceil(viewAngle / mCurrentGapAngle) : FloatMath.floor(viewAngle / mCurrentGapAngle));
     }
 
     /**
