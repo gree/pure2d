@@ -14,7 +14,6 @@ import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.ui.Button;
 
 /**
  * @author long
@@ -65,7 +64,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         // if bounds changed, all children's bounds should also be changed
         for (int i = 0; i < mNumChildren; i++) {
             final DisplayObject child = mChildren.get(i);
-            if (child.isAutoUpdateBounds() || child instanceof Button) {
+            if (child.isAutoUpdateBounds()) {
                 child.updateBounds();
             }
         }
