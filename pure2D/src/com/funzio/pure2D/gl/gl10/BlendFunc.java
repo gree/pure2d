@@ -39,7 +39,7 @@ public class BlendFunc {
     }
 
     public boolean equals(final BlendFunc func) {
-        return src == func.src && dst == func.dst;
+        return (this == func) || (src == func.src && dst == func.dst);
     }
 
     /**

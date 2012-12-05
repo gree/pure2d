@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.geom;
 
+import android.util.FloatMath;
+
 /*
  * Copyright (C) 2007 The Android Open Source Project
  *
@@ -17,6 +19,10 @@ package com.funzio.pure2D.geom;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ */
+
+/*
+ * Long optimized by using FloatMath instead of Math
  */
 
 /**
@@ -353,7 +359,7 @@ public class Matrix {
      * @return the length of a vector
      */
     public static float length(final float x, final float y, final float z) {
-        return (float) Math.sqrt(x * x + y * y + z * z);
+        return FloatMath.sqrt(x * x + y * y + z * z);
     }
 
     /**
@@ -505,8 +511,8 @@ public class Matrix {
         rm[rmOffset + 14] = 0;
         rm[rmOffset + 15] = 1;
         a *= (float) (Math.PI / 180.0f);
-        float s = (float) Math.sin(a);
-        float c = (float) Math.cos(a);
+        float s = FloatMath.sin(a);
+        float c = FloatMath.cos(a);
         if (1.0f == x && 0.0f == y && 0.0f == z) {
             rm[rmOffset + 5] = c;
             rm[rmOffset + 10] = c;
@@ -577,12 +583,12 @@ public class Matrix {
         x *= (float) (Math.PI / 180.0f);
         y *= (float) (Math.PI / 180.0f);
         z *= (float) (Math.PI / 180.0f);
-        float cx = (float) Math.cos(x);
-        float sx = (float) Math.sin(x);
-        float cy = (float) Math.cos(y);
-        float sy = (float) Math.sin(y);
-        float cz = (float) Math.cos(z);
-        float sz = (float) Math.sin(z);
+        float cx = FloatMath.cos(x);
+        float sx = FloatMath.sin(x);
+        float cy = FloatMath.cos(y);
+        float sy = FloatMath.sin(y);
+        float cz = FloatMath.cos(z);
+        float sz = FloatMath.sin(z);
         float cxsy = cx * sy;
         float sxsy = sx * sy;
 
