@@ -40,7 +40,7 @@ public class JsonAtlasActivity extends StageActivity {
         });
 
         try {
-            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_60px_15f.json");
+            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_60px_15f.json", 1);
         } catch (Exception e) {
             Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
         }

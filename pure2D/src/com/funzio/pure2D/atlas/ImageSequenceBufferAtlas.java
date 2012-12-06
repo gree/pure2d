@@ -13,7 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
@@ -372,7 +372,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         }
 
         // create frame
-        final AtlasFrame frame = new AtlasFrame(mTexture, mFrameIndex++, frameName, new Rect(mStartX, mStartY, mStartX + (int) frameSize.x - 1, mStartY + (int) frameSize.y - 1));
+        final AtlasFrame frame = new AtlasFrame(mTexture, mFrameIndex++, frameName, new RectF(mStartX, mStartY, mStartX + (int) frameSize.x - 1, mStartY + (int) frameSize.y - 1));
         addFrame(frame);
 
         // find next position

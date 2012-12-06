@@ -11,6 +11,7 @@ import java.util.Set;
  * @author long
  */
 public class Atlas {
+    protected String mImage;
     protected int mWidth;
     protected int mHeight;
 
@@ -26,6 +27,10 @@ public class Atlas {
     public Atlas(final int width, final int height) {
         mWidth = width;
         mHeight = height;
+    }
+
+    public String getImage() {
+        return mImage;
     }
 
     public int getWidth() {

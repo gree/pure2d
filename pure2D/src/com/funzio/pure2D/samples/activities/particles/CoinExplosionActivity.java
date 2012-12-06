@@ -40,7 +40,7 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         });
 
         try {
-            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_60px_15f.json");
+            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_60px_15f.json", 1);
         } catch (Exception e) {
             Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
         }
@@ -55,6 +55,7 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         // create object
         Clip obj = new Clip(mAtlas.getMasterFrameSet());
         obj.setTexture(mTexture);
+        // obj.setRotation(mRandom.nextInt(360));
         // obj.setFps(30);
 
         // center origin

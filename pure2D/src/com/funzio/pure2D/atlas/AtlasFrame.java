@@ -3,8 +3,9 @@
  */
 package com.funzio.pure2D.atlas;
 
+import android.annotation.TargetApi;
 import android.graphics.PointF;
-import android.graphics.Rect;
+import android.graphics.RectF;
 
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
@@ -13,7 +14,7 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
  */
 public class AtlasFrame {
     private Atlas mAtlas;
-    private Rect mRect = new Rect();
+    private RectF mRect = new RectF();
     private float[] mTextureCoords = new float[8];
     private PointF mSize = new PointF();
 
@@ -23,18 +24,18 @@ public class AtlasFrame {
     private final int mIndex;
     private final String mName;
 
-    public AtlasFrame(final Atlas atlas, final int index, final String name, final int left, final int top, final int right, final int bottom) {
+    public AtlasFrame(final Atlas atlas, final int index, final String name, final float left, final float top, final float right, final float bottom) {
         mIndex = index;
         mAtlas = atlas;
         setRect(left, top, right, bottom);
         mName = name;
     }
 
-    public AtlasFrame(final Atlas atlas, final int index, final String name, final Rect rect) {
+    public AtlasFrame(final Atlas atlas, final int index, final String name, final RectF rect) {
         this(atlas, index, name, rect.left, rect.top, rect.right, rect.bottom);
     }
 
-    public AtlasFrame(final Texture texture, final int index, final String name, final Rect rect) {
+    public AtlasFrame(final Texture texture, final int index, final String name, final RectF rect) {
         mIndex = index;
         mTexture = texture;
         setRect(rect);
@@ -48,15 +49,15 @@ public class AtlasFrame {
         mName = name;
     }
 
-    public void setRect(final int left, final int top, final int right, final int bottom) {
+    public void setRect(final float left, final float top, final float right, final float bottom) {
         mRect.left = left;
         mRect.right = right;
         mRect.top = top;
         mRect.bottom = bottom;
 
         // pre-cal
-        mSize.x = Math.abs(right - left + 1);
-        mSize.y = Math.abs(bottom - top + 1);
+        mSize.x = mRect.width();
+        mSize.y = mRect.height();
 
         if (mTexture != null) {
             final PointF size = mTexture.getSize();
@@ -74,17 +75,17 @@ public class AtlasFrame {
             mTextureCoords[7] = bottom / size.y;
         } else {
             // TL
-            mTextureCoords[0] = (float) left / (float) mAtlas.mWidth;
-            mTextureCoords[1] = (float) top / (float) mAtlas.mHeight;
+            mTextureCoords[0] = left / mAtlas.mWidth;
+            mTextureCoords[1] = top / mAtlas.mHeight;
             // BL
-            mTextureCoords[2] = (float) left / (float) mAtlas.mWidth;
-            mTextureCoords[3] = (float) bottom / (float) mAtlas.mHeight;
+            mTextureCoords[2] = left / mAtlas.mWidth;
+            mTextureCoords[3] = bottom / mAtlas.mHeight;
             // TR
-            mTextureCoords[4] = (float) right / (float) mAtlas.mWidth;
-            mTextureCoords[5] = (float) top / (float) mAtlas.mHeight;
+            mTextureCoords[4] = right / mAtlas.mWidth;
+            mTextureCoords[5] = top / mAtlas.mHeight;
             // BR
-            mTextureCoords[6] = (float) right / (float) mAtlas.mWidth;
-            mTextureCoords[7] = (float) bottom / (float) mAtlas.mHeight;
+            mTextureCoords[6] = right / mAtlas.mWidth;
+            mTextureCoords[7] = bottom / mAtlas.mHeight;
         }
     }
 
@@ -113,11 +114,11 @@ public class AtlasFrame {
         mSize.y = temp;
     }
 
-    public void setRect(final Rect rect) {
+    public void setRect(final RectF rect) {
         setRect(rect.left, rect.top, rect.right, rect.bottom);
     }
 
-    public Rect getRect() {
+    public RectF getRect() {
         return mRect;
     }
 
@@ -162,6 +163,7 @@ public class AtlasFrame {
     }
 
     @Override
+    @TargetApi(14)
     public String toString() {
         return String.format("AtlasFrame( %s, %s )", mName, mRect.toShortString());
     }

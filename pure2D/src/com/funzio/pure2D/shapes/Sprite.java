@@ -57,7 +57,7 @@ public class Sprite extends Rectangular {
             // size changed?
             final PointF newSize = frame.getSize();
             if (newSize.x != mSize.x || newSize.y != mSize.y) {
-                setSize(newSize);
+                setSize(newSize.x, newSize.y);
             } else {
                 invalidate();
             }

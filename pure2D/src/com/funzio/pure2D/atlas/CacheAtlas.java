@@ -4,7 +4,6 @@
 package com.funzio.pure2D.atlas;
 
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
@@ -73,16 +72,17 @@ public class CacheAtlas extends Atlas {
         // rect.setColor(new GLColor(0, 0.3f, 0, 1f));
         // rect.draw(mGLState);
 
+        final RectF posRect = new RectF();
         for (int i = 0; i < frames; i++) {
             mTarget.stopAt(i);
-            final Rect posRect = mPacker.getRect(i);
+            posRect.set(mPacker.getRect(i));
             final RectF frameRect = mTarget.getFrameRect(i);
             // mTarget.setPosition(posRect.left - frameRect.left, posRect.top - frameRect.top); // bottom - top
             mTarget.setPosition(posRect.left - frameRect.left, mHeight - posRect.top - frameRect.top - posRect.height()); // top - bottom
             mTarget.draw(mGLState);
 
             // create frame
-            AtlasFrame frame = new AtlasFrame(this, i, "", posRect);
+            final AtlasFrame frame = new AtlasFrame(this, i, "", posRect);
             frame.mOffset = new PointF(frameRect.left, frameRect.top);
             addFrame(frame);
         }
