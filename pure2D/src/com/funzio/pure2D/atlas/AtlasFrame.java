@@ -74,18 +74,43 @@ public class AtlasFrame {
             mTextureCoords[7] = bottom / size.y;
         } else {
             // TL
-            mTextureCoords[0] = (float) left / mAtlas.mWidth;
-            mTextureCoords[1] = (float) top / mAtlas.mHeight;
+            mTextureCoords[0] = (float) left / (float) mAtlas.mWidth;
+            mTextureCoords[1] = (float) top / (float) mAtlas.mHeight;
             // BL
-            mTextureCoords[2] = (float) left / mAtlas.mWidth;
-            mTextureCoords[3] = (float) bottom / mAtlas.mHeight;
+            mTextureCoords[2] = (float) left / (float) mAtlas.mWidth;
+            mTextureCoords[3] = (float) bottom / (float) mAtlas.mHeight;
             // TR
-            mTextureCoords[4] = (float) right / mAtlas.mWidth;
-            mTextureCoords[5] = (float) top / mAtlas.mHeight;
+            mTextureCoords[4] = (float) right / (float) mAtlas.mWidth;
+            mTextureCoords[5] = (float) top / (float) mAtlas.mHeight;
             // BR
-            mTextureCoords[6] = (float) right / mAtlas.mWidth;
-            mTextureCoords[7] = (float) bottom / mAtlas.mHeight;
+            mTextureCoords[6] = (float) right / (float) mAtlas.mWidth;
+            mTextureCoords[7] = (float) bottom / (float) mAtlas.mHeight;
         }
+    }
+
+    protected void rotateCCW() {
+        float x0 = mTextureCoords[0];
+        float y0 = mTextureCoords[1];
+        float x1 = mTextureCoords[2];
+        float y1 = mTextureCoords[3];
+
+        // TR
+        mTextureCoords[0] = mTextureCoords[4];
+        mTextureCoords[1] = mTextureCoords[5];
+        // TL
+        mTextureCoords[2] = x0;
+        mTextureCoords[3] = y0;
+        // BR
+        mTextureCoords[4] = mTextureCoords[6];
+        mTextureCoords[5] = mTextureCoords[7];
+        // BL
+        mTextureCoords[6] = x1;
+        mTextureCoords[7] = y1;
+
+        // also flip the size
+        float temp = mSize.x;
+        mSize.x = mSize.y;
+        mSize.y = temp;
     }
 
     public void setRect(final Rect rect) {

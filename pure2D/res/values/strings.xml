@@ -116,5 +116,6 @@
     <string name="_3d_rotation">3D Rotation</string>
     <string name="reverse">Reverse</string>
     <string name="once">Once</string>
+    <string name="json_atlas">JSON Atlas</string>
 
 </resources>

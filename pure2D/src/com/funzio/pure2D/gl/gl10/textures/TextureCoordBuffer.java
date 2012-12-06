@@ -128,6 +128,28 @@ public class TextureCoordBuffer extends GLFloatBuffer {
         setValues(mValues);
     }
 
+    public void rotateCCW() {
+        float x0 = mValues[0];
+        float y0 = mValues[1];
+        float x1 = mValues[2];
+        float y1 = mValues[3];
+
+        // TR
+        mValues[0] = mValues[4];
+        mValues[1] = mValues[5];
+        // TL
+        mValues[2] = x0;
+        mValues[3] = y0;
+        // BR
+        mValues[4] = mValues[6];
+        mValues[5] = mValues[7];
+        // BL
+        mValues[6] = x1;
+        mValues[7] = y1;
+
+        setValues(mValues);
+    }
+
     // public boolean equals(final TextureCoordBuffer buffer) {
     // return this == buffer || compare(this, buffer);
     // }

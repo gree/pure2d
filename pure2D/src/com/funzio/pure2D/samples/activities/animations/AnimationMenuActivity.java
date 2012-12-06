@@ -14,6 +14,7 @@ public class AnimationMenuActivity extends MenuActivity {
     @Override
     protected void createMenus() {
         addMenu(R.id.btn_hello_atlas, HelloAtlasActivity.class);
+        addMenu(R.id.btn_json_atlas, JsonAtlasActivity.class);
         addMenu(R.id.btn_image_sequence, ImageSequenceActivity.class);
         addMenu(R.id.btn_tween_animations, TweenAnimationsActivity.class);
         addMenu(R.id.btn_skeleton_animation, SkeletonActivity.class);
