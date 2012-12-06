@@ -3,6 +3,7 @@
  */
 package com.funzio.pure2D.shapes;
 
+import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.Playable;
@@ -59,6 +60,20 @@ public class Clip extends Sprite implements Playable {
             return null;
         } else {
             return new RectF(mFrameSet.getFrame(frame).getRect());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#setOriginAtCenter()
+     */
+    @Override
+    public void setOriginAtCenter() {
+        if (mFrameSet != null) {
+            final PointF maxSize = mFrameSet.getFrameMaxSize();
+            super.setOrigin(maxSize.x / 2f, maxSize.y / 2f);
+        } else {
+            super.setOriginAtCenter();
         }
     }
 

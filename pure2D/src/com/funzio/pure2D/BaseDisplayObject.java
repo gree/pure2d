@@ -279,6 +279,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.ORIGIN);
     }
 
+    public void setOrigin(final float x, final float y) {
+        mOrigin.x = x;
+        mOrigin.y = y;
+        mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
     public void setOriginAtCenter() {
         mOrigin.x = mSize.x / 2;
         mOrigin.y = mSize.y / 2;
