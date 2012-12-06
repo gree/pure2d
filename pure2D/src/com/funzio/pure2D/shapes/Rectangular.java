@@ -3,8 +3,6 @@
  */
 package com.funzio.pure2D.shapes;
 
-import java.util.Arrays;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.RectF;
@@ -17,13 +15,15 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  */
 public class Rectangular extends Shape {
     private static final int VERTICES_NUM = 4;
-    private float[] mVertices = new float[8];
+    private final float[] mVertices = {
+            0, 0, // TL
+            0, 0, // BL
+            0, 0, // TR
+            0, 0, // BR
+    };
 
     public Rectangular() {
         super();
-
-        // init vertices
-        Arrays.fill(mVertices, 0);
 
         // use default texture coordinates
         setTextureCoordBuffer(TextureCoordBuffer.getDefault());
