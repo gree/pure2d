@@ -79,6 +79,7 @@
     <string name="animations">Animations</string>
     <string name="texture_atlas">Texture Atlas</string>
     <string name="repeating">Repeating</string>
+    <string name="repeat">Repeat</string>
     <string name="vertical_wheel">Vertical Wheel</string>
     <string name="horizontal_wheel">Horizontal Wheel</string>
     <string name="atlas_generator">Atlas Generator</string>
@@ -113,5 +114,7 @@
     <string name="perspective_camera">Perspective Camera</string>
     <string name="simple_3d">Simple 3D</string>
     <string name="_3d_rotation">3D Rotation</string>
+    <string name="reverse">Reverse</string>
+    <string name="once">Once</string>
 
 </resources>

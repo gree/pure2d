@@ -99,15 +99,15 @@ public class TweenAnimationsActivity extends StageActivity {
                 mAnimator.setInterpolator(BOUNCE);
                 break;
 
-            case R.id.radio_no_looping:
+            case R.id.radio_once:
                 mAnimator.setLoop(Playable.LOOP_NONE);
                 break;
 
-            case R.id.radio_repeating:
+            case R.id.radio_repeat:
                 mAnimator.setLoop(Playable.LOOP_REPEAT);
                 break;
 
-            case R.id.radio_circling:
+            case R.id.radio_reverse:
                 mAnimator.setLoop(Playable.LOOP_REVERSE);
                 break;
         }
