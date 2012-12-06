@@ -1,4 +1,4 @@
-package com.funzio.pure2D.samples.activities.animations;
+package com.funzio.pure2D.samples.activities.particles;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -6,20 +6,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CheckBox;
 
-import com.funzio.pure2D.R;
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.animators.Animator.AnimatorListener;
+import com.funzio.pure2D.animators.TrajectoryAnimator;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.samples.activities.StageActivity;
 import com.funzio.pure2D.shapes.Clip;
-import com.funzio.pure2D.shapes.Sprite;
 
-public class JsonAtlasActivity extends StageActivity {
+public class CoinExplosionActivity extends StageActivity implements AnimatorListener {
     private Texture mTexture;
     private JsonAtlas mAtlas;
-    private Sprite mAtlasSprite;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class JsonAtlasActivity extends StageActivity {
                 loadTexture();
 
                 // generate a lot of squares
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
             }
         });
 
@@ -46,22 +46,9 @@ public class JsonAtlasActivity extends StageActivity {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.samples.activities.StageActivity#getLayout()
-     */
-    @Override
-    protected int getLayout() {
-        return R.layout.stage_atlas;
-    }
-
     private void loadTexture() {
         // create texture
         mTexture = mScene.getTextureManager().createAssetTexture("atlas/coin_60px_15f.png", null);
-
-        mAtlasSprite = new Sprite();
-        mAtlasSprite.setTexture(mTexture);
-        mScene.addChild(mAtlasSprite);
     }
 
     private void addObject(final float x, final float y) {
@@ -78,6 +65,18 @@ public class JsonAtlasActivity extends StageActivity {
 
         // add to scene
         mScene.addChild(obj);
+
+        // animation
+        TrajectoryAnimator animator = new TrajectoryAnimator(0);
+        obj.addManipulator(animator);
+        animator.start(mRandom.nextInt(100), (float) (mRandom.nextInt(360) * Math.PI / 180));
+        animator.setListener(this);
+    }
+
+    private void addSome(final float x, final float y) {
+        for (int i = 0; i < 10; i++) {
+            addObject(x, y);
+        }
     }
 
     @Override
@@ -88,10 +87,7 @@ public class JsonAtlasActivity extends StageActivity {
             mStage.queueEvent(new Runnable() {
                 @Override
                 public void run() {
-                    int len = event.getPointerCount();
-                    for (int i = 0; i < len; i++) {
-                        addObject(event.getX(i), mDisplaySize.y - event.getY(i));
-                    }
+                    addSome(event.getX(), mDisplaySize.y - event.getY());
                 }
             });
         }
@@ -99,17 +95,21 @@ public class JsonAtlasActivity extends StageActivity {
         return true;
     }
 
-    public void onClickAtlas(final View view) {
-        if (view.getId() == R.id.cb_show_atlas) {
-            if (mAtlasSprite != null) {
-                mAtlasSprite.setVisible(((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked());
-                // for testing clipping
-                // if (((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked()) {
-                // mAtlasSprite.setPosition(0, 0);
-                // } else {
-                // mAtlasSprite.setPosition(0, mDisplaySize.y);
-                // }
+    @Override
+    public void onAnimationEnd(final Animator animator) {
+        mStage.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                ((DisplayObject) animator.getTarget()).removeFromParent();
             }
-        }
+        });
     }
+
+    @Override
+    public void onAnimationUpdate(final Animator animator, final float value) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

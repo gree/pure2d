@@ -199,6 +199,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".samples.activities.particles.CoinExplosionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".samples.activities.effects.EffectsMenuActivity"
             android:label="@string/effects"
             android:screenOrientation="portrait" >
