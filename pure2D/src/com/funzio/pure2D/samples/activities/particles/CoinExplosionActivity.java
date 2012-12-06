@@ -2,6 +2,7 @@ package com.funzio.pure2D.samples.activities.particles;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import com.funzio.pure2D.shapes.Clip;
 public class CoinExplosionActivity extends StageActivity implements AnimatorListener {
     private Texture mTexture;
     private JsonAtlas mAtlas;
+    private PointF mCoinCenter = new PointF();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
 
         try {
             mAtlas = new JsonAtlas(getAssets(), "atlas/coin_60px_15f.json", 1);
+            mCoinCenter.x = mAtlas.getMasterFrameSet().getFrameMaxSize().x / 2;
+            mCoinCenter.y = mAtlas.getMasterFrameSet().getFrameMaxSize().y / 2;
         } catch (Exception e) {
             Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
         }
@@ -59,7 +63,8 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         // obj.setFps(30);
 
         // center origin
-        obj.setOriginAtCenter();
+        // obj.setOriginAtCenter();
+        obj.setOrigin(mCoinCenter);
 
         // position
         obj.setPosition(x, y);
@@ -69,6 +74,8 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
 
         // animation
         TrajectoryAnimator animator = new TrajectoryAnimator(0);
+        // animator.setTargetAngleFixed(false);
+        // animator.setTargetAngleOffset(-90);
         obj.addManipulator(animator);
         animator.start(mRandom.nextInt(100), (float) (mRandom.nextInt(360) * Math.PI / 180));
         animator.setListener(this);

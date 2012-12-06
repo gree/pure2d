@@ -13,16 +13,16 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
  * @author long
  */
 public class AtlasFrame {
-    private Atlas mAtlas;
-    private RectF mRect = new RectF();
-    private float[] mTextureCoords = new float[8];
-    private PointF mSize = new PointF();
+    protected Atlas mAtlas;
+    protected RectF mRect = new RectF();
+    protected float[] mTextureCoords = new float[8];
+    protected PointF mSize = new PointF();
 
     public PointF mOffset = null;
-    private Texture mTexture;
+    protected Texture mTexture;
 
-    private final int mIndex;
-    private final String mName;
+    protected final int mIndex;
+    protected final String mName;
 
     public AtlasFrame(final Atlas atlas, final int index, final String name, final float left, final float top, final float right, final float bottom) {
         mIndex = index;

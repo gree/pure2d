@@ -24,10 +24,30 @@ public class TrajectoryAnimator extends BaseAnimator {
     protected float mSin;
     protected float mCos;
 
+    // rotation
+    protected boolean mTargetAngleFixed = true;
+    protected float mTargetAngleOffset = 0;
+
     public TrajectoryAnimator(final float ground) {
         super();
 
         mGround = ground;
+    }
+
+    public boolean isTargetAngleFixed() {
+        return mTargetAngleFixed;
+    }
+
+    public void setTargetAngleFixed(final boolean fixed) {
+        mTargetAngleFixed = fixed;
+    }
+
+    public float getTargetAngleOffset() {
+        return mTargetAngleOffset;
+    }
+
+    public void setTargetAngleOffset(final float offsetDegree) {
+        mTargetAngleOffset = offsetDegree;
     }
 
     public void start(final float srcX, final float srcY, final float velocity, final float angle) {
@@ -93,7 +113,18 @@ public class TrajectoryAnimator extends BaseAnimator {
             final float t = Math.min(mElapsedTime, mDuration) / TIME_FACTOR;
             final float x = mSrcX + mVelocity * t * mCos;
             final float y = mSrcY + mVelocity * t * mSin - 0.5f * mGravity * t * t;
+
             if (mTarget != null) {
+
+                // rotation
+                if (!mTargetAngleFixed) {
+                    final PointF currentPos = mTarget.getPosition();
+                    final float dx = x - currentPos.x;
+                    final float dy = y - currentPos.y;
+                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(dy, dx) * 180 / Math.PI));
+                }
+
+                // position
                 mTarget.setPosition(x, y);
             }
 

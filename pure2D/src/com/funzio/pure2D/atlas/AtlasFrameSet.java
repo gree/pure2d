@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.graphics.PointF;
+
 /**
  * @author long
  */
 public class AtlasFrameSet {
     protected final String mName;
     protected List<AtlasFrame> mFrames = new ArrayList<AtlasFrame>();
+    protected PointF mFrameMaxSize = new PointF();
 
     public AtlasFrameSet(final String name) {
         mName = name;
@@ -20,6 +23,13 @@ public class AtlasFrameSet {
 
     public void addFrame(final AtlasFrame frame) {
         mFrames.add(frame);
+
+        if (frame.mSize.x > mFrameMaxSize.x) {
+            mFrameMaxSize.x = frame.mSize.x;
+        }
+        if (frame.mSize.y > mFrameMaxSize.y) {
+            mFrameMaxSize.y = frame.mSize.y;
+        }
     }
 
     public boolean removeFrame(final AtlasFrame frame) {
@@ -38,7 +48,7 @@ public class AtlasFrameSet {
         int len = mFrames.size();
         for (int i = 0; i < len; i++) {
             AtlasFrame frame = mFrames.get(i);
-            if (frame.getName().equals(name)) {
+            if (frame.mName.equals(name)) {
                 return frame;
             }
         }
@@ -99,5 +109,13 @@ public class AtlasFrameSet {
 
     public static String extractName(final String full) {
         return extractName(full, "_");
+    }
+
+    public PointF getFrameMaxSize() {
+        return mFrameMaxSize;
+    }
+
+    public void setFrameMaxSize(final PointF frameMaxSize) {
+        mFrameMaxSize = frameMaxSize;
     }
 }
