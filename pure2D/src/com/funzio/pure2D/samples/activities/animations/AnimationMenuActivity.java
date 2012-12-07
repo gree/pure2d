@@ -18,6 +18,7 @@ public class AnimationMenuActivity extends MenuActivity {
         addMenu(R.id.btn_json_atlas, JsonAtlasActivity.class);
         addMenu(R.id.btn_image_sequence, ImageSequenceActivity.class);
         addMenu(R.id.btn_tween_animations, TweenAnimationsActivity.class);
+        addMenu(R.id.btn_bezier_animation, BezierAnimationActivity.class);
         addMenu(R.id.btn_skeleton_animation, SkeletonActivity.class);
         addMenu(R.id.btn_skeleton_animation_cache, SkeletonCacheActivity.class);
         addMenu(R.id.btn_coin_explosion, CoinExplosionActivity.class);

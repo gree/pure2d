@@ -119,5 +119,6 @@
     <string name="json_atlas">JSON Atlas</string>
     <string name="coin_explosion">Coin Explosion</string>
     <string name="trajectory_animation">Trajectory Animation</string>
+    <string name="bezier_animation">Bezier Animation</string>
 
 </resources>
