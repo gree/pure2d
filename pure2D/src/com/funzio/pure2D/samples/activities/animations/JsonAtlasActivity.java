@@ -40,7 +40,7 @@ public class JsonAtlasActivity extends StageActivity {
         });
 
         try {
-            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_60px_15f.json", 1);
+            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_01_60.json", 1);
         } catch (Exception e) {
             Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
         }
@@ -57,7 +57,7 @@ public class JsonAtlasActivity extends StageActivity {
 
     private void loadTexture() {
         // create texture
-        mTexture = mScene.getTextureManager().createAssetTexture("atlas/coin_60px_15f.png", null);
+        mTexture = mScene.getTextureManager().createAssetTexture("atlas/coin_01_60.png", null);
 
         mAtlasSprite = new Sprite();
         mAtlasSprite.setTexture(mTexture);

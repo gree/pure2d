@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.atlas;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,10 +21,10 @@ import org.json.JSONObject;
  * @category Loads and parses Json file exported by TexturePacker
  */
 public class JsonAtlas extends Atlas {
-    public JsonAtlas(final String json, final float scale) throws JSONException {
-        super();
+    protected static final String TAG = JsonAtlas.class.getSimpleName();
 
-        parseJson(json, scale);
+    public JsonAtlas() {
+        super();
     }
 
     public JsonAtlas(final InputStream stream, final float scale) throws IOException, JSONException {
@@ -36,14 +38,20 @@ public class JsonAtlas extends Atlas {
         }
         stream.close();
 
-        parseJson(sb.toString(), scale);
+        parse(sb.toString(), scale);
     }
 
     public JsonAtlas(final AssetManager asset, final String filePath, final float scale) throws IOException, JSONException {
         this(asset.open(filePath), scale);
     }
 
-    protected void parseJson(final String json, final float scale) throws JSONException {
+    public JsonAtlas(final String filePath, final float scale) throws IOException, JSONException {
+        this(new FileInputStream(new File(filePath)), scale);
+    }
+
+    public void parse(final String json, final float scale) throws JSONException {
+        removeAllFrames();
+
         final JSONObject jsonObject = new JSONObject(json);
         final JSONObject meta = jsonObject.getJSONObject("meta");
         // final float scale = (float) jsonObject.getDouble("scale");

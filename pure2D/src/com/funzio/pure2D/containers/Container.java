@@ -39,4 +39,6 @@ public interface Container {
     public PointF globalToLocal(final PointF pt);
 
     public Matrix getMatrix();
+
+    public void queueEvent(Runnable r);
 }
