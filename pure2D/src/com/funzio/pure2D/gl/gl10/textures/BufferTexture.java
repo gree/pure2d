@@ -13,11 +13,11 @@ public class BufferTexture extends Texture {
     /**
      * @param gl
      */
-    public BufferTexture(final GLState glState, final int width, final int height) {
+    public BufferTexture(final GLState glState, final float width, final float height) {
         super(glState);
 
         // create an blank texture
-        load(null, width, height, 0);
+        load(null, Math.round(width), Math.round(height), 0);
     }
 
     /*

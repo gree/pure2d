@@ -56,8 +56,8 @@ public class JsonAtlas extends Atlas {
         final JSONObject meta = jsonObject.getJSONObject("meta");
         // final float scale = (float) jsonObject.getDouble("scale");
         final JSONObject size = meta.getJSONObject("size");
-        mWidth = size.getInt("w");
-        mHeight = size.getInt("h");
+        mWidth = size.getInt("w") * scale;
+        mHeight = size.getInt("h") * scale;
         mImage = meta.getString("image");
 
         // create the frames
@@ -74,20 +74,20 @@ public class JsonAtlas extends Atlas {
         final boolean trimmed = frameJson.getBoolean("trimmed");
         final boolean rotated = frameJson.getBoolean("rotated");
 
-        final float left = frame.getInt("x") * scale;
-        final float top = frame.getInt("y") * scale;
-        final float w = frame.getInt("w");
-        final float h = frame.getInt("h");
-        final float right = left + ((rotated ? h : w) - 1) * scale;
-        final float bottom = top + ((rotated ? w : h) - 1) * scale;
+        final int left = frame.getInt("x");
+        final int top = frame.getInt("y");
+        final int w = frame.getInt("w");
+        final int h = frame.getInt("h");
+        final int right = left + (rotated ? h : w) - 1;
+        final int bottom = top + (rotated ? w : h) - 1;
 
-        final AtlasFrame atlasFrame = new AtlasFrame(this, index, frameJson.getString("filename"), new RectF(left, top, right, bottom));
+        final AtlasFrame atlasFrame = new AtlasFrame(this, index, frameJson.getString("filename"), new RectF(left * scale, top * scale, right * scale, bottom * scale));
         if (trimmed) {
             final JSONObject spriteSourceSize = frameJson.getJSONObject("spriteSourceSize");
             final int offsetX = spriteSourceSize.getInt("x");
             final int offsetY = spriteSourceSize.getInt("y");
             if (offsetX != 0 || offsetY != 0) {
-                atlasFrame.mOffset = new PointF(offsetX, offsetY);
+                atlasFrame.mOffset = new PointF(offsetX * scale, offsetY * scale);
             }
         }
         if (rotated) {

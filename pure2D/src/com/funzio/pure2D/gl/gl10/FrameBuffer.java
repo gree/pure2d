@@ -31,7 +31,7 @@ public class FrameBuffer {
     private int[] mOriginalViewport = new int[4];
     private boolean mBinded = false;
 
-    public FrameBuffer(final GLState glState, final int width, final int height) {
+    public FrameBuffer(final GLState glState, final float width, final float height) {
         mGLState = glState;
         mGL = glState.mGL;
         mGL11Ex = (GL11ExtensionPack) mGL;

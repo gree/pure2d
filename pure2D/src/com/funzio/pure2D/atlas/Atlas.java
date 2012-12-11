@@ -12,8 +12,8 @@ import java.util.Set;
  */
 public class Atlas {
     protected String mImage;
-    protected int mWidth;
-    protected int mHeight;
+    protected float mWidth;
+    protected float mHeight;
 
     private AtlasFrameSet mMasterFrameSet = new AtlasFrameSet("");
     private Map<String, AtlasFrameSet> mSubFrameSets = new HashMap<String, AtlasFrameSet>();
@@ -24,7 +24,7 @@ public class Atlas {
     public Atlas() {
     }
 
-    public Atlas(final int width, final int height) {
+    public Atlas(final float width, final float height) {
         mWidth = width;
         mHeight = height;
     }
@@ -33,11 +33,11 @@ public class Atlas {
         return mImage;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return mWidth;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return mHeight;
     }
 
