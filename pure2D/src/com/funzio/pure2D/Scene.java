@@ -30,6 +30,10 @@ public interface Scene extends Renderer, Container {
 
     public int getAxisSystem();
 
+    public Camera getCamera();
+
+    public void setCamera(final Camera camera);
+
     public GLState getGLState();
 
     public TextureManager getTextureManager();
