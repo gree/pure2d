@@ -18,6 +18,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
  * @author long
  */
 public abstract class Texture {
+    public static boolean LOG_ENABLED = true;
     public static final String TAG = Texture.class.getSimpleName();
 
     protected GLState mGLState;
@@ -75,7 +76,9 @@ public abstract class Texture {
         mTextureID = ids[0];
 
         int error = mGL.glGetError();
-        Log.v(TAG, String.format("load(%s, %d, %d); id: %d, error: %d", bitmap, actualWidth, actualHeight, mTextureID, error));
+        if (LOG_ENABLED) {
+            Log.v(TAG, String.format("load(%s, %d, %d); id: %d, error: %d", bitmap, actualWidth, actualHeight, mTextureID, error));
+        }
 
         // error checking
         if (error == 0 && mTextureID != 0) {
@@ -109,7 +112,7 @@ public abstract class Texture {
             // mGL.glBindTexture(GL10.GL_TEXTURE_2D, 0);
             // mGLState.unbindTexture();
         } else {
-            Log.e(TAG, "Failed to generate Texture: " + GLU.gluErrorString(error) + "\n" + Log.getStackTraceString(new Exception()));
+            Log.e(TAG, "Failed to generate Texture: " + GLU.gluErrorString(error), new Exception());
             // TODO maybe throw an Exception here
         }
 
@@ -173,7 +176,9 @@ public abstract class Texture {
     // }
 
     public void unload() {
-        Log.v(TAG, "unload(): " + mTextureID);
+        if (LOG_ENABLED) {
+            Log.v(TAG, "unload(): " + mTextureID);
+        }
 
         if (mTextureID != 0) {
             // clean up
