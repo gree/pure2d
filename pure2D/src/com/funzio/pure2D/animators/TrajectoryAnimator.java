@@ -155,4 +155,12 @@ public class TrajectoryAnimator extends BaseAnimator {
     public float getDuration() {
         return mDuration;
     }
+
+    public float getGround() {
+        return mGround;
+    }
+
+    public void setGround(final float ground) {
+        mGround = ground;
+    }
 }
