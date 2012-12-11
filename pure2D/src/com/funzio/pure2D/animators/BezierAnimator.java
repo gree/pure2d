@@ -29,6 +29,11 @@ public class BezierAnimator extends TweenAnimator {
         mControl2.set(c2);
     }
 
+    public void setControlPoints(final float c1x, final float c1y, final float c2x, final float c2y) {
+        mControl1.set(c1x, c1y);
+        mControl2.set(c2x, c2y);
+    }
+
     public void setValues(final float srcX, final float srcY, final float dstX, final float dstY) {
         mStart.set(srcX, srcY);
         mEnd.set(dstX, dstY);
