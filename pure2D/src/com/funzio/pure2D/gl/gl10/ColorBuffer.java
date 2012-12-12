@@ -17,7 +17,7 @@ public class ColorBuffer extends GLFloatBuffer {
         super(colors);
     }
 
-    public ColorBuffer(final GLColor[] colors) {
+    public ColorBuffer(final GLColor... colors) {
         setValues(colors);
     }
 
