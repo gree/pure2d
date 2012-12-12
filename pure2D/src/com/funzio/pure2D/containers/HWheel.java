@@ -11,6 +11,7 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
     // spinning
     protected VelocityAnimator mAnimator;
+    protected boolean mStopping = false;
 
     public HWheel() {
         // always, because this is a wheel
@@ -59,11 +60,27 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         return mAnimator.getDuration();
     }
 
-    public void onAnimationEnd(final Animator animator) {
-        // TODO to be overriden
+    @Override
+    protected void positionChildren() {
+        super.positionChildren();
+
+        if (mStopping) {
+            mStopping = false;
+            onStop();
+        }
     }
 
+    protected void onStop() {
+        // TODO to be overridden
+    }
+
+    @Override
+    public void onAnimationEnd(final Animator animator) {
+        mStopping = true;
+    }
+
+    @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
-        scrollBy(-value, 0);
+        scrollBy(0, -value);
     }
 }

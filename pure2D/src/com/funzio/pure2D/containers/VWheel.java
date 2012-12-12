@@ -9,6 +9,7 @@ import com.funzio.pure2D.animators.VelocityAnimator;
 public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     // spinning
     protected VelocityAnimator mAnimator;
+    protected boolean mStopping = false;
 
     public VWheel() {
         // always, because this is a wheel
@@ -57,10 +58,26 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         return mAnimator.getDuration();
     }
 
-    public void onAnimationEnd(final Animator animator) {
-        // TODO to be overriden
+    @Override
+    protected void positionChildren() {
+        super.positionChildren();
+
+        if (mStopping) {
+            mStopping = false;
+            onStop();
+        }
     }
 
+    protected void onStop() {
+        // TODO to be overridden
+    }
+
+    @Override
+    public void onAnimationEnd(final Animator animator) {
+        mStopping = true;
+    }
+
+    @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
         scrollBy(0, -value);
     }
