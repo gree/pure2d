@@ -17,6 +17,27 @@ public abstract class LinearGroup extends DisplayGroup {
     protected boolean mRepeating = false;
     protected boolean mClipping = true;
 
+    private boolean mChildrenPositionInvalidated = false;
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.DisplayGroup#update(int)
+     */
+    @Override
+    public boolean update(final int deltaTime) {
+        if (mChildrenPositionInvalidated) {
+            positionChildren();
+            mChildrenPositionInvalidated = false;
+        }
+
+        return super.update(deltaTime);
+    }
+
+    protected void invalidateChildrenPosition() {
+        mChildrenPositionInvalidated = true;
+        invalidate();
+    }
+
     /**
      * @return the gap
      */
@@ -31,7 +52,7 @@ public abstract class LinearGroup extends DisplayGroup {
         mGap = gap;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public PointF getScrollPosition() {
@@ -43,7 +64,7 @@ public abstract class LinearGroup extends DisplayGroup {
         mScrollPosition.y = y;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     public void scrollTo(final DisplayObject child) {
@@ -57,7 +78,7 @@ public abstract class LinearGroup extends DisplayGroup {
         mScrollPosition.y += dy;
 
         // reposition the children
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /**
@@ -72,7 +93,7 @@ public abstract class LinearGroup extends DisplayGroup {
      */
     public void setRepeating(final boolean Repeating) {
         mRepeating = Repeating;
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /*
@@ -83,7 +104,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected void onAddedChild(final DisplayObject child) {
         super.onAddedChild(child);
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /*
@@ -94,7 +115,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected void onRemovedChild(final DisplayObject child) {
         super.onRemovedChild(child);
 
-        positionChildren();
+        invalidateChildrenPosition();
     }
 
     /**

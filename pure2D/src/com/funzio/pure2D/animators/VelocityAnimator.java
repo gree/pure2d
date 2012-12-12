@@ -7,7 +7,7 @@ public class VelocityAnimator extends BaseAnimator {
 
     protected float mAcceleration = 0;
     protected float mVelocity = 0;
-    private int mDuration = 0; // 0: unlimited
+    protected int mDuration = 0; // 0: unlimited
 
     public VelocityAnimator() {
         super();
@@ -56,6 +56,13 @@ public class VelocityAnimator extends BaseAnimator {
 
     public void setAcceleration(final float acceleration) {
         mAcceleration = acceleration;
+    }
+
+    /**
+     * @return the Duration in ms
+     */
+    public int getDuration() {
+        return mDuration;
     }
 
     @Override

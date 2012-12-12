@@ -1,122 +1,69 @@
 package com.funzio.pure2D.containers;
 
+import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.animators.Animator.AnimatorListener;
+import com.funzio.pure2D.animators.VelocityAnimator;
+
 /**
  * @author long
  */
-public class HWheel extends HGroup implements Wheel {
+public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
-    protected float mAcceleration = -0.002f;
-    protected float mVelocity = 0;
-
-    private int mMaxSpinTime = 0; // 0: unlimited
-    private int mElapsedSpinTime = 0;
+    // spinning
+    protected VelocityAnimator mAnimator;
 
     public HWheel() {
         // always, because this is a wheel
         mRepeating = true;
+
+        // animator
+        mAnimator = new VelocityAnimator();
+        mAnimator.setListener(this);
+        addManipulator(mAnimator);
     }
 
     public void spin(final float veloc) {
-        mVelocity = veloc;
-        mAcceleration = 0;
-        mMaxSpinTime = 0;
-
-        // reset elapsed time
-        mElapsedSpinTime = 0;
+        spin(veloc, 0, 0);
     }
 
     public void spin(final float veloc, final float acceleration) {
-        mVelocity = veloc;
-        mAcceleration = acceleration;
-        mMaxSpinTime = 0;
-
-        // reset elapsed time
-        mElapsedSpinTime = 0;
+        spin(veloc, acceleration, 0);
     }
 
     public void spin(final float veloc, final float acceleration, final int maxSpinTime) {
-        mVelocity = veloc;
-        mAcceleration = acceleration;
-        mMaxSpinTime = maxSpinTime;
-
-        // reset elapsed time
-        mElapsedSpinTime = 0;
+        mAnimator.start(veloc, acceleration, maxSpinTime);
     }
 
     public void stop() {
-        mVelocity = 0;
-        mElapsedSpinTime = 0;
+        mAnimator.stop();
     }
 
     /**
      * @return the velocity
      */
     public float getVelocity() {
-        return mVelocity;
+        return mAnimator.getVelocity();
     }
 
     /**
      * @return the Acceleration
      */
     public float getAcceleration() {
-        return mAcceleration;
+        return mAnimator.getAcceleration();
     }
 
     /**
      * @return the maxSpinTime
      */
     public int getMaxSpinTime() {
-        return mMaxSpinTime;
+        return mAnimator.getDuration();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#update(int)
-     */
-    @Override
-    public boolean update(final int deltaTime) {
-        if (mVelocity != 0 && ((mMaxSpinTime > 0 && mElapsedSpinTime < mMaxSpinTime) || mMaxSpinTime <= 0)) {
-
-            int myDeltaTime = deltaTime;
-            boolean isTimeUp = false;
-            // if there is a time limit
-            if (mMaxSpinTime > 0 && mElapsedSpinTime + myDeltaTime > mMaxSpinTime) {
-                // uh oh, time's up!
-                myDeltaTime = mMaxSpinTime - mElapsedSpinTime;
-                isTimeUp = true;
-            }
-            mElapsedSpinTime += myDeltaTime;
-
-            float deltaVeloc = mAcceleration * myDeltaTime;
-            float newVeloc = mVelocity + deltaVeloc;
-
-            // scroll now
-            float delta = mVelocity * myDeltaTime + 0.5f * deltaVeloc * myDeltaTime; // Real physics, Newton's
-            mScrollPosition.x -= delta;
-            positionChildren();
-
-            // direction changed or time's up?
-            if ((mMaxSpinTime <= 0 && newVeloc * mVelocity <= 0) || isTimeUp) {
-                mVelocity = 0;
-                // done! do callback
-                onStop();
-            } else {
-                // update veloc
-                mVelocity = newVeloc;
-            }
-        } else if (mVelocity != 0) {
-            mVelocity = 0;
-            // done! do callback
-            onStop();
-        }
-
-        return super.update(deltaTime);
-    }
-
-    /**
-     * Called when the wheel stops from spinning
-     */
-    protected void onStop() {
+    public void onAnimationEnd(final Animator animator) {
         // TODO to be overriden
+    }
+
+    public void onAnimationUpdate(final Animator animator, final float value) {
+        scrollBy(-value, 0);
     }
 }
