@@ -82,8 +82,12 @@ public class BaseAnimator implements Animator {
      * 
      * @param elapsedTimeAt
      */
-    public void elapseTo(final int elapsedTimeAt) {
+    public void setElapsedTime(final int elapsedTimeAt) {
         mElapsedTime = elapsedTimeAt;
+    }
+
+    public int getElapsedTime() {
+        return mElapsedTime;
     }
 
     /*
