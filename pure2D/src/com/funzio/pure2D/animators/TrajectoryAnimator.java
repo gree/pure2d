@@ -62,7 +62,9 @@ public class TrajectoryAnimator extends BaseAnimator {
         // pre-cals
         final float vcos = mVelocity * mCos;
         final float vsin = mVelocity * mSin;
-        mDistance = (vcos / mGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
+        final float absGravity = Math.abs(mGravity);
+        mDistance = (vcos / absGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
+        // mDistance = (vcos / mGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
         mDuration = TIME_FACTOR * mDistance / vcos;
 
         start();
@@ -162,5 +164,9 @@ public class TrajectoryAnimator extends BaseAnimator {
 
     public void setGround(final float ground) {
         mGround = ground;
+    }
+
+    public float getVelocity() {
+        return mVelocity;
     }
 }
