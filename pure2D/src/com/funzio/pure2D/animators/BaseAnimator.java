@@ -73,7 +73,7 @@ public class BaseAnimator implements Animator {
      * 
      * @param elapsedTimeDelta
      */
-    public void elapseBy(final int elapsedTimeDelta) {
+    public void elapse(final int elapsedTimeDelta) {
         mElapsedTime += elapsedTimeDelta;
     }
 
