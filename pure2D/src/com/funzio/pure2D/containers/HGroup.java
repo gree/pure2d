@@ -61,6 +61,9 @@ public class HGroup extends LinearGroup {
     @Override
     public void scrollTo(final DisplayObject child) {
         mScrollPosition.x = child.getPosition().x;
+
+        // reposition the children
+        invalidateChildrenPosition();
     }
 
     /*

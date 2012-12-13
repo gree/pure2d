@@ -62,6 +62,9 @@ public class VGroup extends LinearGroup {
     @Override
     public void scrollTo(final DisplayObject child) {
         mScrollPosition.y = child.getPosition().y;
+
+        // reposition the children
+        invalidateChildrenPosition();
     }
 
     /*

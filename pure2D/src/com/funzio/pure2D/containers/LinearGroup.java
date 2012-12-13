@@ -71,6 +71,9 @@ public abstract class LinearGroup extends DisplayGroup {
         PointF pos = child.getPosition();
         mScrollPosition.x = pos.x;
         mScrollPosition.y = pos.y;
+
+        // reposition the children
+        invalidateChildrenPosition();
     }
 
     public void scrollBy(final float dx, final float dy) {
