@@ -71,10 +71,19 @@ public class BaseAnimator implements Animator {
     /**
      * Jump to some elapsed time
      * 
-     * @param elapsedTime
+     * @param elapsedTimeDelta
      */
-    public void elapse(final int elapsedTime) {
-        mElapsedTime += elapsedTime;
+    public void elapseBy(final int elapsedTimeDelta) {
+        mElapsedTime += elapsedTimeDelta;
+    }
+
+    /**
+     * Jump to some elapsed time
+     * 
+     * @param elapsedTimeAt
+     */
+    public void elapseTo(final int elapsedTimeAt) {
+        mElapsedTime = elapsedTimeAt;
     }
 
     /*
