@@ -20,6 +20,7 @@ import android.util.Log;
 public abstract class URLTask implements IntentTask {
     public static boolean LOG_ENABLED = true;
     protected static final int DEFAULT_BUFFER = 1024;
+    protected static final int DEFAULT_TIMEOUT = 20 * 1000;
 
     private static final String TAG = URLTask.class.getSimpleName();
     private static final String CLASS_NAME = URLTask.class.getName();
@@ -53,6 +54,7 @@ public abstract class URLTask implements IntentTask {
             final URL address = new URL(mURL);
 
             conn = address.openConnection();
+            conn.setConnectTimeout(DEFAULT_TIMEOUT);
             mContentLength = conn.getContentLength();
 
         } catch (Exception e) {
@@ -132,7 +134,7 @@ public abstract class URLTask implements IntentTask {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
 
-            //add properties to the post http request
+            // add properties to the post http request
             for (String key : properties.keySet()) {
                 String value = properties.get(key);
                 if (value != null) {
