@@ -10,13 +10,13 @@ import android.view.animation.Interpolator;
 /**
  * @author long
  */
-@Deprecated
-// NOT READY
 public class PathAnimator extends TweenAnimator {
     protected PointF[] mPoints;
     protected float[] mSin;
     protected float[] mCos;
-    protected float mDistance;
+    protected float[] mSegments;
+    protected float mTotalSegment;
+    protected PointF mCurrentPoint;
 
     public PathAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -28,16 +28,18 @@ public class PathAnimator extends TweenAnimator {
         final int n = points.length;
         mSin = new float[n - 1];
         mCos = new float[n - 1];
+        mSegments = new float[n - 1];
 
         float dx, dy, angle;
-        mDistance = 0;
+        mTotalSegment = 0;
         for (int i = 0; i < n - 1; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
             angle = (float) Math.atan2(dy, dx);
             mSin[i] = FloatMath.sin(angle);
             mCos[i] = FloatMath.cos(angle);
-            mDistance += FloatMath.sqrt(dx * dx + dy * dy);
+            mSegments[i] = FloatMath.sqrt(dx * dx + dy * dy);
+            mTotalSegment += mSegments[i];
         }
     }
 
@@ -50,7 +52,21 @@ public class PathAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            // mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y);
+            final float valueLen = value * mTotalSegment;
+            final int size = mSegments.length;
+            float len = 0;
+            float segment;
+            for (int i = 0; i < size; i++) {
+                segment = mSegments[i];
+                if (len + segment >= valueLen) {
+                    final float delta = valueLen - len;
+                    mTarget.setPosition(mPoints[i].x + delta * mCos[i], mPoints[i].y + delta * mSin[i]);
+                    return;
+                }
+
+                // add up
+                len += segment;
+            }
         }
 
         super.onUpdate(value);

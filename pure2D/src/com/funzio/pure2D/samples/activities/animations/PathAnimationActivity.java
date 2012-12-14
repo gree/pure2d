@@ -2,6 +2,7 @@ package com.funzio.pure2D.samples.activities.animations;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -12,20 +13,19 @@ import android.view.animation.DecelerateInterpolator;
 import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.R;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.animators.MoveAnimator;
+import com.funzio.pure2D.animators.PathAnimator;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.samples.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
 
-public class TweenAnimationsActivity extends StageActivity {
+public class PathAnimationActivity extends StageActivity {
     private static final AccelerateInterpolator ACCELERATE = new AccelerateInterpolator();
     private static final DecelerateInterpolator DECELERATE = new DecelerateInterpolator();
     private static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
     private static final BounceInterpolator BOUNCE = new BounceInterpolator();
-    private static final int OBJ_SIZE = 128;
 
     private Texture mTexture;
-    private MoveAnimator mAnimator = new MoveAnimator(null);
+    private PathAnimator mAnimator = new PathAnimator(null);
 
     @Override
     protected int getLayout() {
@@ -36,8 +36,8 @@ public class TweenAnimationsActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAnimator.setDuration(1000);
-        mAnimator.setValues(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y, mDisplaySizeDiv2.x, mDisplaySize.y - OBJ_SIZE / 2);
+        mAnimator.setDuration(4000);
+        mAnimator.setValues(new PointF(), new PointF(0, mDisplaySize.y), new PointF(mDisplaySize.x, 0), new PointF(mDisplaySize.x, mDisplaySize.y), new PointF());
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {

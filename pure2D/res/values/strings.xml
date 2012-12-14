@@ -120,5 +120,6 @@
     <string name="coin_explosion">Coin Explosion</string>
     <string name="trajectory_animation">Trajectory Animation</string>
     <string name="bezier_animation">Bezier Animation</string>
+    <string name="path_animation">Path Animation</string>
 
 </resources>
