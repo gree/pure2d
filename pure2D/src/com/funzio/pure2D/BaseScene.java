@@ -657,8 +657,19 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
-    final public PointF localToGlobal(final PointF pt) {
-        return new PointF(pt.x, pt.y);
+    final public PointF localToGlobal(final PointF local) {
+        return new PointF(local.x, local.y);
+    }
+
+    /**
+     * Converts a local point to a global point, without allocating new PointF
+     * 
+     * @param local
+     * @param result
+     */
+    final public void localToGlobal(final PointF local, final PointF result) {
+        result.x = (local == null ? 0 : local.x);
+        result.y = (local == null ? 0 : local.y);
     }
 
     /**
@@ -666,8 +677,19 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
-    final public PointF globalToLocal(final PointF pt) {
-        return new PointF(pt.x, pt.y);
+    final public PointF globalToLocal(final PointF global) {
+        return new PointF(global.x, global.y);
+    }
+
+    /**
+     * Converts a global point to a local point, without allocating new PointF
+     * 
+     * @param global
+     * @param result
+     */
+    final public void globalToLocal(final PointF global, final PointF result) {
+        result.x = global.x;
+        result.y = global.y;
     }
 
     /**

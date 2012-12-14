@@ -569,12 +569,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * Converts a local point to a global point
      * 
-     * @param pt
+     * @param local
      * @return
      */
-    final public PointF localToGlobal(final PointF pt) {
+    final public PointF localToGlobal(final PointF local) {
         // final PointF temp = new PointF(pt.x + mPosition.x - mOrigin.x, pt.y + mPosition.y - mOrigin.y);
-        final PointF temp = new PointF(pt.x + mPosition.x, pt.y + mPosition.y);
+        final PointF temp = new PointF((local == null ? 0 : local.x) + mPosition.x, (local == null ? 0 : local.y) + mPosition.y);
         if (mParent != null && !(mParent instanceof Scene)) {
             return mParent.localToGlobal(temp);
         } else {
@@ -583,22 +583,54 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     /**
+     * Converts a local point to a global point, without allocating new PointF
+     * 
+     * @param local
+     * @param result
+     */
+    final public void localToGlobal(final PointF local, final PointF result) {
+        result.x = (local == null ? 0 : local.x) + mPosition.x;
+        result.y = (local == null ? 0 : local.y) + mPosition.y;
+        if (mParent != null && !(mParent instanceof Scene)) {
+            mParent.localToGlobal(result, result);
+        }
+    }
+
+    /**
      * Converts a global point to a local point
      * 
-     * @param pt
+     * @param global
      * @return
      */
-    final public PointF globalToLocal(final PointF pt) {
+    final public PointF globalToLocal(final PointF global) {
         final PointF local;
         if (mParent != null && !(mParent instanceof Scene)) {
-            local = mParent.globalToLocal(pt);
+            local = mParent.globalToLocal(global);
         } else {
-            local = new PointF(pt.x, pt.y);
+            local = new PointF(global.x, global.y);
         }
 
         local.x -= mPosition.x;
         local.y -= mPosition.y;
         return local;
+    }
+
+    /**
+     * Converts a global point to a local point, without allocating new PointF
+     * 
+     * @param global
+     * @param result
+     */
+    final public void globalToLocal(final PointF global, final PointF result) {
+        if (mParent != null && !(mParent instanceof Scene)) {
+            mParent.globalToLocal(global, result);
+        } else {
+            result.x = global.x;
+            result.y = global.y;
+        }
+
+        result.x -= mPosition.x;
+        result.y -= mPosition.y;
     }
 
     /**

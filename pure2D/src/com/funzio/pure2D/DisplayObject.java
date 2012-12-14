@@ -76,6 +76,14 @@ public interface DisplayObject extends Manipulatable {
 
     public void dispose();
 
+    public PointF localToGlobal(final PointF local);
+
+    public void localToGlobal(final PointF local, final PointF result);
+
+    public PointF globalToLocal(final PointF global);
+
+    public void globalToLocal(final PointF global, final PointF result);
+
     public RectF getBounds();
 
     public RectF updateBounds();

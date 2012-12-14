@@ -34,9 +34,13 @@ public interface Container {
 
     public PointF getSize();
 
-    public PointF localToGlobal(final PointF pt);
+    public PointF localToGlobal(final PointF local);
 
-    public PointF globalToLocal(final PointF pt);
+    public void localToGlobal(final PointF local, final PointF result);
+
+    public PointF globalToLocal(final PointF global);
+
+    public void globalToLocal(final PointF global, final PointF result);
 
     public Matrix getMatrix();
 
