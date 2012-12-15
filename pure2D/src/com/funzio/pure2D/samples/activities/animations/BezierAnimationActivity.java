@@ -5,7 +5,10 @@ import javax.microedition.khronos.opengles.GL10;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.R;
@@ -18,19 +21,28 @@ import com.funzio.pure2D.shapes.Rectangular;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class BezierAnimationActivity extends StageActivity {
+    private static final AccelerateInterpolator ACCELERATE = new AccelerateInterpolator();
+    private static final DecelerateInterpolator DECELERATE = new DecelerateInterpolator();
+    private static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
+    private static final BounceInterpolator BOUNCE = new BounceInterpolator();
+
     private Texture mTexture;
-    private BezierAnimator mAnimator = new BezierAnimator(new AccelerateInterpolator());
+    private BezierAnimator mAnimator = new BezierAnimator(null);
     private Rectangular mControl1;
     private Rectangular mControl2;
     private int mPointer1 = -1;
     private int mPointer2 = -1;
 
     @Override
+    protected int getLayout() {
+        return R.layout.stage_tween_animations;
+    }
+
+    @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAnimator.setDuration(1000);
-        mAnimator.setLoop(Playable.LOOP_REVERSE);
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -132,5 +144,45 @@ public class BezierAnimationActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickRadio(final View view) {
+
+        switch (view.getId()) {
+            case R.id.radio_linear:
+                mAnimator.setInterpolator(null);
+                break;
+
+            case R.id.radio_accelarate:
+                mAnimator.setInterpolator(ACCELERATE);
+                break;
+
+            case R.id.radio_decelarate:
+                mAnimator.setInterpolator(DECELERATE);
+                break;
+
+            case R.id.radio_accelerate_decelarate:
+                mAnimator.setInterpolator(ACCELERATE_DECELERATE);
+                break;
+
+            case R.id.radio_bounce:
+                mAnimator.setInterpolator(BOUNCE);
+                break;
+
+            case R.id.radio_once:
+                mAnimator.setLoop(Playable.LOOP_NONE);
+                break;
+
+            case R.id.radio_repeat:
+                mAnimator.setLoop(Playable.LOOP_REPEAT);
+                break;
+
+            case R.id.radio_reverse:
+                mAnimator.setLoop(Playable.LOOP_REVERSE);
+                break;
+        }
+
+        mAnimator.stop();
+        mAnimator.start();
     }
 }

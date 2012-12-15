@@ -7,18 +7,14 @@ import android.graphics.PointF;
 
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
-import com.funzio.pure2D.utils.ObjectPool;
 
 /**
  * @author long
  */
 public class SimpleSmoke extends RectangularEmitter {
-
     private int mInitParticles = 0;
     private int mRetainParticles = 0;
-    private static final ObjectPool<SimpleSmokeParticle> sParticlePool = new ObjectPool<SimpleSmokeParticle>(1000);
     private Texture mParticleTexture;
     private boolean mParticleTextureEnabled = false;
 
@@ -64,13 +60,7 @@ public class SimpleSmoke extends RectangularEmitter {
     }
 
     private void createParticle() {
-        SimpleSmokeParticle particle = sParticlePool.acquire();
-        if (particle != null) {
-            particle.reset();
-        } else {
-            particle = new SimpleSmokeParticle();
-        }
-
+        SimpleSmokeParticle particle = SimpleSmokeParticle.newInstance();
         particle.setTexture(mParticleTextureEnabled ? mParticleTexture : null);
 
         particle.setSize(40, 40);
@@ -82,19 +72,6 @@ public class SimpleSmoke extends RectangularEmitter {
 
         // add to scene
         addParticle(particle);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.particles.RectangularEmitter#removeParticle(com.funzio.pure2D.particles.Particle)
-     */
-    @Override
-    protected boolean removeParticle(final Particle particle) {
-        final boolean found = super.removeParticle(particle);
-        if (found) {
-            sParticlePool.release((SimpleSmokeParticle) particle);
-        }
-        return found;
     }
 
     /**

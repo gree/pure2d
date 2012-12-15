@@ -39,6 +39,18 @@ public class SimpleSmokeActivity extends StageActivity {
         });
     }
 
+    /*
+     * (non-Javadoc)
+     * @see android.app.Activity#finish()
+     */
+    @Override
+    public void finish() {
+        super.finish();
+
+        // clear the pool
+        SimpleSmokeParticle.clearPool();
+    }
+
     @Override
     protected int getLayout() {
         return R.layout.stage_textures;
