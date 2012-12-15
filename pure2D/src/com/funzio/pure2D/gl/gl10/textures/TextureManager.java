@@ -162,7 +162,7 @@ public class TextureManager {
     public FileTexture createFileTexture(final String filePath, final TextureOptions options) {
         Log.v(TAG, String.format("createTexture( %s, %s)", filePath, options));
 
-        final FileTexture texture = new FileTexture(mGLState, filePath, options, true);
+        final FileTexture texture = new FileTexture(mGLState, filePath, options);
 
         // add to list
         addTexture(texture);
