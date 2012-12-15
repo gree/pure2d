@@ -13,6 +13,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
@@ -187,7 +188,8 @@ public class BaseScene implements Scene {
 
         // find the extension
         mExtensions = gl.glGetString(GL10.GL_EXTENSIONS);
-        mNpotTextureSupported = mExtensions.contains("GL_OES_texture_npot");
+        Pure2D.NPOT_TEXTURE_SUPPORTED = mNpotTextureSupported = mExtensions.contains("GL_OES_texture_npot");
+        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.NPOT_TEXTURE_SUPPORTED);
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
