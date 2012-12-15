@@ -87,7 +87,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < filenames.length; i++) {
             // create a temp texture for the image
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true);
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, false);
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             createFrame(texture, filenames[i].split("\\.")[0]);
         }
@@ -160,7 +160,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < files.length; i++) {
             // create a temp texture for the image
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true);
+            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, false);
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             createFrame(texture, files[i].getName().split("\\.")[0]);

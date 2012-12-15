@@ -166,7 +166,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         for (int i = 0; i < filenames.length; i++) {
 
             // create a temp texture for the image
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true);
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, false);
 
             // init the buffer based on the first texture
             if (i == 0) {
@@ -254,7 +254,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         for (int i = 0; i < files.length; i++) {
 
             // create a temp texture for the image
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true);
+            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, false);
 
             // init the buffer based on the first texture
             if (i == 0) {
