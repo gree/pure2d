@@ -20,26 +20,25 @@ public class AssetTexture extends Texture {
     private AssetManager mAssetManager;
     private String mFilePath;
     private TextureOptions mOptions;
-    private boolean mPo2;
     private boolean mIsAsync = false;
 
-    public AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options, final boolean po2) {
+    public AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options) {
         super(glState);
 
         mAssetManager = assetManager;
 
-        load(filePath, options, po2);
+        load(filePath, options);
     }
 
-    public AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options, final boolean po2, final boolean async) {
+    public AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options, final boolean async) {
         super(glState);
 
         mAssetManager = assetManager;
 
         if (async) {
-            loadAsync(filePath, options, po2);
+            loadAsync(filePath, options);
         } else {
-            load(filePath, options, po2);
+            load(filePath, options);
         }
     }
 
@@ -50,14 +49,13 @@ public class AssetTexture extends Texture {
      * @param options
      * @param po2
      */
-    public void load(final String filePath, final TextureOptions options, final boolean po2) {
+    public void load(final String filePath, final TextureOptions options) {
         mIsAsync = false;
         mFilePath = filePath;
         mOptions = options;
-        mPo2 = po2;
 
         final int[] dimensions = new int[2];
-        final Bitmap bitmap = Pure2DUtils.getAssetBitmap(mAssetManager, mFilePath, mOptions, mPo2, dimensions);
+        final Bitmap bitmap = Pure2DUtils.getAssetBitmap(mAssetManager, mFilePath, mOptions, dimensions);
         if (bitmap != null) {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
@@ -73,9 +71,9 @@ public class AssetTexture extends Texture {
     @Override
     public void reload() {
         if (mIsAsync) {
-            loadAsync(mFilePath, mOptions, mPo2);
+            loadAsync(mFilePath, mOptions);
         } else {
-            load(mFilePath, mOptions, mPo2);
+            load(mFilePath, mOptions);
         }
     }
 
@@ -87,11 +85,10 @@ public class AssetTexture extends Texture {
      * @param po2
      */
     @SuppressLint("NewApi")
-    public void loadAsync(final String filePath, final TextureOptions options, final boolean po2) {
+    public void loadAsync(final String filePath, final TextureOptions options) {
         mIsAsync = true;
         mFilePath = filePath;
         mOptions = options;
-        mPo2 = po2;
 
         final AsyncLoader loader = new AsyncLoader();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
@@ -105,7 +102,7 @@ public class AssetTexture extends Texture {
         @Override
         protected Void doInBackground(final Void... params) {
             final int[] dimensions = new int[2];
-            final Bitmap bitmap = Pure2DUtils.getAssetBitmap(mAssetManager, mFilePath, mOptions, mPo2, dimensions);
+            final Bitmap bitmap = Pure2DUtils.getAssetBitmap(mAssetManager, mFilePath, mOptions, dimensions);
             mGLState.queueEvent(new Runnable() {
 
                 @Override

@@ -18,33 +18,31 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 public class FileTexture extends Texture {
     private String mFilePath;
     private TextureOptions mOptions;
-    private boolean mPo2;
     private boolean mIsAsync = false;
 
-    public FileTexture(final GLState glState, final String filePath, final TextureOptions options, final boolean po2) {
+    public FileTexture(final GLState glState, final String filePath, final TextureOptions options) {
         super(glState);
 
-        load(filePath, options, po2);
+        load(filePath, options);
     }
 
-    public FileTexture(final GLState glState, final String filePath, final TextureOptions options, final boolean po2, final boolean async) {
+    public FileTexture(final GLState glState, final String filePath, final TextureOptions options, final boolean async) {
         super(glState);
 
         if (async) {
-            loadAsync(filePath, options, po2);
+            loadAsync(filePath, options);
         } else {
-            load(filePath, options, po2);
+            load(filePath, options);
         }
     }
 
-    public void load(final String filePath, final TextureOptions options, final boolean po2) {
+    public void load(final String filePath, final TextureOptions options) {
         mIsAsync = false;
         mFilePath = filePath;
         mOptions = options;
-        mPo2 = po2;
 
         int[] dimensions = new int[2];
-        Bitmap bitmap = Pure2DUtils.getFileBitmap(mFilePath, mOptions, mPo2, dimensions);
+        Bitmap bitmap = Pure2DUtils.getFileBitmap(mFilePath, mOptions, dimensions);
         if (bitmap != null) {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
@@ -60,9 +58,9 @@ public class FileTexture extends Texture {
     @Override
     public void reload() {
         if (mIsAsync) {
-            loadAsync(mFilePath, mOptions, mPo2);
+            loadAsync(mFilePath, mOptions);
         } else {
-            load(mFilePath, mOptions, mPo2);
+            load(mFilePath, mOptions);
         }
     }
 
@@ -74,11 +72,10 @@ public class FileTexture extends Texture {
      * @param po2
      */
     @SuppressLint("NewApi")
-    public void loadAsync(final String filePath, final TextureOptions options, final boolean po2) {
+    public void loadAsync(final String filePath, final TextureOptions options) {
         mIsAsync = true;
         mFilePath = filePath;
         mOptions = options;
-        mPo2 = po2;
 
         final AsyncLoader loader = new AsyncLoader();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
@@ -92,7 +89,7 @@ public class FileTexture extends Texture {
         @Override
         protected Void doInBackground(final Void... params) {
             final int[] dimensions = new int[2];
-            final Bitmap bitmap = Pure2DUtils.getFileBitmap(mFilePath, mOptions, mPo2, dimensions);
+            final Bitmap bitmap = Pure2DUtils.getFileBitmap(mFilePath, mOptions, dimensions);
             mGLState.queueEvent(new Runnable() {
 
                 @Override

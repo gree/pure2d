@@ -16,21 +16,19 @@ public class TextTexture extends Texture {
 
     private String mText = "";
     private TextOptions mOptions;
-    private boolean mPo2;
 
-    public TextTexture(final GLState glState, final String text, final TextOptions options, final boolean po2) {
+    public TextTexture(final GLState glState, final String text, final TextOptions options) {
         super(glState);
 
-        load(text, options, po2);
+        load(text, options);
     }
 
-    public void load(final String text, final TextOptions options, final boolean po2) {
+    public void load(final String text, final TextOptions options) {
         mText = text;
         mOptions = options;
-        mPo2 = po2;
 
         int[] dimensions = new int[2];
-        Bitmap bitmap = Pure2DUtils.getTextBitmap(mText, mOptions, mPo2, dimensions);
+        Bitmap bitmap = Pure2DUtils.getTextBitmap(mText, mOptions, dimensions);
         if (bitmap != null) {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
@@ -43,7 +41,7 @@ public class TextTexture extends Texture {
      */
     @Override
     public void reload() {
-        load(mText, mOptions, mPo2);
+        load(mText, mOptions);
     }
 
 }

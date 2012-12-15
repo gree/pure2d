@@ -64,6 +64,10 @@ public class BaseScene implements Scene {
     private MotionEvent mMotionEvent = null;
     private PointF mTouchedPoint;
 
+    // GL extensions
+    protected String mExtensions;
+    protected boolean mNpotTextureSupported = false;
+
     public BaseScene() {
     }
 
@@ -180,6 +184,10 @@ public class BaseScene implements Scene {
         mFrameCount = 0;
         mCurrentFps = 0;
         mFrameCountDuration = 0;
+
+        // find the extension
+        mExtensions = gl.glGetString(GL10.GL_EXTENSIONS);
+        mNpotTextureSupported = mExtensions.contains("GL_OES_texture_npot");
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
@@ -803,7 +811,7 @@ public class BaseScene implements Scene {
         mGLState = null;
     }
 
-    public boolean isUIEnabled() {
+    public final boolean isUIEnabled() {
         return mUIEnabled;
     }
 
@@ -812,6 +820,10 @@ public class BaseScene implements Scene {
      */
     public void setUIEnabled(final boolean enabled) {
         mUIEnabled = enabled;
+    }
+
+    public final boolean isNpotTextureSupported() {
+        return mNpotTextureSupported;
     }
 
     public PointF getTouchedPoint() {

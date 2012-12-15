@@ -86,7 +86,7 @@ public class TextureManager {
     public DrawableTexture createTexture(final int drawable, final TextureOptions options) {
         Log.v(TAG, String.format("createTexture(%d, %s)", drawable, options));
 
-        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
+        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options);
 
         // add to list
         addTexture(texture);
@@ -104,7 +104,7 @@ public class TextureManager {
     public DrawableTexture createDrawableTexture(final int drawable, final TextureOptions options) {
         Log.v(TAG, String.format("createTexture(%d, %s)", drawable, options));
 
-        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
+        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options);
 
         // add to list
         addTexture(texture);
@@ -125,7 +125,7 @@ public class TextureManager {
     public AssetTexture createTexture(final AssetManager assetManager, final String filePath, final TextureOptions options) {
         Log.v(TAG, String.format("createTexture(%s, %s, %s)", assetManager, filePath, options));
 
-        final AssetTexture texture = new AssetTexture(mGLState, assetManager, filePath, options, true);
+        final AssetTexture texture = new AssetTexture(mGLState, assetManager, filePath, options);
 
         // add to list
         addTexture(texture);
@@ -144,7 +144,7 @@ public class TextureManager {
     public AssetTexture createAssetTexture(final String filePath, final TextureOptions options) {
         Log.v(TAG, String.format("createAssetTexture(%s, %s)", filePath, options));
 
-        final AssetTexture texture = new AssetTexture(mGLState, mAssets, filePath, options, true);
+        final AssetTexture texture = new AssetTexture(mGLState, mAssets, filePath, options);
 
         // add to list
         addTexture(texture);
@@ -180,7 +180,7 @@ public class TextureManager {
     public TextTexture createTextTexture(final String text, final TextOptions options) {
         Log.v(TAG, String.format("createTexture( %s, %s)", text, options));
 
-        final TextTexture texture = new TextTexture(mGLState, text, options, true);
+        final TextTexture texture = new TextTexture(mGLState, text, options);
 
         // add to list
         addTexture(texture);

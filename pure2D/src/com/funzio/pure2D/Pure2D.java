@@ -4,7 +4,7 @@
 package com.funzio.pure2D;
 
 /**
- * This class is intented for being used ONLY outside the engine.
+ * This class is intentionally for being used ONLY outside the engine.
  * 
  * @author long
  */

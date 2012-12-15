@@ -130,7 +130,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < filenames.length; i++) {
             // load the texture asynchronously
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true, true); // async
+            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true); // async
             // listen to it
             texture.setListener(mTextureListener);
 
@@ -201,7 +201,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < files.length; i++) {
             // load the texture asynchronously
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true, true); // async
+            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true); // async
             // listen to it
             texture.setListener(mTextureListener);
 

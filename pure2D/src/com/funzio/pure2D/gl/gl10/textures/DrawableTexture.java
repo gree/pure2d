@@ -16,22 +16,20 @@ public class DrawableTexture extends Texture {
     private int mDrawable;
     private TextureOptions mOptions;
     private Resources mResources;
-    private boolean mPo2 = false;
 
-    public DrawableTexture(final GLState glState, final Resources res, final int drawable, final TextureOptions options, final boolean po2) {
+    public DrawableTexture(final GLState glState, final Resources res, final int drawable, final TextureOptions options) {
         super(glState);
 
         mResources = res;
-        load(drawable, options, po2);
+        load(drawable, options);
     }
 
-    public void load(final int drawable, final TextureOptions options, final boolean po2) {
+    public void load(final int drawable, final TextureOptions options) {
         mDrawable = drawable;
         mOptions = options;
-        mPo2 = po2;
 
         int[] dimensions = new int[2];
-        Bitmap bitmap = Pure2DUtils.getResourceBitmap(mResources, mDrawable, mOptions, mPo2, dimensions);
+        Bitmap bitmap = Pure2DUtils.getResourceBitmap(mResources, mDrawable, mOptions, dimensions);
         if (bitmap != null) {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
@@ -40,7 +38,7 @@ public class DrawableTexture extends Texture {
 
     @Override
     public void reload() {
-        load(mDrawable, mOptions, mPo2);
+        load(mDrawable, mOptions);
     }
 
     /**

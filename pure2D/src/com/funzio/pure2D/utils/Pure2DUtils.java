@@ -24,6 +24,7 @@ import com.funzio.pure2D.text.TextOptions;
 /**
  * @author long
  */
+
 public class Pure2DUtils {
     /**
      * Create a texture from an asset file
@@ -35,11 +36,11 @@ public class Pure2DUtils {
      * @param outDimensions
      * @return
      */
-    public static Bitmap getAssetBitmap(final AssetManager assetManager, final String assetPath, final TextureOptions options, final boolean po2, final int[] outDimensions) {
+    public static Bitmap getAssetBitmap(final AssetManager assetManager, final String assetPath, final TextureOptions options, final int[] outDimensions) {
         try {
-            return getStreamBitmap(assetManager.open(assetPath), options, po2, outDimensions);
+            return getStreamBitmap(assetManager.open(assetPath), options, outDimensions);
         } catch (IOException e) {
-            Log.e(Pure2D.TAG, "BITMAP LOADING ERROR:\n" + Log.getStackTraceString(e));
+            Log.e(Pure2D.TAG, "BITMAP LOADING ERROR:", e);
             return null;
         }
     }
@@ -54,7 +55,7 @@ public class Pure2DUtils {
      * @param outDimensions
      * @return
      */
-    public static Bitmap getResourceBitmap(final Resources resources, final int resourceID, final TextureOptions options, final boolean po2, final int[] outDimensions) {
+    public static Bitmap getResourceBitmap(final Resources resources, final int resourceID, final TextureOptions options, final int[] outDimensions) {
         Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceID, (options == null) ? TextureOptions.getDefault() : options);
 
         // resize to the specified size
@@ -64,7 +65,7 @@ public class Pure2DUtils {
             bitmap = newBitmap;
         }
 
-        if (po2) {
+        if (options != null && options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -86,7 +87,7 @@ public class Pure2DUtils {
      * @param outDimensions
      * @return
      */
-    public static Bitmap getFileBitmap(final String filePath, final TextureOptions options, final boolean po2, final int[] outDimensions) {
+    public static Bitmap getFileBitmap(final String filePath, final TextureOptions options, final int[] outDimensions) {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath, (options == null) ? TextureOptions.getDefault() : options);
 
         if (bitmap == null) {
@@ -100,7 +101,7 @@ public class Pure2DUtils {
             bitmap = newBitmap;
         }
 
-        if (po2) {
+        if (options != null && options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -122,7 +123,7 @@ public class Pure2DUtils {
      * @param outDimensions
      * @return
      */
-    public static Bitmap getStreamBitmap(final InputStream stream, final TextureOptions options, final boolean po2, final int[] outDimensions) {
+    public static Bitmap getStreamBitmap(final InputStream stream, final TextureOptions options, final int[] outDimensions) {
         Bitmap bitmap = BitmapFactory.decodeStream(stream, null, (options == null) ? TextureOptions.getDefault() : options);
 
         if (bitmap == null) {
@@ -136,7 +137,7 @@ public class Pure2DUtils {
             bitmap = newBitmap;
         }
 
-        if (po2) {
+        if (options != null && options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -158,7 +159,7 @@ public class Pure2DUtils {
      * @param outDimensions
      * @return
      */
-    public static Bitmap getTextBitmap(final String text, final TextOptions options, final boolean po2, final int[] outDimensions) {
+    public static Bitmap getTextBitmap(final String text, final TextOptions options, final int[] outDimensions) {
         final TextOptions textOptions = (options == null) ? TextOptions.getDefault() : options;
 
         // find the bounds
@@ -198,7 +199,7 @@ public class Pure2DUtils {
             bitmap = newBitmap;
         }
 
-        if (po2) {
+        if (options != null && options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -246,15 +247,15 @@ public class Pure2DUtils {
                     if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
                         try {
                             // try with lower quality
-                            Log.e(Pure2D.TAG, "BITMAP CREATION FALLBACK:\n" + Log.getStackTraceString(e1));
+                            Log.w(Pure2D.TAG, "BITMAP CREATION FALLBACK: " + powWidth + " x " + powHeight, e1);
                             po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, Bitmap.Config.ARGB_4444);
                         } catch (OutOfMemoryError e2) {
-                            Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e2));
+                            Log.e(Pure2D.TAG, "BITMAP CREATION FALLBACK ERROR: " + powWidth + " x " + powHeight, e2);
                             // crash prevention
                             return null;
                         }
                     } else {
-                        Log.e(Pure2D.TAG, "BITMAP CREATION ERROR:\n" + Log.getStackTraceString(e));
+                        Log.e(Pure2D.TAG, "BITMAP CREATION ERROR: " + powWidth + " x " + powHeight, e);
                         // crash prevention
                         return null;
                     }
@@ -267,6 +268,35 @@ public class Pure2DUtils {
             return po2Bitmap;
         }
     }
+
+    /**
+     * Scale the specified bitmap to the size of the closest-power-of-2 of the current size
+     * 
+     * @param bitmap
+     * @param outDimensions
+     * @return
+     */
+    // public static Bitmap scaleBitmapToPo2Old(final Bitmap bitmap, final int[] outDimensions) {
+    // int originalWidth = bitmap.getWidth();
+    // int originalHeight = bitmap.getHeight();
+    //
+    // // also output the original width and height
+    // if (outDimensions != null) {
+    // outDimensions[0] = originalWidth;
+    // outDimensions[1] = originalHeight;
+    // }
+    //
+    // int powWidth = getNextPO2(originalWidth);
+    // int powHeight = getNextPO2(originalHeight);
+    //
+    // if (originalWidth == powWidth && originalHeight == powHeight) {
+    // return bitmap;
+    // } else {
+    // final Bitmap po2Bitmap = Bitmap.createScaledBitmap(bitmap, powWidth, powHeight, true);
+    // bitmap.recycle();
+    // return po2Bitmap;
+    // }
+    // }
 
     /**
      * Calculates the next highest power of two for a given integer.

@@ -52,7 +52,7 @@ public class CasinoTextureManager extends TextureManager {
         mDisplayMetrics = resources.getDisplayMetrics();
 
         // determine the global texture scale to save memory
-        Bitmap sample = Pure2DUtils.getAssetBitmap(mAssets, mTheme + "/" + "mayan_machine_front.png", null, false, null);
+        Bitmap sample = Pure2DUtils.getAssetBitmap(mAssets, mTheme + "/" + "mayan_machine_front.png", null, null);
         float scaleX = (float) mDisplayMetrics.widthPixels / sample.getWidth();
         float scaleY = (float) mDisplayMetrics.heightPixels / sample.getHeight();
         sample.recycle();
