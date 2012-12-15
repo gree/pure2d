@@ -52,10 +52,10 @@ public class CacheAtlas extends Atlas {
         mWidth = mPacker.getWidth();
         mHeight = mPacker.getHeight();
 
-        Log.v(TAG, String.format("initBuffer(%d, %d)", mWidth, mHeight));
+        // Log.v(TAG, String.format("initBuffer(%d, %d)", mWidth, mHeight));
 
         // create a new texture
-        mFrameBuffer = new FrameBuffer(mGLState, (float) mWidth, (float) mHeight);
+        mFrameBuffer = new FrameBuffer(mGLState, mWidth, mHeight);
         mTexture = (BufferTexture) mFrameBuffer.getTexture();
     }
 

@@ -32,7 +32,6 @@ public class Pure2DUtils {
      * @param assetManager
      * @param assetPath
      * @param options
-     * @param po2
      * @param outDimensions
      * @return
      */
@@ -51,21 +50,23 @@ public class Pure2DUtils {
      * @param resources
      * @param resourceID
      * @param options
-     * @param po2
      * @param outDimensions
      * @return
      */
-    public static Bitmap getResourceBitmap(final Resources resources, final int resourceID, final TextureOptions options, final int[] outDimensions) {
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceID, (options == null) ? TextureOptions.getDefault() : options);
+    public static Bitmap getResourceBitmap(final Resources resources, final int resourceID, TextureOptions options, final int[] outDimensions) {
+        if (options == null) {
+            options = TextureOptions.getDefault();
+        }
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceID, options);
 
         // resize to the specified size
-        if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
+        if (options.inScaleX != 1 || options.inScaleY != 1) {
             final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
             bitmap.recycle();
             bitmap = newBitmap;
         }
 
-        if (options != null && options.inPo2) {
+        if (options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -83,25 +84,27 @@ public class Pure2DUtils {
      * 
      * @param filePath
      * @param options
-     * @param po2
      * @param outDimensions
      * @return
      */
-    public static Bitmap getFileBitmap(final String filePath, final TextureOptions options, final int[] outDimensions) {
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath, (options == null) ? TextureOptions.getDefault() : options);
+    public static Bitmap getFileBitmap(final String filePath, TextureOptions options, final int[] outDimensions) {
+        if (options == null) {
+            options = TextureOptions.getDefault();
+        }
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
 
         if (bitmap == null) {
             return null;
         }
 
         // resize to the specified size
-        if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
+        if (options.inScaleX != 1 || options.inScaleY != 1) {
             final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
             bitmap.recycle();
             bitmap = newBitmap;
         }
 
-        if (options != null && options.inPo2) {
+        if (options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -119,25 +122,27 @@ public class Pure2DUtils {
      * 
      * @param stream
      * @param options
-     * @param po2
      * @param outDimensions
      * @return
      */
-    public static Bitmap getStreamBitmap(final InputStream stream, final TextureOptions options, final int[] outDimensions) {
-        Bitmap bitmap = BitmapFactory.decodeStream(stream, null, (options == null) ? TextureOptions.getDefault() : options);
+    public static Bitmap getStreamBitmap(final InputStream stream, TextureOptions options, final int[] outDimensions) {
+        if (options == null) {
+            options = TextureOptions.getDefault();
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
 
         if (bitmap == null) {
             return null;
         }
 
         // resize to the specified size
-        if (options != null && (options.inScaleX != 1 || options.inScaleY != 1)) {
+        if (options.inScaleX != 1 || options.inScaleY != 1) {
             final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
             bitmap.recycle();
             bitmap = newBitmap;
         }
 
-        if (options != null && options.inPo2) {
+        if (options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -155,7 +160,6 @@ public class Pure2DUtils {
      * 
      * @param text
      * @param options
-     * @param po2
      * @param outDimensions
      * @return
      */
@@ -193,13 +197,13 @@ public class Pure2DUtils {
         canvas.drawText(text, textX, textY, textOptions.inTextPaint);
 
         // resize to the specified size
-        if (textOptions != null && (textOptions.inScaleX != 1 || textOptions.inScaleY != 1)) {
-            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+        if (textOptions.inScaleX != 1 || textOptions.inScaleY != 1) {
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * textOptions.inScaleX), Math.round(bitmap.getHeight() * textOptions.inScaleY), true);
             bitmap.recycle();
             bitmap = newBitmap;
         }
 
-        if (options != null && options.inPo2) {
+        if (textOptions.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
