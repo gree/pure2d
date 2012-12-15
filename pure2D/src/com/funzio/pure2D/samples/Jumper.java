@@ -22,7 +22,7 @@ public class Jumper extends Rectangular {
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
 
-        moveBy(mRandom.nextInt(21) - 10, mRandom.nextInt(21) - 10);
+        moveBy(mRandom.nextInt(41) - 20, mRandom.nextInt(41) - 20);
 
         return true;
     }

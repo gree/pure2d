@@ -16,8 +16,8 @@
     <!-- display groups -->
     <string name="containers">Containers</string>
     <string name="display_groups">Display Groups</string>
-    <string name="vertical_groups">Vertical Groups</string>
-    <string name="horizontal_groups">Horizontal Groups</string>
+    <string name="vertical_group">Vertical Group</string>
+    <string name="horizontal_group">Horizontal Group</string>
 
     <!-- camera -->
     <string name="camera">Camera</string>

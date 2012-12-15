@@ -37,7 +37,7 @@ public class TweenAnimationsActivity extends StageActivity {
         super.onCreate(savedInstanceState);
 
         mAnimator.setDuration(1000);
-        mAnimator.setValues(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y, mDisplaySizeDiv2.x, mDisplaySize.y - OBJ_SIZE / 2);
+        mAnimator.start(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y, mDisplaySizeDiv2.x, mDisplaySize.y - OBJ_SIZE / 2);
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {

@@ -21,9 +21,9 @@ public class Bouncer extends Sprite {
     private Point mVeloc;
 
     public Bouncer() {
-        mVeloc = new Point(1 + mRandom.nextInt(3), 1 + mRandom.nextInt(3));
-        mVeloc.x *= Math.random() > 0.5 ? 1 : -1;
-        mVeloc.y *= Math.random() > 0.5 ? 1 : -1;
+        mVeloc = new Point(1 + mRandom.nextInt(5), 1 + mRandom.nextInt(5));
+        mVeloc.x *= mRandom.nextFloat() > 0.5 ? 1 : -1;
+        mVeloc.y *= mRandom.nextFloat() > 0.5 ? 1 : -1;
     }
 
     /*
@@ -35,18 +35,18 @@ public class Bouncer extends Sprite {
         super.update(deltaTime);
 
         if (mPosition.x >= mBoundary.x - mSize.x) {
-            mPosition.x = mBoundary.x - mSize.x;
+            // mPosition.x = mBoundary.x - mSize.x;
             mVeloc.x = -Math.abs(mVeloc.x);
         } else if (mPosition.x <= 0) {
-            mPosition.x = 0;
+            // mPosition.x = 0;
             mVeloc.x = Math.abs(mVeloc.x);
         }
 
         if (mPosition.y >= mBoundary.y - mSize.y) {
-            mPosition.y = mBoundary.y - mSize.y;
+            // mPosition.y = mBoundary.y - mSize.y;
             mVeloc.y = -Math.abs(mVeloc.y);
         } else if (mPosition.y <= 0) {
-            mPosition.y = 0;
+            // mPosition.y = 0;
             mVeloc.y = Math.abs(mVeloc.y);
         }
 

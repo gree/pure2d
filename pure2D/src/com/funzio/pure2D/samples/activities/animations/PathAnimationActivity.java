@@ -36,8 +36,9 @@ public class PathAnimationActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAnimator.setDuration(4000);
-        mAnimator.setValues(new PointF(), new PointF(0, mDisplaySize.y), new PointF(mDisplaySize.x, 0), new PointF(mDisplaySize.x, mDisplaySize.y), new PointF());
+        mAnimator.setDuration(2000);
+        mAnimator.start(new PointF(0, mDisplaySizeDiv2.y), new PointF(0, mDisplaySize.y), new PointF(mDisplaySize.x, mDisplaySizeDiv2.y), new PointF(mDisplaySize.x, mDisplaySize.y), new PointF(0,
+                mDisplaySizeDiv2.y));
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
