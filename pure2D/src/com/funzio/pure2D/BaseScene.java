@@ -189,7 +189,7 @@ public class BaseScene implements Scene {
         // find the extension
         mExtensions = gl.glGetString(GL10.GL_EXTENSIONS);
         Pure2D.NPOT_TEXTURE_SUPPORTED = mNpotTextureSupported = mExtensions.contains("GL_OES_texture_npot") || mExtensions.contains("GL_ARB_texture_non_power_of_two");
-        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.NPOT_TEXTURE_SUPPORTED + "\n" + mExtensions);
+        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.NPOT_TEXTURE_SUPPORTED);
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
