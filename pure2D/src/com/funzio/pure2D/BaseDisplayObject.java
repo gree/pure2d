@@ -472,7 +472,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public boolean removeManipulator(final Manipulator manipulator) {
-        if (mManipulators.remove(manipulator)) {
+        // null check
+        if (mManipulators != null && mManipulators.remove(manipulator)) {
             manipulator.setTarget(null);
             mNumManipulators--;
             return true;
@@ -482,6 +483,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public int removeAllManipulators() {
+        // null check
+        if (mManipulators == null) {
+            return 0;
+        }
+
         final int n = mNumManipulators;
         mManipulators.clear();
         mNumManipulators = 0;
