@@ -65,7 +65,7 @@ public class VelocityAnimator extends BaseAnimator {
      */
     @Override
     public void elapse(final int elapsedTimeDelta) {
-        mPendingElapse = elapsedTimeDelta;
+        mPendingElapse += elapsedTimeDelta;
     }
 
     /**
