@@ -8,6 +8,7 @@ public class VelocityAnimator extends BaseAnimator {
     protected float mAcceleration = 0;
     protected float mVelocity = 0;
     protected int mDuration = 0; // 0: unlimited
+    protected int mPendingElapse = 0;
 
     public VelocityAnimator() {
         super();
@@ -58,11 +59,24 @@ public class VelocityAnimator extends BaseAnimator {
         mAcceleration = acceleration;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#elapse(int)
+     */
+    @Override
+    public void elapse(final int elapsedTimeDelta) {
+        mPendingElapse = elapsedTimeDelta;
+    }
+
     /**
      * @return the Duration in ms
      */
     public int getDuration() {
         return mDuration;
+    }
+
+    public int getRemainingTime() {
+        return mDuration - mElapsedTime;
     }
 
     @Override
@@ -71,7 +85,8 @@ public class VelocityAnimator extends BaseAnimator {
 
             if (mVelocity != 0 && ((mDuration > 0 && mElapsedTime < mDuration) || mDuration <= 0)) {
 
-                int myDeltaTime = deltaTime;
+                int myDeltaTime = deltaTime + mPendingElapse;
+                mPendingElapse = 0;
                 boolean isTimeUp = false;
                 // if there is a time limit
                 if (mDuration > 0 && mElapsedTime + myDeltaTime > mDuration) {
