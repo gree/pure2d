@@ -20,12 +20,14 @@ public class VelocityAnimator extends BaseAnimator {
         mVelocity = veloc;
         mAcceleration = acceleration;
         mDuration = duration;
+        mPendingElapse = 0;
     }
 
     public void start(final float veloc, final float acceleration, final int duration) {
         mVelocity = veloc;
         mAcceleration = acceleration;
         mDuration = duration;
+        mPendingElapse = 0;
 
         super.start();
     }
