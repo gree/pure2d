@@ -214,6 +214,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".samples.activities.effects.MotionTrailShapeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".samples.activities.physics.PhysicsMenuActivity"
             android:label="@string/physics"
             android:screenOrientation="portrait" >

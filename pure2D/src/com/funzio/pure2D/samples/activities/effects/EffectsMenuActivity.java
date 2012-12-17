@@ -1,26 +1,18 @@
 package com.funzio.pure2D.samples.activities.effects;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager.LayoutParams;
-
 import com.funzio.pure2D.R;
+import com.funzio.pure2D.samples.activities.MenuActivity;
 
-public class EffectsMenuActivity extends Activity {
+public class EffectsMenuActivity extends MenuActivity {
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.effect_menu);
-
-        getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
+    protected int getLayout() {
+        return R.layout.effect_menu;
     }
 
-    public void onClickButton(final View view) {
-        if (view.getId() == R.id.btn_sparks) {
-            startActivity(new Intent(this, SparksActivity.class));
-        }
+    @Override
+    protected void createMenus() {
+        addMenu(R.id.btn_sparks, SparksActivity.class);
+        addMenu(R.id.btn_motion_trail_shape, MotionTrailShapeActivity.class);
     }
 }

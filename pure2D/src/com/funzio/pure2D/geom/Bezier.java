@@ -46,4 +46,24 @@ public class Bezier {
         result[0] = rx;
         result[1] = ry;
     }
+
+    public static void getCubicBezierPoint(final float t, final PointF start, final PointF c1, final PointF c2, final PointF end, final PointF result) {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+        float uuu = uu * u;
+        float ttt = tt * t;
+
+        float rx = start.x * uuu;
+        float ry = start.y * uuu;
+        rx += 3 * uu * t * c1.x;
+        ry += 3 * uu * t * c1.y;
+        rx += 3 * u * tt * c2.x;
+        ry += 3 * u * tt * c2.y;
+        rx += ttt * end.x;
+        ry += ttt * end.y;
+
+        result.x = rx;
+        result.y = ry;
+    }
 }
