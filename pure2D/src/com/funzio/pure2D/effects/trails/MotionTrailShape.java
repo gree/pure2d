@@ -42,7 +42,7 @@ public class MotionTrailShape extends Polyline {
     public boolean update(final int deltaTime) {
         if (mNumPoints > 0) {
 
-            // calculate time loop
+            // calculate time loop for consistency with different framerate
             final int loop = deltaTime / Scene.DEFAULT_MSPF;
             for (int n = 0; n < loop; n++) {
                 PointF p1, p2;
@@ -53,6 +53,7 @@ public class MotionTrailShape extends Polyline {
                     dx = p2.x - p1.x;
                     dy = p2.y - p1.y;
                     if (mSegmentLength == 0 || FloatMath.sqrt(dx * dx + dy * dy) > mSegmentLength) {
+                        // move toward the leading point
                         p1.x += dx * mMotionEasing;
                         p1.y += dy * mMotionEasing;
                     }
@@ -119,6 +120,12 @@ public class MotionTrailShape extends Polyline {
             for (int i = 0; i < mNumPoints; i++) {
                 mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
             }
+        }
+    }
+
+    public void setPointsAt(final float x, final float y) {
+        for (int i = 0; i < mNumPoints; i++) {
+            mPoints[i].set(x, y);
         }
     }
 
