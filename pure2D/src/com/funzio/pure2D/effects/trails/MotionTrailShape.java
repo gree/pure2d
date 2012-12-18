@@ -13,7 +13,7 @@ import com.funzio.pure2D.shapes.Polyline;
 /**
  * @author long
  */
-public class TrailShape extends Polyline {
+public class MotionTrailShape extends Polyline {
 
     protected int mNumPoints = 0;
     protected int mMinLength = 0;

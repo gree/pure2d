@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.effects.trails.TrailShape;
+import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.samples.Bouncer;
 import com.funzio.pure2D.samples.activities.StageActivity;
@@ -69,7 +69,7 @@ public class MotionTrailShapeActivity extends StageActivity {
         // add to scene
         mScene.addChild(obj);
 
-        TrailShape trail = new TrailShape();
+        MotionTrailShape trail = new MotionTrailShape();
         trail.setColor(color1);
         trail.setStrokeRange(30, 1);
         trail.setNumPoints(20);
