@@ -7,7 +7,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.PointF;
 import android.util.FloatMath;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.gl.GLColor;
@@ -17,7 +16,7 @@ import com.funzio.pure2D.gl.gl10.VertexBuffer;
 /**
  * @author long
  */
-public class PolyLine extends Shape {
+public class PolylineRenamed extends Shape {
 
     protected PointF[] mPoints;
     protected float mStroke1 = 1;
@@ -30,7 +29,7 @@ public class PolyLine extends Shape {
     protected float[] mVertices;
     protected int mVerticesNum = 0;
     protected float mTotalSegment;
-    protected Interpolator mStrokeInterpolator = new DecelerateInterpolator();
+    protected Interpolator mStrokeInterpolator = null;// new DecelerateInterpolator();
 
     public PointF[] getPoints() {
         return mPoints;

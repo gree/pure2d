@@ -7,12 +7,12 @@ import android.graphics.PointF;
 import android.util.FloatMath;
 
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.shapes.PolyLine;
+import com.funzio.pure2D.shapes.PolylineRenamed;
 
 /**
  * @author long
  */
-public class TrailShape extends PolyLine {
+public class TrailShape extends PolylineRenamed {
 
     protected int mNumPoints = 10;
     protected int mMinLength = 0;
