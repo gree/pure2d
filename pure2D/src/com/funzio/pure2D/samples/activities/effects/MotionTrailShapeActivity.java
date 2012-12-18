@@ -1,9 +1,12 @@
 package com.funzio.pure2D.samples.activities.effects;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.effects.trails.TrailShape;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.samples.Bouncer;
@@ -15,7 +18,15 @@ public class MotionTrailShapeActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+        mScene.setListener(new Scene.Listener() {
+
+            @Override
+            public void onSurfaceCreated(final GL10 gl) {
+                for (int i = 0; i < 500; i++) {
+                    addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                }
+            }
+        });
     }
 
     // private void addObject(float x, float y) {
@@ -46,8 +57,8 @@ public class MotionTrailShapeActivity extends StageActivity {
 
     private void addObject(final float x, final float y) {
         final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
-        final GLColor color2 = GLColor.WHITE;// new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 0.5f);
-        color2.a = 0;
+        final GLColor color2 = new GLColor(color1);// new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 0.5f);
+        color2.a = 0.1f;
 
         // create object
         Bouncer obj = new Bouncer();

@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.util.FloatMath;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.shapes.Polyline;
 
 /**
@@ -18,7 +19,9 @@ public class TrailShape extends Polyline {
     protected int mMinLength = 0;
     protected int mSegmentLength;
     protected float mMotionEasing = 0.5f;
+
     protected DisplayObject mTarget;
+    protected PointF mTargetOffset = new PointF(0, 0);
 
     public TrailShape() {
         // TODO Auto-generated constructor stub
@@ -30,26 +33,31 @@ public class TrailShape extends Polyline {
      */
     @Override
     public boolean update(final int deltaTime) {
-        if (mTarget != null && mNumPoints > 0) {
+        if (mNumPoints > 0) {
 
-            PointF p1, p2;
-            float dx, dy;
-            float delta = 0;
-            for (int i = mNumPoints - 1; i > 0; i--) {
-                p1 = mPoints[i];
-                p2 = mPoints[i - 1];
-                dx = p2.x - p1.x;
-                dy = p2.y - p1.y;
-                delta = FloatMath.sqrt(dx * dx + dy * dy);
-                if (delta > mSegmentLength) {
-                    p1.x += dx * mMotionEasing;
-                    p1.y += dy * mMotionEasing;
+            // calculate time loop
+            final int loop = deltaTime / Scene.DEFAULT_MSPF;
+            for (int n = 0; n < loop; n++) {
+                PointF p1, p2;
+                float dx, dy;
+                for (int i = mNumPoints - 1; i > 0; i--) {
+                    p1 = mPoints[i];
+                    p2 = mPoints[i - 1];
+                    dx = p2.x - p1.x;
+                    dy = p2.y - p1.y;
+                    if (mSegmentLength == 0 || FloatMath.sqrt(dx * dx + dy * dy) > mSegmentLength) {
+                        p1.x += dx * mMotionEasing;
+                        p1.y += dy * mMotionEasing;
+                    }
                 }
             }
 
             // follow the target
-            // set the head
-            mPoints[0].set(mTarget.getPosition());
+            if (mTarget != null) {
+                // set the head
+                final PointF pos = mTarget.getPosition();
+                mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
+            }
 
             // apply
             setPoints(mPoints);
@@ -75,11 +83,12 @@ public class TrailShape extends Polyline {
         if (mPoints == null || mPoints.length != numPoints) {
             mPoints = new PointF[numPoints];
 
+            final PointF pos = (mTarget != null) ? mTarget.getPosition() : null;
             for (int i = 0; i < numPoints; i++) {
                 mPoints[i] = new PointF();
 
-                if (mTarget != null) {
-                    mPoints[i].set(mTarget.getPosition());
+                if (pos != null) {
+                    mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
                 }
             }
 
@@ -99,8 +108,9 @@ public class TrailShape extends Polyline {
         mTarget = target;
 
         if (mTarget != null) {
+            final PointF pos = mTarget.getPosition();
             for (int i = 0; i < mNumPoints; i++) {
-                mPoints[i].set(mTarget.getPosition());
+                mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
             }
         }
     }
