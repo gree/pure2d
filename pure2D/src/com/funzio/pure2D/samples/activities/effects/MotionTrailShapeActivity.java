@@ -18,7 +18,7 @@ public class MotionTrailShapeActivity extends StageActivity {
         addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
     }
 
-    private void addObject(final float x, final float y) {
+    private void addObject(float x, float y) {
         final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
         final GLColor color2 = new GLColor(color1);
         color2.a = 0;
@@ -26,8 +26,19 @@ public class MotionTrailShapeActivity extends StageActivity {
         // create object
         PolyLine obj = new PolyLine();
         obj.setColor(color1);
-        obj.setThickRange(10, 30);
-        obj.setPoints(new PointF(x, y), new PointF(x + RANDOM.nextInt(300), y + RANDOM.nextInt(300)), new PointF(x + RANDOM.nextInt(300), y + RANDOM.nextInt(300)));
+        obj.setStrokeRange(10, 50);
+
+        PointF[] points = new PointF[5];
+        points[0] = new PointF(x, y);
+        for (int i = 1; i < points.length; i++) {
+            x += RANDOM.nextInt(300) - 150;
+            y += RANDOM.nextInt(300) - 150;
+            points[i] = new PointF(x, y);
+        }
+        obj.setPoints(points);
+
+        // obj.setPoints(new PointF(x, y), new PointF(x + RANDOM.nextInt(300), y + RANDOM.nextInt(300)), new PointF(x + RANDOM.nextInt(300), y + RANDOM.nextInt(300)));
+        // obj.setPoints(new PointF(x, y), new PointF(x + 300, y), new PointF(x + 100, y + 100), new PointF(x + 400, y - 300), new PointF());
 
         // add to scene
         mScene.addChild(obj);
