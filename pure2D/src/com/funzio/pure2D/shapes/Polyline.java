@@ -37,7 +37,9 @@ public class Polyline extends Shape {
 
     public void setPoints(final PointF... points) {
         mPoints = points;
-        mVerticesNum = mPoints.length * 2; // each point has upper and lower points
+        final int len = mPoints.length;
+
+        mVerticesNum = len * 2; // each point has upper and lower points
         if (mVertices == null || mVerticesNum > mVertices.length) {
             mVertices = new float[mVerticesNum * 2];
 
@@ -57,16 +59,16 @@ public class Polyline extends Shape {
 
         // find total segment
         mTotalSegment = 0;
-        for (i = 0; i < mPoints.length - 1; i++) {
+        for (i = 0; i < len - 1; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
 
             mTotalSegment += FloatMath.sqrt(dx * dx + dy * dy);
         }
 
-        for (i = 0; i < mPoints.length; i++) {
+        for (i = 0; i < len; i++) {
 
-            if (i < mPoints.length - 1) {
+            if (i < len - 1) {
                 dx = points[i + 1].x - points[i].x;
                 dy = points[i + 1].y - points[i].y;
                 segment += FloatMath.sqrt(dx * dx + dy * dy);
@@ -81,7 +83,7 @@ public class Polyline extends Shape {
                 angle1 = (float) Math.atan2(dy, dx);
             }
 
-            if (i == 0 || i == mPoints.length - 1) {
+            if (i == 0 || i == len - 1) {
                 // beginning and closing cut
                 angleCut = angle1 + (float) Math.PI / 2f;
             } else {
