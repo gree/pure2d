@@ -16,7 +16,7 @@ import com.funzio.pure2D.gl.gl10.VertexBuffer;
 /**
  * @author long
  */
-public class PolylineRenamed extends Shape {
+public class Polyline extends Shape {
 
     protected PointF[] mPoints;
     protected float mStroke1 = 1;
