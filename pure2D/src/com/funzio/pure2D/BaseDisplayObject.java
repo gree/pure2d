@@ -73,7 +73,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         glState.mGL.glPushMatrix();
 
         // translating
-        glState.mGL.glTranslatef(mPosition.x, mPosition.y, mZ);
+        if (mPosition.x != 0 || mPosition.y != 0 || mZ != 0) {
+            glState.mGL.glTranslatef(mPosition.x, mPosition.y, mZ);
+        }
+
         // scaling
         if (mScale.x != 1 || mScale.y != 1) {
             glState.mGL.glScalef(mScale.x, mScale.y, 0);

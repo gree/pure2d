@@ -22,7 +22,7 @@ public class MotionTrailShapeActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
-                for (int i = 0; i < 50; i++) {
+                for (int i = 0; i < 500; i++) {
                     addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
                 }
             }

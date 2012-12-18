@@ -15,7 +15,7 @@ import com.funzio.pure2D.shapes.Polyline;
  */
 public class TrailShape extends Polyline {
 
-    protected int mNumPoints = 10;
+    protected int mNumPoints = 0;
     protected int mMinLength = 0;
     protected int mSegmentLength;
     protected float mMotionEasing = 0.5f;
@@ -23,8 +23,15 @@ public class TrailShape extends Polyline {
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
 
-    public TrailShape() {
-        // TODO Auto-generated constructor stub
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
+     */
+    @Override
+    public void setPosition(final float x, final float y) {
+        if (mNumPoints > 0) {
+            mPoints[0].set(x, y);
+        }
     }
 
     /*
