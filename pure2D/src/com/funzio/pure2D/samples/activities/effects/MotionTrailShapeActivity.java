@@ -46,7 +46,7 @@ public class MotionTrailShapeActivity extends StageActivity {
 
     private void addObject(final float x, final float y) {
         final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
-        final GLColor color2 = new GLColor(color1);
+        final GLColor color2 = GLColor.WHITE;// new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 0.5f);
         color2.a = 0;
 
         // create object
@@ -62,6 +62,7 @@ public class MotionTrailShapeActivity extends StageActivity {
         trail.setColor(color1);
         trail.setStrokeRange(30, 1);
         trail.setNumPoints(20);
+        trail.setStrokeColorRange(color1, color2);
         trail.setMinLength(100);
         trail.setTarget(obj);
         mScene.addChild(trail);

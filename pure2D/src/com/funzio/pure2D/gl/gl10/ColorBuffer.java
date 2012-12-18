@@ -22,13 +22,13 @@ public class ColorBuffer extends GLFloatBuffer {
     }
 
     public void setValues(final GLColor... colors) {
-        float[] values = new float[colors.length * 4];
+        final float[] values = new float[colors.length * 4];
+        int index = 0;
         for (int i = 0; i < colors.length; i++) {
-            int index = i * 4; // rgba
-            values[index] = colors[i].r;
-            values[index + 1] = colors[i].g;
-            values[index + 2] = colors[i].b;
-            values[index + 3] = colors[i].a;
+            values[index++] = colors[i].r;
+            values[index++] = colors[i].g;
+            values[index++] = colors[i].b;
+            values[index++] = colors[i].a;
         }
 
         setValues(values);

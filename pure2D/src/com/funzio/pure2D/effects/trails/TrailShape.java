@@ -86,6 +86,9 @@ public class TrailShape extends PolyLine {
             // find the
             mSegmentLength = mMinLength / (numPoints - 1);
         }
+
+        // re-count
+        mVerticesNum = numPoints * 2;
     }
 
     public DisplayObject getTarget() {
