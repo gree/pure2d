@@ -40,6 +40,9 @@ public class Polyline extends Shape {
         mVerticesNum = mPoints.length * 2; // each point has upper and lower points
         if (mVertices == null || mVerticesNum > mVertices.length) {
             mVertices = new float[mVerticesNum * 2];
+
+            // only set colors ONCE!
+            setStrokeColorRange(mStrokeColor1, mStrokeColor2);
         }
 
         final float strokeDelta = mStroke2 - mStroke1;
@@ -105,11 +108,6 @@ public class Polyline extends Shape {
             mVertexBuffer = new VertexBuffer(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
         } else {
             mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
-        }
-
-        // only set color ONCE!
-        if (mStrokeColor1 != null && mStrokeColor2 != null && mColorBuffer == null) {
-            setStrokeColorRange(mStrokeColor1, mStrokeColor2);
         }
 
         invalidate();
