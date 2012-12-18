@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.PointF;
 import android.util.FloatMath;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
@@ -17,18 +17,15 @@ import com.funzio.pure2D.gl.gl10.VertexBuffer;
  */
 public class PolyLine extends Shape {
 
-    private PointF[] mPoints;
-    private float mStroke1 = 1;
-    private float mStroke2 = 1;
+    protected PointF[] mPoints;
+    protected float mStroke1 = 1;
+    protected float mStroke2 = 1;
 
-    private float[] mVertices;
+    protected float[] mVertices;
     // private short[] mIndices;
-    private int mVerticesNum = 0;
-    private float mTotalSegment;
-    private Interpolator mStrokeInterpolator = new AccelerateInterpolator();
-
-    public PolyLine() {
-    }
+    protected int mVerticesNum = 0;
+    protected float mTotalSegment;
+    protected Interpolator mStrokeInterpolator = new DecelerateInterpolator();
 
     public PointF[] getPoints() {
         return mPoints;
@@ -106,11 +103,21 @@ public class PolyLine extends Shape {
         } else {
             mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
         }
+
+        invalidate();
     }
 
     public void setStrokeRange(final float stroke1, final float stroke2) {
         mStroke1 = stroke1;
         mStroke2 = stroke2;
+    }
+
+    public Interpolator getStrokeInterpolator() {
+        return mStrokeInterpolator;
+    }
+
+    public void setStrokeInterpolator(final Interpolator strokeInterpolator) {
+        mStrokeInterpolator = strokeInterpolator;
     }
 
 }
