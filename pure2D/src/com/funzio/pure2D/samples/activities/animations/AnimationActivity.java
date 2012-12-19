@@ -15,6 +15,7 @@ import com.funzio.pure2D.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.TweenAnimator;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.samples.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
@@ -80,8 +81,9 @@ public abstract class AnimationActivity extends StageActivity {
 
         // motion trail
         mMotionTrail = new MotionTrailShape();
-        mMotionTrail.setNumPoints(10);
+        mMotionTrail.setNumPoints(15);
         mMotionTrail.setStrokeRange(10, 1);
+        mMotionTrail.setStrokeColorRange(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
         mMotionTrail.setTarget(obj);
         mScene.addChild(mMotionTrail);
     }
