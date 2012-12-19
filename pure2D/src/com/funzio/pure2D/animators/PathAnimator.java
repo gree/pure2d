@@ -16,7 +16,9 @@ public class PathAnimator extends TweenAnimator {
     protected float[] mCos;
     protected float[] mSegments;
     protected float mTotalLength;
-    protected PointF mCurrentPoint;
+
+    // current velocity
+    protected PointF mVelocity = new PointF();
 
     public PathAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -55,12 +57,26 @@ public class PathAnimator extends TweenAnimator {
             final float valueLen = value * mTotalLength;
             final int size = mSegments.length;
             float len = 0;
+
+            // find the right segment
             float segment;
             for (int i = 0; i < size; i++) {
                 segment = mSegments[i];
+
+                // bingo?
                 if (len + segment >= valueLen) {
                     final float delta = valueLen - len;
+                    PointF currentPos = mTarget.getPosition();
+                    float lastX = currentPos.x;
+                    float lastY = currentPos.y;
+
+                    // new position
                     mTarget.setPosition(mPoints[i].x + delta * mCos[i], mPoints[i].y + delta * mSin[i]);
+
+                    // find the velocity
+                    currentPos = mTarget.getPosition();
+                    mVelocity.x = (currentPos.x - lastX) / mLastDeltaTime;
+                    mVelocity.y = (currentPos.y - lastY) / mLastDeltaTime;
                     break;
                 }
 
@@ -75,4 +91,12 @@ public class PathAnimator extends TweenAnimator {
     public PointF[] getPoints() {
         return mPoints;
     }
+
+    /**
+     * @return the current velocity
+     */
+    public PointF getVelocity() {
+        return mVelocity;
+    }
+
 }
