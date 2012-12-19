@@ -124,5 +124,8 @@
     <string name="bezier_animation">Bezier Animation</string>
     <string name="path_animation">Path Animation</string>
     <string name="motion_trail_shape">Motion Trail Shape</string>
+    <string name="wave_animation">Wave Animation</string>
+    <string name="motion_trail">Motion Trail</string>
+    <string name="trail">Trail</string>
 
 </resources>

@@ -90,6 +90,14 @@
             android:checked="false"
             android:onClick="onClickRadio"
             android:text="@string/reverse" />
+
+        <CheckBox
+            android:id="@+id/cb_motion_trail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onClickRadio"
+            android:text="@string/trail" />
     </RadioGroup>
 
 </RelativeLayout>

@@ -15,7 +15,7 @@ public class PathAnimator extends TweenAnimator {
     protected float[] mSin;
     protected float[] mCos;
     protected float[] mSegments;
-    protected float mTotalSegment;
+    protected float mTotalLength;
     protected PointF mCurrentPoint;
 
     public PathAnimator(final Interpolator interpolator) {
@@ -31,7 +31,7 @@ public class PathAnimator extends TweenAnimator {
         mSegments = new float[n - 1];
 
         float dx, dy, angle;
-        mTotalSegment = 0;
+        mTotalLength = 0;
         for (int i = 0; i < n - 1; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
@@ -39,7 +39,7 @@ public class PathAnimator extends TweenAnimator {
             mSin[i] = FloatMath.sin(angle);
             mCos[i] = FloatMath.cos(angle);
             mSegments[i] = FloatMath.sqrt(dx * dx + dy * dy);
-            mTotalSegment += mSegments[i];
+            mTotalLength += mSegments[i];
         }
     }
 
@@ -52,7 +52,7 @@ public class PathAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            final float valueLen = value * mTotalSegment;
+            final float valueLen = value * mTotalLength;
             final int size = mSegments.length;
             float len = 0;
             float segment;
@@ -61,7 +61,7 @@ public class PathAnimator extends TweenAnimator {
                 if (len + segment >= valueLen) {
                     final float delta = valueLen - len;
                     mTarget.setPosition(mPoints[i].x + delta * mCos[i], mPoints[i].y + delta * mSin[i]);
-                    return;
+                    break;
                 }
 
                 // add up
