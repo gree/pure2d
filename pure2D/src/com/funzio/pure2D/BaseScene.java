@@ -424,6 +424,10 @@ public class BaseScene implements Scene {
         mStartTime = System.nanoTime();
     }
 
+    public boolean isPaused() {
+        return mPaused;
+    }
+
     public void stop() {
         // TODO
     }
