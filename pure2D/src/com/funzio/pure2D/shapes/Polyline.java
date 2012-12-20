@@ -28,7 +28,7 @@ public class Polyline extends Shape {
 
     protected float[] mVertices;
     protected int mVerticesNum = 0;
-    protected float mTotalSegment;
+    protected float mTotalLength;
     protected Interpolator mStrokeInterpolator = null;// new DecelerateInterpolator();
 
     public PointF[] getPoints() {
@@ -58,12 +58,12 @@ public class Polyline extends Shape {
         int i, vertexIndex = 0;
 
         // find total segment
-        mTotalSegment = 0;
+        mTotalLength = 0;
         for (i = 0; i < len - 1; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
 
-            mTotalSegment += FloatMath.sqrt(dx * dx + dy * dy);
+            mTotalLength += FloatMath.sqrt(dx * dx + dy * dy);
         }
 
         for (i = 0; i < len; i++) {
@@ -74,10 +74,10 @@ public class Polyline extends Shape {
                 segment += FloatMath.sqrt(dx * dx + dy * dy);
                 if (mStrokeInterpolator != null) {
                     // interpolating
-                    stroke = mStroke1 + mStrokeInterpolator.getInterpolation(segment / mTotalSegment) * strokeDelta;
+                    stroke = mStroke1 + mStrokeInterpolator.getInterpolation(segment / mTotalLength) * strokeDelta;
                 } else {
                     // linear
-                    stroke = mStroke1 + (segment / mTotalSegment) * strokeDelta;
+                    stroke = mStroke1 + (segment / mTotalLength) * strokeDelta;
                 }
 
                 angle1 = (float) Math.atan2(dy, dx);
