@@ -48,14 +48,37 @@ public class Line {
     }
 
     /**
-     * Find the parallel line that is shifted "delta" units from the given line and angle
+     * Find the parallel line that is shifted "delta" units from the given line
      * 
      * @param p1
      * @param p2
      * @param delta
      * @return
      */
-    public static PointF shiftLine(final PointF p1, final PointF p2, final float angle, final float delta) {
+    public static PointF shiftLine(final PointF p1, final PointF p2, final float delta) {
+        final float angle = (float) Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        final float deltaX = -delta * FloatMath.sin(angle);
+        final float deltaY = delta * FloatMath.cos(angle);
+
+        p1.x += deltaX;
+        p1.y += deltaY;
+        p2.x += deltaX;
+        p2.y += deltaY;
+
+        // return the delta
+        return new PointF(deltaX, deltaY);
+    }
+
+    /**
+     * Find the parallel line that is shifted "delta" units from the given line and angle
+     * 
+     * @param p1
+     * @param p2
+     * @param angle
+     * @param delta
+     * @return
+     */
+    public static PointF shiftLine(final PointF p1, final PointF p2, final float delta, final float angle) {
         final float deltaX = -delta * FloatMath.sin(angle);
         final float deltaY = delta * FloatMath.cos(angle);
 
