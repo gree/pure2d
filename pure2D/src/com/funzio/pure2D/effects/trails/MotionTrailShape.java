@@ -15,13 +15,20 @@ import com.funzio.pure2D.shapes.Polyline;
  */
 public class MotionTrailShape extends Polyline {
 
-    protected int mNumPoints = 0;
+    protected int mNumPoints = 10;
     protected int mMinLength = 0;
     protected int mSegmentLength;
     protected float mMotionEasing = 0.5f;
 
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
+
+    public MotionTrailShape() {
+        super();
+
+        // set default num points
+        setNumPoints(mNumPoints);
+    }
 
     /*
      * (non-Javadoc)
