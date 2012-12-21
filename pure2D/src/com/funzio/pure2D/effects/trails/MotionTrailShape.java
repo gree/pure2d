@@ -156,4 +156,12 @@ public class MotionTrailShape extends Polyline {
         mMotionEasing = easing;
     }
 
+    public PointF getTargetOffset() {
+        return mTargetOffset;
+    }
+
+    public void setTargetOffset(final PointF targetOffset) {
+        mTargetOffset = targetOffset;
+    }
+
 }
