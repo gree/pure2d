@@ -8,7 +8,7 @@ package com.funzio.pure2D.animators;
  */
 public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
 
-    protected float mDecelerationRate = 0.5f;
+    protected float mDecelerationRate = 0.75f;
     protected float mMinVelocity = 1;
 
     /**
@@ -22,6 +22,9 @@ public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
     public void end() {
         final float newVelocity = mVelocity * mDecelerationRate;
         if (Math.abs(newVelocity) >= mMinVelocity) {
+            stop();
+
+            // and restart
             start(newVelocity, mAngle);
         } else {
             super.end();

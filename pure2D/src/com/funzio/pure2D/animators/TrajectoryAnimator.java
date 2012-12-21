@@ -17,12 +17,13 @@ public class TrajectoryAnimator extends BaseAnimator {
     protected float mSrcY = 0;
 
     protected float mGround = 0;
+    protected float mAngle = 0;
+    protected float mSin = 0;
+    protected float mCos = 1;
     protected float mVelocity;
-    protected float mAngle;
     protected float mDistance;
     protected float mDuration;
-    protected float mSin;
-    protected float mCos;
+    protected PointF mCurrentVelocity = new PointF();
 
     // rotation
     protected boolean mTargetAngleFixed = true;
@@ -55,9 +56,11 @@ public class TrajectoryAnimator extends BaseAnimator {
         mSrcY = srcY;
 
         mVelocity = velocity;
-        mAngle = angle;
-        mSin = FloatMath.sin(mAngle);
-        mCos = FloatMath.cos(mAngle);
+        if (mAngle != angle) {
+            mAngle = angle;
+            mSin = FloatMath.sin(mAngle);
+            mCos = FloatMath.cos(mAngle);
+        }
 
         // pre-cals
         final float vcos = mVelocity * mCos;
@@ -116,12 +119,13 @@ public class TrajectoryAnimator extends BaseAnimator {
 
             if (mTarget != null) {
 
+                final PointF currentPos = mTarget.getPosition();
+                mCurrentVelocity.x = (x - currentPos.x) / (deltaTime);
+                mCurrentVelocity.y = (y - currentPos.y) / (deltaTime);
+
                 // rotation
                 if (!mTargetAngleFixed) {
-                    final PointF currentPos = mTarget.getPosition();
-                    final float dx = x - currentPos.x;
-                    final float dy = y - currentPos.y;
-                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(dy, dx) * 180 / Math.PI));
+                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(mCurrentVelocity.y, mCurrentVelocity.x) * 180 / Math.PI));
                 }
 
                 // position
@@ -167,5 +171,13 @@ public class TrajectoryAnimator extends BaseAnimator {
 
     public float getVelocity() {
         return mVelocity;
+    }
+
+    public PointF getCurrentVelocity() {
+        return mCurrentVelocity;
+    }
+
+    public void setCurrentVelocity(final PointF currentVelocity) {
+        mCurrentVelocity = currentVelocity;
     }
 }
