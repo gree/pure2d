@@ -10,7 +10,7 @@ import android.util.FloatMath;
  * @author long
  */
 public class TrajectoryAnimator extends BaseAnimator {
-    public static float TIME_FACTOR = 100;
+    public static float TIME_FACTOR = 50;
 
     protected float mGravity = 10f;
     protected float mSrcX = 0;
@@ -65,7 +65,7 @@ public class TrajectoryAnimator extends BaseAnimator {
         final float absGravity = Math.abs(mGravity);
         mDistance = (vcos / absGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
         // mDistance = (vcos / mGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
-        mDuration = TIME_FACTOR * mDistance / vcos;
+        mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
 
         start();
     }
@@ -110,8 +110,6 @@ public class TrajectoryAnimator extends BaseAnimator {
     public boolean update(final int deltaTime) {
         if (super.update(deltaTime)) {
 
-            mElapsedTime += deltaTime;
-
             final float t = Math.min(mElapsedTime, mDuration) / TIME_FACTOR;
             final float x = mSrcX + mVelocity * t * mCos;
             final float y = mSrcY + mVelocity * t * mSin - 0.5f * mGravity * t * t;
@@ -135,6 +133,7 @@ public class TrajectoryAnimator extends BaseAnimator {
                 mListener.onAnimationUpdate(this, t);
             }
 
+            // time's up?
             if (mElapsedTime >= mDuration) {
                 // force end
                 end();
