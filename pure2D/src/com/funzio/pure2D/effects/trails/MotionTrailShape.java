@@ -160,8 +160,8 @@ public class MotionTrailShape extends Polyline {
         return mTargetOffset;
     }
 
-    public void setTargetOffset(final PointF targetOffset) {
-        mTargetOffset = targetOffset;
+    public void setTargetOffset(final float offsetX, final float offsetY) {
+        mTargetOffset.set(offsetX, offsetY);
     }
 
 }
