@@ -66,6 +66,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected int mInvalidateFlags = 0;
     protected Matrix mMatrix = new Matrix();
     protected boolean mAutoUpdateBounds = false;
+    // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
 
     protected void drawStart(final GLState glState) {
@@ -717,7 +718,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     /**
-     * Get the bounds of this object that takes rotation and scale factors into account. Note that this does NOT count the parent's matrix
+     * Get the Global Bounds of this object that takes translation, rotation and scale factors into account.
      * 
      * @return
      */
