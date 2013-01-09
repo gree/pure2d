@@ -583,12 +583,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     final public PointF localToGlobal(final PointF local) {
         // final PointF temp = new PointF(pt.x + mPosition.x - mOrigin.x, pt.y + mPosition.y - mOrigin.y);
-        final PointF temp = new PointF((local == null ? 0 : local.x) + mPosition.x, (local == null ? 0 : local.y) + mPosition.y);
+        final PointF result = new PointF((local == null ? 0 : local.x) + mPosition.x, (local == null ? 0 : local.y) + mPosition.y);
+
         if (mParent != null && !(mParent instanceof Scene)) {
-            return mParent.localToGlobal(temp);
-        } else {
-            return temp;
+            mParent.localToGlobal(result, result);
+
+            if (mParent instanceof DisplayObject) {
+                // apply parent's origin
+                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                result.x -= parentOrigin.x;
+                result.y -= parentOrigin.y;
+            }
         }
+
+        return result;
     }
 
     /**
@@ -602,6 +610,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         result.y = (local == null ? 0 : local.y) + mPosition.y;
         if (mParent != null && !(mParent instanceof Scene)) {
             mParent.localToGlobal(result, result);
+
+            if (mParent instanceof DisplayObject) {
+                // apply parent's origin
+                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                result.x -= parentOrigin.x;
+                result.y -= parentOrigin.y;
+            }
         }
     }
 
@@ -615,6 +630,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         final PointF local;
         if (mParent != null && !(mParent instanceof Scene)) {
             local = mParent.globalToLocal(global);
+
+            if (mParent instanceof DisplayObject) {
+                // apply parent's origin
+                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                local.x += parentOrigin.x;
+                local.y += parentOrigin.y;
+            }
         } else {
             local = new PointF(global.x, global.y);
         }
@@ -633,6 +655,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
     final public void globalToLocal(final PointF global, final PointF result) {
         if (mParent != null && !(mParent instanceof Scene)) {
             mParent.globalToLocal(global, result);
+
+            if (mParent instanceof DisplayObject) {
+                // apply parent's origin
+                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                result.x += parentOrigin.x;
+                result.y += parentOrigin.y;
+            }
         } else {
             result.x = global.x;
             result.y = global.y;
