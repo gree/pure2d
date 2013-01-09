@@ -66,7 +66,6 @@ public class BaseScene implements Scene {
     private PointF mTouchedPoint;
 
     // GL extensions
-    protected String mExtensions;
     protected boolean mNpotTextureSupported = false;
 
     public BaseScene() {
@@ -186,10 +185,14 @@ public class BaseScene implements Scene {
         mCurrentFps = 0;
         mFrameCountDuration = 0;
 
-        // find the extension
-        mExtensions = gl.glGetString(GL10.GL_EXTENSIONS);
-        Pure2D.NPOT_TEXTURE_SUPPORTED = mNpotTextureSupported = mExtensions.contains("GL_OES_texture_npot") || mExtensions.contains("GL_ARB_texture_non_power_of_two");
-        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.NPOT_TEXTURE_SUPPORTED);
+        // find the extensions
+        if (Pure2D.GL_EXTENSIONS == null) {
+            Pure2D.GL_EXTENSIONS = gl.glGetString(GL10.GL_EXTENSIONS);
+            Pure2D.GL_NPOT_TEXTURE_SUPPORTED = mNpotTextureSupported = Pure2D.GL_EXTENSIONS.contains("GL_OES_texture_npot") || Pure2D.GL_EXTENSIONS.contains("GL_ARB_texture_non_power_of_two");
+            Pure2D.GL_STENCIL8_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_stencil8");
+        }
+
+        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.GL_NPOT_TEXTURE_SUPPORTED);
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);

@@ -14,7 +14,7 @@ import com.funzio.pure2D.Pure2D;
 public class TextureOptions extends BitmapFactory.Options {
     public float inScaleX = 1;
     public float inScaleY = 1;
-    public boolean inPo2 = !Pure2D.NPOT_TEXTURE_SUPPORTED; // power of 2 dimensions
+    public boolean inPo2 = !Pure2D.GL_NPOT_TEXTURE_SUPPORTED; // power of 2 dimensions
     public int inMipmaps = 0; // for GL texture mipmapping
 
     public static TextureOptions getDefault() {
@@ -23,7 +23,7 @@ public class TextureOptions extends BitmapFactory.Options {
         options.inScaled = false;
         options.inPurgeable = true; // for gc
         options.inScaleX = options.inScaleY = 1;
-        options.inPo2 = !Pure2D.NPOT_TEXTURE_SUPPORTED;
+        options.inPo2 = !Pure2D.GL_NPOT_TEXTURE_SUPPORTED;
         options.inMipmaps = 0;
 
         return options;
