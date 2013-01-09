@@ -7,6 +7,9 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -70,6 +73,34 @@ public class StageActivity extends Activity implements OnTouchListener {
         mDisplaySizeDiv2.y = mDisplaySize.y / 2;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.stage_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.pause:
+                if (mScene.isPaused()) {
+                    mScene.resume();
+                    item.setTitle(getResources().getString(R.string.pause));
+                } else {
+                    mScene.pause();
+                    item.setTitle(getResources().getString(R.string.resume));
+                }
+                return true;
+        }
+
+        return false;
+    }
+
     protected BaseScene createScene() {
         return new BaseScene();
     }
@@ -97,8 +128,23 @@ public class StageActivity extends Activity implements OnTouchListener {
     protected void onStop() {
         super.onStop();
 
-        mScene.stop();
+        // pause the scene
+        mScene.pause();
+
+        // stop tracing
         mHandler.removeCallbacks(mFrameRateUpdater);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // resume the scene
+        mScene.resume();
     }
 
     public boolean onTouch(final View v, final MotionEvent event) {

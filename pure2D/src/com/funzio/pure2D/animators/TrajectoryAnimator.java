@@ -10,19 +10,20 @@ import android.util.FloatMath;
  * @author long
  */
 public class TrajectoryAnimator extends BaseAnimator {
-    public static float TIME_FACTOR = 100;
+    public static float TIME_FACTOR = 50;
 
     protected float mGravity = 10f;
     protected float mSrcX = 0;
     protected float mSrcY = 0;
 
     protected float mGround = 0;
+    protected float mAngle = 0;
+    protected float mSin = 0;
+    protected float mCos = 1;
     protected float mVelocity;
-    protected float mAngle;
     protected float mDistance;
     protected float mDuration;
-    protected float mSin;
-    protected float mCos;
+    protected PointF mCurrentVelocity = new PointF();
 
     // rotation
     protected boolean mTargetAngleFixed = true;
@@ -55,9 +56,11 @@ public class TrajectoryAnimator extends BaseAnimator {
         mSrcY = srcY;
 
         mVelocity = velocity;
-        mAngle = angle;
-        mSin = FloatMath.sin(mAngle);
-        mCos = FloatMath.cos(mAngle);
+        if (mAngle != angle) {
+            mAngle = angle;
+            mSin = FloatMath.sin(mAngle);
+            mCos = FloatMath.cos(mAngle);
+        }
 
         // pre-cals
         final float vcos = mVelocity * mCos;
@@ -65,7 +68,7 @@ public class TrajectoryAnimator extends BaseAnimator {
         final float absGravity = Math.abs(mGravity);
         mDistance = (vcos / absGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
         // mDistance = (vcos / mGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
-        mDuration = TIME_FACTOR * mDistance / vcos;
+        mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
 
         start();
     }
@@ -110,20 +113,19 @@ public class TrajectoryAnimator extends BaseAnimator {
     public boolean update(final int deltaTime) {
         if (super.update(deltaTime)) {
 
-            mElapsedTime += deltaTime;
-
             final float t = Math.min(mElapsedTime, mDuration) / TIME_FACTOR;
             final float x = mSrcX + mVelocity * t * mCos;
             final float y = mSrcY + mVelocity * t * mSin - 0.5f * mGravity * t * t;
 
             if (mTarget != null) {
 
+                final PointF currentPos = mTarget.getPosition();
+                mCurrentVelocity.x = (x - currentPos.x) / (deltaTime);
+                mCurrentVelocity.y = (y - currentPos.y) / (deltaTime);
+
                 // rotation
                 if (!mTargetAngleFixed) {
-                    final PointF currentPos = mTarget.getPosition();
-                    final float dx = x - currentPos.x;
-                    final float dy = y - currentPos.y;
-                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(dy, dx) * 180 / Math.PI));
+                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(mCurrentVelocity.y, mCurrentVelocity.x) * 180 / Math.PI));
                 }
 
                 // position
@@ -135,6 +137,7 @@ public class TrajectoryAnimator extends BaseAnimator {
                 mListener.onAnimationUpdate(this, t);
             }
 
+            // time's up?
             if (mElapsedTime >= mDuration) {
                 // force end
                 end();
@@ -168,5 +171,13 @@ public class TrajectoryAnimator extends BaseAnimator {
 
     public float getVelocity() {
         return mVelocity;
+    }
+
+    public PointF getCurrentVelocity() {
+        return mCurrentVelocity;
+    }
+
+    public void setCurrentVelocity(final PointF currentVelocity) {
+        mCurrentVelocity = currentVelocity;
     }
 }

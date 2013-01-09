@@ -35,7 +35,7 @@ public class MotionTrailShapeActivity extends StageActivity {
     // color2.a = 0;
     //
     // // create object
-    // PolyLine obj = new PolyLine();
+    // Polyline obj = new Polyline();
     // obj.setColor(color1);
     // obj.setStrokeRange(10, 50);
     //

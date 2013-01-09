@@ -14,6 +14,7 @@ public class BaseAnimator implements Animator {
     protected AnimatorListener mListener;
 
     protected int mElapsedTime = 0;
+    protected int mLastDeltaTime = 0;
     protected boolean mRunning = false;
 
     @Override
@@ -29,6 +30,7 @@ public class BaseAnimator implements Animator {
     @Override
     public boolean update(final int deltaTime) {
         if (mRunning) {
+            mLastDeltaTime = deltaTime;
             mElapsedTime += deltaTime;
             return true;
         }

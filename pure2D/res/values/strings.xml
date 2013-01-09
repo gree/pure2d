@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Funzio 2D Engine</string>
+    <string name="app_name">Pure2D Engine</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 
     <!-- display objects -->
     <string name="display_objects">Display Objects</string>
@@ -122,5 +124,8 @@
     <string name="bezier_animation">Bezier Animation</string>
     <string name="path_animation">Path Animation</string>
     <string name="motion_trail_shape">Motion Trail Shape</string>
+    <string name="wave_animation">Wave Animation</string>
+    <string name="motion_trail">Motion Trail</string>
+    <string name="trail">Trail</string>
 
 </resources>
