@@ -345,13 +345,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        // start from front to back
-        for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
-            if (mVisibleTouchables.get(i).onTouchEvent(event)) {
-                // break here
-                return true;
+        if (mVisibleTouchables != null) {
+            // start from front to back
+            for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+                if (mVisibleTouchables.get(i).onTouchEvent(event)) {
+                    // break here
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
