@@ -101,16 +101,24 @@ public class HGroup extends LinearGroup {
     @Override
     protected void positionChildren() {
         float nextY = -mScrollPosition.y;
+        float alignedY = 0;
+        DisplayObject child;
+        PointF childSize;
 
         if (mRepeating) {
             findStartIndex();
             float nextX = mStartX;
             for (int i = 0; i < mNumChildren; i++) {
-                DisplayObject child = mChildren.get((i + mStartIndex) % mNumChildren);
-                PointF childSize = child.getSize();
-                child.setPosition(nextX, nextY);
+                child = mChildren.get((i + mStartIndex) % mNumChildren);
+                childSize = child.getSize();
+                if ((mAlignment & Alignment.VERTICAL_CENTER) != 0) {
+                    alignedY = (mSize.y - childSize.y) * 0.5f;
+                } else if ((mAlignment & Alignment.TOP) != 0) {
+                    alignedY = (mSize.y - childSize.y);
+                }
+                child.setPosition(nextX, nextY + alignedY);
 
-                // find nextY
+                // find nextX
                 nextX += childSize.x + mGap;
             }
 
@@ -120,17 +128,22 @@ public class HGroup extends LinearGroup {
                 if (index < 0) {
                     index += mNumChildren;
                 }
-                final DisplayObject child = mChildren.get(index);
+                child = mChildren.get(index);
                 child.setPosition(mStartX - child.getSize().x - mGap, child.getPosition().y);
             }
         } else {
             float nextX = -mScrollPosition.x;
             for (int i = 0; i < mNumChildren; i++) {
-                DisplayObject child = mChildren.get(i);
-                child.setPosition(nextX, nextY);
+                child = mChildren.get(i);
+                childSize = child.getSize();
+                if ((mAlignment & Alignment.VERTICAL_CENTER) != 0) {
+                    alignedY = (mSize.y - childSize.y) * 0.5f;
+                } else if ((mAlignment & Alignment.TOP) != 0) {
+                    alignedY = (mSize.y - childSize.y);
+                }
+                child.setPosition(nextX, nextY + alignedY);
 
                 // update sizes
-                PointF childSize = child.getSize();
                 nextX += childSize.x + mGap;
             }
         }
@@ -145,8 +158,10 @@ public class HGroup extends LinearGroup {
         super.setSize(w, h);
 
         // update scroll max
-        mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
-        mScrollMax.y = Math.max(0, mContentSize.y - mSize.y);
+        mScrollMax.x = Math.max(0, mContentSize.x - w);
+        mScrollMax.y = Math.max(0, mContentSize.y - h);
+
+        invalidateChildrenPosition();
     }
 
     /*
@@ -166,7 +181,7 @@ public class HGroup extends LinearGroup {
      */
     @Override
     protected void onAddedChild(final DisplayObject child) {
-        PointF childSize = child.getSize();
+        final PointF childSize = child.getSize();
         mContentSize.x += childSize.x + mGap;
         mContentSize.y += childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
 
@@ -183,7 +198,7 @@ public class HGroup extends LinearGroup {
      */
     @Override
     protected void onRemovedChild(final DisplayObject child) {
-        PointF childSize = child.getSize();
+        final PointF childSize = child.getSize();
         mContentSize.x -= childSize.x + mGap;
 
         // update scroll max

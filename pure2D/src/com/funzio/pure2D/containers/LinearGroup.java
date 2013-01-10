@@ -13,6 +13,7 @@ import com.funzio.pure2D.DisplayObject;
 public abstract class LinearGroup extends DisplayGroup {
 
     protected float mGap = 0;
+    protected int mAlignment = Alignment.NONE;
     protected PointF mScrollPosition = new PointF();
     protected boolean mRepeating = false;
     protected boolean mClipping = true;
@@ -135,9 +136,20 @@ public abstract class LinearGroup extends DisplayGroup {
         mClipping = clipping;
     }
 
+    public int getAlignment() {
+        return mAlignment;
+    }
+
+    public void setAlignment(final int alignment) {
+        mAlignment = alignment;
+
+        invalidateChildrenPosition();
+    }
+
     protected abstract void positionChildren();
 
     public abstract PointF getContentSize();
 
     public abstract PointF getScrollMax();
+
 }
