@@ -131,7 +131,7 @@ public class HGroup extends LinearGroup {
 
                 // update sizes
                 PointF childSize = child.getSize();
-                nextX += childSize.y + mGap;
+                nextX += childSize.x + mGap;
             }
         }
     }
