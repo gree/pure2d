@@ -183,7 +183,7 @@ public class HGroup extends LinearGroup {
     protected void onAddedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
         mContentSize.x += childSize.x + mGap;
-        mContentSize.y += childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
+        mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);

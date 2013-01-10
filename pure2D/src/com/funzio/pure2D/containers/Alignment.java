@@ -14,6 +14,6 @@ public interface Alignment {
     public static final int BOTTOM = 1 << 2;
 
     public static final int LEFT = 1 << 3;
-    public static final int CENTER_H = 1 << 4;
+    public static final int HORIZONTAL_CENTER = 1 << 4;
     public static final int RIGHT = 1 << 5;
 }
