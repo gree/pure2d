@@ -3,9 +3,12 @@
  */
 package com.funzio.pure2D.containers;
 
+import java.util.ArrayList;
+
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
@@ -73,12 +76,30 @@ public class VGroup extends LinearGroup {
      */
     @Override
     protected void drawChildren(final GLState glState) {
+        if (mTouchable) {
+            if (mVisibleTouchables == null) {
+                mVisibleTouchables = new ArrayList<Touchable>();
+            } else {
+                mVisibleTouchables.clear();
+            }
+        }
+
         // draw the children
         for (int i = 0; i < mNumChildren; i++) {
             DisplayObject child = mChildren.get(i);
             if (child.isVisible() && (!mClipping || isChildInBounds(child))) {
                 // draw frame
                 child.draw(glState);
+
+                // stack the visible child
+                if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                    float childZ = child.getZ();
+                    int j = mVisibleTouchables.size();
+                    while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                        j--;
+                    }
+                    mVisibleTouchables.add(j, (Touchable) child);
+                }
             }
         }
 
