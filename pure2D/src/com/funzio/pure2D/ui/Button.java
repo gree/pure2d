@@ -139,6 +139,11 @@ public class Button extends Sprite implements UIObject {
 
                 // take control
                 return true;
+            } else if (mFocus) {
+                // if for some reason, there's another ACTION_DOWN while we're on focus?
+                // unflag focus
+                mFocus = false;
+                setState(STATE_UP);
             }
         } else if (action == MotionEvent.ACTION_UP) {
             if (mFocus) {
