@@ -65,9 +65,18 @@ public class Button extends Sprite implements UIObject {
     protected void setState(final int state) {
         mState = state;
         // go to the state's frame
-        setAtlasFrame(mNumFrames == 0 ? null : mFrameSet.getFrame(Math.min(state, mNumFrames - 1)));
+        AtlasFrame frame = mNumFrames == 0 ? null : mFrameSet.getFrame(Math.min(state, mNumFrames - 1));
+        boolean forceDim = false;
+        if (frame == null) {
+            if (mNumFrames > 0) {
+                // use first frame as default
+                frame = mFrameSet.getFrame(0);
+                forceDim = true;
+            }
+        }
+        setAtlasFrame(frame);
         // dim it if there is missing frame
-        setColor(mAtlasFrame == null ? DIMMED_COLOR : null);
+        setColor((state > mNumFrames - 1 || forceDim) ? DIMMED_COLOR : null);
     }
 
     public boolean isEnabled() {
@@ -114,7 +123,7 @@ public class Button extends Sprite implements UIObject {
             return false;
         }
 
-        final int action = event.getAction(); // & MotionEvent.ACTION_MASK;
+        final int action = event.getAction() & MotionEvent.ACTION_MASK;
         final PointF touchedPoint = mScene.getTouchedPoint();
 
         if (action == MotionEvent.ACTION_DOWN) {
