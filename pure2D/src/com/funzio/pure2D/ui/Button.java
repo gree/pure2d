@@ -114,7 +114,7 @@ public class Button extends Sprite implements UIObject {
             return false;
         }
 
-        final int action = event.getAction() & MotionEvent.ACTION_MASK;
+        final int action = event.getAction(); // & MotionEvent.ACTION_MASK;
         final PointF touchedPoint = mScene.getTouchedPoint();
 
         if (action == MotionEvent.ACTION_DOWN) {
