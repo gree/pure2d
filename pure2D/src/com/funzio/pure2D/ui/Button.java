@@ -67,7 +67,7 @@ public class Button extends Sprite implements UIObject {
         // go to the state's frame
         setAtlasFrame(mNumFrames == 0 ? null : mFrameSet.getFrame(Math.min(state, mNumFrames - 1)));
         // dim it if there is missing frame
-        setColor(state <= mNumFrames - 1 ? null : DIMMED_COLOR);
+        setColor(mAtlasFrame == null ? DIMMED_COLOR : null);
     }
 
     public boolean isEnabled() {
@@ -105,13 +105,16 @@ public class Button extends Sprite implements UIObject {
         mListener = listener;
     }
 
+    /**
+     * @hide
+     */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         if (!mEnabled) {
             return false;
         }
 
-        final int action = event.getAction();
+        final int action = event.getAction() & MotionEvent.ACTION_MASK;
         final PointF touchedPoint = mScene.getTouchedPoint();
 
         if (action == MotionEvent.ACTION_DOWN) {
