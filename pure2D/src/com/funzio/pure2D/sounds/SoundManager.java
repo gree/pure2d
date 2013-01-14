@@ -60,7 +60,9 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
 
                 // check and add to the map
                 if (soundID > 0) {
-                    mSoundMap.put(sound.getKey(), sound);
+                    synchronized (mSoundMap) {
+                        mSoundMap.put(sound.getKey(), sound);
+                    }
                 }
             }
 
@@ -75,7 +77,12 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     public int play(final int key) {
         // Log.v(TAG, "play(" + key + ")");
 
-        return play(mSoundMap.get(key));
+        try {
+            return play(mSoundMap.get(key));
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to play sound:", e);
+            return -1;
+        }
     }
 
     /**
@@ -165,7 +172,9 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     }
 
     public void dispose() {
-        mSoundMap.clear();
+        synchronized (mSoundMap) {
+            mSoundMap.clear();
+        }
 
         mSoundPool.release();
 
