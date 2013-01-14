@@ -41,7 +41,7 @@ public class AtlasFrameSet {
     }
 
     public AtlasFrame getFrame(final int index) {
-        return mFrames.get(index);
+        return index < mFrames.size() ? mFrames.get(index) : null;
     }
 
     public AtlasFrame getFrame(final String name) {
