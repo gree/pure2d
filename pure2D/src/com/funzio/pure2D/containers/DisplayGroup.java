@@ -218,7 +218,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public DisplayObject getChildAt(final int index) {
-        return index < mNumChildren ? mChildren.get(index) : null;
+        return index < mChildren.size() ? mChildren.get(index) : null;
     }
 
     public int getChildIndex(final DisplayObject child) {
