@@ -25,6 +25,16 @@ public class TextOptions extends TextureOptions {
     public Bitmap inBackground = null;
     public Paint inStrokePaint;
 
+    /**
+     * Use {@link #getDefault()} to create a default instance
+     */
+    protected TextOptions() {
+        super();
+    }
+
+    /**
+     * @return a new instance with default configuration
+     */
     public static TextOptions getDefault() {
         TextOptions options = new TextOptions();
         options.set(TextureOptions.getDefault());

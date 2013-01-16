@@ -17,6 +17,16 @@ public class TextureOptions extends BitmapFactory.Options {
     public boolean inPo2 = !Pure2D.GL_NPOT_TEXTURE_SUPPORTED; // power of 2 dimensions
     public int inMipmaps = 0; // for GL texture mipmapping
 
+    /**
+     * Use {@link #getDefault()} to create a default instance
+     */
+    protected TextureOptions() {
+        super();
+    }
+
+    /**
+     * @return a new instance with default configuration
+     */
     public static TextureOptions getDefault() {
         TextureOptions options = new TextureOptions();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
