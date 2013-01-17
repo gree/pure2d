@@ -693,9 +693,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 mMatrix.postScale(mScale.x, mScale.y, mOrigin.x, mOrigin.y);
             } else {
                 mMatrix.setScale(mScale.x, mScale.y, mOrigin.x, mOrigin.y);
+                // flag
+                changed = true;
             }
-            // flag
-            changed = true;
         }
 
         // clear flags: bounds
@@ -707,6 +707,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 mMatrix.postTranslate(mPosition.x - mOrigin.x, mPosition.y - mOrigin.y);
             } else {
                 mMatrix.setTranslate(mPosition.x - mOrigin.x, mPosition.y - mOrigin.y);
+                // flag
+                changed = true;
 
                 if (parentMatrix == null) {
                     // easy case: only translation needs to be applied. No need to use matrix!
@@ -718,15 +720,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
                     return mBounds;
                 }
             }
-            // flag
-            changed = true;
+        } else {
+            if (!changed) {
+                // reset to identity
+                mMatrix.reset();
+            }
         }
 
         // prepare to map to the matrix
-        mBounds.left = 0;// -mOrigin.x;
-        mBounds.top = 0;// -mOrigin.y;
-        mBounds.right = mBounds.left + mSize.x - 1;
-        mBounds.bottom = mBounds.top + mSize.y - 1;
+        mBounds.left = 0;
+        mBounds.top = 0;
+        mBounds.right = mSize.x - 1;
+        mBounds.bottom = mSize.y - 1;
 
         // find the bounds
         if (changed || parentMatrix != null) {
