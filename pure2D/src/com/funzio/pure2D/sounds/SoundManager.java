@@ -8,10 +8,13 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 
-public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPreparedListener {
+public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
 
     protected volatile SparseArray<Soundable> mSoundMap;
@@ -24,6 +27,8 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
 
     protected MediaPlayer mMediaPlayer;
 
+    private Handler mHandler;
+
     protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
         mSoundMap = new SparseArray<Soundable>();
@@ -32,6 +37,20 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         mSoundPool.setOnLoadCompleteListener(this);
 
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
+        start();
+    }
+
+    @Override
+    public void run() {
+        Looper.prepare();
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(final Message msg) {
+                play(mSoundMap.get(msg.arg1));
+            }
+        };
+        Looper.loop();
     }
 
     public boolean isSoundEnabled() {
@@ -74,14 +93,15 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
      * @param key
      * @return a non-zero as the Stream ID if success
      */
-    public int play(final int key) {
+    public void play(final int key) {
         // Log.v(TAG, "play(" + key + ")");
 
-        try {
-            return play(mSoundMap.get(key));
-        } catch (Exception e) {
-            Log.e(TAG, "Unable to play sound:", e);
-            return -1;
+        if (mSoundMap.get(key) != null) {
+            Message msg = new Message();
+            msg.arg1 = key;
+            mHandler.sendMessage(msg);
+        } else {
+            Log.e(TAG, "Unable to play sound:");
         }
     }
 
