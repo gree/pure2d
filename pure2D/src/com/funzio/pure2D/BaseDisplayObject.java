@@ -6,6 +6,8 @@ package com.funzio.pure2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -15,12 +17,24 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
 
 /**
  * @author long
  */
 public abstract class BaseDisplayObject implements DisplayObject {
     public static final String TAG = BaseDisplayObject.class.getSimpleName();
+
+    // for debugging
+    private static VertexBuffer mDebugVertex;
+    private static final float[] mDebugVertices = {
+            0, 0, // BL
+            0, 0, // TL
+            0, 0, // TR
+            0, 0, // BR
+    };
+    protected boolean mDebugEnabled = false;
+    protected GLColor mDebugColor = null;
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);
@@ -111,6 +125,33 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // check mask
         if (mMask != null) {
             mMask.disableMask();
+        }
+
+        // for debugging
+        if (Pure2D.DEBUG_ENALBLED || mDebugEnabled) {
+            // draw debug box
+            mDebugVertices[3] = mSize.y;
+            mDebugVertices[4] = mSize.x;
+            mDebugVertices[5] = mSize.y;
+            mDebugVertices[6] = mSize.x;
+            if (mDebugVertex == null) {
+                mDebugVertex = new VertexBuffer(GL10.GL_LINE_LOOP, 4, mDebugVertices);
+            } else {
+                mDebugVertex.setValues(mDebugVertices);
+            }
+            // pre-draw
+            final GLColor currentColor = glState.getColor();
+            final boolean textureEnabled = glState.isTextureEnabled();
+            final float currentLineWidth = glState.getLineWidth();
+            glState.setLineWidth(Pure2D.DEBUG_LINE_WIDTH);
+            glState.setColor(mDebugColor != null ? mDebugColor : Pure2D.DEBUG_LINE_COLOR);
+            glState.setTextureEnabled(false);
+            // draw
+            mDebugVertex.draw(glState);
+            // post-draw
+            glState.setTextureEnabled(textureEnabled);
+            glState.setColor(currentColor);
+            glState.setLineWidth(currentLineWidth);
         }
 
         // restore the matrix
@@ -774,6 +815,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setAutoUpdateBounds(final boolean autoUpdateBounds) {
         mAutoUpdateBounds = autoUpdateBounds;
+    }
+
+    public boolean isDebugEnabled() {
+        return mDebugEnabled;
+    }
+
+    public void setDebugEnabled(final boolean debugEnabled) {
+        mDebugEnabled = debugEnabled;
+        invalidate(InvalidateFlags.VISUAL);
+    }
+
+    public GLColor getDebugColor() {
+        return mDebugColor;
+    }
+
+    public void setDebugColor(final GLColor debugColor) {
+        mDebugColor = debugColor;
+        invalidate(InvalidateFlags.VISUAL);
     }
 
     public void onAdded(final Container parent) {

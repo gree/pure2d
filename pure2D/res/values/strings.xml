@@ -127,5 +127,6 @@
     <string name="wave_animation">Wave Animation</string>
     <string name="motion_trail">Motion Trail</string>
     <string name="trail">Trail</string>
+    <string name="debug">Debug</string>
 
 </resources>

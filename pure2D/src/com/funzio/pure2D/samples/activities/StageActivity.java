@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.BaseStage;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.R;
 
 public class StageActivity extends Activity implements OnTouchListener {
@@ -95,6 +96,10 @@ public class StageActivity extends Activity implements OnTouchListener {
                     mScene.pause();
                     item.setTitle(getResources().getString(R.string.resume));
                 }
+                return true;
+
+            case R.id.debug:
+                Pure2D.DEBUG_ENALBLED = !Pure2D.DEBUG_ENALBLED;
                 return true;
         }
 
