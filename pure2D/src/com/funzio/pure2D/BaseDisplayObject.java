@@ -6,8 +6,6 @@ package com.funzio.pure2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -17,7 +15,6 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.VertexBuffer;
 
 /**
  * @author long
@@ -26,15 +23,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public static final String TAG = BaseDisplayObject.class.getSimpleName();
 
     // for debugging
-    private static VertexBuffer mDebugVertex;
-    private static final float[] mDebugVertices = {
-            0, 0, // BL
-            0, 0, // TL
-            0, 0, // TR
-            0, 0, // BR
-    };
-    protected boolean mDebugEnabled = false;
-    protected GLColor mDebugColor = null;
+    protected int mDebugFlags = 0;
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);
@@ -128,30 +117,21 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // for debugging
-        if (Pure2D.DEBUG_ENALBLED || mDebugEnabled) {
-            // draw debug box
-            mDebugVertices[3] = mSize.y;
-            mDebugVertices[4] = mSize.x;
-            mDebugVertices[5] = mSize.y;
-            mDebugVertices[6] = mSize.x;
-            if (mDebugVertex == null) {
-                mDebugVertex = new VertexBuffer(GL10.GL_LINE_LOOP, 4, mDebugVertices);
-            } else {
-                mDebugVertex.setValues(mDebugVertices);
+        final int debugFlags = Pure2D.DEBUG_FLAGS | mDebugFlags;
+        if (debugFlags != 0) {
+
+            // local rect
+            if ((debugFlags & Pure2D.DEBUG_FLAG_LOCAL_SHAPE) != 0 && mSize.x > 0 && mSize.y > 0) {
+                Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_LOCAL_SHAPE);
             }
-            // pre-draw
-            final GLColor currentColor = glState.getColor();
-            final boolean textureEnabled = glState.isTextureEnabled();
-            final float currentLineWidth = glState.getLineWidth();
-            glState.setLineWidth(Pure2D.DEBUG_LINE_WIDTH);
-            glState.setColor(mDebugColor != null ? mDebugColor : Pure2D.DEBUG_LINE_COLOR);
-            glState.setTextureEnabled(false);
-            // draw
-            mDebugVertex.draw(glState);
-            // post-draw
-            glState.setTextureEnabled(textureEnabled);
-            glState.setColor(currentColor);
-            glState.setLineWidth(currentLineWidth);
+
+            // global bounds
+            if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
+                glState.mGL.glPushMatrix();
+                glState.mGL.glLoadIdentity();
+                Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+                glState.mGL.glPopMatrix();
+            }
         }
 
         // restore the matrix
@@ -817,21 +797,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mAutoUpdateBounds = autoUpdateBounds;
     }
 
-    public boolean isDebugEnabled() {
-        return mDebugEnabled;
+    /**
+     * @return
+     * @see Pure2D.DEBUG_FLAG_LOCAL_SHAPE, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS
+     */
+    public int getDebugFlags() {
+        return mDebugFlags;
     }
 
-    public void setDebugEnabled(final boolean debugEnabled) {
-        mDebugEnabled = debugEnabled;
-        invalidate(InvalidateFlags.VISUAL);
-    }
-
-    public GLColor getDebugColor() {
-        return mDebugColor;
-    }
-
-    public void setDebugColor(final GLColor debugColor) {
-        mDebugColor = debugColor;
+    /**
+     * @param flags
+     * @see Pure2D.DEBUG_FLAG_SHAPE, Pure2D.DEBUG_FLAG_BOUNDS
+     */
+    public void setDebugFlags(final int flags) {
+        mDebugFlags = flags;
         invalidate(InvalidateFlags.VISUAL);
     }
 
