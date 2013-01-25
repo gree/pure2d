@@ -70,6 +70,35 @@ public class VGroup extends LinearGroup {
         invalidateChildrenPosition();
     }
 
+    /**
+     * @param positive
+     * @return the delta to the closest child based on the specified direction which is either positive or negative
+     */
+    protected float getSnapDelta(final boolean positive) {
+        if (mNumChildren == 0) {
+            return 0;
+        }
+
+        final DisplayObject startChild = getChildAt(mStartIndex);
+        final float y = startChild.getY();
+
+        if (y < 0) {
+            if (positive) {
+                return y + (startChild.getSize().y + mGap);
+            } else {
+                return y;
+            }
+        } else {
+            if (positive) {
+                return y;
+            } else {
+                int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
+                final DisplayObject newChild = getChildAt(newIndex);
+                return y - (newChild.getSize().y + mGap);
+            }
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.containers.DisplayGroup#drawChildren(javax.microedition.khronos.opengles.GL10)

@@ -69,6 +69,35 @@ public class HGroup extends LinearGroup {
         invalidateChildrenPosition();
     }
 
+    /**
+     * @param positive
+     * @return the delta to the closest child based on the specified direction which is either positive or negative
+     */
+    protected float getSnapDelta(final boolean positive) {
+        if (mNumChildren == 0) {
+            return 0;
+        }
+
+        final DisplayObject startChild = getChildAt(mStartIndex);
+        final float x = startChild.getX();
+
+        if (x < 0) {
+            if (positive) {
+                return x + (startChild.getSize().x + mGap);
+            } else {
+                return x;
+            }
+        } else {
+            if (positive) {
+                return x;
+            } else {
+                int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
+                final DisplayObject newChild = getChildAt(newIndex);
+                return x - (newChild.getSize().x + mGap);
+            }
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.containers.DisplayGroup#drawChildren(javax.microedition.khronos.opengles.GL10)
