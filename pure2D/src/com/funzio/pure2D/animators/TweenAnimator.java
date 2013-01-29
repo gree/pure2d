@@ -73,7 +73,11 @@ public class TweenAnimator extends BaseAnimator {
     @Override
     public void end() {
         // force end
-        mCurrentValue = 1;
+        if (mLoop == Playable.LOOP_REVERSE && mLoopCount > 0) {
+            mCurrentValue = mLoopCount % 2 == 0 ? 1 : 0;
+        } else {
+            mCurrentValue = 1;
+        }
         onUpdate(mCurrentValue);
 
         super.end();
