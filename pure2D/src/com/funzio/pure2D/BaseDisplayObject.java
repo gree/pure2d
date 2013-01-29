@@ -163,12 +163,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return false;
     }
 
+    /**
+     * @hide
+     */
     final public void invalidate() {
         if (mParent != null) {
             mParent.invalidate();
         }
     }
 
+    /**
+     * @hide
+     */
     final public void invalidate(final int flags) {
         mInvalidateFlags |= flags;
 
@@ -177,6 +183,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
     }
 
+    /**
+     * @hide
+     */
     final protected void validate(final int flags) {
         mInvalidateFlags &= ~flags;
     }

@@ -16,6 +16,7 @@ public class TweenAnimator extends BaseAnimator {
 
     protected float mCurrentValue = 0;
     protected int mLoop = Playable.LOOP_NONE;
+    protected int mLoopCount = -1;
 
     public TweenAnimator(final Interpolator interpolator) {
         super();
@@ -30,25 +31,33 @@ public class TweenAnimator extends BaseAnimator {
     @Override
     public boolean update(final int deltaTime) {
         if (super.update(deltaTime)) {
-            if (mLoop == Playable.LOOP_NONE && mElapsedTime >= mDuration) {
-                // force end
-                end();
-            } else {
-                float timeLine;
-                if (mLoop == Playable.LOOP_REPEAT) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
-                } else if (mLoop == Playable.LOOP_REVERSE) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
-                    final int trips = (mElapsedTime / mDuration);
-                    if (trips % 2 == 1) {
-                        timeLine = 1 - timeLine;
-                    }
-                } else {
-                    timeLine = (float) mElapsedTime / (float) mDuration;
-                }
+            final int trips = mElapsedTime / mDuration;
+            float elapsed = mElapsedTime;
+            boolean endLoop = false;
+            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoop == Playable.LOOP_NONE && mElapsedTime >= mDuration)) {
+                // cap it
+                elapsed = trips * mDuration;
+                endLoop = true;
+            }
 
-                mCurrentValue = mInterpolator == null ? timeLine : mInterpolator.getInterpolation(timeLine);
-                onUpdate(mCurrentValue);
+            float timeLine;
+            if (mLoop == Playable.LOOP_REPEAT) {
+                timeLine = endLoop ? 1 : (elapsed % mDuration) / mDuration;
+            } else if (mLoop == Playable.LOOP_REVERSE) {
+                timeLine = (elapsed % mDuration) / mDuration;
+                if (trips % 2 == 1) {
+                    // reverse
+                    timeLine = 1 - timeLine;
+                }
+            } else {
+                timeLine = elapsed / mDuration;
+            }
+
+            mCurrentValue = (mInterpolator == null) ? timeLine : mInterpolator.getInterpolation(timeLine);
+            onUpdate(mCurrentValue);
+
+            if (endLoop) {
+                super.end();
             }
 
             return true;
@@ -110,6 +119,14 @@ public class TweenAnimator extends BaseAnimator {
      */
     public void setLoop(final int loop) {
         mLoop = loop;
+    }
+
+    public int getLoopCount() {
+        return mLoopCount;
+    }
+
+    public void setLoopCount(final int value) {
+        mLoopCount = value;
     }
 
     /**
