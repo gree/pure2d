@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
@@ -20,6 +21,12 @@ public class HGroup extends LinearGroup {
 
     private int mStartIndex = 0;
     private float mStartX = 0;
+
+    private boolean mSwipeEnabled = false;
+    private float mSwipeMinThreshold = 0;
+    private float mAnchoredScroll;
+    private boolean mSwiping = false;
+    private PointF mAnchorPoint;
 
     public HGroup() {
         super();
@@ -274,5 +281,81 @@ public class HGroup extends LinearGroup {
     @Override
     public PointF getScrollMax() {
         return mScrollMax;
+    }
+
+    public boolean isSwipeEnabled() {
+        return mSwipeEnabled;
+    }
+
+    public void setSwipeEnabled(final boolean swipeEnabled) {
+        mSwipeEnabled = swipeEnabled;
+        if (swipeEnabled && mAnchorPoint == null) {
+            mAnchorPoint = new PointF(-1, -1);
+        }
+    }
+
+    public float getSwipeMinThreshold() {
+        return mSwipeMinThreshold;
+    }
+
+    public void setSwipeMinThreshold(float swipeMinThreshold) {
+        mSwipeMinThreshold = swipeMinThreshold;
+    }
+
+    protected void startSwipe() {
+        mAnchoredScroll = mScrollPosition.x;
+        mSwiping = true;
+    }
+
+    protected void stopSwipe(final float delta) {
+        mAnchorPoint.x = mAnchorPoint.y = -1;
+        mSwiping = false;
+    }
+
+    protected void swipe(final float delta) {
+        scrollTo(mAnchoredScroll - delta, 0);
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
+        // swipe enabled?
+        if (mSwipeEnabled) {
+            final int action = event.getAction() & MotionEvent.ACTION_MASK;
+            if (action == MotionEvent.ACTION_DOWN) {
+                final PointF global = mScene.getTouchedPoint();
+                if (getBounds().contains(global.x, global.y)) {
+                    mAnchorPoint.x = event.getX();
+                    mAnchorPoint.y = event.getY();
+                }
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                if (mAnchorPoint.x >= 0) {
+                    final float deltaX = event.getX() - mAnchorPoint.x;
+
+                    if (Math.abs(deltaX) >= mSwipeMinThreshold || mSwiping) {
+                        if (!mSwiping) {
+                            // re-anchor
+                            mAnchorPoint.x = event.getX();
+                            mAnchorPoint.y = event.getY();
+
+                            startSwipe();
+                        } else {
+                            swipe(event.getX() - mAnchorPoint.x);
+                        }
+                    }
+                }
+
+            } else if (action == MotionEvent.ACTION_UP) {
+                if (mSwiping) {
+                    stopSwipe(event.getX() - mAnchorPoint.x);
+                    return true;
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
     }
 }

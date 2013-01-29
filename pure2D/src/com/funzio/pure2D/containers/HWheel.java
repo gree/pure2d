@@ -35,17 +35,27 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
     }
 
     /**
-     * Spin the the closest child based on the specified direction which is either positive or negative
+     * Spin a specified distance
+     * 
+     * @param distance
+     * @param acceleration
+     * @param duration
+     */
+    public void spinDistance(final float distance, final float acceleration, final int duration) {
+        final float accel = distance > 0 ? -acceleration : acceleration; // against veloc
+        float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
+        mAnimator.start(-veloc, accel, duration);
+    }
+
+    /**
+     * Spin to the closest child based on the specified direction which is either positive or negative
      * 
      * @param positive
      * @param acceleration
      * @param duration
      */
     public void spinToSnap(final boolean positive, final float acceleration, final int duration) {
-        final float distance2Travel = getSnapDelta(positive);
-        final float accel = distance2Travel > 0 ? -acceleration : acceleration;
-        float veloc = distance2Travel / duration - 0.5f * accel * duration; // Real physics!
-        spin(-veloc, -accel, duration);
+        spinDistance(getSnapDelta(positive), acceleration, duration);
     }
 
     public void stop() {
