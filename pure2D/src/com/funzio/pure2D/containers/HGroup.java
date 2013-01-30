@@ -24,9 +24,9 @@ public class HGroup extends LinearGroup {
 
     private boolean mSwipeEnabled = false;
     private float mSwipeMinThreshold = 0;
+    private float mSwipeAnchor;
     private float mAnchoredScroll;
     private boolean mSwiping = false;
-    private PointF mAnchorPoint;
 
     public HGroup() {
         super();
@@ -289,8 +289,8 @@ public class HGroup extends LinearGroup {
 
     public void setSwipeEnabled(final boolean swipeEnabled) {
         mSwipeEnabled = swipeEnabled;
-        if (swipeEnabled && mAnchorPoint == null) {
-            mAnchorPoint = new PointF(-1, -1);
+        if (swipeEnabled) {
+            mSwipeAnchor = -1;
         }
     }
 
@@ -298,7 +298,7 @@ public class HGroup extends LinearGroup {
         return mSwipeMinThreshold;
     }
 
-    public void setSwipeMinThreshold(float swipeMinThreshold) {
+    public void setSwipeMinThreshold(final float swipeMinThreshold) {
         mSwipeMinThreshold = swipeMinThreshold;
     }
 
@@ -308,7 +308,7 @@ public class HGroup extends LinearGroup {
     }
 
     protected void stopSwipe(final float delta) {
-        mAnchorPoint.x = mAnchorPoint.y = -1;
+        mSwipeAnchor = -1;
         mSwiping = false;
     }
 
@@ -325,32 +325,30 @@ public class HGroup extends LinearGroup {
         // swipe enabled?
         if (mSwipeEnabled) {
             final int action = event.getAction() & MotionEvent.ACTION_MASK;
+            final float deltaX = event.getX() - mSwipeAnchor;
+
             if (action == MotionEvent.ACTION_DOWN) {
                 final PointF global = mScene.getTouchedPoint();
                 if (getBounds().contains(global.x, global.y)) {
-                    mAnchorPoint.x = event.getX();
-                    mAnchorPoint.y = event.getY();
+                    mSwipeAnchor = event.getX();
                 }
             } else if (action == MotionEvent.ACTION_MOVE) {
-                if (mAnchorPoint.x >= 0) {
-                    final float deltaX = event.getX() - mAnchorPoint.x;
-
+                if (mSwipeAnchor >= 0) {
                     if (Math.abs(deltaX) >= mSwipeMinThreshold || mSwiping) {
                         if (!mSwiping) {
                             // re-anchor
-                            mAnchorPoint.x = event.getX();
-                            mAnchorPoint.y = event.getY();
+                            mSwipeAnchor = event.getX();
 
                             startSwipe();
                         } else {
-                            swipe(event.getX() - mAnchorPoint.x);
+                            swipe(deltaX);
                         }
                     }
                 }
 
             } else if (action == MotionEvent.ACTION_UP) {
                 if (mSwiping) {
-                    stopSwipe(event.getX() - mAnchorPoint.x);
+                    stopSwipe(deltaX);
                     return true;
                 }
             }

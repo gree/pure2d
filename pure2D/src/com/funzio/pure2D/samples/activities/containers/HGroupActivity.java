@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.funzio.pure2D.shapes.Sprite;
 
 public class HGroupActivity extends StageActivity {
     private List<Texture> mTextures = new ArrayList<Texture>();
-    private PointF mRegisteredPoint = new PointF();
     private HGroup mContainer;
 
     /*
@@ -36,7 +34,8 @@ public class HGroupActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // need to get the GL reference first
+        // to allow swiping
+        mScene.setUIEnabled(true);
         mScene.setListener(new BaseScene.Listener() {
 
             @Override
@@ -67,6 +66,7 @@ public class HGroupActivity extends StageActivity {
         mContainer = new HGroup();
         mContainer.setGap(10);
         mContainer.setSize(mDisplaySize.x, 200);
+        mContainer.setSwipeEnabled(true);
 
         for (int n = 0; n < 3; n++) {
             Texture texture = mTextures.get(n % mTextures.size());
@@ -90,18 +90,8 @@ public class HGroupActivity extends StageActivity {
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        if (action == MotionEvent.ACTION_DOWN) {
-            mRegisteredPoint.x = x;
-            mRegisteredPoint.y = y;
-        } else if (action == MotionEvent.ACTION_MOVE) {
-            float delta = x - mRegisteredPoint.x;
-            mContainer.scrollBy(-delta, 0);
-            mRegisteredPoint.x = x;
-            mRegisteredPoint.y = y;
-        }
+        // forward the event to scene
+        mScene.onTouchEvent(event);
 
         return true;
     }
