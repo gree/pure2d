@@ -4,7 +4,6 @@
 package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 import android.view.animation.Interpolator;
 
 /**
@@ -36,12 +35,12 @@ public class SinWaveAnimator extends TweenAnimator {
 
         mDelta.x = dstX - srcX;
         mDelta.y = dstY - srcY;
-        mDeltaLength = FloatMath.sqrt(mDelta.x * mDelta.x + mDelta.y * mDelta.y);
+        mDeltaLength = (float) Math.sqrt(mDelta.x * mDelta.x + mDelta.y * mDelta.y);
 
         // pre-cals
         mAngle = (float) Math.atan2(mDelta.y, mDelta.x);
-        mSinAngle = FloatMath.sin(mAngle);
-        mCosAngle = FloatMath.cos(mAngle);
+        mSinAngle = (float) Math.sin(mAngle);
+        mCosAngle = (float) Math.cos(mAngle);
     }
 
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
@@ -62,7 +61,7 @@ public class SinWaveAnimator extends TweenAnimator {
         if (mTarget != null) {
             final float da = value * mWaveNum * (float) Math.PI;
             final float dx = value * mDeltaLength;
-            final float dy = FloatMath.sin(da) * mWaveRadius;
+            final float dy = (float) Math.sin(da) * mWaveRadius;
             mTarget.setPosition(mSrcX + dx * mCosAngle - dy * mSinAngle, mSrcY + dx * mSinAngle + dy * mCosAngle);
         }
 

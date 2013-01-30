@@ -87,7 +87,9 @@ public class MotionTrailShapeActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addObject(event.getX(), mDisplaySize.y - event.getY());
+                    for (int i = 0; i < 10; i++) {
+                        addObject(event.getX(), mDisplaySize.y - event.getY());
+                    }
                 }
             });
         }

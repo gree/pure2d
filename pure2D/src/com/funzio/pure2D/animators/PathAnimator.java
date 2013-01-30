@@ -4,7 +4,6 @@
 package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 import android.view.animation.Interpolator;
 
 /**
@@ -19,6 +18,7 @@ public class PathAnimator extends TweenAnimator {
 
     // current velocity
     protected PointF mVelocity = new PointF();
+    private int mCurrentSegment = 0;
 
     public PathAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -38,11 +38,22 @@ public class PathAnimator extends TweenAnimator {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
             angle = (float) Math.atan2(dy, dx);
-            mSin[i] = FloatMath.sin(angle);
-            mCos[i] = FloatMath.cos(angle);
-            mSegments[i] = FloatMath.sqrt(dx * dx + dy * dy);
+            mSin[i] = (float) Math.sin(angle);
+            mCos[i] = (float) Math.cos(angle);
+            mSegments[i] = (float) Math.sqrt(dx * dx + dy * dy);
             mTotalLength += mSegments[i];
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#start()
+     */
+    @Override
+    public void start() {
+        super.start();
+
+        mCurrentSegment = 0;
     }
 
     public void start(final PointF... points) {
@@ -65,6 +76,7 @@ public class PathAnimator extends TweenAnimator {
 
                 // bingo?
                 if (len + segment >= valueLen) {
+                    mCurrentSegment = i;
                     final float delta = valueLen - len;
                     PointF currentPos = mTarget.getPosition();
                     float lastX = currentPos.x;
@@ -97,6 +109,10 @@ public class PathAnimator extends TweenAnimator {
      */
     public PointF getVelocity() {
         return mVelocity;
+    }
+
+    public int getCurrentSegment() {
+        return mCurrentSegment;
     }
 
 }

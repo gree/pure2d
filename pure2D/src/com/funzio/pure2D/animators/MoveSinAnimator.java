@@ -4,7 +4,6 @@
 package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 import android.view.animation.Interpolator;
 
 /**
@@ -56,7 +55,7 @@ public class MoveSinAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y + FloatMath.sin((float) Math.PI * value) * mFactor);
+            mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y + (float) Math.sin((float) Math.PI * value) * mFactor);
         }
 
         super.onUpdate(value);

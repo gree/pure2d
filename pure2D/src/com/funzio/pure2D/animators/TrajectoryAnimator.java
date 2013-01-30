@@ -4,7 +4,6 @@
 package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 
 /**
  * @author long
@@ -58,16 +57,16 @@ public class TrajectoryAnimator extends BaseAnimator {
         mVelocity = velocity;
         if (mAngle != angle) {
             mAngle = angle;
-            mSin = FloatMath.sin(mAngle);
-            mCos = FloatMath.cos(mAngle);
+            mSin = (float) Math.sin(mAngle);
+            mCos = (float) Math.cos(mAngle);
         }
 
         // pre-cals
         final float vcos = mVelocity * mCos;
         final float vsin = mVelocity * mSin;
         final float absGravity = Math.abs(mGravity);
-        mDistance = (vcos / absGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
-        // mDistance = (vcos / mGravity) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
+        mDistance = (vcos / absGravity) * (vsin + (float) Math.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
+        // mDistance = (vcos / mGravity) * (vsin + (float)Math.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
         mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
 
         start();
@@ -90,13 +89,13 @@ public class TrajectoryAnimator extends BaseAnimator {
 
         final float v2 = mVelocity * mVelocity;
         // find the angle to hit the destination
-        mAngle = (float) Math.atan((v2 + FloatMath.sqrt(v2 * v2 - mGravity * (mGravity * deltaX * deltaX + 2 * deltaY * v2))) / (mGravity * deltaX));
-        mSin = FloatMath.sin(mAngle);
-        mCos = FloatMath.cos(mAngle);
+        mAngle = (float) Math.atan((v2 + (float) Math.sqrt(v2 * v2 - mGravity * (mGravity * deltaX * deltaX + 2 * deltaY * v2))) / (mGravity * deltaX));
+        mSin = (float) Math.sin(mAngle);
+        mCos = (float) Math.cos(mAngle);
 
         final float vcos = mVelocity * mCos;
         // final float vsin = mVelocity * mSin;
-        mDistance = deltaX;// (vcos / GRAVITY) * (vsin + FloatMath.sqrt(vsin * vsin + 2 * GRAVITY * mSrcY));
+        mDistance = deltaX;// (vcos / GRAVITY) * (vsin + (float)Math.sqrt(vsin * vsin + 2 * GRAVITY * mSrcY));
         mDuration = TIME_FACTOR * mDistance / vcos;
 
         start();
