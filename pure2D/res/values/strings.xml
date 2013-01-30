@@ -128,5 +128,6 @@
     <string name="motion_trail">Motion Trail</string>
     <string name="trail">Trail</string>
     <string name="debug">Debug</string>
+    <string name="async_loader">Async Loader</string>
 
 </resources>

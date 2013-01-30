@@ -21,6 +21,8 @@ public class LoaderMenuActivity extends Activity {
     public void onClickButton(final View view) {
         if (view.getId() == R.id.btn_loader_service) {
             startActivity(new Intent(this, LoaderServiceActivity.class));
+        } else if (view.getId() == R.id.btn_loader_async) {
+            startActivity(new Intent(this, LoaderAsyncActivity.class));
         }
     }
 }
