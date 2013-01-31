@@ -16,7 +16,7 @@ public class MotionTrailShape extends Polyline {
 
     protected int mNumPoints = 10;
     protected int mMinLength = 0;
-    protected int mSegmentLength;
+    protected int mSegmentLength = 0;
     protected float mMotionEasing = 0.5f;
 
     protected DisplayObject mTarget;

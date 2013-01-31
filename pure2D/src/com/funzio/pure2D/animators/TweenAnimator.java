@@ -16,12 +16,16 @@ public class TweenAnimator extends BaseAnimator {
 
     protected float mCurrentValue = 0;
     protected int mLoopMode = Playable.LOOP_NONE;
-    protected int mLoopCount = -1;
+    protected int mLoopCount = -1; // forever
+
+    public TweenAnimator() {
+        super();
+    }
 
     public TweenAnimator(final Interpolator interpolator) {
         super();
 
-        setInterpolator(interpolator);
+        mInterpolator = interpolator;
     }
 
     /*
@@ -30,9 +34,9 @@ public class TweenAnimator extends BaseAnimator {
      */
     @Override
     public boolean update(final int deltaTime) {
-        if (super.update(deltaTime)) {
-            final int trips = (mDuration == 0) ? 0 : mElapsedTime / mDuration;
-            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration) || mDuration == 0) {
+        if (mDuration > 0 && super.update(deltaTime)) {
+            final int trips = mElapsedTime / mDuration;
+            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration)) {
                 // end it
                 end();
             } else {
@@ -50,7 +54,9 @@ public class TweenAnimator extends BaseAnimator {
                     timeLine = (float) mElapsedTime / (float) mDuration;
                 }
 
+                // interpolate the value
                 mCurrentValue = (mInterpolator == null) ? timeLine : mInterpolator.getInterpolation(timeLine);
+                // and update
                 onUpdate(mCurrentValue);
             }
 
@@ -106,14 +112,14 @@ public class TweenAnimator extends BaseAnimator {
     }
 
     /**
-     * @return the looping
+     * @return the looping mode
      */
     public int getLoop() {
         return mLoopMode;
     }
 
     /**
-     * @param loop the looping to set
+     * @param loop the looping mode to set
      */
     public void setLoop(final int loop) {
         mLoopMode = loop;
