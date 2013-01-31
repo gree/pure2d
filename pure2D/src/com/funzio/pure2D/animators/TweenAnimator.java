@@ -32,7 +32,7 @@ public class TweenAnimator extends BaseAnimator {
     public boolean update(final int deltaTime) {
         if (super.update(deltaTime)) {
             final int trips = (mDuration == 0) ? 0 : mElapsedTime / mDuration;
-            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration)) {
+            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration) || mDuration == 0) {
                 // end it
                 end();
             } else {
