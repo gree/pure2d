@@ -18,7 +18,8 @@ public class PathAnimator extends TweenAnimator {
 
     // current velocity
     protected PointF mVelocity = new PointF();
-    private int mCurrentSegment = 0;
+    protected int mCurrentSegment = 0;
+    protected boolean mSnapEnabled = false;
 
     public PathAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -65,6 +66,26 @@ public class PathAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
+
+            if (mSnapEnabled) {
+                final int newSegment = getSegment(value);
+                // segment change?
+                if (newSegment != mCurrentSegment) {
+                    if (newSegment > mCurrentSegment) {
+                        mTarget.setPosition(mPoints[newSegment]);
+                    } else {
+                        mTarget.setPosition(mPoints[mCurrentSegment]);
+                    }
+
+                    // set
+                    mCurrentSegment = newSegment;
+
+                    super.onUpdate(value);
+
+                    return;
+                }
+            }
+
             final float valueLen = value * mTotalLength;
             final int size = mSegments.length;
             float len = 0;
@@ -100,6 +121,24 @@ public class PathAnimator extends TweenAnimator {
         super.onUpdate(value);
     }
 
+    protected int getSegment(final float value) {
+        final float valueLen = value * mTotalLength;
+        final int size = mSegments.length;
+        float len = 0;
+
+        // find the right segment
+        for (int i = 0; i < size; i++) {
+            len += mSegments[i];
+
+            // bingo?
+            if (len >= valueLen) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
     public PointF[] getPoints() {
         return mPoints;
     }
@@ -113,6 +152,14 @@ public class PathAnimator extends TweenAnimator {
 
     public int getCurrentSegment() {
         return mCurrentSegment;
+    }
+
+    public boolean isSnapEnabled() {
+        return mSnapEnabled;
+    }
+
+    public void setSnapEnabled(final boolean snapEnabled) {
+        mSnapEnabled = snapEnabled;
     }
 
 }
