@@ -40,7 +40,7 @@ public class AniSkeleton extends PlayableObject {
         if (file != null && mAniFile.mSkeletonData.length > 0) {
             mVertexBuffers = new VertexBuffer[file.mNumParts];
             mCoordBuffers = new TextureCoordBuffer[file.mNumParts];
-            mBounds = new RectF[file.mNumParts];
+            mBounds = new RectF[file.mNumFrames];
             if (file.mVersion == 2) {
                 // version 2 has the same coordinates across the frames
                 file.getFrameCoordBuffers(0, mCoordBuffers);
