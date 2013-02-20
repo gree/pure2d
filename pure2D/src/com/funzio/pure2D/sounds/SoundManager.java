@@ -1,7 +1,5 @@
 package com.funzio.pure2D.sounds;
 
-import jp.gree.casino.Logger;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
@@ -215,7 +213,6 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
      */
     @Override
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
-        Logger.logError("SoundManager: MediaPlayer error (" + what + ", " + extra + ")! Resetting...");
         if (mp != null) {
             mp.reset();
         }
