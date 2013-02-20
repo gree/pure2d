@@ -54,7 +54,6 @@ public abstract class URLTask implements IntentTask {
             final URL address = new URL(mURL);
 
             conn = address.openConnection();
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
             conn.setConnectTimeout(DEFAULT_TIMEOUT);
             mContentLength = conn.getContentLength();
 
