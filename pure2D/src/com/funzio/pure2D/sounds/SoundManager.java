@@ -32,7 +32,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     protected MediaPlayer mMediaPlayer;
     protected float mMediaVolume = DEFAULT_MEDIA_VOLUME;
 
-    private Handler mHandler;
+    protected Handler mHandler;
 
     protected volatile SparseIntArray mStreamIds;
 
