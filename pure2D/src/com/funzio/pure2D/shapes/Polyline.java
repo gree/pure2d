@@ -6,7 +6,6 @@ package com.funzio.pure2D.shapes;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.gl.GLColor;
@@ -63,7 +62,7 @@ public class Polyline extends Shape {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
 
-            mTotalLength += FloatMath.sqrt(dx * dx + dy * dy);
+            mTotalLength += Math.sqrt(dx * dx + dy * dy);
         }
 
         for (i = 0; i < len; i++) {
@@ -71,7 +70,7 @@ public class Polyline extends Shape {
             if (i < len - 1) {
                 dx = points[i + 1].x - points[i].x;
                 dy = points[i + 1].y - points[i].y;
-                segment += FloatMath.sqrt(dx * dx + dy * dy);
+                segment += Math.sqrt(dx * dx + dy * dy);
                 if (mStrokeInterpolator != null) {
                     // interpolating
                     stroke = mStroke1 + mStrokeInterpolator.getInterpolation(segment / mTotalLength) * strokeDelta;
@@ -91,8 +90,8 @@ public class Polyline extends Shape {
                 angleCut += angleDelta / 2;
             }
 
-            rx = stroke * FloatMath.cos(angleCut) / 2f;
-            ry = stroke * FloatMath.sin(angleCut) / 2f;
+            rx = stroke * (float) Math.cos(angleCut) / 2f;
+            ry = stroke * (float) Math.sin(angleCut) / 2f;
             // Log.e("long", "a t r x y: " + angle1 + " " + Math.round(stroke) + " " + Math.round(radius) + " " + Math.round(rx) + " " + Math.round(ry));
 
             // upper point

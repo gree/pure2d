@@ -18,6 +18,8 @@ import android.util.SparseIntArray;
 public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
 
+    protected static final float DEFAULT_MEDIA_VOLUME = 0.8f;
+
     protected volatile SparseArray<Soundable> mSoundMap;
 
     protected final SoundPool mSoundPool;
@@ -27,6 +29,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     protected final AudioManager mAudioManager;
 
     protected MediaPlayer mMediaPlayer;
+    protected float mMediaVolume = DEFAULT_MEDIA_VOLUME;
 
     private Handler mHandler;
 
@@ -155,8 +158,16 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
         mMediaPlayer.setLooping(media.isLooping());
         mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.setVolume(mMediaVolume, mMediaVolume);
 
         mMediaPlayer.prepareAsync();
+    }
+
+    public void setMediaVolume(final float volume) {
+        mMediaVolume = volume;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setVolume(mMediaVolume, mMediaVolume);
+        }
     }
 
     public void stopMedia() {

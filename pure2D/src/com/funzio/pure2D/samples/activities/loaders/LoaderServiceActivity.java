@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -79,21 +78,6 @@ public class LoaderServiceActivity extends StageActivity {
 
         // add to scene
         mScene.addChild(obj);
-    }
-
-    @Override
-    public boolean onTouch(final View v, final MotionEvent event) {
-        // if (event.getAction() == MotionEvent.ACTION_DOWN) {
-        // mStage.queueEvent(new Runnable() {
-        //
-        // @Override
-        // public void run() {
-        // addObject(event.getX(), mDisplaySize.y - event.getY());
-        // }
-        // });
-        // }
-
-        return true;
     }
 
     public void onClickLoad(final View view) {

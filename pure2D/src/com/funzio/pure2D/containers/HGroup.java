@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
@@ -20,6 +21,12 @@ public class HGroup extends LinearGroup {
 
     private int mStartIndex = 0;
     private float mStartX = 0;
+
+    private boolean mSwipeEnabled = false;
+    private float mSwipeMinThreshold = 0;
+    private float mSwipeAnchor;
+    private float mAnchoredScroll;
+    private boolean mSwiping = false;
 
     public HGroup() {
         super();
@@ -67,6 +74,35 @@ public class HGroup extends LinearGroup {
 
         // reposition the children
         invalidateChildrenPosition();
+    }
+
+    /**
+     * @param positive
+     * @return the delta to the closest child based on the specified direction which is either positive or negative
+     */
+    protected float getSnapDelta(final boolean positive) {
+        if (mNumChildren == 0) {
+            return 0;
+        }
+
+        final DisplayObject startChild = getChildAt(mStartIndex);
+        final float x = startChild.getX();
+
+        if (x < 0) {
+            if (positive) {
+                return x + (startChild.getSize().x + mGap);
+            } else {
+                return x;
+            }
+        } else {
+            if (positive) {
+                return x;
+            } else {
+                int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
+                final DisplayObject newChild = getChildAt(newIndex);
+                return x - (newChild.getSize().x + mGap);
+            }
+        }
     }
 
     /*
@@ -245,5 +281,79 @@ public class HGroup extends LinearGroup {
     @Override
     public PointF getScrollMax() {
         return mScrollMax;
+    }
+
+    public boolean isSwipeEnabled() {
+        return mSwipeEnabled;
+    }
+
+    public void setSwipeEnabled(final boolean swipeEnabled) {
+        mSwipeEnabled = swipeEnabled;
+        if (swipeEnabled) {
+            mSwipeAnchor = -1;
+        }
+    }
+
+    public float getSwipeMinThreshold() {
+        return mSwipeMinThreshold;
+    }
+
+    public void setSwipeMinThreshold(final float swipeMinThreshold) {
+        mSwipeMinThreshold = swipeMinThreshold;
+    }
+
+    protected void startSwipe() {
+        mAnchoredScroll = mScrollPosition.x;
+        mSwiping = true;
+    }
+
+    protected void stopSwipe(final float delta) {
+        mSwipeAnchor = -1;
+        mSwiping = false;
+    }
+
+    protected void swipe(final float delta) {
+        scrollTo(mAnchoredScroll - delta, 0);
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
+        // swipe enabled?
+        if (mSwipeEnabled) {
+            final int action = event.getAction() & MotionEvent.ACTION_MASK;
+            final float deltaX = event.getX() - mSwipeAnchor;
+
+            if (action == MotionEvent.ACTION_DOWN) {
+                final PointF global = mScene.getTouchedPoint();
+                if (getBounds().contains(global.x, global.y)) {
+                    mSwipeAnchor = event.getX();
+                }
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                if (mSwipeAnchor >= 0) {
+                    if (Math.abs(deltaX) >= mSwipeMinThreshold || mSwiping) {
+                        if (!mSwiping) {
+                            // re-anchor
+                            mSwipeAnchor = event.getX();
+
+                            startSwipe();
+                        } else {
+                            swipe(deltaX);
+                        }
+                    }
+                }
+
+            } else if (action == MotionEvent.ACTION_UP) {
+                if (mSwiping) {
+                    stopSwipe(deltaX);
+                    return true;
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
     }
 }

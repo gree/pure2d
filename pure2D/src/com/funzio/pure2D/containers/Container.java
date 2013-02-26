@@ -44,5 +44,5 @@ public interface Container {
 
     public Matrix getMatrix();
 
-    public void queueEvent(Runnable r);
+    public boolean queueEvent(Runnable r);
 }

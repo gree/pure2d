@@ -78,14 +78,17 @@ public class BaseScene implements Scene {
         return mStage;
     }
 
-    final public void queueEvent(final Runnable r) {
+    final public boolean queueEvent(final Runnable r) {
         if (mStage != null) {
             mStage.queueEvent(r);
+            return true;
         }
+
+        return false;
     }
 
-    final public void queueEvent(final Runnable r, final int delayMillis) {
-        if (mStage != null) {
+    final public boolean queueEvent(final Runnable r, final int delayMillis) {
+        if (mStage != null && mStage.getHandler() != null) {
             mStage.getHandler().postDelayed(new Runnable() {
 
                 @Override
@@ -94,7 +97,11 @@ public class BaseScene implements Scene {
                     queueEvent(r);
                 }
             }, delayMillis);
+
+            return true;
         }
+
+        return false;
     }
 
     /**
