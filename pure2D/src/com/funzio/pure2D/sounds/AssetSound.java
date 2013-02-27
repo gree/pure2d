@@ -19,7 +19,6 @@ public class AssetSound extends AbstractSound {
 
     private final AssetManager mAssets;
     private final String mFilePath;
-    private long mLength = -1;
 
     public AssetSound(final int key, final AssetManager assets, final String filePath) {
         super(key);
@@ -45,7 +44,4 @@ public class AssetSound extends AbstractSound {
         return mSoundID;
     }
 
-    public long getLength() {
-        return mLength;
-    }
 }
