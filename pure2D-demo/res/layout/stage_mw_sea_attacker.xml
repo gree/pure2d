@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/stage_template" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/radio_frigate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onClickRadio"
+            android:text="@string/frigate" />
+
+        <RadioButton
+            android:id="@+id/radio_submarine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/submarine" />
+
+        <RadioButton
+            android:id="@+id/radio_aircraft_carrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/aircraft_carrier" />
+    </RadioGroup>
+
+</RelativeLayout>

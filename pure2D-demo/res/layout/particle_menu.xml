@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
+
+    <Button
+        android:id="@+id/btn_simple_smoke"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/simple_smoke" />
+
+    <Button
+        android:id="@+id/btn_mw_explosion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/mw_explosions" />
+
+    <Button
+        android:id="@+id/btn_motion_trails"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/motion_trails" />
+
+    <Button
+        android:id="@+id/btn_dynamic_emitters"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/dynamic_emitters" />
+
+    <Button
+        android:id="@+id/btn_coin_explosion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/coin_explosion" />
+
+</LinearLayout>

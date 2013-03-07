@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
+
+    <Button
+        android:id="@+id/btn_display_groups"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/display_groups" />
+
+    <Button
+        android:id="@+id/btn_vgroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/vertical_group" />
+
+    <Button
+        android:id="@+id/btn_hgroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/horizontal_group" />
+
+    <Button
+        android:id="@+id/btn_vwheel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/vertical_wheel" />
+
+    <Button
+        android:id="@+id/btn_hwheel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/horizontal_wheel" />
+
+    <Button
+        android:id="@+id/btn_vwheel_3d"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/vertical_wheel_3d" />
+
+    <Button
+        android:id="@+id/btn_hwheel_3d"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/horizontal_wheel_3d" />
+
+</LinearLayout>
