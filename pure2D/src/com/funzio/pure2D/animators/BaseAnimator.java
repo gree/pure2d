@@ -54,7 +54,7 @@ public class BaseAnimator implements Animator {
      */
     public void startElapse(final int elapsedTime) {
         if (mRunning) {
-            end();
+            stop();
         }
 
         mElapsedTime = elapsedTime;

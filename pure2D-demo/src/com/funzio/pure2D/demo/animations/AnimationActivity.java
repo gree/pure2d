@@ -11,9 +11,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.TweenAnimator;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
@@ -28,7 +29,8 @@ public abstract class AnimationActivity extends StageActivity {
     protected static final int OBJ_SIZE = 128;
 
     protected Texture mTexture;
-    protected TweenAnimator mAnimator;
+    protected Sprite mSprite;
+    protected Animator mAnimator;
     protected MotionTrailShape mMotionTrail;
 
     @Override
@@ -36,7 +38,23 @@ public abstract class AnimationActivity extends StageActivity {
         return R.layout.stage_tween_animations;
     }
 
-    abstract protected TweenAnimator createAnimator();
+    abstract protected Animator createAnimator();
+
+    protected void setAnimator(final Animator animator) {
+
+        mAnimator = animator;
+
+        if (mSprite != null) {
+            mScene.queueEvent(new Runnable() {
+
+                @Override
+                public void run() {
+                    mSprite.removeAllManipulators();
+                    mSprite.addManipulator(mAnimator);
+                }
+            });
+        }
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -54,7 +72,7 @@ public abstract class AnimationActivity extends StageActivity {
                 loadTexture();
 
                 // generate a lot of squares
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                mSprite = addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
             }
         });
     }
@@ -64,7 +82,7 @@ public abstract class AnimationActivity extends StageActivity {
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_128, null);
     }
 
-    private void addObject(final float x, final float y) {
+    private Sprite addObject(final float x, final float y) {
         // create object
         Sprite obj = new Sprite();
         obj.setTexture(mTexture);
@@ -86,45 +104,55 @@ public abstract class AnimationActivity extends StageActivity {
         mMotionTrail.setStrokeColorRange(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
         mMotionTrail.setTarget(obj);
         mScene.addChild(mMotionTrail);
+
+        return obj;
     }
 
     public void onClickRadio(final View view) {
 
         boolean restart = true;
 
+        if (mAnimator instanceof TweenAnimator) {
+            final TweenAnimator tween = (TweenAnimator) mAnimator;
+
+            // tween specific switches
+            switch (view.getId()) {
+                case R.id.radio_linear:
+                    tween.setInterpolator(null);
+                    break;
+
+                case R.id.radio_accelarate:
+                    tween.setInterpolator(ACCELERATE);
+                    break;
+
+                case R.id.radio_decelarate:
+                    tween.setInterpolator(DECELERATE);
+                    break;
+
+                case R.id.radio_accelerate_decelarate:
+                    tween.setInterpolator(ACCELERATE_DECELERATE);
+                    break;
+
+                case R.id.radio_bounce:
+                    tween.setInterpolator(BOUNCE);
+                    break;
+
+                case R.id.radio_once:
+                    tween.setLoop(Playable.LOOP_NONE);
+                    break;
+
+                case R.id.radio_repeat:
+                    tween.setLoop(Playable.LOOP_REPEAT);
+                    break;
+
+                case R.id.radio_reverse:
+                    tween.setLoop(Playable.LOOP_REVERSE);
+                    break;
+            }
+        }
+
+        // general switches
         switch (view.getId()) {
-            case R.id.radio_linear:
-                mAnimator.setInterpolator(null);
-                break;
-
-            case R.id.radio_accelarate:
-                mAnimator.setInterpolator(ACCELERATE);
-                break;
-
-            case R.id.radio_decelarate:
-                mAnimator.setInterpolator(DECELERATE);
-                break;
-
-            case R.id.radio_accelerate_decelarate:
-                mAnimator.setInterpolator(ACCELERATE_DECELERATE);
-                break;
-
-            case R.id.radio_bounce:
-                mAnimator.setInterpolator(BOUNCE);
-                break;
-
-            case R.id.radio_once:
-                mAnimator.setLoop(Playable.LOOP_NONE);
-                break;
-
-            case R.id.radio_repeat:
-                mAnimator.setLoop(Playable.LOOP_REPEAT);
-                break;
-
-            case R.id.radio_reverse:
-                mAnimator.setLoop(Playable.LOOP_REVERSE);
-                break;
-
             case R.id.cb_motion_trail:
                 mMotionTrail.setVisible(((CheckBox) view).isChecked());
                 restart = false;

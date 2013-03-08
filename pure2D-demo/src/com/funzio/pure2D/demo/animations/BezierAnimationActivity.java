@@ -3,8 +3,8 @@ package com.funzio.pure2D.demo.animations;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.BezierAnimator;
-import com.funzio.pure2D.animators.TweenAnimator;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.shapes.Rectangular;
 
@@ -16,7 +16,7 @@ public class BezierAnimationActivity extends AnimationActivity {
     private int mPointer2 = -1;
 
     @Override
-    protected TweenAnimator createAnimator() {
+    protected Animator createAnimator() {
         final BezierAnimator animator = new BezierAnimator(null);
         animator.setDuration(1000);
 

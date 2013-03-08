@@ -129,5 +129,8 @@
     <string name="trail">Trail</string>
     <string name="debug">Debug</string>
     <string name="async_loader">Async Loader</string>
+    <string name="parallel">Parallel</string>
+    <string name="sequence">Sequence</string>
+    <string name="parallel_animations">Parallel Animations</string>
 
 </resources>

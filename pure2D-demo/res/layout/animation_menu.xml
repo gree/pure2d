@@ -56,6 +56,13 @@
         android:text="@string/wave_animation" />
 
     <Button
+        android:id="@+id/btn_parallel_animation"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/parallel_animations" />
+
+    <Button
         android:id="@+id/btn_skeleton_animation"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
