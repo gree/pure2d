@@ -3,13 +3,14 @@
  */
 package com.funzio.pure2D.animators;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author long
  */
 public class ActionQueue extends BaseAnimator {
-    private Vector<Action> mActions = new Vector<Action>();
+    private List<Action> mActions = new ArrayList<Action>();
     private Action mCurrentAction;
     private int mCurrentIndex = -1;
     private int mNumActions = 0;

@@ -16,6 +16,7 @@ public class EmitterVO {
     public int lifespan = 0; // ms
 
     public List<ParticleVO> particles;
+    public List<AnimatorVO> animators;
 
     public EmitterVO() {
         // TODO Auto-generated constructor stub

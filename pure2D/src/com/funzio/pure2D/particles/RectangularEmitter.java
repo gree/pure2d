@@ -28,16 +28,6 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#update(int)
-     */
-    @Override
-    public boolean update(final int deltaTime) {
-        // do nothing
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
      * @see com.funzio.pure2D.DisplayObject#dispose()
      */
     @Override

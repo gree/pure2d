@@ -1,17 +1,17 @@
 {
-	"version": "1",
+	"version": 1,
 	"emitters": [
 		{
 			"name": "awesome_fire",
-			"width": "100",
-			"height": "100",
-			"lifespan": "5000",
+			"width": 100,
+			"height": 100,
+			"lifespan": 5000,
 			"particles": [
 				{
 					"sprite": "smoke",
-					"start_delay": "0",
-					"step_delay": "100",
-					"num_per_step": "1",
+					"start_delay": 0,0
+					"step_delay": 100,
+0					"num_per_step": 1,
 					"animators": [ "move_up", "rotate_360"]
 				}
 			]
