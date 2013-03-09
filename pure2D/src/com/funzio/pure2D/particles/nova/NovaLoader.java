@@ -74,12 +74,18 @@ public class NovaLoader {
                         mNovaVO = mapper.readValue(assets.open(filePath), NovaVO.class);
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "Load failed: " + filePath);
+                    Log.e(TAG, "Load failed: " + filePath, e);
 
                     mNovaVO = null;
-                    mListener.onError(NovaLoader.this);
+                    if (mListener != null) {
+                        mListener.onError(NovaLoader.this);
+                    }
+                    return;
                 }
 
+                if (mListener != null) {
+                    mListener.onLoad(NovaLoader.this, mNovaVO);
+                }
             }
         });
 

@@ -132,5 +132,6 @@
     <string name="parallel">Parallel</string>
     <string name="sequence">Sequence</string>
     <string name="parallel_animations">Parallel\nAnimations</string>
+    <string name="nova_system">Nova System</string>
 
 </resources>

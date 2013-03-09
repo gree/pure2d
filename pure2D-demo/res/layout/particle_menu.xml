@@ -41,4 +41,11 @@
         android:onClick="onClickButton"
         android:text="@string/coin_explosion" />
 
+    <Button
+        android:id="@+id/btn_nova_system"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/nova_system" />
+
 </LinearLayout>

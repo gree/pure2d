@@ -18,6 +18,7 @@ public class ParticleMenuActivity extends MenuActivity {
         addMenu(R.id.btn_motion_trails, MotionTrailActivity.class);
         addMenu(R.id.btn_dynamic_emitters, DynamicEmitterActivity.class);
         addMenu(R.id.btn_coin_explosion, CoinExplosionActivity.class);
+        addMenu(R.id.btn_nova_system, NovaMenuActivity.class);
     }
 
 }

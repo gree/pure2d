@@ -18,4 +18,16 @@ public class NovaVO {
         // TODO Auto-generated constructor stub
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Ver: " + version + "\n" //
+                + "Emitters: " + (emitters == null ? 0 : emitters.size()) + "\n" //
+                + "Sprites: " + (sprites == null ? 0 : sprites.size()) + "\n" //
+                + "Animators: " + (animators == null ? 0 : animators.size());
+    }
+
 }

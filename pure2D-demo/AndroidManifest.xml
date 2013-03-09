@@ -204,6 +204,16 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".particles.NovaMenuActivity"
+            android:label="@string/nova_system"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".particles.NovaActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".effects.EffectsMenuActivity"
             android:label="@string/effects"
             android:screenOrientation="portrait" >
