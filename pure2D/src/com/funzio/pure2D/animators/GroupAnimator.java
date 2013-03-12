@@ -19,6 +19,17 @@ public abstract class GroupAnimator extends BaseAnimator implements Animator.Ani
     protected int mLooped = 0;
     protected int mLoopCount = 0; // negative = UNLIMITED
 
+    public GroupAnimator(final Animator... animators) {
+        // null check
+        if (animators == null) {
+            return;
+        }
+
+        for (Animator animator : animators) {
+            add(animator);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.animators.BaseAnimator#start()

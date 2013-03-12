@@ -8,14 +8,15 @@ import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.animators.Timeline;
 import com.funzio.pure2D.animators.Timeline.Action;
-import com.funzio.pure2D.particles.HybridEmitter;
+import com.funzio.pure2D.particles.RectangularEmitter;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
+import com.funzio.pure2D.utils.Reusable;
 
 /**
  * @author long
  */
-public class NovaEmitter extends HybridEmitter implements AnimatorListener {
+public class NovaEmitter extends RectangularEmitter implements AnimatorListener, Reusable {
 
     protected EmitterVO mEmitterVO;
     protected Timeline mTimeline = new Timeline();
@@ -30,7 +31,10 @@ public class NovaEmitter extends HybridEmitter implements AnimatorListener {
         // auto remove
         mRemoveOnFinish = true;
 
-        createChildren();
+        // define the area size
+        setSize(vo.width, vo.height);
+
+        createAnimators();
     }
 
     /*
@@ -39,8 +43,6 @@ public class NovaEmitter extends HybridEmitter implements AnimatorListener {
      */
     @Override
     public void reset() {
-        super.reset();
-
         // stop timeline
         mTimeline.reset();
 
@@ -54,13 +56,13 @@ public class NovaEmitter extends HybridEmitter implements AnimatorListener {
         }
     }
 
-    protected void createChildren() {
-        // add lifespan to timeline
+    protected void createAnimators() {
+        // add lifespan to timeline if there is
         if (mEmitterVO.lifespan > 0) {
             mTimeline.addAction(new FinishAction(this, mEmitterVO.lifespan));
         }
 
-        // timline action for particles
+        // emitting action for particles
         int size = mEmitterVO.particles.size();
         for (int i = 0; i < size; i++) {
             mTimeline.addAction(new EmitAction(this, mEmitterVO.particles.get(i)));
@@ -82,6 +84,7 @@ public class NovaEmitter extends HybridEmitter implements AnimatorListener {
 
     @Override
     public void onAnimationEnd(final Animator animator) {
+        // only finish when lifespan is not set
         if (mEmitterVO.lifespan <= 0) {
             queueFinish();
         }
@@ -93,6 +96,11 @@ public class NovaEmitter extends HybridEmitter implements AnimatorListener {
 
     }
 
+    /**
+     * Timeline Action for emitting paricles
+     * 
+     * @author long
+     */
     private static class EmitAction extends Action {
         private NovaEmitter mEmitter;
         private ParticleVO mParticleVO;
@@ -123,6 +131,11 @@ public class NovaEmitter extends HybridEmitter implements AnimatorListener {
         }
     }
 
+    /**
+     * Timeline Action for finishing this emitter
+     * 
+     * @author long
+     */
     private static class FinishAction extends Action {
         private NovaEmitter mEmitter;
 

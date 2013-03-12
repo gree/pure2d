@@ -9,6 +9,10 @@ package com.funzio.pure2D.animators;
 public class ParallelAnimator extends GroupAnimator {
     private int mDoneAnimators = 0;
 
+    public ParallelAnimator(final Animator... animators) {
+        super(animators);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.animators.Manipulator#update(int)

@@ -21,8 +21,7 @@ public class NovaParticle extends ClipParticle {
         mParticleVO = particleVO;
 
         if (emitter != null) {
-            emitter.getNextPosition(mPosition);
-            createChildren();
+            createAnimators();
         }
     }
 
@@ -44,7 +43,7 @@ public class NovaParticle extends ClipParticle {
         }
     }
 
-    protected void createChildren() {
+    protected void createAnimators() {
         // optional animators
         if (mParticleVO.animator != null) {
             final Animator animator = ((NovaEmitter) mEmitter).mFactory.createAnimator(mParticleVO.animator);

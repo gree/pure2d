@@ -10,6 +10,10 @@ public class SequenceAnimator extends GroupAnimator {
     protected int mCurrentIndex = -1;
     protected Animator mCurrentAnimator;
 
+    public SequenceAnimator(final Animator... animators) {
+        super(animators);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.animators.Manipulator#update(int)

@@ -9,7 +9,7 @@
 			"particles": [
 				{
 					"sprite": "smoke",
-					"start_delay": 0
+					"start_delay": 0,
 					"step_delay": 100,
 					"num_per_step": 1,
 					"animator": "move_rotate"

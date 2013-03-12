@@ -8,8 +8,4 @@ package com.funzio.pure2D.particles.nova.vo;
  */
 public class SequenceAnimatorVO extends GroupAnimatorVO {
 
-    public SequenceAnimatorVO() {
-        // TODO Auto-generated constructor stub
-    }
-
 }
