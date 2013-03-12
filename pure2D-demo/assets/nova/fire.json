@@ -12,7 +12,7 @@
 					"start_delay": 0
 					"step_delay": 100,
 					"num_per_step": 1,
-					"animators": [ "move_up", "rotate_360"]
+					"animator": "move_rotate"
 				}
 			]
 		}
@@ -26,8 +26,13 @@
 	],
 	
 	"animators": [
-		{"name":"move_up", "type": "move", "delta_x": [10], "delta_y": [20], "duration": [1000], "interpolator": "accelerate"},
-		{"name":"rotate_360", "type": "rotate", "delta": [360], "duration": [500]},
-		{"name":"seq_move_rotate", "type": "sequence", "animators": ["move_up", "rotate_360"]}
+		{
+			"name":"move_rotate",
+			"type": "parallel",
+			"animators": [
+				{"name":"move_up", "type": "move", "delta_x": [10], "delta_y": [20], "duration": [1000], "interpolator": "accelerate"},
+				{"name":"rotate_360", "type": "rotate", "delta": [360], "duration": [500]}
+			]
+		}
 	]
 }

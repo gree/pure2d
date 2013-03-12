@@ -22,8 +22,4 @@ public class AnimatorVO {
     public String name;
     public String type;
 
-    public AnimatorVO() {
-        // TODO Auto-generated constructor stub
-    }
-
 }

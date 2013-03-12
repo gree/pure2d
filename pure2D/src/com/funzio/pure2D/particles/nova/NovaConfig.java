@@ -9,6 +9,7 @@ import java.util.Random;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 
 /**
  * @author long
@@ -61,5 +62,17 @@ public class NovaConfig {
             // randomly pick one of the given values
             return values.get(RANDOM.nextInt(size));
         }
+    }
+
+    public static Interpolator getInterpolator(final String name) {
+        if ("accelerate".equalsIgnoreCase(name)) {
+            return NovaConfig.INTER_ACCELARATION;
+        } else if ("decelerate".equalsIgnoreCase(name)) {
+            return NovaConfig.INTER_DECELERATION;
+        } else if ("bounce".equalsIgnoreCase(name)) {
+            return NovaConfig.INTER_BOUNCE;
+        }
+
+        return null;
     }
 }

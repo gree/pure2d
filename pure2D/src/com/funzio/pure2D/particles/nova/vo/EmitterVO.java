@@ -15,8 +15,8 @@ public class EmitterVO {
     public float height = 1;
     public int lifespan = 0; // ms
 
-    // animators for this emitter
-    public List<AnimatorVO> animators;
+    // animator for this emitter
+    public String animator;
 
     // and particles this will emit
     public List<ParticleVO> particles;

@@ -15,11 +15,10 @@ import com.funzio.pure2D.gl.gl10.GLState;
  */
 public class RectangularEmitter extends BaseDisplayObject implements ParticleEmitter {
 
-    // protected List<Particle> mParticles = new ArrayList<Particle>();
     protected Random mRandom = new Random();
     protected boolean mFinished = false;
-    private boolean mRemoveOnFinish = false;
-    private int nNumParticles = 0;
+    protected boolean mRemoveOnFinish = false;
+    protected int nNumParticles = 0;
 
     public boolean draw(final GLState glState) {
         // draw nothing
@@ -33,29 +32,27 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
     @Override
     public void dispose() {
 
-        // for (int i = 0; i < nNumParticles; i++) {
-        // Particle particle = mParticles.get(i);
-        // particle.setListener(null);
-        //
-        // // also remove it from parent, or not
-        // // /* particle.removeFromParent();
-        // }
-        // mParticles.clear();
-
         // simple clean up
         nNumParticles = 0;
-        mRandom = null;
         mFinished = false;
+        mRandom = null;
     }
 
-    protected PointF getNextPosition() {
-        PointF pt = new PointF(mPosition.x + mRandom.nextInt((int) mSize.x), mPosition.y + mRandom.nextInt((int) mSize.y));
+    /**
+     * This is more memory efficient
+     * 
+     * @param pt
+     * @return
+     */
+    public PointF getNextPosition(final PointF pt) {
+        pt.x = mPosition.x + mRandom.nextInt((int) mSize.x);
+        pt.y = mPosition.y + mRandom.nextInt((int) mSize.y);
+
         return pt;
     }
 
     protected boolean addParticle(final Particle particle) {
         if (particle.getEmitter() != this) {
-            // mParticles.add(particle);
             nNumParticles++;
 
             // register listeners
@@ -73,7 +70,6 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
 
     protected boolean removeParticle(final Particle particle) {
         if (particle.getEmitter() == this) {
-            // mParticles.remove(particle);
             nNumParticles--;
 
             // remove listener
@@ -107,6 +103,16 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
         }
     }
 
+    protected void queueFinish() {
+        queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                finish();
+            }
+        });
+    }
+
     public boolean isFinished() {
         return mFinished;
     }
@@ -123,19 +129,6 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
      */
     public void setRemoveOnFinish(final boolean removeOnFinish) {
         mRemoveOnFinish = removeOnFinish;
-    }
-
-    public boolean removeFromParentSafely() {
-        if (mParent != null) {
-            queueEvent(new Runnable() {
-
-                @Override
-                public void run() {
-                    mParent.removeChild(RectangularEmitter.this);
-                }
-            });
-        }
-        return false;
     }
 
     @Override

@@ -66,7 +66,7 @@ public class SimpleSmoke extends RectangularEmitter {
         particle.setSize(40, 40);
         particle.setAlpha(0.3f);
         // random position
-        particle.setPosition(getNextPosition());
+        getNextPosition(particle.getPosition());
         // random velocity
         particle.setVelocity(new PointF(mRandom.nextInt(7) - 3, 5 + mRandom.nextInt(10)));
 

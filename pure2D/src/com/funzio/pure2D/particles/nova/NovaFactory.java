@@ -3,8 +3,6 @@
  */
 package com.funzio.pure2D.particles.nova;
 
-import android.view.animation.Interpolator;
-
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.MoveAnimator;
 import com.funzio.pure2D.animators.RotateAnimator;
@@ -37,34 +35,25 @@ public class NovaFactory {
     }
 
     public NovaEmitter createEmitter(final EmitterVO emitterVO) {
+        // TODO use pool
         return new NovaEmitter(this, emitterVO);
     }
 
-    public ClipParticle createParticle(final ParticleVO particleVO) {
-        // TODO
-
-        return null;
+    public ClipParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
+        // TODO use pool
+        return new NovaParticle(emitter, particleVO);
     }
 
-    public Animator createAnimator(final AnimatorVO animatorVO) {
+    public Animator createAnimator(final String name) {
+        AnimatorVO animatorVO = mNovaVO.getAnimatorVO(name);
+
+        // TODO use pool
         if (animatorVO instanceof MoveAnimatorVO) {
             MoveAnimatorVO vo = (MoveAnimatorVO) animatorVO;
-            return new MoveAnimator(createInterpolator(vo.interpolator));
+            return new MoveAnimator(NovaConfig.getInterpolator(vo.interpolator));
         } else if (animatorVO instanceof RotateAnimatorVO) {
             RotateAnimatorVO vo = (RotateAnimatorVO) animatorVO;
-            return new RotateAnimator(createInterpolator(vo.interpolator));
-        }
-
-        return null;
-    }
-
-    public static Interpolator createInterpolator(final String name) {
-        if ("accelerate".equalsIgnoreCase(name)) {
-            return NovaConfig.INTER_ACCELARATION;
-        } else if ("decelerate".equalsIgnoreCase(name)) {
-            return NovaConfig.INTER_DECELERATION;
-        } else if ("bounce".equalsIgnoreCase(name)) {
-            return NovaConfig.INTER_BOUNCE;
+            return new RotateAnimator(NovaConfig.getInterpolator(vo.interpolator));
         }
 
         return null;

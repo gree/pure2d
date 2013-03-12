@@ -13,8 +13,4 @@ public class TweenAnimatorVO extends AnimatorVO {
     public List<Integer> duration;
     public String interpolator;
 
-    public TweenAnimatorVO() {
-        // TODO Auto-generated constructor stub
-    }
-
 }
