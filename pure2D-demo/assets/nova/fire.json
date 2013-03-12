@@ -30,7 +30,7 @@
 			"name":"move_rotate",
 			"type": "parallel",
 			"animators": [
-				{"name":"move_up", "type": "move", "delta_x": [10], "delta_y": [20], "duration": [1000], "interpolator": "accelerate"},
+				{"name":"move_up", "type": "move", "dx": [10], "dy": [20], "duration": [1000], "interpolator": "accelerate"},
 				{"name":"rotate_360", "type": "rotate", "delta": [360], "duration": [500]}
 			]
 		}

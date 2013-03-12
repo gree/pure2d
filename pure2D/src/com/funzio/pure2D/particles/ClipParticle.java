@@ -3,12 +3,12 @@
  */
 package com.funzio.pure2D.particles;
 
-import com.funzio.pure2D.shapes.Sprite;
+import com.funzio.pure2D.shapes.Clip;
 
 /**
  * @author long
  */
-public class ClipParticle extends Sprite implements Particle {
+public class ClipParticle extends Clip implements Particle {
 
     protected ParticleEmitter mEmitter;
     protected Listener mListener = null;

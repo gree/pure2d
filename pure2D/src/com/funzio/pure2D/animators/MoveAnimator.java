@@ -30,6 +30,11 @@ public class MoveAnimator extends TweenAnimator {
         mDelta.y = dstY - srcY;
     }
 
+    public void setDelta(final float dx, final float dy) {
+        mDelta.x = dx;
+        mDelta.y = dy;
+    }
+
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;
@@ -52,7 +57,11 @@ public class MoveAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y);
+            if (mAccumulating) {
+                mTarget.moveBy(value * mDelta.x, value * mDelta.y);
+            } else {
+                mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y);
+            }
         }
 
         super.onUpdate(value);

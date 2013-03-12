@@ -6,27 +6,24 @@ package com.funzio.pure2D.particles.nova;
 import java.util.List;
 
 import com.funzio.pure2D.animators.Animator;
-import com.funzio.pure2D.animators.MoveAnimator;
-import com.funzio.pure2D.animators.ParallelAnimator;
-import com.funzio.pure2D.animators.RotateAnimator;
-import com.funzio.pure2D.animators.SequenceAnimator;
+import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
-import com.funzio.pure2D.particles.nova.vo.MoveAnimatorVO;
+import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
-import com.funzio.pure2D.particles.nova.vo.ParallelAnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
-import com.funzio.pure2D.particles.nova.vo.RotateAnimatorVO;
-import com.funzio.pure2D.particles.nova.vo.SequenceAnimatorVO;
+import com.funzio.pure2D.particles.nova.vo.TweenAnimatorVO;
 
 /**
  * @author long
  */
 public class NovaFactory {
     protected NovaVO mNovaVO;
+    protected FrameMapper mFrameMapper;
 
-    public NovaFactory(final NovaVO novaVO) {
+    public NovaFactory(final NovaVO novaVO, final FrameMapper frameMapper) {
         mNovaVO = novaVO;
+        mFrameMapper = frameMapper;
     }
 
     public NovaEmitter[] createEmitters() {
@@ -48,30 +45,34 @@ public class NovaFactory {
         // TODO use pool
         final NovaParticle particle = new NovaParticle(emitter, particleVO);
         particle.setPosition(emitter.getNextPosition(particle.getPosition()));
+        particle.setAtlasFrameSet(mFrameMapper.getFrameSet(particleVO.sprite));
         return particle;
     }
 
+    /**
+     * Create an animator by using name as a key
+     * 
+     * @param name
+     * @return
+     */
     public Animator createAnimator(final String name) {
         AnimatorVO animatorVO = mNovaVO.getAnimatorVO(name);
 
-        // TODO use pool
-        if (animatorVO instanceof MoveAnimatorVO) {
-            MoveAnimatorVO vo = (MoveAnimatorVO) animatorVO;
-            return new MoveAnimator(NovaConfig.getInterpolator(vo.interpolator));
-        } else if (animatorVO instanceof RotateAnimatorVO) {
-            RotateAnimatorVO vo = (RotateAnimatorVO) animatorVO;
-            return new RotateAnimator(NovaConfig.getInterpolator(vo.interpolator));
-        } else if (animatorVO instanceof SequenceAnimatorVO) {
-            SequenceAnimatorVO vo = (SequenceAnimatorVO) animatorVO;
-            return new SequenceAnimator(createAnimators(vo.animators));
-        } else if (animatorVO instanceof ParallelAnimatorVO) {
-            ParallelAnimatorVO vo = (ParallelAnimatorVO) animatorVO;
-            return new ParallelAnimator(createAnimators(vo.animators));
+        if (animatorVO instanceof TweenAnimatorVO) {
+            return ((TweenAnimatorVO) animatorVO).createAnimator();
+        } else if (animatorVO instanceof GroupAnimatorVO) {
+            return ((GroupAnimatorVO) animatorVO).createAnimator(createAnimators(((GroupAnimatorVO) animatorVO).animators));
         }
 
         return null;
     }
 
+    /**
+     * Create multiple animators
+     * 
+     * @param vos
+     * @return
+     */
     public Animator[] createAnimators(final List<AnimatorVO> vos) {
         // null check
         if (vos == null) {
@@ -85,6 +86,18 @@ public class NovaFactory {
         }
 
         return animators;
+    }
+
+    public FrameMapper getFrameMapper() {
+        return mFrameMapper;
+    }
+
+    public void setFrameMapper(final FrameMapper frameMapper) {
+        mFrameMapper = frameMapper;
+    }
+
+    public static interface FrameMapper {
+        public AtlasFrameSet getFrameSet(String name);
     }
 
 }

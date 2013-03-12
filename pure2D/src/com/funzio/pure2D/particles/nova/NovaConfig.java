@@ -43,7 +43,7 @@ public class NovaConfig {
         }
     }
 
-    public static float getRandomInt(final List<Integer> values) {
+    public static int getRandomInt(final List<Integer> values) {
         if (values == null) {
             return 0;
         }
@@ -57,7 +57,7 @@ public class NovaConfig {
             return values.get(0);
         } else if (size == 2) {
             // random value within a range
-            return values.get(0) + RANDOM.nextFloat() * (values.get(1) - values.get(0));
+            return values.get(0) + (int) (RANDOM.nextFloat() * (values.get(1) - values.get(0)));
         } else {
             // randomly pick one of the given values
             return values.get(RANDOM.nextInt(size));

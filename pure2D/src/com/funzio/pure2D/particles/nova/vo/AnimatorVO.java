@@ -21,5 +21,4 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 public class AnimatorVO {
     public String name;
     public String type;
-
 }

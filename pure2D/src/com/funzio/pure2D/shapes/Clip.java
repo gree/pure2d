@@ -86,7 +86,7 @@ public class Clip extends Sprite implements Playable {
         final boolean returned = super.update(deltaTime);
 
         // get next frame
-        if (mNumFrames > 0 && mPlaying) {
+        if (mNumFrames > 1 && mPlaying) {
             int frames = 1;
             // if there is specific fps
             if (mFps > 0) {

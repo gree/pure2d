@@ -17,6 +17,9 @@ public class BaseAnimator implements Animator {
     protected int mLastDeltaTime = 0;
     protected boolean mRunning = false;
 
+    // no accumulating by default
+    protected boolean mAccumulating = false;
+
     @Override
     public void setTarget(final Manipulatable target) {
         mTarget = target;
@@ -107,6 +110,14 @@ public class BaseAnimator implements Animator {
 
     public boolean isRunning() {
         return mRunning;
+    }
+
+    public boolean isAccumulating() {
+        return mAccumulating;
+    }
+
+    public void setAccumulating(final boolean accumulating) {
+        mAccumulating = accumulating;
     }
 
     /*

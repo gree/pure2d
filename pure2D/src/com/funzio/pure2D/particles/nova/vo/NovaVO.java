@@ -57,7 +57,7 @@ public class NovaVO {
      */
     @Override
     public String toString() {
-        return "Ver: " + version + "\n" //
+        return "Version: " + version + "\n" //
                 + "Emitters: " + (emitters == null ? 0 : emitters.size()) + "\n" //
                 + "Sprites: " + (sprites == null ? 0 : sprites.size()) + "\n" //
                 + "Animators: " + (animators == null ? 0 : animators.size());
