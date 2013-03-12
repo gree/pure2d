@@ -88,18 +88,20 @@ public class ActionQueue extends BaseAnimator {
     }
 
     public void add(final Action action) {
-        mActions.add(action);
-        mNumActions++;
+        if (mActions.add(action)) {
+            mNumActions++;
 
-        // auto start
-        if (mAutoStart && !mRunning) {
-            start();
+            // auto start
+            if (mAutoStart && !mRunning) {
+                start();
+            }
         }
     }
 
     public void remove(final Action action) {
-        mActions.remove(action);
-        mNumActions--;
+        if (mActions.remove(action)) {
+            mNumActions--;
+        }
     }
 
     public void clear() {

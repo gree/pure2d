@@ -15,8 +15,11 @@ public class EmitterVO {
     public float height = 1;
     public int lifespan = 0; // ms
 
-    public List<ParticleVO> particles;
+    // animators for this emitter
     public List<AnimatorVO> animators;
+
+    // and particles this will emit
+    public List<ParticleVO> particles;
 
     public EmitterVO() {
         // TODO Auto-generated constructor stub

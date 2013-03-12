@@ -6,11 +6,20 @@ package com.funzio.pure2D.particles.nova;
 import java.util.List;
 import java.util.Random;
 
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
+
 /**
  * @author long
  */
 public class NovaConfig {
     public static final Random RANDOM = new Random();
+
+    // interpolators
+    public static final DecelerateInterpolator INTER_DECELERATION = new DecelerateInterpolator();
+    public static final AccelerateInterpolator INTER_ACCELARATION = new AccelerateInterpolator();
+    public static final BounceInterpolator INTER_BOUNCE = new BounceInterpolator();
 
     public static float getRandomFloat(final List<Float> values) {
         if (values == null) {
