@@ -27,6 +27,8 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public void resetAnimator(final Animator animator) {
+        super.resetAnimator(animator);
+
         final RotateAnimator rotate = (RotateAnimator) animator;
         if (rotate != null) {
             rotate.setDelta(NovaConfig.getRandomFloat(delta));

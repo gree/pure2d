@@ -7,6 +7,8 @@ import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
+import com.funzio.pure2D.animators.Animator;
+
 /**
  * @author long
  */
@@ -20,8 +22,19 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @Type(value = SequenceAnimatorVO.class, name = "sequence"), //
         @Type(value = ParallelAnimatorVO.class, name = "parallel"), //
 })
-public class AnimatorVO {
+public abstract class AnimatorVO {
     public String name;
     public String type;
     public String loop_mode;
+
+    /**
+     * Reset a specific animator to reflect this VO
+     * 
+     * @param animator
+     */
+    public void resetAnimator(final Animator animator) {
+        if (animator != null) {
+            animator.reset();
+        }
+    }
 }

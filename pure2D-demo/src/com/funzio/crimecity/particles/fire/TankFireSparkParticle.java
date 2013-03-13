@@ -20,11 +20,11 @@ public class TankFireSparkParticle extends TankFireParticle {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.crimecity.particles.ExplosionParticle#reset()
+     * @see com.funzio.pure2D.particles.ClipParticle#reset(java.lang.Object[])
      */
     @Override
-    public void reset() {
-        super.reset();
+    public void reset(final Object... params) {
+        super.reset(params);
 
         // setColor(new GLColor(1f, 0.5f, 0f, 1f));
         mPosition.x = 0;

@@ -30,10 +30,10 @@ public class GunshotSmokeParticle extends SpriteParticle {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.particles.SpriteParticle#reset()
+     * @see com.funzio.pure2D.particles.ClipParticle#reset(java.lang.Object[])
      */
     @Override
-    public void reset() {
+    public void reset(final Object... params) {
         super.reset();
 
         // initial state

@@ -78,7 +78,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
                     @Override
                     public void onLoad(final NovaLoader loader, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
-                        mNovaFactory = new NovaFactory(vo, mFrameMapper);
+                        mNovaFactory = new NovaFactory(vo, mFrameMapper, 500);
                         addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
                     }
 
@@ -91,6 +91,19 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
                 loader.load(getAssets(), mFilePath, OBJECT_MAPPER);
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.samples.activities.StageActivity#onStop()
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mNovaFactory != null) {
+            mNovaFactory.dispose();
+        }
     }
 
     private void loadTextures() {

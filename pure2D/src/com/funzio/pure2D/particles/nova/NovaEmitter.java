@@ -43,16 +43,16 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         setSize(vo.width, vo.height);
         setOriginAtCenter();
 
-        createAnimators();
+        createManipulators();
         createLayers();
     }
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.particles.HybridEmitter#reset()
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
      */
     @Override
-    public void reset() {
+    public void reset(final Object... params) {
         // stop timeline
         mTimeline.reset();
 
@@ -62,7 +62,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         }
     }
 
-    protected void createAnimators() {
+    protected void createManipulators() {
         // add lifespan to timeline if there is
         if (mEmitterVO.duration > 0) {
             mTimeline.addAction(new FinishAction(this, mEmitterVO.duration));
@@ -129,6 +129,11 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
             public void run() {
                 // auto remove
                 particle.removeFromParent();
+
+                // add to pool
+                if (mFactory.mParticlePool != null) {
+                    mFactory.mParticlePool.release((NovaParticle) particle);
+                }
             }
         });
     }

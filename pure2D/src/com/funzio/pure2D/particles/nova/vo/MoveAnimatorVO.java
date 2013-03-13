@@ -28,6 +28,8 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public void resetAnimator(final Animator animator) {
+        super.resetAnimator(animator);
+
         final MoveAnimator move = (MoveAnimator) animator;
         if (move != null) {
             move.setDelta(NovaConfig.getRandomFloat(dx), NovaConfig.getRandomFloat(dy));

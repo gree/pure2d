@@ -53,7 +53,12 @@ public class ExplosionCombo extends RectangularEmitter implements Reusable {
         mSmokeTexture = smoke;
     }
 
-    public void reset() {
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
+     */
+    @Override
+    public void reset(final Object... params) {
         mFrame = 0;
     }
 

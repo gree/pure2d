@@ -30,6 +30,8 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public void resetAnimator(final Animator animator) {
+        super.resetAnimator(animator);
+
         final ScaleAnimator scale = (ScaleAnimator) animator;
         if (scale != null) {
             scale.setValues(NovaConfig.getRandomFloat(x_from), NovaConfig.getRandomFloat(y_from), NovaConfig.getRandomFloat(x_to), NovaConfig.getRandomFloat(y_to));

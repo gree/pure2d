@@ -28,6 +28,8 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public void resetAnimator(final Animator animator) {
+        super.resetAnimator(animator);
+
         final AlphaAnimator alpha = (AlphaAnimator) animator;
         if (alpha != null) {
             alpha.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));

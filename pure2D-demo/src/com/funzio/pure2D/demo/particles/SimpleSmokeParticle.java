@@ -40,8 +40,12 @@ public class SimpleSmokeParticle extends SpriteParticle {
         setTexture(texture);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.ClipParticle#reset(java.lang.Object[])
+     */
     @Override
-    public void reset() {
+    public void reset(final Object... params) {
         mAlpha = 1;
         mRotation = 0;
         mScale.x = mScale.y = 1;

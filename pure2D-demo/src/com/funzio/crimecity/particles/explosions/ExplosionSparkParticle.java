@@ -21,11 +21,11 @@ public class ExplosionSparkParticle extends ExplosionParticle {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.crimecity.particles.ExplosionParticle#reset()
+     * @see com.funzio.pure2D.particles.ClipParticle#reset(java.lang.Object[])
      */
     @Override
-    public void reset() {
-        super.reset();
+    public void reset(final Object... params) {
+        super.reset(params);
 
         setColor(new GLColor(1f, 1f, 1f, 1f));
         mPosition.x = 0;

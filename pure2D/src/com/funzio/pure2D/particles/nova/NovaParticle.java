@@ -5,6 +5,7 @@ package com.funzio.pure2D.particles.nova;
 
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.particles.ClipParticle;
+import com.funzio.pure2D.particles.ParticleEmitter;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 
 /**
@@ -17,37 +18,37 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
     public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
         super();
 
-        mParticleVO = particleVO;
-        setEmitter(emitter);
-
-        if (emitter != null) {
-            createAnimators();
-        }
+        reset(emitter, particleVO);
     }
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.particles.ClipParticle#reset()
+     * @see com.funzio.pure2D.particles.ClipParticle#reset(java.lang.Object[])
      */
     @Override
-    public void reset() {
-        super.reset();
+    public void reset(final Object... params) {
+        super.reset(params);
 
-        // stop all other animator
+        mEmitter = (ParticleEmitter) params[0];
+        mParticleVO = (ParticleVO) params[1];
+
         if (mAnimator != null) {
             mAnimator.stop();
+            removeManipulator(mAnimator);
+            ((NovaEmitter) mEmitter).mFactory.releaseAnimator(mParticleVO.animator, mAnimator);
+            mAnimator = null;
         }
-    }
 
-    protected void createAnimators() {
-        // optional animators
-        if (mParticleVO.animator != null) {
-            mAnimator = ((NovaEmitter) mEmitter).mFactory.createAnimator(mParticleVO.animator);
-            if (mAnimator != null) {
-                mAnimator.setListener(this);
-                addManipulator(mAnimator);
-                // auto start
-                mAnimator.start();
+        if (mEmitter != null) {
+            // optional animators
+            if (mParticleVO.animator != null) {
+                mAnimator = ((NovaEmitter) mEmitter).mFactory.createAnimator(mParticleVO.animator);
+                if (mAnimator != null) {
+                    mAnimator.setListener(this);
+                    addManipulator(mAnimator);
+                    // auto start
+                    mAnimator.start();
+                }
             }
         }
     }

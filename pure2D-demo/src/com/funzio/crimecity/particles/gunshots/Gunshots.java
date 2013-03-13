@@ -50,7 +50,12 @@ public class Gunshots extends RectangularEmitter implements Reusable {
         setRemoveOnFinish(true);
     }
 
-    public void reset() {
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.ClipParticle#reset(java.lang.Object[])
+     */
+    @Override
+    public void reset(final Object... params) {
         mNumParticles = 0;
         mFrame = 0;
     }

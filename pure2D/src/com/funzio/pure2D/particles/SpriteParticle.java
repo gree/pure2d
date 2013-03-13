@@ -25,8 +25,7 @@ public class SpriteParticle extends Sprite implements Particle {
      * (non-Javadoc)
      * @see com.funzio.pure2D.utils.Reusable#reset()
      */
-    @Override
-    public void reset() {
+    public void reset(final Object... params) {
         mEmitter = null;
         mListener = null;
         mFinished = false;

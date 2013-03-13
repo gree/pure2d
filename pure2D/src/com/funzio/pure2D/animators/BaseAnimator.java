@@ -20,6 +20,17 @@ public class BaseAnimator implements Animator {
     // no accumulating by default
     protected boolean mAccumulating = false;
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
+     */
+    @Override
+    public void reset(final Object... params) {
+        stop();
+
+        mTarget = null;
+    }
+
     @Override
     public void setTarget(final Manipulatable target) {
         mTarget = target;

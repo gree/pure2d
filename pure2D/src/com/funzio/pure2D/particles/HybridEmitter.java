@@ -14,10 +14,10 @@ public class HybridEmitter extends RectangularEmitter implements Particle {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.utils.Reusable#reset()
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
      */
     @Override
-    public void reset() {
+    public void reset(final Object... params) {
         mEmitter = null;
         mListener = null;
         mFinished = false;
