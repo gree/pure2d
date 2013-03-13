@@ -94,6 +94,24 @@ public class NovaConfig {
         }
     }
 
+    public static String getRandomString(final List<String> values) {
+        if (values == null) {
+            return null;
+        }
+
+        final int size = values.size();
+        if (size == 0) {
+            // default value
+            return null;
+        } else if (size == 1) {
+            // fixed value
+            return values.get(0);
+        } else {
+            // randomly pick one of the given values
+            return values.get(RANDOM.nextInt(size));
+        }
+    }
+
     public static Interpolator getInterpolator(final String name) {
         if (INTER_ST_ACCELERATE.equalsIgnoreCase(name)) {
             return INTER_ACCELARATE;

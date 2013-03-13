@@ -48,7 +48,7 @@ public class NovaFactory {
         // TODO use pool
         final NovaParticle particle = new NovaParticle(emitter, particleVO);
         particle.setPosition(emitter.getNextPosition(particle.getPosition()));
-        particle.setAtlasFrameSet(mFrameMapper.getFrameSet(particleVO.sprite));
+        particle.setAtlasFrameSet(mFrameMapper.getFrameSet(NovaConfig.getRandomString(particleVO.sprites)));
         particle.setOriginAtCenter();
         // particle.setZ(particleVO.z);
         // particle.setAlphaTestEnabled(particleVO.z != 0);

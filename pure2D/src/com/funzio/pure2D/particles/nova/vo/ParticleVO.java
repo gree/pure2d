@@ -3,13 +3,15 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
+import java.util.List;
+
 import com.funzio.pure2D.Scene;
 
 /**
  * @author long
  */
 public class ParticleVO {
-    public String sprite;
+    public List<String> sprites;
 
     public int start_delay = 0;
     public int step_delay = Scene.DEFAULT_MSPF;
