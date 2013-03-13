@@ -13,6 +13,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -186,7 +187,7 @@ public class BaseScene implements Scene {
         // this might help but I have not seen any difference yet!
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        mStartTime = System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
         mDownTime = 0;
         mFrameCount = 0;
         mCurrentFps = 0;
@@ -298,10 +299,11 @@ public class BaseScene implements Scene {
         }
 
         // delta time
-        final long now = System.nanoTime();
-        final float delta = ((now - mStartTime) / 1000000f);
+        final long now = SystemClock.elapsedRealtime(); // System.nanoTime();
+        // final float delta = ((now - mStartTime) / 1000000f);
+        final long delta = now - mStartTime;
 
-        if ((int) delta == 0) {
+        if (delta == 0) {
             // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
             // We need to force invalidate!
             invalidate();
@@ -431,7 +433,7 @@ public class BaseScene implements Scene {
         }
 
         mPaused = false;
-        mStartTime = System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
     }
 
     public boolean isPaused() {
