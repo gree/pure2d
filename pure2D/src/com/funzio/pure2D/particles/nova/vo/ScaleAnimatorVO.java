@@ -14,10 +14,10 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class ScaleAnimatorVO extends TweenAnimatorVO {
 
-    public List<Float> sx1;
-    public List<Float> sx2;
-    public List<Float> sy1;
-    public List<Float> sy2;
+    public List<Float> x_from;
+    public List<Float> x_to;
+    public List<Float> y_from;
+    public List<Float> y_to;
 
     @Override
     public Animator createAnimator() {
@@ -32,7 +32,7 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
     public void resetAnimator(final Animator animator) {
         final ScaleAnimator scale = (ScaleAnimator) animator;
         if (scale != null) {
-            scale.setValues(NovaConfig.getRandomFloat(sx1), NovaConfig.getRandomFloat(sy1), NovaConfig.getRandomFloat(sx2), NovaConfig.getRandomFloat(sy2));
+            scale.setValues(NovaConfig.getRandomFloat(x_from), NovaConfig.getRandomFloat(y_from), NovaConfig.getRandomFloat(x_to), NovaConfig.getRandomFloat(y_to));
             scale.setDuration(NovaConfig.getRandomInt(duration));
         }
     }
