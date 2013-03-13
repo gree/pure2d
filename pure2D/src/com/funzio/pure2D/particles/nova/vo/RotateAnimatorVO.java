@@ -19,7 +19,8 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     @Override
     public Animator createAnimator() {
         final RotateAnimator rotate = new RotateAnimator(NovaConfig.getInterpolator(interpolator));
-        rotate.setAccumulating(true);
+        rotate.setAccumulating(accumulating);
+        rotate.setLoop(NovaConfig.getLoopMode(loop_mode));
         resetAnimator(rotate);
         return rotate;
     }

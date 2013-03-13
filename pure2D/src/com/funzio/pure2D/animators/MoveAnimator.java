@@ -58,7 +58,7 @@ public class MoveAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget != null) {
             if (mAccumulating) {
-                mTarget.moveBy(value * mDelta.x, value * mDelta.y);
+                mTarget.moveBy((value - mLastValue) * mDelta.x, (value - mLastValue) * mDelta.y);
             } else {
                 mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y);
             }

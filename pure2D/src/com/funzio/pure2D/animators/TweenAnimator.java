@@ -14,6 +14,7 @@ public class TweenAnimator extends BaseAnimator {
     protected int mDuration;
     protected Interpolator mInterpolator;
 
+    protected float mLastValue = 0;
     protected float mCurrentValue = 0;
     protected int mLoopMode = Playable.LOOP_NONE;
     protected int mLoopCount = -1; // forever
@@ -30,6 +31,16 @@ public class TweenAnimator extends BaseAnimator {
 
     /*
      * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
+     */
+    @Override
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
+        mLastValue = 0;
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.funzio.pure2D.animators.BaseAnimator#update(int)
      */
     @Override
@@ -41,21 +52,22 @@ public class TweenAnimator extends BaseAnimator {
                 end();
             } else {
 
-                float timeLine;
+                float timeline;
                 if (mLoopMode == Playable.LOOP_REPEAT) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
+                    timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                 } else if (mLoopMode == Playable.LOOP_REVERSE) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
+                    timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                     if (trips % 2 == 1) {
                         // reverse
-                        timeLine = 1 - timeLine;
+                        timeline = 1 - timeline;
                     }
                 } else {
-                    timeLine = (float) mElapsedTime / (float) mDuration;
+                    timeline = (float) mElapsedTime / (float) mDuration;
                 }
 
                 // interpolate the value
-                mCurrentValue = (mInterpolator == null) ? timeLine : mInterpolator.getInterpolation(timeLine);
+                mLastValue = mCurrentValue;
+                mCurrentValue = (mInterpolator == null) ? timeline : mInterpolator.getInterpolation(timeline);
                 // and update
                 onUpdate(mCurrentValue);
             }

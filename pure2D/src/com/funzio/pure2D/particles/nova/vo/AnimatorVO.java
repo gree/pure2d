@@ -15,10 +15,12 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonSubTypes({
         @Type(value = MoveAnimatorVO.class, name = "move"), //
         @Type(value = RotateAnimatorVO.class, name = "rotate"), //
+        @Type(value = ScaleAnimatorVO.class, name = "scale"), //
         @Type(value = SequenceAnimatorVO.class, name = "sequence"), //
         @Type(value = ParallelAnimatorVO.class, name = "parallel"), //
 })
 public class AnimatorVO {
     public String name;
     public String type;
+    public String loop_mode;
 }

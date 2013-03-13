@@ -14,5 +14,4 @@ public class ParticleVO {
     public int num_per_step = 1;
     public String animator;
     public String blend_mode;
-
 }

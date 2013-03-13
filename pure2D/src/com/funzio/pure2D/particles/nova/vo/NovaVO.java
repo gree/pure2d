@@ -16,7 +16,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class NovaVO {
     public final int version;
     public final List<EmitterVO> emitters;
-    public final List<SpriteVO> sprites;
     public final List<AnimatorVO> animators;
 
     protected final Map<String, AnimatorVO> mAnimatorMap;
@@ -29,15 +28,11 @@ public class NovaVO {
             @JsonProperty("emitters")//
             final List<EmitterVO> emitters, //
 
-            @JsonProperty("sprites")//
-            final List<SpriteVO> sprites, //
-
             @JsonProperty("animators")//
             final List<AnimatorVO> animators //
     ) {
         this.version = version;
         this.emitters = emitters;
-        this.sprites = sprites;
         this.animators = animators;
 
         // make the map
@@ -59,7 +54,6 @@ public class NovaVO {
     public String toString() {
         return "Version: " + version + "\n" //
                 + "Emitters: " + (emitters == null ? 0 : emitters.size()) + "\n" //
-                + "Sprites: " + (sprites == null ? 0 : sprites.size()) + "\n" //
                 + "Animators: " + (animators == null ? 0 : animators.size());
     }
 

@@ -5,7 +5,6 @@ package com.funzio.pure2D.particles.nova;
 
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
-import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.animators.Timeline;
 import com.funzio.pure2D.animators.Timeline.Action;
 import com.funzio.pure2D.particles.Particle;
@@ -22,6 +21,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
     protected EmitterVO mEmitterVO;
     protected Timeline mTimeline = new Timeline();
     protected NovaFactory mFactory;
+    protected Animator mAnimator;
 
     public NovaEmitter(final NovaFactory factory, final EmitterVO vo) {
         super();
@@ -47,13 +47,9 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         // stop timeline
         mTimeline.reset();
 
-        // stop all other animators
-        int size = mManipulators.size();
-        for (int i = 0; i < size; i++) {
-            final Manipulator manipulator = mManipulators.get(i);
-            if (manipulator instanceof Animator) {
-                ((Animator) manipulator).stop();
-            }
+        // stop all other animator
+        if (mAnimator != null) {
+            mAnimator.stop();
         }
     }
 
@@ -73,13 +69,15 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         // auto start
         mTimeline.start();
 
-        // optional emitter animators
+        // optional emitter animator
         if (mEmitterVO.animator != null) {
-            final Animator animator = mFactory.createAnimator(mEmitterVO.animator);
-            animator.setListener(this);
-            addManipulator(animator);
-            // auto start
-            animator.start();
+            mAnimator = mFactory.createAnimator(mEmitterVO.animator);
+            if (mAnimator != null) {
+                mAnimator.setListener(this);
+                addManipulator(mAnimator);
+                // auto start
+                mAnimator.start();
+            }
         }
     }
 

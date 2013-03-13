@@ -9,39 +9,41 @@
 			"particles": [
 				{
 					"sprite": "smoke",
-					"start_delay": 0,
-					"step_delay": 100,
-					"duration": 2000,
-					"num_per_step": 5,
+					"step_delay": 50,
+					"num_per_step": 3,
 					"animator": "move_rotate",
-					"blend_mode": "screen"
+					"blend_mode": "screen_alpha"
 				},
 				{
 					"sprite": "fire",
-					"start_delay": 1000,
-					"step_delay": 100,
-					"num_per_step": 10,
+					"start_delay": 500,
+					"step_delay": 50,
+					"duration": 4000,
+					"num_per_step": 5,
 					"animator": "move_rotate",
 					"blend_mode": "add"
 				}
-			]
-		}
-	],
-	
-	"sprites": [
-		{
-			"name": "smoke",
-			"file": "smoke.png"
+			],
+			"animator": "left_right"
 		}
 	],
 	
 	"animators": [
 		{
+			"name": "left_right",
+			"type": "move",
+			"dx": [50],
+			"duration": [1000],
+			"interpolator": "accelerrae_decelerate",
+			"loop_mode": "reverse"
+		},
+		{
 			"name":"move_rotate",
 			"type": "parallel",
 			"animators": [
-				{"type": "move", "dx": [-5, 5], "dy": [10, 20], "duration": [500, 1000], "interpolator": "decelerate"},
-				{"type": "rotate", "delta": [-360, 360], "duration": [500, 1000]}
+				{"type": "move", "dx": [-100, 100], "dy": [300, 500], "duration": [500, 1000], "interpolator": "decelerate"},
+				{"type": "rotate", "delta": [360], "duration": [500, 1000]},
+				{"type": "scale", "sx1": [1], "sy1": [1], "sx2": [0.5], "sy2": [0.5], "duration": [500, 1000]}
 			]
 		}
 	]

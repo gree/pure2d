@@ -20,7 +20,8 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
     @Override
     public Animator createAnimator() {
         final MoveAnimator move = new MoveAnimator(NovaConfig.getInterpolator(interpolator));
-        move.setAccumulating(true);
+        move.setAccumulating(accumulating);
+        move.setLoop(NovaConfig.getLoopMode(loop_mode));
         resetAnimator(move);
         return move;
     }

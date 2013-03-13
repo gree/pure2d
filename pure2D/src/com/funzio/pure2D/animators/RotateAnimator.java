@@ -45,7 +45,7 @@ public class RotateAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget != null) {
             if (mAccumulating) {
-                mTarget.rotateBy(value * mDelta);
+                mTarget.rotateBy((value - mLastValue) * mDelta);
             } else {
                 mTarget.setRotation(mSrc + value * mDelta);
             }

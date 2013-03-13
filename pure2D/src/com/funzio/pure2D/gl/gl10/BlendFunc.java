@@ -81,4 +81,15 @@ public class BlendFunc {
         // (src * 1) + (dst * (1 - src)) = src + dst - dst * src = dst + src * (1 - dst)
         return new BlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_COLOR);
     }
+
+    /**
+     * Screen-Alpha blending
+     * 
+     * @return
+     */
+    public static BlendFunc getScreenAlpha() {
+        // (src * 0) + (dst * (1 - src_alpha)) = dst - dst * src_alpha
+        return new BlendFunc(GL10.GL_ZERO, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
 }

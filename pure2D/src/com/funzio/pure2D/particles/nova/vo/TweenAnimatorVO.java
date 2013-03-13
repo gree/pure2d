@@ -14,6 +14,7 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
 
     public List<Integer> duration;
     public String interpolator;
+    public boolean accumulating = true; // true by default
 
     public abstract Animator createAnimator();
 
