@@ -86,7 +86,7 @@ public class FrameBuffer {
 
         // Some experiments:
         // A renderbuffer are just objects which are used to support offscreen rendering,
-        // often for sections of the framebuffer which don’t have a texture format associated with them such as the stencil or depth buffer.
+        // often for sections of the framebuffer which don't have a texture format associated with them such as the stencil or depth buffer.
         // mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_DEPTH_COMPONENT16, mWidth, mHeight);
         // mGL11Ex.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
 
