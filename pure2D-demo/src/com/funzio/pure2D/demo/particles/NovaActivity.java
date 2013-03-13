@@ -19,6 +19,7 @@ import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
 import com.funzio.pure2D.particles.nova.NovaFactory.FrameMapper;
@@ -36,8 +37,6 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
     private String mFilePath;
 
-    private AssetTexture mSmokeTexture;
-    private AssetTexture mFireTexture;
     private SingleFrameSet mSmokeFrame;
     private SingleFrameSet mFireFrame;
     private FrameMapper mFrameMapper = new FrameMapper() {
@@ -52,31 +51,14 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
         }
     };
 
-    private NovaFactory mFactory;
+    private NovaFactory mNovaFactory;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mScene.setColor(new GLColor(0, 0.7f, 0, 1));
-
         mFilePath = NOVA_DIR + getIntent().getExtras().getString("text");
-        NovaLoader loader = new NovaLoader();
-        loader.setListener(new NovaLoader.Listener() {
-
-            @Override
-            public void onLoad(final NovaLoader loader, final NovaVO vo) {
-                Log.d(TAG, vo.toString());
-                mFactory = new NovaFactory(vo, mFrameMapper);
-            }
-
-            @Override
-            public void onError(final NovaLoader loader) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-        loader.load(getAssets(), mFilePath, OBJECT_MAPPER);
+        mScene.setColor(new GLColor(0, 0.7f, 0, 1));
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -89,55 +71,50 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
                 // generate a lot of squares
                 // addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+
+                NovaLoader loader = new NovaLoader();
+                loader.setListener(new NovaLoader.Listener() {
+
+                    @Override
+                    public void onLoad(final NovaLoader loader, final NovaVO vo) {
+                        Log.d(TAG, vo.toString());
+                        mNovaFactory = new NovaFactory(vo, mFrameMapper);
+                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    }
+
+                    @Override
+                    public void onError(final NovaLoader loader) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+                loader.load(getAssets(), mFilePath, OBJECT_MAPPER);
             }
         });
     }
 
     private void loadTextures() {
-        // create textures
-        mSmokeTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/smoke.png", null);
-        mSmokeFrame = new SingleFrameSet("smoke", mSmokeTexture);
+        TextureOptions options = TextureOptions.getDefault();
+        options.inMipmaps = 1;
 
-        mFireTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/fire.png", null);
-        mFireFrame = new SingleFrameSet("fire", mFireTexture);
+        // create textures
+        AssetTexture smokeTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/smoke.png", options);
+        mSmokeFrame = new SingleFrameSet("smoke", smokeTexture);
+
+        AssetTexture fireTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/fire.png", options);
+        mFireFrame = new SingleFrameSet("fire", fireTexture);
     }
 
     private void addObject(final float x, final float y) {
+        // null check
+        if (mNovaFactory == null) {
+            return;
+        }
 
-        NovaEmitter[] emitters = mFactory.createEmitters();
+        NovaEmitter[] emitters = mNovaFactory.createEmitters();
         for (NovaEmitter emitter : emitters) {
             emitter.setPosition(x, y);
             mScene.addChild(emitter);
-        }
-
-        // // create object
-        // Clip obj = new Clip(mAtlas.getMasterFrameSet());
-        // obj.setTexture(mTexture);
-        // obj.playAt(mRandom.nextInt(obj.getNumFrames()));
-        // // obj.setRotation(mRandom.nextInt(360));
-        // // obj.setFps(30);
-        //
-        // // center origin
-        // obj.setOriginAtCenter();
-        //
-        // // position
-        // obj.setPosition(x, y);
-        //
-        // // add to scene
-        // mScene.addChild(obj);
-        //
-        // // animation
-        // final TrajectoryAnimator animator = new TrajectoryAnimator(0);
-        // // animator.setTargetAngleFixed(false);
-        // // animator.setTargetAngleOffset(-90);
-        // obj.addManipulator(animator);
-        // animator.start(mRandom.nextInt(100), (float) (mRandom.nextInt(360) * Math.PI / 180));
-        // animator.setListener(this);
-    }
-
-    private void addSome(final float x, final float y) {
-        for (int i = 0; i < 10; i++) {
-            addObject(x, y);
         }
     }
 

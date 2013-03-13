@@ -3,10 +3,14 @@
  */
 package com.funzio.pure2D.particles.nova;
 
+import android.util.SparseArray;
+
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.Timeline;
 import com.funzio.pure2D.animators.Timeline.Action;
+import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
@@ -23,6 +27,9 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
     protected NovaFactory mFactory;
     protected Animator mAnimator;
 
+    // layers for particles
+    protected SparseArray<DisplayGroup> mLayers;
+
     public NovaEmitter(final NovaFactory factory, final EmitterVO vo) {
         super();
 
@@ -34,8 +41,10 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
 
         // define the area size
         setSize(vo.width, vo.height);
+        setOriginAtCenter();
 
         createAnimators();
+        createLayers();
     }
 
     /*
@@ -55,8 +64,8 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
 
     protected void createAnimators() {
         // add lifespan to timeline if there is
-        if (mEmitterVO.lifespan > 0) {
-            mTimeline.addAction(new FinishAction(this, mEmitterVO.lifespan));
+        if (mEmitterVO.duration > 0) {
+            mTimeline.addAction(new FinishAction(this, mEmitterVO.duration));
         }
 
         // emitting action for particles
@@ -81,10 +90,23 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         }
     }
 
+    protected void createLayers() {
+        int size = mEmitterVO.particles.size();
+        for (int i = 0; i < size; i++) {
+            final ParticleVO particle = mEmitterVO.particles.get(i);
+            if (particle.layer > 0) {
+                if (mLayers == null) {
+                    mLayers = new SparseArray<DisplayGroup>();
+                }
+                mLayers.put(particle.layer, new DisplayGroup());
+            }
+        }
+    }
+
     @Override
     public void onAnimationEnd(final Animator animator) {
         // only finish when lifespan is not set
-        if (mEmitterVO.lifespan <= 0) {
+        if (mEmitterVO.duration <= 0) {
             queueFinish();
         }
     }
@@ -109,6 +131,40 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
                 particle.removeFromParent();
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
+     */
+    @Override
+    public void onAdded(final Container parent) {
+        super.onAdded(parent);
+
+        // add the layers
+        if (mLayers != null) {
+            final int size = mLayers.size();
+            for (int i = 0; i < size; i++) {
+                mParent.addChild(mLayers.get(mLayers.keyAt(i)));
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.RectangularEmitter#onRemoved()
+     */
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        // remove the layers
+        if (mLayers != null) {
+            final int size = mLayers.size();
+            for (int i = 0; i < size; i++) {
+                mLayers.get(mLayers.keyAt(i)).removeFromParent();
+            }
+        }
     }
 
     /**
@@ -136,8 +192,12 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
                     // null check
                     if (mEmitter.mParent != null) {
                         // emit the particles
+                        Container layer;
                         for (int n = 0; n < mParticleVO.num_per_step; n++) {
-                            mEmitter.mParent.addChild(mEmitter.mFactory.createParticle(mEmitter, mParticleVO));
+                            // find the layer
+                            layer = mParticleVO.layer > 0 ? mEmitter.mLayers.get(mParticleVO.layer) : mEmitter.mParent;
+                            // add to the layer
+                            layer.addChild(mEmitter.mFactory.createParticle(mEmitter, mParticleVO));
                         }
                     }
                 }

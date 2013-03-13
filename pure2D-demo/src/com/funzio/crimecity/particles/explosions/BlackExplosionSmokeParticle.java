@@ -3,8 +3,6 @@
  */
 package com.funzio.crimecity.particles.explosions;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
@@ -13,7 +11,7 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
  */
 public class BlackExplosionSmokeParticle extends ExplosionParticle {
 
-    private static final BlendFunc BLEND_FUNC = new BlendFunc(GL10.GL_ZERO, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    private static final BlendFunc BLEND_FUNC = BlendFunc.getScreenAlpha();
 
     public BlackExplosionSmokeParticle(final Texture texture) {
         super(texture);

@@ -92,4 +92,9 @@ public class BlendFunc {
         return new BlendFunc(GL10.GL_ZERO, GL10.GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    public static BlendFunc getInterpolateColor() {
+        // (src * src_color) + (dst * (1 - src_alpha)) = src * src_color + dst - dst * src_alpha
+        return new BlendFunc(GL10.GL_SRC_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
 }

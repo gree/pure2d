@@ -16,6 +16,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @Type(value = MoveAnimatorVO.class, name = "move"), //
         @Type(value = RotateAnimatorVO.class, name = "rotate"), //
         @Type(value = ScaleAnimatorVO.class, name = "scale"), //
+        @Type(value = AlphaAnimatorVO.class, name = "alpha"), //
         @Type(value = SequenceAnimatorVO.class, name = "sequence"), //
         @Type(value = ParallelAnimatorVO.class, name = "parallel"), //
 })

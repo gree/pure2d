@@ -175,33 +175,42 @@ public class Timeline implements Manipulator {
                 return;
             }
 
-            mElapsedTime += deltaTime;
+            // accumulate
             mAccumulatedTime += deltaTime;
-
-            // duration check if it's set
-            if (mDuration > 0 && mElapsedTime >= mDuration) {
-                mAccumulatedTime -= mElapsedTime - mDuration;
-                // flag done
-                mEnded = true;
-            }
 
             if (!mStarted) {
                 if (mAccumulatedTime >= mStartDelay) {
+                    // woohoo!
                     mStarted = true;
+
+                    // start elapsing
+                    mElapsedTime = mAccumulatedTime - mStartDelay;
                     mAccumulatedTime -= mStartDelay;
 
                     // start the first run
                     run();
                 }
+            } else {
+                // elapse more
+                mElapsedTime += deltaTime;
             }
 
-            // repeated?
-            if (mStarted && mStepDelay > 0 && mAccumulatedTime >= mStepDelay) {
-                final int steps = mAccumulatedTime / mStepDelay;
-                for (int i = 0; i < steps; i++) {
-                    run();
+            if (mStarted) {
+                // duration check if it's set
+                if (mDuration > 0 && mElapsedTime >= mDuration) {
+                    mAccumulatedTime -= mElapsedTime - mDuration;
+                    // flag done
+                    mEnded = true;
+                }
 
-                    mAccumulatedTime -= mStepDelay;
+                // repeated?
+                if (mStepDelay > 0 && mAccumulatedTime >= mStepDelay) {
+                    final int steps = mAccumulatedTime / mStepDelay;
+                    for (int i = 0; i < steps; i++) {
+                        run();
+
+                        mAccumulatedTime -= mStepDelay;
+                    }
                 }
             }
         }

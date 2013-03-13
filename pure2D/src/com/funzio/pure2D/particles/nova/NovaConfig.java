@@ -39,12 +39,14 @@ public class NovaConfig {
     public static final String BF_ST_SCREEN_ALPHA = "screen_alpha";
     public static final String BF_ST_MULTIPLY = "multiply";
     public static final String BF_ST_INTERPOLATE = "interpolate";
+    public static final String BF_ST_INTERPOLATE_COLOR = "interpolate_color";
 
     public static final BlendFunc BF_ADD = BlendFunc.getAdd();
     public static final BlendFunc BF_SCREEN = BlendFunc.getScreen();
     public static final BlendFunc BF_SCREEN_ALPHA = BlendFunc.getScreenAlpha();
     public static final BlendFunc BF_MULTIPLY = BlendFunc.getMultiply();
     public static final BlendFunc BF_INTERPOLATE = BlendFunc.getInterpolate();
+    public static final BlendFunc BF_INTERPOLATE_COLOR = BlendFunc.getInterpolateColor();
 
     // loop modes
     public static final String LOOP_REPEAT = "repeat";
@@ -117,6 +119,8 @@ public class NovaConfig {
             return BF_MULTIPLY;
         } else if (BF_ST_INTERPOLATE.equalsIgnoreCase(mode)) {
             return BF_INTERPOLATE;
+        } else if (BF_ST_INTERPOLATE_COLOR.equalsIgnoreCase(mode)) {
+            return BF_INTERPOLATE_COLOR;
         }
 
         return null;

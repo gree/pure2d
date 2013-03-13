@@ -50,6 +50,8 @@ public class NovaFactory {
         particle.setPosition(emitter.getNextPosition(particle.getPosition()));
         particle.setAtlasFrameSet(mFrameMapper.getFrameSet(particleVO.sprite));
         particle.setOriginAtCenter();
+        // particle.setZ(particleVO.z);
+        // particle.setAlphaTestEnabled(particleVO.z != 0);
 
         BlendFunc bf = NovaConfig.getBlendFunc(particleVO.blend_mode);
         if (bf != null) {

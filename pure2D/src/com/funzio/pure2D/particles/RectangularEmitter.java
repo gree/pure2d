@@ -45,8 +45,8 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
      * @return
      */
     public PointF getNextPosition(final PointF pt) {
-        pt.x = mPosition.x + mRandom.nextInt((int) mSize.x);
-        pt.y = mPosition.y + mRandom.nextInt((int) mSize.y);
+        pt.x = mPosition.x - mOrigin.x + mRandom.nextInt((int) mSize.x);
+        pt.y = mPosition.y - mOrigin.y + mRandom.nextInt((int) mSize.y);
 
         return pt;
     }
