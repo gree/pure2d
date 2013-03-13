@@ -6,9 +6,8 @@ package com.funzio.pure2D.animators;
 /**
  * @author long
  */
-public class SequenceAnimator extends GroupAnimator {
-    protected int mCurrentIndex = -1;
-    protected Animator mCurrentAnimator;
+public class ParallelAnimator extends GroupAnimator {
+    private int mDoneAnimators = 0;
 
     /*
      * (non-Javadoc)
@@ -18,8 +17,9 @@ public class SequenceAnimator extends GroupAnimator {
     public boolean update(final int deltaTime) {
         if (super.update(deltaTime)) {
 
-            if (mCurrentAnimator != null) {
-                mCurrentAnimator.update(deltaTime);
+            // update all
+            for (int i = 0; i < mNumAnimators; i++) {
+                mAnimators.get(i).update(deltaTime);
             }
 
             return true;
@@ -36,36 +36,25 @@ public class SequenceAnimator extends GroupAnimator {
     public void start() {
         super.start();
 
-        mCurrentIndex = -1;
-        next();
+        // and start
+        startAnimators();
     }
 
-    protected Animator next() {
-        if (mCurrentIndex < mNumAnimators - 1) {
-            mCurrentAnimator = mAnimators.get(++mCurrentIndex);
+    /**
+     * Restart all the child animators
+     */
+    protected void startAnimators() {
+        mDoneAnimators = 0;
 
+        for (int i = 0; i < mNumAnimators; i++) {
+            final Animator animator = mAnimators.get(i);
             // listening
-            mCurrentAnimator.setTarget(mTarget);
-            mCurrentAnimator.setListener(this);
+            animator.setListener(this);
+            animator.setTarget(mTarget);
 
             // and start
-            mCurrentAnimator.start();
-        } else {
-            mCurrentAnimator = null;
+            animator.start();
         }
-
-        return mCurrentAnimator;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#end()
-     */
-    @Override
-    public void end() {
-        super.end();
-
-        mCurrentAnimator = null;
     }
 
     /*
@@ -74,12 +63,12 @@ public class SequenceAnimator extends GroupAnimator {
      */
     @Override
     public void onAnimationEnd(final Animator animator) {
-        if (next() == null) {
+        if (++mDoneAnimators == mNumAnimators) {
             if (++mLooped > mLoopCount && mLoopCount >= 0) {
                 end();
             } else {
                 // loop
-                start();
+                startAnimators();
             }
         }
     }
