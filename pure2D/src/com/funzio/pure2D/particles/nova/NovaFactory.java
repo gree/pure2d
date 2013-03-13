@@ -18,6 +18,8 @@ import com.funzio.pure2D.particles.nova.vo.TweenAnimatorVO;
  * @author long
  */
 public class NovaFactory {
+    protected static final String TAG = NovaFactory.class.getSimpleName();
+
     protected NovaVO mNovaVO;
     protected FrameMapper mFrameMapper;
 
@@ -46,6 +48,7 @@ public class NovaFactory {
         final NovaParticle particle = new NovaParticle(emitter, particleVO);
         particle.setPosition(emitter.getNextPosition(particle.getPosition()));
         particle.setAtlasFrameSet(mFrameMapper.getFrameSet(particleVO.sprite));
+        particle.setOriginAtCenter();
         return particle;
     }
 
@@ -56,8 +59,10 @@ public class NovaFactory {
      * @return
      */
     public Animator createAnimator(final String name) {
-        AnimatorVO animatorVO = mNovaVO.getAnimatorVO(name);
+        return createAnimator(mNovaVO.getAnimatorVO(name));
+    }
 
+    protected Animator createAnimator(final AnimatorVO animatorVO) {
         if (animatorVO instanceof TweenAnimatorVO) {
             return ((TweenAnimatorVO) animatorVO).createAnimator();
         } else if (animatorVO instanceof GroupAnimatorVO) {
@@ -73,7 +78,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    public Animator[] createAnimators(final List<AnimatorVO> vos) {
+    protected Animator[] createAnimators(final List<AnimatorVO> vos) {
         // null check
         if (vos == null) {
             return null;
@@ -82,7 +87,7 @@ public class NovaFactory {
         final int size = vos.size();
         Animator[] animators = new Animator[size];
         for (int i = 0; i < size; i++) {
-            animators[i] = createAnimator(vos.get(i).name);
+            animators[i] = createAnimator(vos.get(i));
         }
 
         return animators;

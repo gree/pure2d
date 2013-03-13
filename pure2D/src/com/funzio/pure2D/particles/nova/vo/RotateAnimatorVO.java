@@ -16,10 +16,6 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
 
     public List<Float> delta;
 
-    public RotateAnimatorVO() {
-        // TODO Auto-generated constructor stub
-    }
-
     @Override
     public Animator createAnimator() {
         final RotateAnimator rotate = new RotateAnimator(NovaConfig.getInterpolator(interpolator));

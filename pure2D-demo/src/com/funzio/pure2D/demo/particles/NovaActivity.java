@@ -14,7 +14,13 @@ import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
+import com.funzio.pure2D.atlas.AtlasFrameSet;
+import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
+import com.funzio.pure2D.particles.nova.NovaEmitter;
+import com.funzio.pure2D.particles.nova.NovaFactory;
+import com.funzio.pure2D.particles.nova.NovaFactory.FrameMapper;
 import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
@@ -29,6 +35,24 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
     private String mFilePath;
 
+    private AssetTexture mSmokeTexture;
+    private AssetTexture mFireTexture;
+    private SingleFrameSet mSmokeFrame;
+    private SingleFrameSet mFireFrame;
+    private FrameMapper mFrameMapper = new FrameMapper() {
+
+        @Override
+        public AtlasFrameSet getFrameSet(final String name) {
+            if (name.equals("smoke")) {
+                return mSmokeFrame;
+            } else {
+                return mFireFrame;
+            }
+        }
+    };
+
+    private NovaFactory mFactory;
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +64,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
             @Override
             public void onLoad(final NovaLoader loader, final NovaVO vo) {
                 Log.d(TAG, vo.toString());
+                mFactory = new NovaFactory(vo, mFrameMapper);
             }
 
             @Override
@@ -57,19 +82,31 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
             public void onSurfaceCreated(final GL10 gl) {
 
                 // load the textures
-                loadTexture();
+                loadTextures();
 
                 // generate a lot of squares
-                addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                // addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
             }
         });
     }
 
-    private void loadTexture() {
-        // create texture
+    private void loadTextures() {
+        // create textures
+        mSmokeTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/smoke.png", null);
+        mSmokeFrame = new SingleFrameSet("smoke", mSmokeTexture);
+
+        mFireTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/fire.png", null);
+        mFireFrame = new SingleFrameSet("fire", mFireTexture);
     }
 
     private void addObject(final float x, final float y) {
+
+        NovaEmitter[] emitters = mFactory.createEmitters();
+        for (NovaEmitter emitter : emitters) {
+            emitter.setPosition(x, y);
+            mScene.addChild(emitter);
+        }
+
         // // create object
         // Clip obj = new Clip(mAtlas.getMasterFrameSet());
         // obj.setTexture(mTexture);
@@ -109,7 +146,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
             mStage.queueEvent(new Runnable() {
                 @Override
                 public void run() {
-                    addSome(event.getX(), mDisplaySize.y - event.getY());
+                    addObject(event.getX(), mDisplaySize.y - event.getY());
                 }
             });
         }

@@ -3,15 +3,22 @@
 	"emitters": [
 		{
 			"name": "awesome_fire",
-			"width": 100,
-			"height": 100,
+			"width": 1,
+			"height": 1,
 			"lifespan": 5000,
 			"particles": [
 				{
 					"sprite": "smoke",
 					"start_delay": 0,
 					"step_delay": 100,
-					"num_per_step": 1,
+					"num_per_step": 2,
+					"animator": "move_rotate"
+				},
+				{
+					"sprite": "fire",
+					"start_delay": 1000,
+					"step_delay": 100,
+					"num_per_step": 10,
 					"animator": "move_rotate"
 				}
 			]
@@ -30,8 +37,8 @@
 			"name":"move_rotate",
 			"type": "parallel",
 			"animators": [
-				{"name":"move_up", "type": "move", "dx": [10], "dy": [20], "duration": [1000], "interpolator": "accelerate"},
-				{"name":"rotate_360", "type": "rotate", "delta": [360], "duration": [500]}
+				{"type": "move", "dx": [-10, 10], "dy": [10, 20], "duration": [500, 1000], "interpolator": "decelerate"},
+				{"type": "rotate", "delta": [-360, 360], "duration": [500, 1000]}
 			]
 		}
 	]

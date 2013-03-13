@@ -72,6 +72,8 @@ public interface DisplayObject extends Manipulatable {
 
     public Container getParent();
 
+    public boolean queueEvent(final Runnable r);
+
     public boolean removeFromParent();
 
     public void dispose();

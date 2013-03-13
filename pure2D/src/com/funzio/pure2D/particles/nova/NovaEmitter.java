@@ -8,6 +8,7 @@ import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.animators.Timeline;
 import com.funzio.pure2D.animators.Timeline.Action;
+import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
@@ -94,6 +95,22 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
     public void onAnimationUpdate(final Animator animator, final float value) {
         // TODO Auto-generated method stub
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.RectangularEmitter#onParticleFinish(com.funzio.pure2D.particles.Particle)
+     */
+    @Override
+    public void onParticleFinish(final Particle particle) {
+        particle.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                // auto remove
+                particle.removeFromParent();
+            }
+        });
     }
 
     /**

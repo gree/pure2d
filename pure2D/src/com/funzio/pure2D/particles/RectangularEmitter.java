@@ -103,7 +103,7 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
         }
     }
 
-    protected void queueFinish() {
+    public void queueFinish() {
         queueEvent(new Runnable() {
 
             @Override
