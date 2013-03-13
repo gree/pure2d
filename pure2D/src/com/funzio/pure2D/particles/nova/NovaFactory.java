@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
@@ -49,6 +50,13 @@ public class NovaFactory {
         particle.setPosition(emitter.getNextPosition(particle.getPosition()));
         particle.setAtlasFrameSet(mFrameMapper.getFrameSet(particleVO.sprite));
         particle.setOriginAtCenter();
+
+        BlendFunc bf = NovaConfig.getBlendFunc(particleVO.blend_mode);
+        if (bf != null) {
+            particle.setBlendFunc(bf);
+        } else {
+            particle.setBlendFunc(null);
+        }
         return particle;
     }
 

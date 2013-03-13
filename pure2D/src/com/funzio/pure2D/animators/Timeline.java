@@ -37,7 +37,9 @@ public class Timeline implements Manipulator {
 
             for (int i = 0; i < mNumActions; i++) {
                 final Action action = mActions.get(i);
-                action.update(deltaTime);
+                if (!action.mEnded) {
+                    action.update(deltaTime);
+                }
             }
 
             return true;
@@ -141,9 +143,12 @@ public class Timeline implements Manipulator {
     public abstract static class Action implements Runnable {
         public int mStartDelay = 0;
         public int mStepDelay = 0;
+        public int mDuration = 0;
 
-        protected boolean mStarted = false;
-        protected int mAccumulatedTime = 0;
+        private boolean mStarted = false;
+        private boolean mEnded = false;
+        private int mAccumulatedTime = 0;
+        private int mElapsedTime = 0;
 
         public Action(final int stepDelay) {
             mStepDelay = stepDelay;
@@ -154,13 +159,31 @@ public class Timeline implements Manipulator {
             mStepDelay = stepDelay;
         }
 
+        public Action(final int startDelay, final int stepDelay, final int duration) {
+            mStartDelay = startDelay;
+            mStepDelay = stepDelay;
+            mDuration = duration;
+        }
+
         protected void reset() {
-            mStarted = false;
+            mStarted = mEnded = false;
             mAccumulatedTime = 0;
         }
 
         protected void update(final int deltaTime) {
+            if (mEnded) {
+                return;
+            }
+
+            mElapsedTime += deltaTime;
             mAccumulatedTime += deltaTime;
+
+            // duration check if it's set
+            if (mDuration > 0 && mElapsedTime >= mDuration) {
+                mAccumulatedTime -= mElapsedTime - mDuration;
+                // flag done
+                mEnded = true;
+            }
 
             if (!mStarted) {
                 if (mAccumulatedTime >= mStartDelay) {

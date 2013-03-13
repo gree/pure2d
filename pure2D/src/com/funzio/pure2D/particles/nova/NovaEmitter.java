@@ -123,7 +123,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         private ParticleVO mParticleVO;
 
         public EmitAction(final NovaEmitter emitter, final ParticleVO vo) {
-            super(vo.start_delay, vo.step_delay);
+            super(vo.start_delay, vo.step_delay, vo.duration);
 
             mEmitter = emitter;
             mParticleVO = vo;

@@ -11,6 +11,8 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.gl.gl10.BlendFunc;
+
 /**
  * @author long
  */
@@ -21,6 +23,10 @@ public class NovaConfig {
     public static final DecelerateInterpolator INTER_DECELERATION = new DecelerateInterpolator();
     public static final AccelerateInterpolator INTER_ACCELARATION = new AccelerateInterpolator();
     public static final BounceInterpolator INTER_BOUNCE = new BounceInterpolator();
+
+    public static final BlendFunc BF_ADD = BlendFunc.getAdd();
+    public static final BlendFunc BF_SCREEN = BlendFunc.getScreen();
+    public static final BlendFunc BF_MULTIPLY = BlendFunc.getMultiply();
 
     public static float getRandomFloat(final List<Float> values) {
         if (values == null) {
@@ -71,6 +77,18 @@ public class NovaConfig {
             return NovaConfig.INTER_DECELERATION;
         } else if ("bounce".equalsIgnoreCase(name)) {
             return NovaConfig.INTER_BOUNCE;
+        }
+
+        return null;
+    }
+
+    public static BlendFunc getBlendFunc(final String mode) {
+        if ("add".equalsIgnoreCase(mode)) {
+            return BF_ADD;
+        } else if ("screen".equalsIgnoreCase(mode)) {
+            return BF_SCREEN;
+        } else if ("multiply".equalsIgnoreCase(mode)) {
+            return BF_MULTIPLY;
         }
 
         return null;
