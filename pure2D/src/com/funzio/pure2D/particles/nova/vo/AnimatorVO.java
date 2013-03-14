@@ -15,9 +15,10 @@ import com.funzio.pure2D.animators.Animator;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @Type(value = MoveAnimatorVO.class, name = "move"), //
+        @Type(value = MoveAnimatorVO.class, name = "translate"), //
         @Type(value = RotateAnimatorVO.class, name = "rotate"), //
         @Type(value = ScaleAnimatorVO.class, name = "scale"), //
+        @Type(value = MoveAnimatorVO.class, name = "move"), //
         @Type(value = AlphaAnimatorVO.class, name = "alpha"), //
         @Type(value = SequenceAnimatorVO.class, name = "sequence"), //
         @Type(value = ParallelAnimatorVO.class, name = "parallel"), //

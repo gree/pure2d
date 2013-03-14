@@ -29,7 +29,7 @@
 	"animators": [
 		{
 			"name": "left_right",
-			"type": "move",
+			"type": "translate",
 			"dx": [200],
 			"duration": [2000],
 			"interpolator": "accelerrae_decelerate",
@@ -39,7 +39,7 @@
 			"name":"smoke_ani",
 			"type": "parallel",
 			"animators": [
-				{"type": "move", "dx": [-50, 50], "dy": [300, 600], "duration": [500, 1000], "interpolator": "accelerate_decelerate"},
+				{"type": "translate", "dx": [-50, 50], "dy": [300, 600], "duration": [500, 1000], "interpolator": "accelerate_decelerate"},
 				{"type": "rotate", "delta": [0, 360], "duration": [500, 1000]},
 				{"type": "alpha", "from": [1], "to": [0], "duration": [500]},
 				{"type": "scale", "x_from": [2], "y_from": [2], "x_to": [0.5], "y_to": [0.5], "duration": [500, 1000]}
@@ -49,7 +49,7 @@
 			"name":"fire_ani",
 			"type": "parallel",
 			"animators": [
-				{"type": "move", "dx": [-20, 20], "dy": [100, 300], "duration": [500, 1000], "interpolator": "accelerate_decelerate"},
+				{"type": "translate", "dx": [-20, 20], "dy": [100, 300], "duration": [500, 1000], "interpolator": "accelerate_decelerate"},
 				{"type": "scale", "x_from": [1.5], "y_from": [1.5], "x_to": [0.125], "y_to": [0.5], "duration": [1000]}
 			]
 		}
