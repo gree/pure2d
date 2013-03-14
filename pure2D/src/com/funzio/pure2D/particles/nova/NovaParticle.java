@@ -5,7 +5,6 @@ package com.funzio.pure2D.particles.nova;
 
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.particles.ClipParticle;
-import com.funzio.pure2D.particles.ParticleEmitter;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 
 /**
@@ -14,6 +13,7 @@ import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 public class NovaParticle extends ClipParticle implements Animator.AnimatorListener {
     protected ParticleVO mParticleVO;
     protected Animator mAnimator;
+    protected NovaEmitter mNovaEmitter;
 
     public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
         super();
@@ -29,28 +29,46 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
     public void reset(final Object... params) {
         super.reset(params);
 
-        mEmitter = (ParticleEmitter) params[0];
+        setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
         mParticleVO = (ParticleVO) params[1];
 
         if (mAnimator != null) {
+            // stop it
             mAnimator.stop();
             removeManipulator(mAnimator);
-            ((NovaEmitter) mEmitter).mFactory.releaseAnimator(mParticleVO.animator, mAnimator);
+
+            // release to pool
+            mNovaEmitter.mFactory.releaseAnimator(mAnimator);
+
+            // flag
             mAnimator = null;
         }
 
         if (mEmitter != null) {
             // optional animators
             if (mParticleVO.animator != null) {
-                mAnimator = ((NovaEmitter) mEmitter).mFactory.createAnimator(mParticleVO.animator);
+                // get a new animator from pool
+                mAnimator = mNovaEmitter.mFactory.createAnimator(mParticleVO.animator);
+
+                // null check
                 if (mAnimator != null) {
+                    // add it
                     mAnimator.setListener(this);
                     addManipulator(mAnimator);
+
                     // auto start
                     mAnimator.start();
                 }
             }
         }
+
+        // init the particle
+        setPosition(mNovaEmitter.getNextPosition(getPosition()));
+        setAtlasFrameSet(mNovaEmitter.mFactory.mFrameMapper.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
+        setOriginAtCenter();
+        setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
+        // setZ(particleVO.z);
+        // setAlphaTestEnabled(particleVO.z != 0);
     }
 
     @Override

@@ -10,16 +10,17 @@ import com.funzio.pure2D.Manipulatable;
  */
 public class BaseAnimator implements Animator {
 
+    // input values
     protected Manipulatable mTarget;
     protected AnimatorListener mListener;
     protected Object mData; // extra data
+    // no accumulating by default
+    protected boolean mAccumulating = false;
 
+    // state values
     protected int mElapsedTime = 0;
     protected int mLastDeltaTime = 0;
     protected boolean mRunning = false;
-
-    // no accumulating by default
-    protected boolean mAccumulating = false;
 
     /*
      * (non-Javadoc)

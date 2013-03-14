@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
-import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
@@ -65,23 +64,13 @@ public class NovaFactory {
             particle = mParticlePool.acquire();
         }
         if (particle == null) {
+            // new instance
             particle = new NovaParticle(emitter, particleVO);
         } else {
+            // reset and reuse
             particle.reset(emitter, particleVO);
         }
 
-        particle.setPosition(emitter.getNextPosition(particle.getPosition()));
-        particle.setAtlasFrameSet(mFrameMapper.getFrameSet(NovaConfig.getRandomString(particleVO.sprites)));
-        particle.setOriginAtCenter();
-        // particle.setZ(particleVO.z);
-        // particle.setAlphaTestEnabled(particleVO.z != 0);
-
-        BlendFunc bf = NovaConfig.getBlendFunc(particleVO.blend_mode);
-        if (bf != null) {
-            particle.setBlendFunc(bf);
-        } else {
-            particle.setBlendFunc(null);
-        }
         return particle;
     }
 
@@ -135,9 +124,10 @@ public class NovaFactory {
         return createAnimatorInstance(vo);
     }
 
-    protected void releaseAnimator(final String name, final Animator animator) {
-        if (mAnimatorPools != null) {
-            ObjectPool<Animator> pool = mAnimatorPools.get(name);
+    protected void releaseAnimator(final Animator animator) {
+        if (mAnimatorPools != null && animator.getData() instanceof AnimatorVO) {
+            final AnimatorVO vo = (AnimatorVO) animator.getData();
+            ObjectPool<Animator> pool = mAnimatorPools.get(vo.name);
             if (pool != null) {
                 pool.release(animator);
             }

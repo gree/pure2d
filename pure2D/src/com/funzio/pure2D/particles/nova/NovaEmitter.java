@@ -13,6 +13,7 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
+import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 import com.funzio.pure2D.utils.Reusable;
@@ -53,12 +54,16 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
      */
     @Override
     public void reset(final Object... params) {
-        // stop timeline
+        // stop and reset timeline
         mTimeline.reset();
 
-        // stop all other animator
+        // stop animator
         if (mAnimator != null) {
             mAnimator.stop();
+            // reset the animator
+            if (mAnimator.getData() instanceof AnimatorVO) {
+                ((AnimatorVO) mAnimator.getData()).resetAnimator(mAnimator);
+            }
         }
     }
 
