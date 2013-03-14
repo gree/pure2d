@@ -48,11 +48,11 @@ public class PathAnimator extends TweenAnimator {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#start()
+     * @see com.funzio.pure2D.animators.TweenAnimator#startElapse(int)
      */
     @Override
-    public void start() {
-        super.start();
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
 
         mCurrentSegment = 0;
     }

@@ -143,7 +143,10 @@ public class NovaFactory {
         if (animatorVO instanceof TweenAnimatorVO) {
             return ((TweenAnimatorVO) animatorVO).createAnimator();
         } else if (animatorVO instanceof GroupAnimatorVO) {
-            return ((GroupAnimatorVO) animatorVO).createAnimator(createAnimators(((GroupAnimatorVO) animatorVO).animators));
+            // group
+            final GroupAnimatorVO groupVO = (GroupAnimatorVO) animatorVO;
+            // create the child animators
+            return groupVO.createAnimator(createChildAnimators(groupVO.animators));
         }
 
         return null;
@@ -155,7 +158,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    protected Animator[] createAnimators(final List<AnimatorVO> vos) {
+    protected Animator[] createChildAnimators(final List<AnimatorVO> vos) {
         // null check
         if (vos == null) {
             return null;

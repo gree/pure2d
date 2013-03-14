@@ -32,13 +32,28 @@ public abstract class GroupAnimator extends BaseAnimator implements Animator.Ani
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#start()
+     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
      */
     @Override
-    public void start() {
-        super.start();
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
 
+        // reset values
         mLooped = 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#stop()
+     */
+    @Override
+    public void stop() {
+        super.stop();
+
+        // also stop all the children
+        for (int i = 0; i < mNumAnimators; i++) {
+            mAnimators.get(i).stop();
+        }
     }
 
     /*

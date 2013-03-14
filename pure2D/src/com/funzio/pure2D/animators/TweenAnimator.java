@@ -16,6 +16,7 @@ public class TweenAnimator extends BaseAnimator {
 
     protected float mLastValue = 0;
     protected float mCurrentValue = 0;
+
     protected int mLoopMode = Playable.LOOP_NONE;
     protected int mLoopCount = -1; // forever
 
@@ -36,7 +37,9 @@ public class TweenAnimator extends BaseAnimator {
     @Override
     public void startElapse(final int elapsedTime) {
         super.startElapse(elapsedTime);
-        mLastValue = 0;
+
+        // clear the values
+        mLastValue = mCurrentValue = 0;
     }
 
     /*

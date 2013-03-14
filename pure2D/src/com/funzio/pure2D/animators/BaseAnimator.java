@@ -29,6 +29,7 @@ public class BaseAnimator implements Animator {
         stop();
 
         mTarget = null;
+        mListener = null;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class BaseAnimator implements Animator {
      * @see com.funzio.pure2D.animators.Animator#start()
      */
     @Override
-    public void start() {
+    final public void start() {
         startElapse(0);
     }
 
@@ -72,6 +73,7 @@ public class BaseAnimator implements Animator {
         }
 
         mElapsedTime = elapsedTime;
+        mLastDeltaTime = 0;
         mRunning = true;
     }
 
