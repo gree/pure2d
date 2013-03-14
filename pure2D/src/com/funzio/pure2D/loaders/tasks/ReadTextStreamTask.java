@@ -27,19 +27,19 @@ public class ReadTextStreamTask extends ReadStreamTask {
     @Override
     protected void readContent(final InputStream in) throws IOException {
 
-        final StringBuffer storedString = new StringBuffer();
-
+        final StringBuffer sb = new StringBuffer();
         final InputStreamReader ir = new InputStreamReader(in);
         final BufferedReader br = new BufferedReader(ir);
+
         String line = "";
         while ((line = br.readLine()) != null) {
-            storedString.append(line);
+            sb.append(line);
         }
         br.close();
         ir.close();
 
         // get the string
-        mContent = storedString.toString();
+        mContent = sb.toString();
     }
 
     public String getContent() {

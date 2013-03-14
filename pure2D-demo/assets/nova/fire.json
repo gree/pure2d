@@ -32,7 +32,7 @@
 			"type": "translate",
 			"dx": [200],
 			"duration": [2000],
-			"interpolator": "accelerrae_decelerate",
+			"interpolator": "accelerate_decelerate",
 			"loop_mode": "reverse"
 		},
 		{
