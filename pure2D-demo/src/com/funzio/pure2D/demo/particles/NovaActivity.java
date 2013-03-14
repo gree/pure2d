@@ -41,7 +41,9 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
     private SingleFrameSet mSmokeFrame;
     private SingleFrameSet mFireFrame;
-    private SpriteDelegator mFrameMapper = new SpriteDelegator() {
+    private NovaFactory mNovaFactory;
+
+    private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
         @Override
         public AtlasFrameSet getFrameSet(final String name) {
@@ -53,7 +55,10 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
         }
     };
 
-    private NovaFactory mNovaFactory;
+    @Override
+    protected int getNumObjects() {
+        return mScene.getNumGrandChildren();
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -80,7 +85,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
                     @Override
                     public void onLoad(final NovaLoader loader, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
-                        mNovaFactory = new NovaFactory(vo, mFrameMapper, 500);
+                        mNovaFactory = new NovaFactory(vo, mSpriteDelegator, 500);
                         addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
                     }
 

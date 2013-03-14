@@ -64,9 +64,6 @@ public class StageActivity extends Activity implements OnTouchListener {
         // objects
         mObjects = (TextView) findViewById(R.id.tv_objects);
 
-        // start recording frame rate
-        startFrameRate();
-
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
         mDisplaySize.x = metrics.widthPixels;
         mDisplaySize.y = metrics.heightPixels;
@@ -150,6 +147,9 @@ public class StageActivity extends Activity implements OnTouchListener {
 
         // resume the scene
         mScene.resume();
+
+        // start recording frame rate
+        startFrameRate();
     }
 
     public boolean onTouch(final View v, final MotionEvent event) {
