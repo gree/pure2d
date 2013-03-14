@@ -12,6 +12,7 @@ public class BaseAnimator implements Animator {
 
     protected Manipulatable mTarget;
     protected AnimatorListener mListener;
+    protected Object mData; // extra data
 
     protected int mElapsedTime = 0;
     protected int mLastDeltaTime = 0;
@@ -149,6 +150,16 @@ public class BaseAnimator implements Animator {
     @Override
     public AnimatorListener getListener() {
         return mListener;
+    }
+
+    @Override
+    public void setData(final Object data) {
+        mData = data;
+    }
+
+    @Override
+    public Object getData() {
+        return mData;
     }
 
 }

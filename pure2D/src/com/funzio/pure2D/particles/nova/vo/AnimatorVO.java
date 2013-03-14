@@ -28,6 +28,21 @@ public abstract class AnimatorVO {
     public String loop_mode;
 
     /**
+     * Initialize a newly created animator
+     * 
+     * @param animator
+     * @return
+     */
+    protected Animator init(final Animator animator) {
+        // couple with this VO
+        animator.setData(this);
+        // reset
+        resetAnimator(animator);
+
+        return animator;
+    }
+
+    /**
      * Reset a specific animator to reflect this VO
      * 
      * @param animator

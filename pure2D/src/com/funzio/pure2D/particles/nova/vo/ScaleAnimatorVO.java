@@ -21,11 +21,7 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator() {
-        final ScaleAnimator scale = new ScaleAnimator(NovaConfig.getInterpolator(interpolator));
-        scale.setAccumulating(accumulating);
-        scale.setLoop(NovaConfig.getLoopMode(loop_mode));
-        resetAnimator(scale);
-        return scale;
+        return init(new ScaleAnimator(NovaConfig.getInterpolator(interpolator)));
     }
 
     @Override

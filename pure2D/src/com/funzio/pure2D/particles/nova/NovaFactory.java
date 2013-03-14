@@ -93,6 +93,11 @@ public class NovaFactory {
             mParticlePool.clear();
             mParticlePool = null;
         }
+
+        if (mAnimatorPools != null) {
+            mAnimatorPools.clear();
+            mParticlePool = null;
+        }
     }
 
     /**

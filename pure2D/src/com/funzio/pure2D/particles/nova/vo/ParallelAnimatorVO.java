@@ -14,6 +14,6 @@ public class ParallelAnimatorVO extends GroupAnimatorVO {
 
     @Override
     public GroupAnimator createAnimator(final Animator... animators) {
-        return new ParallelAnimator(animators);
+        return (ParallelAnimator) init(new ParallelAnimator(animators));
     }
 }

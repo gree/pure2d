@@ -81,6 +81,14 @@ public abstract class GroupAnimator extends BaseAnimator implements Animator.Ani
         }
     }
 
+    public Animator getAnimatorAt(final int index) {
+        return (index < mAnimators.size() && index >= 0) ? mAnimators.get(index) : null;
+    }
+
+    public int getNumAnimators() {
+        return mNumAnimators;
+    }
+
     public void clear() {
         mAnimators.clear();
         mNumAnimators = 0;

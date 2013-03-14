@@ -14,7 +14,6 @@ public class SequenceAnimatorVO extends GroupAnimatorVO {
 
     @Override
     public GroupAnimator createAnimator(final Animator... animators) {
-        return new SequenceAnimator(animators);
+        return (SequenceAnimator) init(new SequenceAnimator(animators));
     }
-
 }

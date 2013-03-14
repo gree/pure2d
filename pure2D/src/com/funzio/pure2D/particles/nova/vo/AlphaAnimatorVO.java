@@ -19,11 +19,7 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator() {
-        final AlphaAnimator alpha = new AlphaAnimator(NovaConfig.getInterpolator(interpolator));
-        alpha.setAccumulating(accumulating);
-        alpha.setLoop(NovaConfig.getLoopMode(loop_mode));
-        resetAnimator(alpha);
-        return alpha;
+        return init(new AlphaAnimator(NovaConfig.getInterpolator(interpolator)));
     }
 
     @Override
