@@ -3,18 +3,13 @@
  */
 package com.funzio.pure2D.particles.nova;
 
-import java.io.File;
-import java.io.IOException;
-
 import android.content.res.AssetManager;
 import android.util.Log;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONException;
 
 import com.funzio.pure2D.loaders.AsyncTaskExecuter;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
-import com.funzio.pure2D.loaders.tasks.RunnableTask;
 import com.funzio.pure2D.loaders.tasks.Task;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
@@ -75,42 +70,42 @@ public class NovaLoader {
         executer.executeOnPool(readTask);
     }
 
-    public void load(final AssetManager assets, final String filePath, final ObjectMapper mapper) {
-        Log.v(TAG, "load(): " + assets + ", " + filePath);
-
-        final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
-        final RunnableTask readTask = new RunnableTask(new Runnable() {
-
-            @Override
-            public void run() {
-                mNovaVO = null;
-
-                try {
-                    if (assets == null) {
-                        // load from file system
-                        mNovaVO = mapper.readValue(new File(filePath), NovaVO.class);
-                    } else {
-                        // load from asset folder
-                        mNovaVO = mapper.readValue(assets.open(filePath), NovaVO.class);
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Load failed: " + filePath, e);
-
-                    if (mListener != null) {
-                        mListener.onError(NovaLoader.this);
-                    }
-                    return;
-                }
-
-                if (mListener != null) {
-                    mListener.onLoad(NovaLoader.this, mNovaVO);
-                }
-            }
-        });
-
-        // start loading
-        executer.executeOnPool(readTask);
-    }
+    // public void load(final AssetManager assets, final String filePath, final ObjectMapper mapper) {
+    // Log.v(TAG, "load(): " + assets + ", " + filePath);
+    //
+    // final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
+    // final RunnableTask readTask = new RunnableTask(new Runnable() {
+    //
+    // @Override
+    // public void run() {
+    // mNovaVO = null;
+    //
+    // try {
+    // if (assets == null) {
+    // // load from file system
+    // mNovaVO = mapper.readValue(new File(filePath), NovaVO.class);
+    // } else {
+    // // load from asset folder
+    // mNovaVO = mapper.readValue(assets.open(filePath), NovaVO.class);
+    // }
+    // } catch (IOException e) {
+    // Log.e(TAG, "Load failed: " + filePath, e);
+    //
+    // if (mListener != null) {
+    // mListener.onError(NovaLoader.this);
+    // }
+    // return;
+    // }
+    //
+    // if (mListener != null) {
+    // mListener.onLoad(NovaLoader.this, mNovaVO);
+    // }
+    // }
+    // });
+    //
+    // // start loading
+    // executer.executeOnPool(readTask);
+    // }
 
     public NovaVO getNovaVO() {
         return mNovaVO;

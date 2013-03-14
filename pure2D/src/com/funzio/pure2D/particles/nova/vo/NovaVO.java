@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,27 +23,27 @@ public class NovaVO {
     // for fast look up
     private Map<String, AnimatorVO> mAnimatorMap;
 
-    @JsonCreator
-    public NovaVO( //
-            @JsonProperty("version")//
-            final int version, //
-
-            @JsonProperty("emitters")//
-            final List<EmitterVO> emitters, //
-
-            @JsonProperty("animators")//
-            final List<AnimatorVO> animators //
-    ) {
-        this.version = version;
-        this.emitters = emitters;
-        this.animators = animators;
-
-        // make the map
-        mAnimatorMap = new HashMap<String, AnimatorVO>();
-        for (AnimatorVO vo : animators) {
-            mAnimatorMap.put(vo.name, vo);
-        }
-    }
+    // @JsonCreator
+    // public NovaVO( //
+    // @JsonProperty("version")//
+    // final int version, //
+    //
+    // @JsonProperty("emitters")//
+    // final List<EmitterVO> emitters, //
+    //
+    // @JsonProperty("animators")//
+    // final List<AnimatorVO> animators //
+    // ) {
+    // this.version = version;
+    // this.emitters = emitters;
+    // this.animators = animators;
+    //
+    // // make the map
+    // mAnimatorMap = new HashMap<String, AnimatorVO>();
+    // for (AnimatorVO vo : animators) {
+    // mAnimatorMap.put(vo.name, vo);
+    // }
+    // }
 
     public NovaVO(final JSONObject json) throws JSONException {
         if (json.has("version")) {
