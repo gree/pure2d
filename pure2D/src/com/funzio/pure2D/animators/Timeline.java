@@ -19,6 +19,15 @@ public class Timeline implements Manipulator {
 
     protected List<Action> mActions = new ArrayList<Action>();
     protected int mNumActions = 0;
+    protected int mNumEndedActions = 0;
+
+    protected int mDuration = 0; // 0 == unlimited
+    protected Listener mListener;
+
+    public Timeline(final int duration, final Listener listener) {
+        mDuration = duration;
+        mListener = listener;
+    }
 
     @Override
     public void setTarget(final Manipulatable target) {
@@ -42,6 +51,14 @@ public class Timeline implements Manipulator {
                 }
             }
 
+            // has duration? check it
+            if (mDuration > 0 && mElapsedTime >= mDuration) {
+                if (mListener != null) {
+                    // callback
+                    mListener.onTimelineComplete(this);
+                }
+            }
+
             return true;
         }
 
@@ -61,6 +78,8 @@ public class Timeline implements Manipulator {
             final Action action = mActions.get(i);
             action.reset();
         }
+
+        mNumEndedActions = 0;
     }
 
     /**
@@ -113,10 +132,16 @@ public class Timeline implements Manipulator {
         return mElapsedTime;
     }
 
+    public Listener getListener() {
+        return mListener;
+    }
+
+    public void setListener(final Listener listener) {
+        mListener = listener;
+    }
+
     public void end() {
         mRunning = false;
-
-        // TODO
     }
 
     public boolean isRunning() {
@@ -125,12 +150,16 @@ public class Timeline implements Manipulator {
 
     public void addAction(final Action action) {
         if (mActions.add(action)) {
+            // couple
+            action.mTimeline = this;
             mNumActions++;
         }
     }
 
     public void removeAction(final Action action) {
         if (mActions.remove(action)) {
+            // couple
+            action.mTimeline = null;
             mNumActions--;
         }
     }
@@ -140,6 +169,30 @@ public class Timeline implements Manipulator {
         mNumActions = 0;
     }
 
+    protected void onActionEnd(final Action action) {
+        if (++mNumEndedActions == mNumActions && mDuration <= 0) {
+            // complete!
+            if (mListener != null) {
+                // callback
+                mListener.onTimelineComplete(this);
+            }
+        }
+    }
+
+    /**
+     * Timeline Listener
+     * 
+     * @author long
+     */
+    public static interface Listener {
+        public void onTimelineComplete(Timeline timeline);
+    }
+
+    /**
+     * Timeline Action
+     * 
+     * @author long
+     */
     public abstract static class Action implements Runnable {
         public int mStartDelay = 0;
         public int mStepDelay = 0;
@@ -149,6 +202,9 @@ public class Timeline implements Manipulator {
         private boolean mEnded = false;
         private int mAccumulatedTime = 0;
         private int mElapsedTime = 0;
+
+        // the assigned timeline
+        private Timeline mTimeline;
 
         public Action(final int stepDelay) {
             mStepDelay = stepDelay;
@@ -211,6 +267,11 @@ public class Timeline implements Manipulator {
 
                         mAccumulatedTime -= mStepDelay;
                     }
+                }
+
+                if (mEnded) {
+                    // callback
+                    mTimeline.onActionEnd(this);
                 }
             }
         }

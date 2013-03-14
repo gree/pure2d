@@ -35,9 +35,9 @@ public abstract class AnimatorVO {
      * @return
      */
     protected Animator init(final Animator animator) {
-        // couple with this VO
+        // MUST: couple with this VO
         animator.setData(this);
-        // reset
+        // init and reset
         resetAnimator(animator);
 
         return animator;

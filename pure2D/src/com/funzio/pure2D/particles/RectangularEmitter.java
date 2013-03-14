@@ -96,6 +96,11 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
     }
 
     public void finish() {
+        // check
+        if (mFinished) {
+            return;
+        }
+
         mFinished = true;
         if (mRemoveOnFinish) {
             // auto remove me

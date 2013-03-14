@@ -21,11 +21,12 @@ import com.funzio.pure2D.utils.Reusable;
 /**
  * @author long
  */
-public class NovaEmitter extends RectangularEmitter implements AnimatorListener, Reusable {
+public class NovaEmitter extends RectangularEmitter implements AnimatorListener, Reusable, Timeline.Listener {
+
+    protected final Timeline mTimeline;
+    protected final NovaFactory mFactory;
 
     protected EmitterVO mEmitterVO;
-    protected Timeline mTimeline = new Timeline();
-    protected NovaFactory mFactory;
     protected Animator mAnimator;
 
     // layers for particles
@@ -36,9 +37,11 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
 
         mFactory = factory;
         mEmitterVO = vo;
-
         // auto remove
         mRemoveOnFinish = true;
+
+        // main timeline
+        mTimeline = new Timeline(mEmitterVO.duration, this);
 
         // define the area size
         setSize(vo.width, vo.height);
@@ -68,11 +71,6 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
     }
 
     protected void createManipulators() {
-        // add lifespan to timeline if there is
-        if (mEmitterVO.duration > 0) {
-            mTimeline.addAction(new FinishAction(this, mEmitterVO.duration));
-        }
-
         // emitting action for particles
         int size = mEmitterVO.particles.size();
         for (int i = 0; i < size; i++) {
@@ -111,9 +109,9 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
     @Override
     public void onAnimationEnd(final Animator animator) {
         // only finish when lifespan is not set
-        if (mEmitterVO.duration <= 0) {
-            queueFinish();
-        }
+        // if (mEmitterVO.duration <= 0) {
+        // queueFinish();
+        // }
     }
 
     @Override
@@ -177,6 +175,12 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         }
     }
 
+    @Override
+    public void onTimelineComplete(final Timeline timeline) {
+        // timeline is done, finish now
+        queueFinish();
+    }
+
     /**
      * Timeline Action for emitting paricles
      * 
@@ -216,23 +220,4 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         }
     }
 
-    /**
-     * Timeline Action for finishing this emitter
-     * 
-     * @author long
-     */
-    private static class FinishAction extends Action {
-        private NovaEmitter mEmitter;
-
-        public FinishAction(final NovaEmitter emitter, final int lifespan) {
-            super(lifespan, 0);
-
-            mEmitter = emitter;
-        }
-
-        @Override
-        public void run() {
-            mEmitter.queueFinish();
-        }
-    }
 }

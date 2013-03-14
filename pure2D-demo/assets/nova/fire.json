@@ -5,7 +5,7 @@
 			"name": "my_fire",
 			"width": 50,
 			"height": 50,
-			"duration": 6000,
+			"duration": 8000,
 			"particles": [
 				{
 					"sprites": ["smoke"],
