@@ -40,7 +40,7 @@
 			"type": "parallel",
 			"animators": [
 				{"type": "translate", "dx": [-100, 100], "dy": [300, 500], "duration": [500, 1000], "interpolator": "accelerate_decelerate"},
-				{"type": "rotate", "delta": [0, 360], "duration": [1000]},
+				{"type": "rotate", "angle": [0, 360], "duration": [1000]},
 				{"type": "alpha", "from": [1], "to": [0], "duration": [700]},
 				{"type": "scale", "x_from": [1.5], "y_from": [1.5], "x_to": [0.5], "y_to": [0.5], "duration": [700]}
 			]

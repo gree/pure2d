@@ -24,6 +24,14 @@ import com.funzio.pure2D.animators.Animator;
 // })
 
 public abstract class AnimatorVO {
+    public static final String PARALLEL = "parallel";
+    public static final String SEQUENCE = "sequence";
+    public static final String ALPHA = "alpha";
+    public static final String TRANSLATE = "translate";
+    public static final String MOVE = "move";
+    public static final String ROTATE = "rotate";
+    public static final String SCALE = "scale";
+
     public String name;
     public String type;
     public String loop_mode;
@@ -79,17 +87,17 @@ public abstract class AnimatorVO {
 
         final String type = json.getString("type");
 
-        if (type.equalsIgnoreCase("translate") || type.equalsIgnoreCase("move")) {
+        if (type.equalsIgnoreCase(TRANSLATE) || type.equalsIgnoreCase(MOVE)) {
             return new MoveAnimatorVO(json);
-        } else if (type.equalsIgnoreCase("rotate")) {
+        } else if (type.equalsIgnoreCase(ROTATE)) {
             return new RotateAnimatorVO(json);
-        } else if (type.equalsIgnoreCase("scale")) {
+        } else if (type.equalsIgnoreCase(SCALE)) {
             return new ScaleAnimatorVO(json);
-        } else if (type.equalsIgnoreCase("alpha")) {
+        } else if (type.equalsIgnoreCase(ALPHA)) {
             return new AlphaAnimatorVO(json);
-        } else if (type.equalsIgnoreCase("sequence")) {
+        } else if (type.equalsIgnoreCase(SEQUENCE)) {
             return new SequenceAnimatorVO(json);
-        } else if (type.equalsIgnoreCase("parallel")) {
+        } else if (type.equalsIgnoreCase(PARALLEL)) {
             return new ParallelAnimatorVO(json);
         } else {
             return null;

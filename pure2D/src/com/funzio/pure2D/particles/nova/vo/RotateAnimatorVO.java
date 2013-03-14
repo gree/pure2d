@@ -16,8 +16,7 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  * @author long
  */
 public class RotateAnimatorVO extends TweenAnimatorVO {
-
-    public List<Float> delta;
+    public List<Float> angle;
 
     public RotateAnimatorVO() {
         super();
@@ -26,8 +25,8 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     public RotateAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        if (json.has("delta")) {
-            delta = NovaVO.getListFloat(json.getJSONArray("delta"));
+        if (json.has("angle")) {
+            angle = NovaVO.getListFloat(json.getJSONArray("angle"));
         }
     }
 
@@ -42,7 +41,7 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
 
         final RotateAnimator rotate = (RotateAnimator) animator;
         if (rotate != null) {
-            rotate.setDelta(NovaConfig.getRandomFloat(delta));
+            rotate.setDelta(NovaConfig.getRandomFloat(angle));
             rotate.setDuration(NovaConfig.getRandomInt(duration));
         }
     }
