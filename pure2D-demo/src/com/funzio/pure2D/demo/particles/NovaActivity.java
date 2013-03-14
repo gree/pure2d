@@ -22,7 +22,7 @@ import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
-import com.funzio.pure2D.particles.nova.NovaFactory.FrameMapper;
+import com.funzio.pure2D.particles.nova.NovaFactory.SpriteDelegator;
 import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
@@ -39,7 +39,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
     private SingleFrameSet mSmokeFrame;
     private SingleFrameSet mFireFrame;
-    private FrameMapper mFrameMapper = new FrameMapper() {
+    private SpriteDelegator mFrameMapper = new SpriteDelegator() {
 
         @Override
         public AtlasFrameSet getFrameSet(final String name) {

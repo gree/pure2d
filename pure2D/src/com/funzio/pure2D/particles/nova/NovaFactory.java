@@ -24,15 +24,15 @@ public class NovaFactory {
     protected static final String TAG = NovaFactory.class.getSimpleName();
 
     protected NovaVO mNovaVO;
-    protected FrameMapper mFrameMapper;
+    protected SpriteDelegator mSpriteDelegator;
     // pools
     private int mPoolLimit = 0;
     protected ObjectPool<NovaParticle> mParticlePool;
     protected Map<String, ObjectPool<Animator>> mAnimatorPools;
 
-    public NovaFactory(final NovaVO novaVO, final FrameMapper frameMapper, final int poolLimit) {
+    public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator, final int poolLimit) {
         mNovaVO = novaVO;
-        mFrameMapper = frameMapper;
+        mSpriteDelegator = spriteDelegator;
 
         // pool is optional
         if (poolLimit > 0) {
@@ -168,15 +168,15 @@ public class NovaFactory {
         return animators;
     }
 
-    public FrameMapper getFrameMapper() {
-        return mFrameMapper;
+    public SpriteDelegator getSpriteDelegator() {
+        return mSpriteDelegator;
     }
 
-    public void setFrameMapper(final FrameMapper frameMapper) {
-        mFrameMapper = frameMapper;
+    public void setSpriteDeletator(final SpriteDelegator frameMapper) {
+        mSpriteDelegator = frameMapper;
     }
 
-    public static interface FrameMapper {
+    public static interface SpriteDelegator {
         public AtlasFrameSet getFrameSet(String name);
     }
 
