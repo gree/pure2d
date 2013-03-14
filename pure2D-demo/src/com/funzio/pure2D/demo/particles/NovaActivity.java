@@ -1,5 +1,7 @@
 package com.funzio.pure2D.demo.particles;
 
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.os.Bundle;
@@ -124,7 +126,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
             return;
         }
 
-        NovaEmitter[] emitters = mNovaFactory.createEmitters();
+        List<NovaEmitter> emitters = mNovaFactory.createEmitters();
         for (NovaEmitter emitter : emitters) {
             emitter.setPosition(x, y);
             mScene.addChild(emitter);

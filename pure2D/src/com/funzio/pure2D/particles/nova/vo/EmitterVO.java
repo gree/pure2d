@@ -13,6 +13,7 @@ public class EmitterVO {
     public String type = "rectangle";
     public float width = 1;
     public float height = 1;
+    public int quantity = 1;
     public int duration = 0; // ms
 
     // animator for this emitter

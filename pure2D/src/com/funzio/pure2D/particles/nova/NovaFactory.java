@@ -3,6 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,11 +43,15 @@ public class NovaFactory {
         }
     }
 
-    public NovaEmitter[] createEmitters() {
+    public List<NovaEmitter> createEmitters() {
         final int size = mNovaVO.emitters.size();
-        final NovaEmitter[] emitters = new NovaEmitter[size];
+        final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
+        EmitterVO vo;
         for (int i = 0; i < size; i++) {
-            emitters[i] = createEmitter(mNovaVO.emitters.get(i));
+            vo = mNovaVO.emitters.get(i);
+            for (int n = 0; n < vo.quantity; n++) {
+                emitters.add(createEmitter(vo));
+            }
         }
 
         return emitters;
