@@ -3,7 +3,12 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author long
@@ -11,8 +16,8 @@ import java.util.List;
 public class EmitterVO {
     public String name;
     public String type = "rectangle";
-    public float width = 1;
-    public float height = 1;
+    public int width = 1;
+    public int height = 1;
     public int quantity = 1;
     public int duration = 0; // ms
 
@@ -23,7 +28,50 @@ public class EmitterVO {
     public List<ParticleVO> particles;
 
     public EmitterVO() {
-        // TODO Auto-generated constructor stub
+    }
+
+    public EmitterVO(final JSONObject json) throws JSONException {
+        if (json.has("name")) {
+            name = json.getString("name");
+        }
+
+        if (json.has("type")) {
+            type = json.getString("type");
+        }
+
+        if (json.has("width")) {
+            width = json.getInt("width");
+        }
+
+        if (json.has("height")) {
+            height = json.getInt("height");
+        }
+
+        if (json.has("quantity")) {
+            quantity = json.getInt("quantity");
+        }
+
+        if (json.has("duration")) {
+            duration = json.getInt("duration");
+        }
+
+        if (json.has("animator")) {
+            animator = json.getString("animator");
+        }
+
+        if (json.has("particles")) {
+            particles = getParticles(json.getJSONArray("particles"));
+        }
+    }
+
+    private List<ParticleVO> getParticles(final JSONArray array) throws JSONException {
+        final List<ParticleVO> list = new ArrayList<ParticleVO>();
+        final int size = array.length();
+        for (int i = 0; i < size; i++) {
+            list.add(new ParticleVO(array.getJSONObject(i)));
+        }
+
+        return list;
     }
 
 }

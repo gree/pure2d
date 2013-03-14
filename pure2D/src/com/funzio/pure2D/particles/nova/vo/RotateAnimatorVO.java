@@ -5,6 +5,9 @@ package com.funzio.pure2D.particles.nova.vo;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.particles.nova.NovaConfig;
@@ -15,6 +18,18 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
 public class RotateAnimatorVO extends TweenAnimatorVO {
 
     public List<Float> delta;
+
+    public RotateAnimatorVO() {
+        super();
+    }
+
+    public RotateAnimatorVO(final JSONObject json) throws JSONException {
+        super(json);
+
+        if (json.has("delta")) {
+            delta = NovaVO.getListFloat(json.getJSONArray("delta"));
+        }
+    }
 
     @Override
     public Animator createAnimator() {

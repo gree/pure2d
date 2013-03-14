@@ -5,6 +5,9 @@ package com.funzio.pure2D.particles.nova.vo;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.GroupAnimator;
 
@@ -15,6 +18,19 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
     public List<AnimatorVO> animators;
 
     public abstract GroupAnimator createAnimator(Animator... animators);
+
+    public GroupAnimatorVO() {
+
+    }
+
+    public GroupAnimatorVO(final JSONObject json) throws JSONException {
+        super(json);
+
+        if (json.has("animators")) {
+            animators = NovaVO.getAnimators(json.getJSONArray("animators"));
+        }
+
+    }
 
     /*
      * (non-Javadoc)

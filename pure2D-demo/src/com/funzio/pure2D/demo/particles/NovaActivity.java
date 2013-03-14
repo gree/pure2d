@@ -9,9 +9,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
@@ -29,13 +26,8 @@ import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
 public class NovaActivity extends StageActivity implements AnimatorListener {
-    protected static final String TAG = NovaActivity.class.getSimpleName();
-
+    private static final String TAG = NovaActivity.class.getSimpleName();
     private static final String NOVA_DIR = "nova/";
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    static {
-        OBJECT_MAPPER.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     private String mFilePath;
 
@@ -79,8 +71,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
                 // generate a lot of squares
                 // addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
 
-                NovaLoader loader = new NovaLoader();
-                loader.setListener(new NovaLoader.Listener() {
+                NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
                     @Override
                     public void onLoad(final NovaLoader loader, final NovaVO vo) {
@@ -95,7 +86,9 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
                     }
                 });
-                loader.load(getAssets(), mFilePath, OBJECT_MAPPER);
+
+                // load the file
+                loader.load(getAssets(), mFilePath);
             }
         });
     }
