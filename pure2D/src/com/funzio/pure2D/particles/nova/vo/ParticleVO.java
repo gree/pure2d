@@ -16,7 +16,7 @@ public class ParticleVO {
     public int start_delay = 0;
     public int step_delay = Scene.DEFAULT_MSPF;
     public int duration = 0; // <= 0 is unlimited
-    public int num_per_step = 1;
+    public int step_quantity = 1;
 
     public int layer = 0;
 

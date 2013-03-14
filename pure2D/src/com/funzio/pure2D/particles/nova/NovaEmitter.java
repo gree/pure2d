@@ -203,7 +203,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
                     if (mEmitter.mParent != null) {
                         // emit the particles
                         Container layer;
-                        for (int n = 0; n < mParticleVO.num_per_step; n++) {
+                        for (int n = 0; n < mParticleVO.step_quantity; n++) {
                             // find the layer
                             layer = mParticleVO.layer > 0 ? mEmitter.mLayers.get(mParticleVO.layer) : mEmitter.mParent;
                             // add to the layer
