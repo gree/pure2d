@@ -5,18 +5,18 @@
 			"name": "my_fire",
 			"width": 50,
 			"height": 50,
-			"duration": 7000,
+			"duration": 6000,
 			"particles": [
 				{
 					"sprites": ["smoke"],
-					"duration": 6000,
+					"duration": 5000,
+					"start_delay": 500,
 					"animator": "smoke_ani",
 					"blend_mode": "screen_alpha",
 					"layer": 1
 				},
 				{
 					"sprites": ["fire", "fire", "fire", "smoke"],
-					"start_delay": 500,
 					"duration": 5000,
 					"animator": "fire_ani",
 					"blend_mode": "add"
