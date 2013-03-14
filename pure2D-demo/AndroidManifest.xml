@@ -180,7 +180,7 @@
         </activity>
         <activity
             android:name=".particles.ParticleMenuActivity"
-            android:label="@string/particles"
+            android:label="@string/simple_particles"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -205,7 +205,7 @@
         </activity>
         <activity
             android:name=".particles.NovaMenuActivity"
-            android:label="@string/nova_system"
+            android:label="@string/nova_particle_system"
             android:screenOrientation="portrait" >
         </activity>
         <activity

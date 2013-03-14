@@ -26,7 +26,7 @@
     <string name="hello_camera">Hello Camera!</string>
 
     <!-- particles -->
-    <string name="particles">Particles</string>
+    <string name="simple_particles">Simple Particles</string>
     <string name="simple_smoke">Simple Smoke</string>
     <string name="motion_trails">Motion Trails</string>
     <string name="dynamic_emitters">Dynamic Emitters</string>
@@ -132,6 +132,6 @@
     <string name="parallel">Parallel</string>
     <string name="sequence">Sequence</string>
     <string name="parallel_animations">Parallel\nAnimations</string>
-    <string name="nova_system">Nova System</string>
+    <string name="nova_particle_system">Nova System</string>
 
 </resources>

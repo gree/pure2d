@@ -54,26 +54,26 @@ public final class R {
         public static final int v22osprey_0_se=0x7f020028;
     }
     public static final class id {
-        public static final int btn_3d=0x7f080025;
+        public static final int btn_3d=0x7f080026;
         public static final int btn_3d_rotation=0x7f080037;
-        public static final int btn_air_attackers=0x7f08002b;
-        public static final int btn_animations=0x7f080023;
+        public static final int btn_air_attackers=0x7f08002c;
+        public static final int btn_animations=0x7f080024;
         public static final int btn_bezier_animation=0x7f080006;
-        public static final int btn_bouncing_objects=0x7f080031;
+        public static final int btn_bouncing_objects=0x7f080032;
         public static final int btn_buffers=0x7f08001e;
         public static final int btn_camera=0x7f080020;
-        public static final int btn_casino=0x7f080028;
+        public static final int btn_casino=0x7f080029;
         public static final int btn_coin_explosion=0x7f080008;
         public static final int btn_containers=0x7f08001c;
         public static final int btn_display_groups=0x7f080010;
         public static final int btn_display_objects=0x7f08001b;
-        public static final int btn_dynamic_emitters=0x7f080034;
-        public static final int btn_effects=0x7f080022;
+        public static final int btn_dynamic_emitters=0x7f080035;
+        public static final int btn_effects=0x7f080023;
         public static final int btn_frame_buffer=0x7f08000b;
-        public static final int btn_ground_attackers=0x7f08002a;
+        public static final int btn_ground_attackers=0x7f08002b;
         public static final int btn_hello_atlas=0x7f080000;
         public static final int btn_hello_camera=0x7f08000d;
-        public static final int btn_hello_display_object=0x7f08002e;
+        public static final int btn_hello_display_object=0x7f08002f;
         public static final int btn_hello_physic=0x7f080036;
         public static final int btn_hello_text=0x7f080068;
         public static final int btn_hello_texture=0x7f080069;
@@ -82,27 +82,27 @@ public final class R {
         public static final int btn_hwheel_3d=0x7f080016;
         public static final int btn_image_sequence=0x7f080002;
         public static final int btn_json_atlas=0x7f080001;
-        public static final int btn_jumping_objects=0x7f080030;
+        public static final int btn_jumping_objects=0x7f080031;
         public static final int btn_load=0x7f080039;
         public static final int btn_loader_async=0x7f08001a;
         public static final int btn_loader_service=0x7f080019;
-        public static final int btn_loaders=0x7f080026;
+        public static final int btn_loaders=0x7f080027;
         public static final int btn_masking=0x7f08006c;
         public static final int btn_motion_trail_shape=0x7f080018;
-        public static final int btn_motion_trails=0x7f080033;
-        public static final int btn_multiple_objects=0x7f08002f;
+        public static final int btn_motion_trails=0x7f080034;
+        public static final int btn_multiple_objects=0x7f080030;
         public static final int btn_multiple_texture=0x7f08006b;
-        public static final int btn_mw=0x7f080027;
-        public static final int btn_mw_explosion=0x7f080029;
-        public static final int btn_nova_system=0x7f080035;
+        public static final int btn_mw=0x7f080028;
+        public static final int btn_mw_explosion=0x7f08002a;
+        public static final int btn_nova_system=0x7f080021;
         public static final int btn_parallel_animation=0x7f080004;
-        public static final int btn_particles=0x7f080021;
+        public static final int btn_particles=0x7f080022;
         public static final int btn_path_animation=0x7f080005;
         public static final int btn_perspective_camera=0x7f08000e;
-        public static final int btn_physics=0x7f080024;
+        public static final int btn_physics=0x7f080025;
         public static final int btn_repeating_texture=0x7f08006a;
-        public static final int btn_sea_attackers=0x7f08002c;
-        public static final int btn_simple_smoke=0x7f080032;
+        public static final int btn_sea_attackers=0x7f08002d;
+        public static final int btn_simple_smoke=0x7f080033;
         public static final int btn_skeleton_animation=0x7f080009;
         public static final int btn_skeleton_animation_cache=0x7f08000a;
         public static final int btn_slot_machine=0x7f08000f;
@@ -125,7 +125,7 @@ public final class R {
         public static final int cb_show_atlas=0x7f080038;
         public static final int cb_textures=0x7f080060;
         public static final int debug=0x7f08006e;
-        public static final int nova_menu_layout=0x7f08002d;
+        public static final int nova_menu_layout=0x7f08002e;
         public static final int pause=0x7f08006d;
         public static final int radio_1=0x7f080054;
         public static final int radio_2=0x7f080055;
@@ -281,13 +281,10 @@ public final class R {
         public static final int mw_units=0x7f050019;
         public static final int no_looping=0x7f05004d;
         public static final int none=0x7f05004b;
-        public static final int nova_system=0x7f050071;
+        public static final int nova_particle_system=0x7f050071;
         public static final int once=0x7f050062;
         public static final int parallel=0x7f05006e;
         public static final int parallel_animations=0x7f050070;
-        /**  particles 
-         */
-        public static final int particles=0x7f050011;
         public static final int path_animation=0x7f050067;
         public static final int pause=0x7f050001;
         public static final int perspective_camera=0x7f05005e;
@@ -309,6 +306,9 @@ public final class R {
         public static final int sequence=0x7f05006f;
         public static final int show_atlas=0x7f050045;
         public static final int simple_3d=0x7f05005f;
+        /**  particles 
+         */
+        public static final int simple_particles=0x7f050011;
         public static final int simple_smoke=0x7f050012;
         public static final int skeleton_animation=0x7f050058;
         public static final int skeleton_animation_cache=0x7f050059;
