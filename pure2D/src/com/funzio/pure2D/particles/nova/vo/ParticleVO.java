@@ -23,8 +23,10 @@ public class ParticleVO {
     public int duration = 0; // <= 0 is unlimited
     public int step_quantity = 1;
 
+    // the layer
     public int layer = 0;
 
+    // optional
     public String animator;
     public String blend_mode;
 
@@ -33,9 +35,7 @@ public class ParticleVO {
     }
 
     public ParticleVO(final JSONObject json) throws JSONException {
-        if (json.has("sprites")) {
-            sprites = getSprites(json.getJSONArray("sprites"));
-        }
+        sprites = getSprites(json.optJSONArray("sprites"));
 
         if (json.has("start_delay")) {
             start_delay = json.getInt("start_delay");
@@ -57,16 +57,16 @@ public class ParticleVO {
             layer = json.getInt("layer");
         }
 
-        if (json.has("animator")) {
-            animator = json.getString("animator");
-        }
-
-        if (json.has("blend_mode")) {
-            blend_mode = json.getString("blend_mode");
-        }
+        // optional
+        animator = json.optString("animator");
+        blend_mode = json.optString("blend_mode");
     }
 
-    private List<String> getSprites(final JSONArray array) throws JSONException {
+    private static List<String> getSprites(final JSONArray array) throws JSONException {
+        if (array == null) {
+            return null;
+        }
+
         final List<String> result = new ArrayList<String>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {

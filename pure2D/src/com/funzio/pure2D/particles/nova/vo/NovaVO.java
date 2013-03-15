@@ -68,6 +68,10 @@ public class NovaVO {
     }
 
     protected static List<EmitterVO> getEmitters(final JSONArray array) throws JSONException {
+        if (array == null) {
+            return null;
+        }
+
         final List<EmitterVO> result = new ArrayList<EmitterVO>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {
@@ -78,6 +82,10 @@ public class NovaVO {
     }
 
     protected static List<AnimatorVO> getAnimators(final JSONArray array) throws JSONException {
+        if (array == null) {
+            return null;
+        }
+
         final List<AnimatorVO> result = new ArrayList<AnimatorVO>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {
