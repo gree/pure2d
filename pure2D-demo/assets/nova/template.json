@@ -7,13 +7,20 @@
 			"particles": [
 				{
 					"sprite": [],
-					"animator": []
+					"animator": ["my_ani"]
 				},
 			]
 		}
 	],
 	
 	"animators": [
-
+		{
+			"name": "my_ani"
+			"type": "translate",
+			"dx": [-100, 100],
+			"dy": [-100, 100],
+			"duration": [1000],
+			"interpolator": "decelerate"
+		}
 	]
 }

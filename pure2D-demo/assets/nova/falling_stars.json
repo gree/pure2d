@@ -2,13 +2,14 @@
 	"version": 1,
 	"emitters": [
 		{
-			"name": "my_emitter",
+			"name": "falling_stars",
 			"lifespan": 5000,
 			"particles": [
 				{
 					"sprite": ["star"],
 					"start_frame": [0, 20],
-					"animator": ["shoot_ani"]
+					"animator": ["fall_ani", "shoot_ani"],
+					"blend_mode": ["", "screen", "add", "subtract"]
 				}
 			]
 		}
@@ -16,10 +17,19 @@
 	
 	"animators": [
 		{
-			"name": "shoot_ani",
+			"name": "fall_ani",
 			"type": "recursive_trajectory",
 			"velocity": [50, 100],
 			"angle": [0, 6.28]
+		},
+
+		{
+			"name": "shoot_ani",
+			"type": "translate",
+			"dx": [-500, 500],
+			"dy": [-500, 500],
+			"duration": [1000],
+			"interpolator": "decelerate"
 		}
 	]
 }

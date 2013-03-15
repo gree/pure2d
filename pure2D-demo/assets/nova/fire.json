@@ -12,14 +12,14 @@
 					"duration": 5000,
 					"start_delay": 500,
 					"animator": ["smoke_ani"],
-					"blend_mode": "screen_alpha",
+					"blend_mode": ["screen_alpha"],
 					"layer": 1
 				},
 				{
 					"sprite": ["fire", "fire", "fire", "smoke"],
 					"duration": 5000,
 					"animator": ["fire_ani"],
-					"blend_mode": "add"
+					"blend_mode": ["add"]
 				}
 			],
 			"animator": "left_right"

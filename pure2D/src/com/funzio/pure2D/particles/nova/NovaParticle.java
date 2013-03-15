@@ -60,7 +60,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         }
         setOriginAtCenter();
         // and others
-        setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
+        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
         // setZ(particleVO.z);
         // setAlphaTestEnabled(particleVO.z != 0);
 
