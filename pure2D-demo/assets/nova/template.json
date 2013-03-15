@@ -5,7 +5,10 @@
 			"name": "my_emitter",
 			"lifespan": 1000,
 			"particles": [
-
+				{
+					"sprite": [],
+					"animator": []
+				},
 			]
 		}
 	],

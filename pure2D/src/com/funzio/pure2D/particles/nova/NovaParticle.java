@@ -51,10 +51,12 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         mAlpha = 1;
         mColor = null;
         // frames
-        setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
+        setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprite)));
         if (getAtlasFrameSet() == null) {
             // just a box
             setSize(50, 50);
+        } else {
+            playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
         }
         setOriginAtCenter();
         // and others
@@ -66,7 +68,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
             // optional animators
             if (mParticleVO.animator != null) {
                 // get a new animator from pool
-                mAnimator = mNovaEmitter.mFactory.createAnimator(this, mParticleVO.animator);
+                mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
 
                 // null check
                 if (mAnimator != null) {

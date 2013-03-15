@@ -6,8 +6,9 @@
 			"lifespan": 5000,
 			"particles": [
 				{
-					"sprites": ["star"],
-					"animator": "shoot_ani"
+					"sprite": ["star"],
+					"start_frame": [0, 20],
+					"animator": ["shoot_ani"]
 				}
 			]
 		}

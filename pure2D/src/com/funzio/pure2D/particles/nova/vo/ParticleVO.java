@@ -3,10 +3,8 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,8 +23,10 @@ public class ParticleVO {
     public int layer = 0;
 
     // optional
-    public List<String> sprites;
-    public String animator;
+    public List<String> sprite;
+    public List<Integer> start_frame;
+
+    public List<String> animator;
     public String blend_mode;
 
     public ParticleVO() {
@@ -55,22 +55,11 @@ public class ParticleVO {
         }
 
         // optional
-        sprites = getSprites(json.optJSONArray("sprites"));
-        animator = json.optString("animator");
+        sprite = NovaVO.getListString(json.optJSONArray("sprite"));
+        animator = NovaVO.getListString(json.optJSONArray("animator"));
         blend_mode = json.optString("blend_mode");
+
+        start_frame = NovaVO.getListInteger(json.optJSONArray("start_frame"));
     }
 
-    private static List<String> getSprites(final JSONArray array) throws JSONException {
-        if (array == null) {
-            return null;
-        }
-
-        final List<String> result = new ArrayList<String>();
-        final int size = array.length();
-        for (int i = 0; i < size; i++) {
-            result.add(array.getString(i));
-        }
-
-        return result;
-    }
 }

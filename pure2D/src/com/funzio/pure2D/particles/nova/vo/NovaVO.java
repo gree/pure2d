@@ -137,6 +137,20 @@ public class NovaVO {
         return result;
     }
 
+    protected static List<String> getListString(final JSONArray array) throws JSONException {
+        if (array == null) {
+            return null;
+        }
+
+        final List<String> result = new ArrayList<String>();
+        final int size = array.length();
+        for (int i = 0; i < size; i++) {
+            result.add(array.getString(i));
+        }
+
+        return result;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
