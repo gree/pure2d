@@ -38,6 +38,13 @@ public class GLColor {
         this.a = color.a;
     }
 
+    public void setValues(final GLColor src) {
+        this.r = src.r;
+        this.g = src.g;
+        this.b = src.b;
+        this.a = src.a;
+    }
+
     public void setValues(final float r, final float g, final float b, final float a) {
         this.r = r;
         this.g = g;
