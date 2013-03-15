@@ -46,17 +46,9 @@ public abstract class AnimatorVO {
     }
 
     public AnimatorVO(final JSONObject json) throws JSONException {
-        if (json.has("name")) {
-            name = json.getString("name");
-        }
-
-        if (json.has("type")) {
-            type = json.getString("type");
-        }
-
-        if (json.has("loop_mode")) {
-            loop_mode = json.getString("loop_mode");
-        }
+        name = json.optString("name");
+        type = json.optString("type");
+        loop_mode = json.optString("loop_mode");
 
         if (json.has("accumulating")) {
             accumulating = json.getBoolean("accumulating");

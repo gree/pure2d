@@ -7,16 +7,13 @@
 			"particles": [
 				{
 					"sprites": ["smoke"],
-					"animator": "smoke_ani",
-					"layer": 1
+					"animator": "smoke_ani"
 				},
 				{
-					"sprites": ["fire", "fire", "fire", "smoke"],
-					"animator": "fire_ani",
-					"blend_mode": "add"
+					"sprites": ["fire"],
+					"animator": "fire_ani"
 				}
-			],
-			"animator": "shoot_ani"
+			]
 		}
 	],
 	
@@ -25,14 +22,13 @@
 			"name": "shoot_ani",
 			"type": "trajectory",
 			"velocity": [50, 100],
-			"angle": [0, 3.14]
+			"angle": [0, 6.28]
 		},
 		{
 			"name":"smoke_ani",
 			"type": "parallel",
 			"animators": [
 				{
-				"name": "shoot_ani",
 				"type": "trajectory",
 				"velocity": [50, 100],
 				"angle": [0, 3.14]
@@ -46,7 +42,6 @@
 			"type": "parallel",
 			"animators": [
 				{
-					"name": "shoot_ani",
 					"type": "trajectory",
 					"velocity": [50, 100],
 					"angle": [0, 3.14]

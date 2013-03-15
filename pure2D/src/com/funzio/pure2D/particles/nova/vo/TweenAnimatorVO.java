@@ -27,14 +27,8 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
     public TweenAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        if (json.has("interpolator")) {
-            type = json.getString("interpolator");
-        }
-
-        if (json.has("duration")) {
-            duration = NovaVO.getListInteger(json.getJSONArray("duration"));
-        }
-
+        type = json.optString("interpolator");
+        duration = NovaVO.getListInteger(json.optJSONArray("duration"));
     }
 
     @Override

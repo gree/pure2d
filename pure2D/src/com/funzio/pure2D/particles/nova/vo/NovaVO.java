@@ -46,17 +46,9 @@ public class NovaVO {
     // }
 
     public NovaVO(final JSONObject json) throws JSONException {
-        if (json.has("version")) {
-            this.version = json.getInt("version");
-        }
-
-        if (json.has("emitters")) {
-            this.emitters = getEmitters(json.getJSONArray("emitters"));
-        }
-
-        if (json.has("animators")) {
-            this.animators = getAnimators(json.getJSONArray("animators"));
-        }
+        version = json.optInt("version");
+        emitters = getEmitters(json.optJSONArray("emitters"));
+        animators = getAnimators(json.optJSONArray("animators"));
 
         // make the map
         if (animators != null) {
@@ -96,6 +88,10 @@ public class NovaVO {
     }
 
     protected static List<Integer> getListInteger(final JSONArray array) throws JSONException {
+        if (array == null) {
+            return null;
+        }
+
         final List<Integer> result = new ArrayList<Integer>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {
@@ -106,6 +102,10 @@ public class NovaVO {
     }
 
     protected static List<Float> getListFloat(final JSONArray array) throws JSONException {
+        if (array == null) {
+            return null;
+        }
+
         final List<Float> result = new ArrayList<Float>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {

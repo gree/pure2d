@@ -31,9 +31,7 @@ public class EmitterVO {
     }
 
     public EmitterVO(final JSONObject json) throws JSONException {
-        if (json.has("name")) {
-            name = json.getString("name");
-        }
+        name = json.optString("name");
 
         if (json.has("type")) {
             type = json.getString("type");
@@ -55,13 +53,8 @@ public class EmitterVO {
             duration = json.getInt("duration");
         }
 
-        if (json.has("animator")) {
-            animator = json.getString("animator");
-        }
-
-        if (json.has("particles")) {
-            particles = getParticles(json.getJSONArray("particles"));
-        }
+        animator = json.optString("animator");
+        particles = getParticles(json.optJSONArray("particles"));
     }
 
     private List<ParticleVO> getParticles(final JSONArray array) throws JSONException {

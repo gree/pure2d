@@ -30,21 +30,10 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
     public ScaleAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        if (json.has("x_from")) {
-            x_from = NovaVO.getListFloat(json.getJSONArray("x_from"));
-        }
-
-        if (json.has("x_to")) {
-            x_to = NovaVO.getListFloat(json.getJSONArray("x_to"));
-        }
-
-        if (json.has("y_from")) {
-            y_from = NovaVO.getListFloat(json.getJSONArray("y_from"));
-        }
-
-        if (json.has("y_to")) {
-            y_to = NovaVO.getListFloat(json.getJSONArray("y_to"));
-        }
+        x_from = NovaVO.getListFloat(json.optJSONArray("x_from"));
+        x_to = NovaVO.getListFloat(json.optJSONArray("x_to"));
+        y_from = NovaVO.getListFloat(json.optJSONArray("y_from"));
+        y_to = NovaVO.getListFloat(json.optJSONArray("y_to"));
     }
 
     @Override

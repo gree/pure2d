@@ -26,9 +26,7 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     public RotateAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        if (json.has("angle")) {
-            angle = NovaVO.getListFloat(json.getJSONArray("angle"));
-        }
+        angle = NovaVO.getListFloat(json.optJSONArray("angle"));
     }
 
     @Override

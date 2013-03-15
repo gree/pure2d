@@ -29,17 +29,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
     public void reset(final Object... params) {
         super.reset(params);
 
-        setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
-        mParticleVO = (ParticleVO) params[1];
-
-        // init the particle
-        setPosition(mNovaEmitter.getNextPosition(getPosition()));
-        setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
-        setOriginAtCenter();
-        setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
-        // setZ(particleVO.z);
-        // setAlphaTestEnabled(particleVO.z != 0);
-
+        // clean up first
         if (mAnimator != null) {
             // stop it
             mAnimator.stop();
@@ -51,6 +41,18 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
             // flag
             mAnimator = null;
         }
+
+        // set
+        setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
+        mParticleVO = (ParticleVO) params[1];
+
+        // init the particle
+        setPosition(mNovaEmitter.getNextPosition(mPosition));
+        setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
+        setOriginAtCenter();
+        setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
+        // setZ(particleVO.z);
+        // setAlphaTestEnabled(particleVO.z != 0);
 
         if (mEmitter != null) {
             // optional animators

@@ -28,13 +28,8 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
     public MoveAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        if (json.has("dx")) {
-            dx = NovaVO.getListFloat(json.getJSONArray("dx"));
-        }
-
-        if (json.has("dy")) {
-            dy = NovaVO.getListFloat(json.getJSONArray("dy"));
-        }
+        dx = NovaVO.getListFloat(json.optJSONArray("dx"));
+        dy = NovaVO.getListFloat(json.optJSONArray("dy"));
     }
 
     @Override

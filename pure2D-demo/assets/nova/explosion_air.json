@@ -9,6 +9,7 @@
 				{
 					"sprites": ["smoke"],
 					"animator": "smoke_ani",
+					"blend_mode": "screen_alpha",
 					"layer": 1
 				},
 				{
