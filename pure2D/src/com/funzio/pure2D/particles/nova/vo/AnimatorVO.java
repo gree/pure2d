@@ -33,6 +33,7 @@ public abstract class AnimatorVO {
     public static final String ROTATE = "rotate";
     public static final String SCALE = "scale";
     public static final String TRAJECTORY = "trajectory";
+    public static final String RECURSIVE_TRAJECTORY = "recursive_trajectory";
 
     public String name;
     public String type;
@@ -99,6 +100,8 @@ public abstract class AnimatorVO {
             return new AlphaAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TRAJECTORY)) {
             return new TrajectoryAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(RECURSIVE_TRAJECTORY)) {
+            return new RecursiveTrajectoryAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SEQUENCE)) {
             return new SequenceAnimatorVO(json);
         } else if (type.equalsIgnoreCase(PARALLEL)) {

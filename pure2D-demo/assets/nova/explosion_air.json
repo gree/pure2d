@@ -3,7 +3,7 @@
 	"emitters": [
 		{
 			"name": "my_fire",
-			"duration": 1000,
+			"duration": 2000,
 			"quantity": 5;
 			"particles": [
 				{
@@ -25,8 +25,8 @@
 	"animators": [
 		{
 			"name": "shoot_ani",
-			"type": "trajectory",
-			"velocity": [100],
+			"type": "recursive_trajectory",
+			"velocity": [50, 100],
 			"angle": [0, 6.28]
 		},
 		{
@@ -35,7 +35,7 @@
 			"animators": [
 				{"type": "translate", "dx": [-20, 20], "dy": [300, 500], "duration": [500], "interpolator": "accelerate_decelerate"},
 				{"type": "alpha", "from": [1], "to": [0], "duration": [500]},
-				{"type": "scale", "x_from": [1], "y_from": [1], "x_to": [0.5], "y_to": [0.5], "duration": [500]}
+				{"type": "scale", "x_from": [1.5], "y_from": [1.5], "x_to": [0.5], "y_to": [0.5], "duration": [500]}
 			]
 		},
 		{

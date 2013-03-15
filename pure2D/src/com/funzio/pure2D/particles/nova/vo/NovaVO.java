@@ -62,7 +62,9 @@ public class NovaVO {
         if (animators != null) {
             mAnimatorMap = new HashMap<String, AnimatorVO>();
             for (AnimatorVO vo : animators) {
-                mAnimatorMap.put(vo.name, vo);
+                if (vo != null) {
+                    mAnimatorMap.put(vo.name, vo);
+                }
             }
         }
     }
