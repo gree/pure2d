@@ -3,6 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova;
 
+import android.graphics.PointF;
 import android.util.SparseArray;
 
 import com.funzio.pure2D.animators.Animator;
@@ -32,7 +33,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
     // layers for particles
     protected SparseArray<DisplayGroup> mLayers;
 
-    public NovaEmitter(final NovaFactory factory, final EmitterVO vo) {
+    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos) {
         super();
 
         mFactory = factory;
@@ -46,6 +47,10 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         // define the area size
         setSize(vo.width, vo.height);
         setOriginAtCenter();
+        // initial position
+        if (pos != null) {
+            setPosition(pos);
+        }
 
         createManipulators();
         createLayers();
@@ -65,7 +70,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
             mAnimator.stop();
             // reset the animator
             if (mAnimator.getData() instanceof AnimatorVO) {
-                ((AnimatorVO) mAnimator.getData()).resetAnimator(mAnimator);
+                ((AnimatorVO) mAnimator.getData()).resetAnimator(this, mAnimator);
             }
         }
     }
@@ -83,7 +88,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
 
         // optional emitter animator
         if (mEmitterVO.animator != null) {
-            mAnimator = mFactory.createAnimator(mEmitterVO.animator);
+            mAnimator = mFactory.createAnimator(this, mEmitterVO.animator);
             if (mAnimator != null) {
                 mAnimator.setListener(this);
                 addManipulator(mAnimator);

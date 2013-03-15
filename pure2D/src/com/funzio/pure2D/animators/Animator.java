@@ -25,6 +25,10 @@ public interface Animator extends Manipulator, Reusable {
 
     public Object getData();
 
+    public boolean isAccumulating();
+
+    public void setAccumulating(final boolean accumulating);
+
     public interface AnimatorListener {
         // public void onAnimationStop(Animator animator);
 

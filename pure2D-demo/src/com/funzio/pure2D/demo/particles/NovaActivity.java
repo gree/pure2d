@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -124,9 +125,8 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
             return;
         }
 
-        List<NovaEmitter> emitters = mNovaFactory.createEmitters();
+        List<NovaEmitter> emitters = mNovaFactory.createEmitters(new PointF(x, y));
         for (NovaEmitter emitter : emitters) {
-            emitter.setPosition(x, y);
             mScene.addChild(emitter);
         }
     }

@@ -8,6 +8,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.particles.nova.NovaConfig;
@@ -31,13 +32,13 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator() {
-        return init(new RotateAnimator(NovaConfig.getInterpolator(interpolator)));
+    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
+        return init(target, new RotateAnimator(NovaConfig.getInterpolator(interpolator)));
     }
 
     @Override
-    public void resetAnimator(final Animator animator) {
-        super.resetAnimator(animator);
+    public void resetAnimator(final Manipulatable target, final Animator animator) {
+        super.resetAnimator(target, animator);
 
         final RotateAnimator rotate = (RotateAnimator) animator;
         if (rotate != null) {

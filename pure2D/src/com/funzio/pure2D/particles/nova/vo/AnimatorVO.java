@@ -6,6 +6,7 @@ package com.funzio.pure2D.particles.nova.vo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 
 /**
@@ -31,13 +32,17 @@ public abstract class AnimatorVO {
     public static final String MOVE = "move";
     public static final String ROTATE = "rotate";
     public static final String SCALE = "scale";
+    public static final String TRAJECTORY = "trajectory";
 
     public String name;
     public String type;
     public String loop_mode;
+    public boolean accumulating = true; // true by default
+
+    public abstract Animator createAnimator(Manipulatable target, Animator... animators);
 
     public AnimatorVO() {
-
+        // TODO nothing
     }
 
     public AnimatorVO(final JSONObject json) throws JSONException {
@@ -52,6 +57,10 @@ public abstract class AnimatorVO {
         if (json.has("loop_mode")) {
             loop_mode = json.getString("loop_mode");
         }
+
+        if (json.has("accumulating")) {
+            accumulating = json.getBoolean("accumulating");
+        }
     }
 
     /**
@@ -60,11 +69,12 @@ public abstract class AnimatorVO {
      * @param animator
      * @return
      */
-    protected Animator init(final Animator animator) {
+    protected Animator init(final Manipulatable target, final Animator animator) {
         // MUST: couple with this VO
         animator.setData(this);
+        animator.setAccumulating(accumulating);
         // init and reset
-        resetAnimator(animator);
+        resetAnimator(target, animator);
 
         return animator;
     }
@@ -74,7 +84,7 @@ public abstract class AnimatorVO {
      * 
      * @param animator
      */
-    public void resetAnimator(final Animator animator) {
+    public void resetAnimator(final Manipulatable target, final Animator animator) {
         if (animator != null) {
             animator.reset();
         }
@@ -95,6 +105,8 @@ public abstract class AnimatorVO {
             return new ScaleAnimatorVO(json);
         } else if (type.equalsIgnoreCase(ALPHA)) {
             return new AlphaAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(TRAJECTORY)) {
+            return new TrajectoryAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SEQUENCE)) {
             return new SequenceAnimatorVO(json);
         } else if (type.equalsIgnoreCase(PARALLEL)) {

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.graphics.PointF;
+
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
@@ -15,7 +18,6 @@ import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
-import com.funzio.pure2D.particles.nova.vo.TweenAnimatorVO;
 import com.funzio.pure2D.utils.ObjectPool;
 
 /**
@@ -43,23 +45,23 @@ public class NovaFactory {
         }
     }
 
-    public List<NovaEmitter> createEmitters() {
+    public List<NovaEmitter> createEmitters(final PointF pos) {
         final int size = mNovaVO.emitters.size();
         final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
         EmitterVO vo;
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
-                emitters.add(createEmitter(vo));
+                emitters.add(createEmitter(vo, pos));
             }
         }
 
         return emitters;
     }
 
-    protected NovaEmitter createEmitter(final EmitterVO emitterVO) {
+    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos) {
         // TODO use pool
-        return new NovaEmitter(this, emitterVO);
+        return new NovaEmitter(this, emitterVO, pos);
     }
 
     protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
@@ -97,11 +99,11 @@ public class NovaFactory {
     /**
      * Create an animator by using name as a key
      * 
-     * @param name
+     * @param animationName
      * @return
      */
-    public Animator createAnimator(final String name) {
-        AnimatorVO vo = mNovaVO.getAnimatorVO(name);
+    public Animator createAnimator(final Manipulatable target, final String animationName) {
+        AnimatorVO vo = mNovaVO.getAnimatorVO(animationName);
         // null check
         if (vo == null) {
             return null;
@@ -109,24 +111,24 @@ public class NovaFactory {
 
         // check the pools
         if (mAnimatorPools != null) {
-            ObjectPool<Animator> pool = mAnimatorPools.get(name);
+            ObjectPool<Animator> pool = mAnimatorPools.get(animationName);
             if (pool == null) {
                 // no pool created yet, create one
                 pool = new ObjectPool<Animator>(mPoolLimit);
-                mAnimatorPools.put(name, pool);
+                mAnimatorPools.put(animationName, pool);
             } else {
                 // there is a pool, try to acquire
                 final Animator animator = pool.acquire();
                 if (animator != null) {
                     // awesome, there is something, reset it!
-                    vo.resetAnimator(animator);
+                    vo.resetAnimator(target, animator);
                     // and return
                     return animator;
                 }
             }
         }
 
-        return createAnimatorInstance(vo);
+        return createAnimatorInstance(target, vo);
     }
 
     protected void releaseAnimator(final Animator animator) {
@@ -139,17 +141,20 @@ public class NovaFactory {
         }
     }
 
-    protected Animator createAnimatorInstance(final AnimatorVO animatorVO) {
-        if (animatorVO instanceof TweenAnimatorVO) {
-            return ((TweenAnimatorVO) animatorVO).createAnimator();
-        } else if (animatorVO instanceof GroupAnimatorVO) {
+    protected Animator createAnimatorInstance(final Manipulatable target, final AnimatorVO animatorVO) {
+        // null check
+        if (animatorVO == null) {
+            return null;
+        }
+
+        if (animatorVO instanceof GroupAnimatorVO) {
             // group
             final GroupAnimatorVO groupVO = (GroupAnimatorVO) animatorVO;
             // create the child animators
-            return groupVO.createAnimator(createChildAnimators(groupVO.animators));
+            return groupVO.createAnimator(target, createChildAnimators(target, groupVO.animators));
+        } else {
+            return animatorVO.createAnimator(target);
         }
-
-        return null;
     }
 
     /**
@@ -158,7 +163,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    protected Animator[] createChildAnimators(final List<AnimatorVO> vos) {
+    protected Animator[] createChildAnimators(final Manipulatable target, final List<AnimatorVO> vos) {
         // null check
         if (vos == null) {
             return null;
@@ -167,7 +172,7 @@ public class NovaFactory {
         final int size = vos.size();
         Animator[] animators = new Animator[size];
         for (int i = 0; i < size; i++) {
-            animators[i] = createAnimatorInstance(vos.get(i));
+            animators[i] = createAnimatorInstance(target, vos.get(i));
         }
 
         return animators;

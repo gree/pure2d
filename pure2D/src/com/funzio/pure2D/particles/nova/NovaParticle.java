@@ -32,6 +32,14 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
         mParticleVO = (ParticleVO) params[1];
 
+        // init the particle
+        setPosition(mNovaEmitter.getNextPosition(getPosition()));
+        setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
+        setOriginAtCenter();
+        setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
+        // setZ(particleVO.z);
+        // setAlphaTestEnabled(particleVO.z != 0);
+
         if (mAnimator != null) {
             // stop it
             mAnimator.stop();
@@ -48,7 +56,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
             // optional animators
             if (mParticleVO.animator != null) {
                 // get a new animator from pool
-                mAnimator = mNovaEmitter.mFactory.createAnimator(mParticleVO.animator);
+                mAnimator = mNovaEmitter.mFactory.createAnimator(this, mParticleVO.animator);
 
                 // null check
                 if (mAnimator != null) {
@@ -61,14 +69,6 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
                 }
             }
         }
-
-        // init the particle
-        setPosition(mNovaEmitter.getNextPosition(getPosition()));
-        setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
-        setOriginAtCenter();
-        setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
-        // setZ(particleVO.z);
-        // setAlphaTestEnabled(particleVO.z != 0);
     }
 
     @Override
