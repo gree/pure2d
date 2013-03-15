@@ -33,7 +33,7 @@ public class NovaMenuActivity extends MenuActivity {
         try {
             String[] files = getAssets().list("nova");
             for (String file : files) {
-                if (file.contains(".json")) {
+                if (file.contains(".json") && !file.contains("template")) {
                     Button button = new Button(this);
                     button.setId(button.hashCode());
                     button.setText(file);

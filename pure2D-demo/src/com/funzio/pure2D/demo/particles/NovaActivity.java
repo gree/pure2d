@@ -15,6 +15,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
+import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
@@ -32,6 +33,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
     private String mFilePath;
 
+    private JsonAtlas mStarAtlas;
     private SingleFrameSet mSmokeFrame;
     private SingleFrameSet mFireFrame;
     private NovaFactory mNovaFactory;
@@ -47,6 +49,8 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
             if (name.equals("smoke")) {
                 return mSmokeFrame;
+            } else if (name.equalsIgnoreCase("star")) {
+                return mStarAtlas.getMasterFrameSet();
             } else {
                 return mFireFrame;
             }
@@ -94,7 +98,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
                 });
 
                 // load the file
-                loader.load(getAssets(), mFilePath);
+                loader.loadAsync(getAssets(), mFilePath);
             }
         });
     }
@@ -117,11 +121,19 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
         options.inMipmaps = 1;
 
         // create textures
-        AssetTexture smokeTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/smoke.png", options);
+        AssetTexture smokeTexture = mScene.getTextureManager().createAssetTexture("nova/smoke.png", options);
         mSmokeFrame = new SingleFrameSet("smoke", smokeTexture);
 
-        AssetTexture fireTexture = new AssetTexture(mScene.getGLState(), getAssets(), "nova/fire.png", options);
+        AssetTexture fireTexture = mScene.getTextureManager().createAssetTexture("nova/fire.png", options);
         mFireFrame = new SingleFrameSet("fire", fireTexture);
+
+        // star texture and atlas
+        try {
+            mStarAtlas = new JsonAtlas(getAssets(), "atlas/star_03_60.json", 1);
+            mStarAtlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture("atlas/star_03_60.png", options));
+        } catch (Exception e) {
+            Log.e(TAG, "Load Error: ", e);
+        }
     }
 
     private void addObject(final float x, final float y) {

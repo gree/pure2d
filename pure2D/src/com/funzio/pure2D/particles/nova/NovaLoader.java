@@ -26,8 +26,8 @@ public class NovaLoader {
         mListener = listener;
     }
 
-    public void load(final AssetManager assets, final String filePath) {
-        Log.v(TAG, "load(): " + filePath);
+    public void loadAsync(final AssetManager assets, final String filePath) {
+        Log.v(TAG, "loadAsync(): " + filePath);
 
         mNovaVO = null;
 

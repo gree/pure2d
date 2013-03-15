@@ -1,0 +1,16 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_emitter",
+			"lifespan": 1000,
+			"particles": [
+
+			]
+		}
+	],
+	
+	"animators": [
+
+	]
+}

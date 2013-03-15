@@ -1,0 +1,24 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_emitter",
+			"lifespan": 5000,
+			"particles": [
+				{
+					"sprites": ["star"],
+					"animator": "shoot_ani"
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "shoot_ani",
+			"type": "recursive_trajectory",
+			"velocity": [50, 100],
+			"angle": [0, 6.28]
+		}
+	]
+}
