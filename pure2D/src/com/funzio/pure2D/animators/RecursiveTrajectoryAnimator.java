@@ -3,7 +3,6 @@
  */
 package com.funzio.pure2D.animators;
 
-
 /**
  * @author long
  */
@@ -30,7 +29,7 @@ public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
             stop();
 
             // and restart
-            start(newVelocity, Math.sin(mAngle) < 0 ? -mAngle : mAngle);
+            start(newVelocity, mSin < 0 ? -mAngle : mAngle);
         } else {
             super.end();
         }
