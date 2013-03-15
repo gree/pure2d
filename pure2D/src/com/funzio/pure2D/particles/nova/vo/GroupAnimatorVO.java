@@ -40,7 +40,10 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
 
         if (animator != null) {
             GroupAnimator group = (GroupAnimator) animator;
-            group.setLoopCount(NovaConfig.getRandomInt(loop_count));
+
+            if (loop_count != null) {
+                group.setLoopCount(NovaConfig.getRandomInt(loop_count));
+            }
 
             Animator childAnimator;
             AnimatorVO vo;

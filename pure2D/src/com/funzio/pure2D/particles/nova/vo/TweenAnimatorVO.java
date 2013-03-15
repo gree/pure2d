@@ -31,15 +31,6 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
         duration = NovaVO.getListInteger(json.optJSONArray("duration"));
     }
 
-    @Override
-    protected Animator init(final Manipulatable target, final Animator animator) {
-        if (animator instanceof TweenAnimator) {
-            ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
-        }
-
-        return super.init(target, animator);
-    }
-
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.particles.nova.vo.AnimatorVO#resetAnimator(com.funzio.pure2D.Manipulatable, com.funzio.pure2D.animators.Animator)
@@ -49,7 +40,11 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
         super.resetAnimator(target, animator);
 
         if (animator instanceof TweenAnimator) {
-            ((TweenAnimator) animator).setLoopCount(NovaConfig.getRandomInt(loop_count));
+            ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
+
+            if (loop_count != null) {
+                ((TweenAnimator) animator).setLoopCount(NovaConfig.getRandomInt(loop_count));
+            }
         }
     }
 }

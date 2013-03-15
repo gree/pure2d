@@ -72,7 +72,7 @@ public abstract class AnimatorVO {
      * @param animator
      * @return
      */
-    protected Animator init(final Manipulatable target, final Animator animator) {
+    final protected Animator init(final Manipulatable target, final Animator animator) {
         // MUST: couple with this VO
         animator.setData(this);
         animator.setAccumulating(accumulating);
