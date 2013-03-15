@@ -6,16 +6,16 @@
 			"lifespan": 1000,
 			"particles": [
 				{
-					"sprite": [],
+					"sprite": ["some_key"],
 					"animator": ["my_ani"]
-				},
+				}
 			]
 		}
 	],
 	
 	"animators": [
 		{
-			"name": "my_ani"
+			"name": "my_ani",
 			"type": "translate",
 			"dx": [-100, 100],
 			"dy": [-100, 100],

@@ -8,16 +8,18 @@
 			"lifespan": 6000,
 			"particles": [
 				{
-					"sprite": ["smoke"],
-					"duration": 5000,
+					"layer": 1,
 					"start_delay": 500,
+					"duration": 5000,
+
+					"sprite": ["smoke"],
 					"animator": ["smoke_ani"],
-					"blend_mode": ["screen_alpha"],
-					"layer": 1
+					"blend_mode": ["screen_alpha"]
 				},
 				{
-					"sprite": ["fire", "fire", "fire", "smoke"],
 					"duration": 5000,
+
+					"sprite": ["fire", "fire", "fire", "smoke"],
 					"animator": ["fire_ani"],
 					"blend_mode": ["add"]
 				}

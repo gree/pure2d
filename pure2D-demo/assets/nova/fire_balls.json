@@ -7,10 +7,11 @@
 			"quantity": 5,
 			"particles": [
 				{
+					"layer": 1,
+
 					"sprite": ["smoke"],
 					"animator": ["smoke_ani"],
-					"blend_mode": ["screen_alpha"],
-					"layer": 1
+					"blend_mode": ["screen_alpha"]
 				},
 				{
 					"sprite": ["fire", "fire", "fire", "smoke"],

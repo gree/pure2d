@@ -49,10 +49,12 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
             if (name.equals("smoke")) {
                 return mSmokeFrame;
+            } else if (name.equalsIgnoreCase("fire")) {
+                return mFireFrame;
             } else if (name.equalsIgnoreCase("star")) {
                 return mStarAtlas.getMasterFrameSet();
             } else {
-                return mFireFrame;
+                return null;
             }
         }
     };
