@@ -40,6 +40,11 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
         @Override
         public AtlasFrameSet getFrameSet(final String name) {
+            // null check
+            if (name == null) {
+                return null;
+            }
+
             if (name.equals("smoke")) {
                 return mSmokeFrame;
             } else {

@@ -16,8 +16,6 @@ import com.funzio.pure2D.Scene;
  * @author long
  */
 public class ParticleVO {
-    public List<String> sprites;
-
     public int start_delay = 0;
     public int step_delay = Scene.DEFAULT_MSPF;
     public int duration = 0; // <= 0 is unlimited
@@ -27,6 +25,7 @@ public class ParticleVO {
     public int layer = 0;
 
     // optional
+    public List<String> sprites;
     public String animator;
     public String blend_mode;
 
@@ -35,8 +34,6 @@ public class ParticleVO {
     }
 
     public ParticleVO(final JSONObject json) throws JSONException {
-        sprites = getSprites(json.optJSONArray("sprites"));
-
         if (json.has("start_delay")) {
             start_delay = json.getInt("start_delay");
         }
@@ -58,6 +55,7 @@ public class ParticleVO {
         }
 
         // optional
+        sprites = getSprites(json.optJSONArray("sprites"));
         animator = json.optString("animator");
         blend_mode = json.optString("blend_mode");
     }

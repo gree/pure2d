@@ -25,29 +25,28 @@
 			"angle": [0, 6.28]
 		},
 		{
-			"name":"smoke_ani",
-			"type": "parallel",
-			"animators": [
-				{
-				"type": "trajectory",
-				"velocity": [50, 100],
-				"angle": [0, 3.14]
-				},
-				{"type": "alpha", "from": [1], "to": [0], "duration": [700]},
-				{"type": "scale", "x_from": [1], "y_from": [1], "x_to": [0.5], "y_to": [0.5], "duration": [700]}
-			]
-		},
-		{
 			"name":"fire_ani",
 			"type": "parallel",
 			"animators": [
 				{
-					"type": "trajectory",
-					"velocity": [50, 100],
-					"angle": [0, 3.14]
+					"type": "move",
+					"dy": [500],
+					"duration": [1000]
+				}
+			]
+		},
+		{
+			"name":"smoke_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "move",
+					"dx": [500],
+					"duration": [1000]
 				},
-				{"type": "scale", "x_from": [1], "y_from": [1], "x_to": [0.125], "y_to": [0.5], "duration": [1000]}
+				{"type": "alpha", "from": [1], "to": [0], "duration": [700]}
 			]
 		}
+
 	]
 }

@@ -45,18 +45,36 @@ public class NovaFactory {
         }
     }
 
-    public List<NovaEmitter> createEmitters(final PointF pos) {
+    /**
+     * Create a list of Emitters with an initial position
+     * 
+     * @param position
+     * @return
+     */
+    public List<NovaEmitter> createEmitters(final PointF position) {
         final int size = mNovaVO.emitters.size();
         final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
         EmitterVO vo;
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
-                emitters.add(createEmitter(vo, pos));
+                emitters.add(createEmitter(vo, position));
             }
         }
 
         return emitters;
+    }
+
+    /**
+     * Create a emitter from a key with an initial position
+     * 
+     * @param name
+     * @param position
+     * @return
+     */
+    public NovaEmitter createEmitter(final String name, final PointF position) {
+        final EmitterVO vo = mNovaVO.getEmitterVO(name);
+        return vo == null ? null : createEmitter(vo, position);
     }
 
     protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos) {

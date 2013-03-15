@@ -47,9 +47,17 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         mParticleVO = (ParticleVO) params[1];
 
         // init the particle
-        setPosition(mNovaEmitter.getNextPosition(mPosition));
+        mPosition = mNovaEmitter.getNextPosition(mPosition);
+        mAlpha = 1;
+        mColor = null;
+        // frames
         setAtlasFrameSet(mNovaEmitter.mFactory.mSpriteDelegator.getFrameSet(NovaConfig.getRandomString(mParticleVO.sprites)));
+        if (getAtlasFrameSet() == null) {
+            // just a box
+            setSize(50, 50);
+        }
         setOriginAtCenter();
+        // and others
         setBlendFunc(NovaConfig.getBlendFunc(mParticleVO.blend_mode));
         // setZ(particleVO.z);
         // setAlphaTestEnabled(particleVO.z != 0);

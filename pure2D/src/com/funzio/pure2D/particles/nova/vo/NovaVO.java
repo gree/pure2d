@@ -21,6 +21,7 @@ public class NovaVO {
     public List<AnimatorVO> animators;
 
     // for fast look up
+    private Map<String, EmitterVO> mEmitterMap;
     private Map<String, AnimatorVO> mAnimatorMap;
 
     // @JsonCreator
@@ -50,7 +51,14 @@ public class NovaVO {
         emitters = getEmitters(json.optJSONArray("emitters"));
         animators = getAnimators(json.optJSONArray("animators"));
 
-        // make the map
+        // make the maps
+        if (emitters != null) {
+            mEmitterMap = new HashMap<String, EmitterVO>();
+            for (EmitterVO vo : emitters) {
+                mEmitterMap.put(vo.name, vo);
+            }
+        }
+
         if (animators != null) {
             mAnimatorMap = new HashMap<String, AnimatorVO>();
             for (AnimatorVO vo : animators) {
@@ -61,6 +69,10 @@ public class NovaVO {
 
     public NovaVO(final String json) throws JSONException {
         this(new JSONObject(json));
+    }
+
+    public EmitterVO getEmitterVO(final String name) {
+        return mEmitterMap != null ? mEmitterMap.get(name) : null;
     }
 
     public AnimatorVO getAnimatorVO(final String name) {
