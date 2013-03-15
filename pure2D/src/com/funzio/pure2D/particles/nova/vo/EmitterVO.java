@@ -19,7 +19,7 @@ public class EmitterVO {
     public int width = 1;
     public int height = 1;
     public int quantity = 1;
-    public int duration = 0; // ms
+    public int lifespan = 0; // ms
 
     // animator for this emitter
     public String animator;
@@ -49,8 +49,8 @@ public class EmitterVO {
             quantity = json.getInt("quantity");
         }
 
-        if (json.has("duration")) {
-            duration = json.getInt("duration");
+        if (json.has("lifespan")) {
+            lifespan = json.getInt("lifespan");
         }
 
         animator = json.optString("animator");

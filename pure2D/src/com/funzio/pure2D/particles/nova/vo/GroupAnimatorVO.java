@@ -11,11 +11,13 @@ import org.json.JSONObject;
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.GroupAnimator;
+import com.funzio.pure2D.particles.nova.NovaConfig;
 
 /**
  * @author long
  */
 public abstract class GroupAnimatorVO extends AnimatorVO {
+    // child animators
     public List<AnimatorVO> animators;
 
     public GroupAnimatorVO() {
@@ -38,6 +40,8 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
 
         if (animator != null) {
             GroupAnimator group = (GroupAnimator) animator;
+            group.setLoopCount(NovaConfig.getRandomInt(loop_count));
+
             Animator childAnimator;
             AnimatorVO vo;
             // reset the children

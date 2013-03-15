@@ -33,8 +33,23 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
 
     @Override
     protected Animator init(final Manipulatable target, final Animator animator) {
-        ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
+        if (animator instanceof TweenAnimator) {
+            ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
+        }
 
         return super.init(target, animator);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.nova.vo.AnimatorVO#resetAnimator(com.funzio.pure2D.Manipulatable, com.funzio.pure2D.animators.Animator)
+     */
+    @Override
+    public void resetAnimator(final Manipulatable target, final Animator animator) {
+        super.resetAnimator(target, animator);
+
+        if (animator instanceof TweenAnimator) {
+            ((TweenAnimator) animator).setLoopCount(NovaConfig.getRandomInt(loop_count));
+        }
     }
 }

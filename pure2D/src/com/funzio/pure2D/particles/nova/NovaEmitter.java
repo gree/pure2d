@@ -42,7 +42,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         mRemoveOnFinish = true;
 
         // main timeline
-        mTimeline = new Timeline(mEmitterVO.duration, this);
+        mTimeline = new Timeline(mEmitterVO.lifespan, this);
 
         // define the area size
         setSize(vo.width, vo.height);

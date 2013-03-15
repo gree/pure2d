@@ -17,9 +17,9 @@ public interface Animator extends Manipulator, Reusable {
 
     public boolean isRunning();
 
-    public void setListener(AnimatorListener listener);
+    public void setLifespan(int lifespan);
 
-    public AnimatorListener getListener();
+    public int getLifespan();
 
     public void setData(Object data);
 
@@ -28,6 +28,10 @@ public interface Animator extends Manipulator, Reusable {
     public boolean isAccumulating();
 
     public void setAccumulating(final boolean accumulating);
+
+    public void setListener(AnimatorListener listener);
+
+    public AnimatorListener getListener();
 
     public interface AnimatorListener {
         // public void onAnimationStop(Animator animator);

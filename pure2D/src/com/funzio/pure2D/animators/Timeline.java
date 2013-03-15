@@ -21,11 +21,11 @@ public class Timeline implements Manipulator {
     protected int mNumActions = 0;
     protected int mNumEndedActions = 0;
 
-    protected int mDuration = 0; // 0 == unlimited
+    protected int mLifespan = 0; // <=0 ~ unlimited
     protected Listener mListener;
 
-    public Timeline(final int duration, final Listener listener) {
-        mDuration = duration;
+    public Timeline(final int lifespan, final Listener listener) {
+        mLifespan = lifespan;
         mListener = listener;
     }
 
@@ -52,7 +52,7 @@ public class Timeline implements Manipulator {
             }
 
             // has duration? check it
-            if (mDuration > 0 && mElapsedTime >= mDuration) {
+            if (mLifespan > 0 && mElapsedTime >= mLifespan) {
                 if (mListener != null) {
                     // callback
                     mListener.onTimelineComplete(this);
@@ -170,7 +170,7 @@ public class Timeline implements Manipulator {
     }
 
     protected void onActionEnd(final Action action) {
-        if (++mNumEndedActions == mNumActions && mDuration <= 0) {
+        if (++mNumEndedActions == mNumActions && mLifespan <= 0) {
             // complete!
             if (mListener != null) {
                 // callback

@@ -16,11 +16,13 @@ public class BaseAnimator implements Animator {
     protected Object mData; // extra data
     // no accumulating by default
     protected boolean mAccumulating = false;
+    protected int mLifespan = 0; // <=0 ~ unlimited
 
     // state values
     protected int mElapsedTime = 0;
     protected int mLastDeltaTime = 0;
     protected boolean mRunning = false;
+    protected boolean mLifeEnded = false;
 
     /*
      * (non-Javadoc)
@@ -47,8 +49,22 @@ public class BaseAnimator implements Animator {
     @Override
     public boolean update(final int deltaTime) {
         if (mRunning) {
+
+            // life check
+            if (mLifeEnded) {
+                end();
+                return false;
+            }
+
             mLastDeltaTime = deltaTime;
             mElapsedTime += deltaTime;
+
+            // has lifespan? check it
+            if (mLifespan > 0 && mElapsedTime >= mLifespan) {
+                // flag
+                mLifeEnded = true;
+            }
+
             return true;
         }
 
@@ -77,6 +93,7 @@ public class BaseAnimator implements Animator {
         mElapsedTime = elapsedTime;
         mLastDeltaTime = 0;
         mRunning = true;
+        mLifeEnded = false;
     }
 
     /*
@@ -125,6 +142,14 @@ public class BaseAnimator implements Animator {
 
     public boolean isRunning() {
         return mRunning;
+    }
+
+    public int getLifespan() {
+        return mLifespan;
+    }
+
+    public void setLifespan(final int lifespan) {
+        mLifespan = lifespan;
     }
 
     public boolean isAccumulating() {

@@ -3,7 +3,7 @@
 	"emitters": [
 		{
 			"name": "my_fire",
-			"duration": 6000,
+			"lifespan": 6000,
 			"particles": [
 				{
 					"sprites": ["smoke"],

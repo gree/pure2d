@@ -3,11 +3,14 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.particles.nova.NovaConfig;
 
 /**
  * @author long
@@ -37,8 +40,12 @@ public abstract class AnimatorVO {
 
     public String name;
     public String type;
-    public String loop_mode;
     public boolean accumulating = true; // true by default
+
+    // looping
+    public String loop_mode;
+    public List<Integer> loop_count;
+    public List<Integer> lifespan;
 
     public abstract Animator createAnimator(Manipulatable target, Animator... animators);
 
@@ -49,11 +56,14 @@ public abstract class AnimatorVO {
     public AnimatorVO(final JSONObject json) throws JSONException {
         name = json.optString("name");
         type = json.optString("type");
-        loop_mode = json.optString("loop_mode");
 
         if (json.has("accumulating")) {
             accumulating = json.getBoolean("accumulating");
         }
+
+        loop_mode = json.optString("loop_mode");
+        loop_count = NovaVO.getListInteger(json.optJSONArray("loop_count"));
+        lifespan = NovaVO.getListInteger(json.optJSONArray("lifespan"));
     }
 
     /**
@@ -80,6 +90,7 @@ public abstract class AnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         if (animator != null) {
             animator.reset();
+            animator.setLifespan(NovaConfig.getRandomInt(lifespan));
         }
     }
 
