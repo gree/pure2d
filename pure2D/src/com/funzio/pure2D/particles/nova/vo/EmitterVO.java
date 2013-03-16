@@ -21,6 +21,10 @@ public class EmitterVO {
     public int quantity = 1;
     public int lifespan = 0; // ms
 
+    // offset position
+    public int x = 0;
+    public int y = 0;
+
     // animator for this emitter
     public String animator;
 
@@ -52,6 +56,10 @@ public class EmitterVO {
         if (json.has("lifespan")) {
             lifespan = json.getInt("lifespan");
         }
+
+        // offset position
+        x = json.optInt("x");
+        y = json.optInt("y");
 
         animator = json.optString("animator");
         particles = getParticles(json.optJSONArray("particles"));

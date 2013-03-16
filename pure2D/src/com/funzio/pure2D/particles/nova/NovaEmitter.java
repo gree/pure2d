@@ -49,8 +49,12 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         setOriginAtCenter();
         // initial position
         if (pos != null) {
-            setPosition(pos);
+            mPosition.x = pos.x;
+            mPosition.y = pos.y;
         }
+        // offset position
+        mPosition.x += vo.x;
+        mPosition.y += vo.y;
 
         createManipulators();
         createLayers();
