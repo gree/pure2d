@@ -20,7 +20,7 @@
 			"dx": [-100, 100],
 			"dy": [-100, 100],
 			"duration": [1000],
-			"interpolator": "decelerate"
+			"interpolation": "decelerate"
 		}
 	]
 }

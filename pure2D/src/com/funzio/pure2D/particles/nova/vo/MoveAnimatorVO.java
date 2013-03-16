@@ -34,7 +34,7 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new MoveAnimator(NovaConfig.getInterpolator(interpolator)));
+        return init(target, new MoveAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override

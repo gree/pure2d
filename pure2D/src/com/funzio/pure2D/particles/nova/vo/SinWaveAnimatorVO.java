@@ -38,7 +38,7 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new SinWaveAnimator(NovaConfig.getInterpolator(interpolator)));
+        return init(target, new SinWaveAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override

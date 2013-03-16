@@ -34,7 +34,7 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new AlphaAnimator(NovaConfig.getInterpolator(interpolator)));
+        return init(target, new AlphaAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override

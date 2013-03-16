@@ -24,7 +24,7 @@
 			"wave_radius": [300],
 			"wave_num": [2],
 			"duration": [2000],
-			"interpolator": "accelerate_decelerate",
+			"interpolation": "accelerate_decelerate",
 			"loop_mode": "reverse",
 			"loop_count": [1]
 		}

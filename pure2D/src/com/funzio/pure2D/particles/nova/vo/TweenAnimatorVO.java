@@ -17,7 +17,7 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  * @author long
  */
 public abstract class TweenAnimatorVO extends AnimatorVO {
-    public String interpolator;
+    public String interpolation;
     public List<Integer> duration;
 
     public TweenAnimatorVO() {
@@ -27,7 +27,7 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
     public TweenAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        type = json.optString("interpolator");
+        interpolation = json.optString("interpolation");
         duration = NovaVO.getListInteger(json.optJSONArray("duration"));
     }
 

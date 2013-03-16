@@ -38,7 +38,7 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new ScaleAnimator(NovaConfig.getInterpolator(interpolator)));
+        return init(target, new ScaleAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override

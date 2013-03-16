@@ -31,7 +31,7 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
 
     @Override
     public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new RotateAnimator(NovaConfig.getInterpolator(interpolator)));
+        return init(target, new RotateAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
