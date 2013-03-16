@@ -48,6 +48,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
         // init the particle
         mPosition = mNovaEmitter.getNextPosition(mPosition);
+        mScale.x = mScale.y = 1;
         mAlpha = 1;
         mColor = null;
         // frames

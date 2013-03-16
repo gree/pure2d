@@ -1,0 +1,142 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "shooter_smoke",
+			"lifespan": 1000,
+			"particles": [
+				{
+					"layer": 1,
+					"sprite": ["smoke"],
+					"animator": ["smoke_ani"],
+					"blend_mode": ["interpolate_color"]
+				}
+			],
+
+			"animator": "shoot_ani"
+		},
+
+		{
+			"name": "shooter_fire",
+			"lifespan": 1000,
+			"particles": [
+				{
+					"sprite": ["fire", "fire", "fire", "smoke"],
+					"animator": ["fire_ani"],
+					"blend_mode": ["add"]
+				}
+			],
+
+			"animator": "shoot_ani"
+		},
+
+		{
+			"name": "exploder",
+			"particles": [
+				{
+					"start_delay": 700,
+					"step_quantity": 50,
+					"duration": 1,
+
+					"sprite": ["star"],
+					"blend_mode": ["add"],
+					"animator": ["star_ani"]
+				}
+			],
+
+			"animator": "invisible_ani"
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "shoot_ani",
+			"type": "move",
+			"dy": [700],
+			"duration": [500],
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "fire_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "scale",
+					"x_from": [0.3, 0.5],
+					"x_to": [0.1],
+					"y_from": [0.3, 0.5],
+					"y_to": [0.1],
+					"duration": [300],
+					"interpolation": "accelerate"
+				},
+
+				{
+					"type": "move",
+					"dx": [-50, 50],
+					"dy": [-50, 50],
+					"duration": [300],
+					"interpolation": "decelerate"
+				}
+			]
+		},
+
+		{
+			"name": "smoke_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "scale",
+					"x_from": [0.5, 1],
+					"x_to": [0.5],
+					"y_from": [0.5, 1],
+					"y_to": [0.5],
+					"duration": [1000],
+					"interpolation": "accelerate"
+				},
+
+				{
+					"type": "move",
+					"dx": [-50, 50],
+					"dy": [-50, 50],
+					"duration": [1000],
+					"interpolation": "decelerate"
+				},
+
+				{
+					"type": "alpha",
+					"from": [1],
+					"to": [0],
+					"duration": [1000],
+					"interpolation": "accelerate"
+				}
+			]
+		},
+
+		{
+			"name": "invisible_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "move",
+					"dy": [700],
+					"duration": [500],
+					"interpolation": "decelerate"
+				},
+				{
+					"type": "move",
+					"from": [0],
+					"to": [0],
+					"duration": 1
+				}
+			]
+		},
+
+		{
+			"name": "star_ani",
+			"type": "recursive_trajectory",
+			"velocity": [20, 100],
+			"angle": [0, 6.28]
+		}
+	]
+}
