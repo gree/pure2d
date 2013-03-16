@@ -12,8 +12,6 @@ import android.view.animation.Interpolator;
 public class SinWaveAnimator extends TweenAnimator {
     protected float mSrcX = 0;
     protected float mSrcY = 0;
-    protected float mDstX = 0;
-    protected float mDstY = 0;
     protected PointF mDelta = new PointF();
     protected float mDeltaLength = 0;
 
@@ -23,6 +21,9 @@ public class SinWaveAnimator extends TweenAnimator {
     protected float mSinAngle;
     protected float mCosAngle;
 
+    private float mLastX;
+    private float mLastY;
+
     public SinWaveAnimator(final Interpolator interpolator) {
         super(interpolator);
     }
@@ -30,11 +31,20 @@ public class SinWaveAnimator extends TweenAnimator {
     public void setValues(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;
-        mDstX = dstX;
-        mDstY = dstY;
 
         mDelta.x = dstX - srcX;
         mDelta.y = dstY - srcY;
+        mDeltaLength = (float) Math.sqrt(mDelta.x * mDelta.x + mDelta.y * mDelta.y);
+
+        // pre-cals
+        mAngle = (float) Math.atan2(mDelta.y, mDelta.x);
+        mSinAngle = (float) Math.sin(mAngle);
+        mCosAngle = (float) Math.cos(mAngle);
+    }
+
+    public void setDelta(final float dx, final float dy) {
+        mDelta.x = dx;
+        mDelta.y = dy;
         mDeltaLength = (float) Math.sqrt(mDelta.x * mDelta.x + mDelta.y * mDelta.y);
 
         // pre-cals
@@ -56,13 +66,34 @@ public class SinWaveAnimator extends TweenAnimator {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.TweenAnimator#startElapse(int)
+     */
+    @Override
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
+
+        mLastX = mLastY = 0;
+    }
+
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            final float da = value * mWaveNum * (float) Math.PI;
+            final float currentAngle = value * mWaveNum * (float) Math.PI;
             final float dx = value * mDeltaLength;
-            final float dy = (float) Math.sin(da) * mWaveRadius;
-            mTarget.setPosition(mSrcX + dx * mCosAngle - dy * mSinAngle, mSrcY + dx * mSinAngle + dy * mCosAngle);
+            final float dy = (float) Math.sin(currentAngle) * mWaveRadius;
+            final float newX = dx * mCosAngle - dy * mSinAngle;
+            final float newY = dx * mSinAngle + dy * mCosAngle;
+
+            if (mAccumulating) {
+                mTarget.moveBy(newX - mLastX, newY - mLastY);
+            } else {
+                mTarget.setPosition(mSrcX + newX, mSrcY + newY);
+            }
+
+            mLastX = newX;
+            mLastY = newY;
         }
 
         super.onUpdate(value);

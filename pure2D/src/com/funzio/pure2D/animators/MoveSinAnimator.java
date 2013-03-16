@@ -12,8 +12,6 @@ import android.view.animation.Interpolator;
 public class MoveSinAnimator extends TweenAnimator {
     protected float mSrcX = 0;
     protected float mSrcY = 0;
-    protected float mDstX = 0;
-    protected float mDstY = 0;
     protected PointF mDelta = new PointF();
     protected float mFactor;
 
@@ -26,8 +24,6 @@ public class MoveSinAnimator extends TweenAnimator {
     public void setValues(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;
-        mDstX = dstX;
-        mDstY = dstY;
 
         mDelta.x = dstX - srcX;
         mDelta.y = dstY - srcY;
@@ -36,8 +32,6 @@ public class MoveSinAnimator extends TweenAnimator {
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;
-        mDstX = dstX;
-        mDstY = dstY;
 
         mDelta.x = dstX - srcX;
         mDelta.y = dstY - srcY;

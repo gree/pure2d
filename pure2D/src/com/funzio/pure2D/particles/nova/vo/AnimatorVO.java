@@ -37,6 +37,7 @@ public abstract class AnimatorVO {
     public static final String SCALE = "scale";
     public static final String TRAJECTORY = "trajectory";
     public static final String RECURSIVE_TRAJECTORY = "recursive_trajectory";
+    public static final String SIN_WAVE = "sin_wave";
 
     public String name;
     public String type;
@@ -101,7 +102,11 @@ public abstract class AnimatorVO {
 
         final String type = json.getString("type");
 
-        if (type.equalsIgnoreCase(TRANSLATE) || type.equalsIgnoreCase(MOVE)) {
+        if (type.equalsIgnoreCase(SEQUENCE)) {
+            return new SequenceAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(PARALLEL)) {
+            return new ParallelAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(TRANSLATE) || type.equalsIgnoreCase(MOVE)) {
             return new MoveAnimatorVO(json);
         } else if (type.equalsIgnoreCase(ROTATE)) {
             return new RotateAnimatorVO(json);
@@ -113,10 +118,8 @@ public abstract class AnimatorVO {
             return new TrajectoryAnimatorVO(json);
         } else if (type.equalsIgnoreCase(RECURSIVE_TRAJECTORY)) {
             return new RecursiveTrajectoryAnimatorVO(json);
-        } else if (type.equalsIgnoreCase(SEQUENCE)) {
-            return new SequenceAnimatorVO(json);
-        } else if (type.equalsIgnoreCase(PARALLEL)) {
-            return new ParallelAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(SIN_WAVE)) {
+            return new SinWaveAnimatorVO(json);
         } else {
             return null;
         }
