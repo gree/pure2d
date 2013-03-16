@@ -37,14 +37,14 @@
 					"start_delay": 700,
 					"step_quantity": 50,
 					"duration": 1,
+					"y": [700],
 
 					"sprite": ["star"],
+					"start_frame": [0, 20],
 					"blend_mode": ["add"],
 					"animator": ["star_ani"]
 				}
-			],
-
-			"animator": "invisible_ani"
+			]
 		}
 	],
 	
@@ -109,25 +109,6 @@
 					"to": [0],
 					"duration": [1000],
 					"interpolation": "accelerate"
-				}
-			]
-		},
-
-		{
-			"name": "invisible_ani",
-			"type": "parallel",
-			"animators": [
-				{
-					"type": "move",
-					"dy": [700],
-					"duration": [500],
-					"interpolation": "decelerate"
-				},
-				{
-					"type": "move",
-					"from": [0],
-					"to": [0],
-					"duration": 1
 				}
 			]
 		},
