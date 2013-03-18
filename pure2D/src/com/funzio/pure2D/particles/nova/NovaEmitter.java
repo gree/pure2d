@@ -209,23 +209,23 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
 
         @Override
         public void run() {
-            mEmitter.queueEvent(new Runnable() {
-
-                @Override
-                public void run() {
-                    // null check
-                    if (mEmitter.mParent != null) {
-                        // emit the particles
-                        Container layer;
-                        for (int n = 0; n < mParticleVO.step_quantity; n++) {
-                            // find the layer
-                            layer = mParticleVO.layer > 0 ? mEmitter.mLayers.get(mParticleVO.layer) : mEmitter.mParent;
-                            // add to the layer
-                            layer.addChild(mEmitter.mFactory.createParticle(mEmitter, mParticleVO));
-                        }
-                    }
+            // mEmitter.queueEvent(new Runnable() {
+            //
+            // @Override
+            // public void run() {
+            // null check
+            if (mEmitter.mParent != null) {
+                // emit the particles
+                Container layer;
+                for (int n = 0; n < mParticleVO.step_quantity; n++) {
+                    // find the layer
+                    layer = mParticleVO.layer > 0 ? mEmitter.mLayers.get(mParticleVO.layer) : mEmitter.mParent;
+                    // add to the layer
+                    layer.addChild(mEmitter.mFactory.createParticle(mEmitter, mParticleVO));
                 }
-            });
+            }
+            // }
+            // });
 
         }
     }
