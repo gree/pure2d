@@ -3,58 +3,48 @@
 	"emitters": [
 		{
 			"name": "shooter_smoke",
-			"lifespan": 1000,
+			"lifespan": 2000,
 			"particles": [
 				{
+					"duration": 1000,
 					"layer": 1,
+
 					"sprite": ["smoke"],
 					"animator": ["smoke_ani"],
 					"blend_mode": ["interpolate_color"]
-				}
-			],
+				},
 
-			"animator": "shoot_ani"
-		},
-
-		{
-			"name": "shooter_fire",
-			"lifespan": 1000,
-			"particles": [
 				{
+					"duration": 1000,
+
 					"sprite": ["fire", "fire", "fire", "smoke"],
 					"animator": ["fire_ani"],
 					"blend_mode": ["add"]
-				}
-			],
+				},
 
-			"animator": "shoot_ani"
-		},
-
-		{
-			"name": "exploder",
-			"particles": [
 				{
 					"start_delay": 700,
 					"step_quantity": 50,
 					"duration": 1,
-					"y": [700],
 
 					"sprite": ["star"],
 					"start_frame": [0, 20],
 					"blend_mode": ["add"],
 					"animator": ["star_ani"]
 				}
-			]
+			],
+
+			"animator": "shoot_ani"
 		}
 	],
 	
 	"animators": [
 		{
 			"name": "shoot_ani",
-			"type": "move",
-			"dy": [700],
-			"duration": [500],
-			"interpolation": "decelerate"
+			"type": "trajectory",
+			"velocity": [100, 200],
+			"angle": [1.4, 1.8],
+			"lifespan": [500, 1000]
 		},
 
 		{
@@ -91,7 +81,7 @@
 					"x_to": [0.5],
 					"y_from": [0.5, 1],
 					"y_to": [0.5],
-					"duration": [1000],
+					"duration": [800],
 					"interpolation": "accelerate"
 				},
 
@@ -99,7 +89,7 @@
 					"type": "move",
 					"dx": [-50, 50],
 					"dy": [-50, 50],
-					"duration": [1000],
+					"duration": [800],
 					"interpolation": "decelerate"
 				},
 
@@ -107,8 +97,8 @@
 					"type": "alpha",
 					"from": [1],
 					"to": [0],
-					"duration": [1000],
-					"interpolation": "accelerate"
+					"duration": [800],
+					"interpolation": "decelerate"
 				}
 			]
 		},
