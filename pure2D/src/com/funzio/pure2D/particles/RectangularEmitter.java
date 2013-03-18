@@ -14,11 +14,11 @@ import com.funzio.pure2D.gl.gl10.GLState;
  * @author long
  */
 public class RectangularEmitter extends BaseDisplayObject implements ParticleEmitter {
-    protected static final Random RANDOM = new Random();
 
     protected boolean mFinished = false;
     protected boolean mRemoveOnFinish = false;
     protected int nNumParticles = 0;
+    protected final Random mRandom = Particle.RANDOM;
 
     protected Listener mListener;
 
@@ -46,8 +46,8 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
      * @return
      */
     public PointF getNextPosition(final PointF pt) {
-        pt.x = mPosition.x - mOrigin.x + RANDOM.nextInt((int) mSize.x);
-        pt.y = mPosition.y - mOrigin.y + RANDOM.nextInt((int) mSize.y);
+        pt.x = mPosition.x - mOrigin.x + mRandom.nextInt((int) mSize.x);
+        pt.y = mPosition.y - mOrigin.y + mRandom.nextInt((int) mSize.y);
 
         return pt;
     }

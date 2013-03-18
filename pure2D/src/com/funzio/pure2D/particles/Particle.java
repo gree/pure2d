@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.particles;
 
+import java.util.Random;
+
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.utils.Reusable;
 
@@ -10,6 +12,8 @@ import com.funzio.pure2D.utils.Reusable;
  * @author long
  */
 public interface Particle extends DisplayObject, Reusable {
+
+    public static final Random RANDOM = new Random();
 
     public void finish();
 

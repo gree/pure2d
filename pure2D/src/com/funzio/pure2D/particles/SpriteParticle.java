@@ -17,7 +17,7 @@ public class SpriteParticle extends Sprite implements Particle {
     protected ParticleEmitter mEmitter;
     protected Listener mListener = null;
     protected PointF mVelocity = new PointF(0, 0);
-    protected Random mRandom = new Random();
+    protected final Random mRandom = Particle.RANDOM;
 
     protected boolean mFinished = false;
 
