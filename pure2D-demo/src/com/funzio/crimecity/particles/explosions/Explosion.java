@@ -32,10 +32,10 @@ public class Explosion extends HybridEmitter {
         ExplosionParticle particle = null;
         if (type == ExplosionSmokeParticle.class) {
             particle = new ExplosionSmokeParticle(mSmokeTexture);
-            particle.setPosition(mPosition.x + mRandom.nextInt(7) - 3, mPosition.y + mRandom.nextInt(7) - 3);
+            particle.setPosition(mPosition.x + RANDOM.nextInt(7) - 3, mPosition.y + RANDOM.nextInt(7) - 3);
         } else if (type == ExplosionFireParticle.class) {
             particle = new ExplosionFireParticle(mFireTexture);
-            particle.setPosition(mPosition.x + mRandom.nextInt(7) - 3, mPosition.y + mRandom.nextInt(7) - 3);
+            particle.setPosition(mPosition.x + RANDOM.nextInt(7) - 3, mPosition.y + RANDOM.nextInt(7) - 3);
         } else if (type == ExplosionSparkParticle.class) {
             // use pool for better perf
             ExplosionSparkParticle spark = ParticleAdapter.EXPLOSION_SPARK_PARTICLES.acquire();

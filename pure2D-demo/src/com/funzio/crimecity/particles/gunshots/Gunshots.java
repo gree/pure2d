@@ -35,7 +35,7 @@ public class Gunshots extends RectangularEmitter implements Reusable {
                 particle.reset();
             }
 
-            particle.setPosition(mPosition.x + mRandom.nextInt(101) - 50, mPosition.y + mRandom.nextInt(101) - 50);
+            particle.setPosition(mPosition.x + RANDOM.nextInt(101) - 50, mPosition.y + RANDOM.nextInt(101) - 50);
             addParticle(particle);
         }
     };

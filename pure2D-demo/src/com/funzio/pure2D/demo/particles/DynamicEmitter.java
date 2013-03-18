@@ -37,7 +37,7 @@ public class DynamicEmitter extends RectangularEmitter {
         mSmokeTexture = smoke;
         mBounds.x = bounds.x / 2;
         mBounds.y = bounds.y / 2;
-        setPosition(mRandom.nextInt(mBounds.x), mRandom.nextInt(mBounds.y));
+        setPosition(RANDOM.nextInt(mBounds.x), RANDOM.nextInt(mBounds.y));
     }
 
     private void addParticles() {
@@ -157,8 +157,8 @@ public class DynamicEmitter extends RectangularEmitter {
     }
 
     private void nextDestination() {
-        mDestination.x = mBounds.x / 2 + mRandom.nextInt(mBounds.x);
-        mDestination.y = mBounds.y / 2 + mRandom.nextInt(mBounds.y);
+        mDestination.x = mBounds.x / 2 + RANDOM.nextInt(mBounds.x);
+        mDestination.y = mBounds.y / 2 + RANDOM.nextInt(mBounds.y);
     }
 
     public void lockDestination(final boolean lock) {

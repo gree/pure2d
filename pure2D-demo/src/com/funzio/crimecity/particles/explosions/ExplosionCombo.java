@@ -25,7 +25,7 @@ public class ExplosionCombo extends RectangularEmitter implements Reusable {
 
         @Override
         public void run() {
-            PointF position = new PointF(mPosition.x + mRandom.nextInt(25), mPosition.y + mRandom.nextInt(25));
+            PointF position = new PointF(mPosition.x + RANDOM.nextInt(25), mPosition.y + RANDOM.nextInt(25));
 
             // explosion
             BlackExplosion explosion = new BlackExplosion(mFireTexture);

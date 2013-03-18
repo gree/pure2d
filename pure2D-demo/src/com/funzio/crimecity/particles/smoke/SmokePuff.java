@@ -49,7 +49,7 @@ public class SmokePuff extends HybridEmitter {
                     spark.reset();
                 }
                 spark.setPosition(mPosition);
-                spark.setVelocity(new PointF(mRandom.nextInt(4) - 2, mRandom.nextInt(5) - 1));
+                spark.setVelocity(new PointF(RANDOM.nextInt(4) - 2, RANDOM.nextInt(5) - 1));
                 addParticle(spark);
             }
         }

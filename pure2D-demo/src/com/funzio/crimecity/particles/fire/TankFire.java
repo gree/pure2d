@@ -31,10 +31,10 @@ public class TankFire extends RectangularEmitter {
         TankFireParticle particle = null;
         if (type == TankFireSmokeParticle.class) {
             particle = new TankFireSmokeParticle(mSmokeTexture);
-            particle.setPosition(mPosition.x + mRandom.nextInt(7) - 3, mPosition.y + mRandom.nextInt(7) - 3);
+            particle.setPosition(mPosition.x + RANDOM.nextInt(7) - 3, mPosition.y + RANDOM.nextInt(7) - 3);
         } else if (type == TankFireFireParticle.class) {
             particle = new TankFireFireParticle(mFireTexture);
-            particle.setPosition(mPosition.x + mRandom.nextInt(7) - 3, mPosition.y + mRandom.nextInt(7) - 3);
+            particle.setPosition(mPosition.x + RANDOM.nextInt(7) - 3, mPosition.y + RANDOM.nextInt(7) - 3);
         } else if (type == TankFireSparkParticle.class) {
             particle = new TankFireSparkParticle(mFireTexture);
             particle.setPosition(mPosition);
