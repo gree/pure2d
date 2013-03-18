@@ -204,6 +204,10 @@ public class NovaFactory {
         mSpriteDelegator = frameMapper;
     }
 
+    public AtlasFrameSet getFrameSet(final String sprite) {
+        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(sprite);
+    }
+
     public static interface SpriteDelegator {
         public AtlasFrameSet getFrameSet(String name);
     }
