@@ -20,6 +20,8 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
     protected boolean mRemoveOnFinish = false;
     protected int nNumParticles = 0;
 
+    protected Listener mListener;
+
     public boolean draw(final GLState glState) {
         // draw nothing
         return false;
@@ -105,6 +107,11 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
             // auto remove me
             removeFromParent();
         }
+
+        // check listener
+        if (mListener != null) {
+            mListener.onEmitterFinish(this);
+        }
     }
 
     public void queueFinish() {
@@ -133,6 +140,16 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
      */
     public void setRemoveOnFinish(final boolean removeOnFinish) {
         mRemoveOnFinish = removeOnFinish;
+    }
+
+    @Override
+    public void setListener(final Listener listener) {
+        mListener = listener;
+    }
+
+    @Override
+    public Listener getListener() {
+        return mListener;
     }
 
     @Override

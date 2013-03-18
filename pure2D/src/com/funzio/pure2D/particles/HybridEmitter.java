@@ -10,7 +10,7 @@ package com.funzio.pure2D.particles;
 public class HybridEmitter extends RectangularEmitter implements Particle {
 
     private ParticleEmitter mEmitter;
-    private Listener mListener;
+    private Particle.Listener mParticleListener;
 
     /*
      * (non-Javadoc)
@@ -20,6 +20,7 @@ public class HybridEmitter extends RectangularEmitter implements Particle {
     public void reset(final Object... params) {
         mEmitter = null;
         mListener = null;
+        mParticleListener = null;
         mFinished = false;
     }
 
@@ -46,17 +47,17 @@ public class HybridEmitter extends RectangularEmitter implements Particle {
      * @see com.funzio.pure2D.particles.Particle#setListener(com.funzio.pure2D.particles.Particle.Listener)
      */
     @Override
-    public void setListener(final Listener listener) {
-        mListener = listener;
+    public void setParticleListener(final Particle.Listener listener) {
+        mParticleListener = listener;
     }
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.particles.Particle#getListener()
+     * @see com.funzio.pure2D.particles.Particle#getParticleListener()
      */
     @Override
-    public Listener getListener() {
-        return mListener;
+    public Particle.Listener getParticleListener() {
+        return mParticleListener;
     }
 
     @Override
@@ -68,9 +69,9 @@ public class HybridEmitter extends RectangularEmitter implements Particle {
             super.finish();
         }
 
-        // additional listener
-        if (mListener != null) {
-            mListener.onParticleFinish(this);
+        // particle listener
+        if (mParticleListener != null) {
+            mParticleListener.onParticleFinish(this);
         }
     }
 }

@@ -19,9 +19,9 @@ public interface Particle extends DisplayObject, Reusable {
 
     public ParticleEmitter getEmitter();
 
-    public void setListener(Listener listener);
+    public void setParticleListener(Listener listener);
 
-    public Listener getListener();
+    public Listener getParticleListener();
 
     public interface Listener {
         public void onParticleFinish(Particle particle);

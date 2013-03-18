@@ -71,11 +71,11 @@ public class SpriteParticle extends Sprite implements Particle {
      * @see com.funzio.pure2D.particles.Particle#setListener(com.funzio.pure2D.particles.Particle.Listener)
      */
     @Override
-    public void setListener(final Listener listener) {
+    public void setParticleListener(final Listener listener) {
         mListener = listener;
     }
 
-    public Listener getListener() {
+    public Listener getParticleListener() {
         return mListener;
     }
 
