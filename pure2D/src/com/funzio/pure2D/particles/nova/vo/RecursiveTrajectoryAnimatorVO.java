@@ -27,7 +27,7 @@ public class RecursiveTrajectoryAnimatorVO extends TrajectoryAnimatorVO {
     public RecursiveTrajectoryAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        deceleration_rate = NovaVO.getListFloat(json.optJSONArray("deceleration_rate"));
+        deceleration_rate = NovaVO.getListFloat(json, "deceleration_rate");
     }
 
     @Override

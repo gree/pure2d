@@ -9,17 +9,17 @@
 					"duration": 1000,
 					"layer": 1,
 
-					"sprite": ["smoke"],
-					"animator": ["smoke_ani"],
-					"blend_mode": ["interpolate_color"]
+					"sprite": "smoke",
+					"animator": "smoke_ani",
+					"blend_mode": "interpolate_color"
 				},
 
 				{
 					"duration": 1000,
 
 					"sprite": ["fire", "fire", "fire", "smoke"],
-					"animator": ["fire_ani"],
-					"blend_mode": ["add"]
+					"animator": "fire_ani",
+					"blend_mode": "add"
 				},
 
 				{
@@ -27,10 +27,10 @@
 					"step_quantity": 50,
 					"duration": 1,
 
-					"sprite": ["star"],
+					"sprite": "star",
 					"start_frame": [0, 20],
-					"blend_mode": ["add"],
-					"animator": ["star_ani"]
+					"blend_mode": "add",
+					"animator": "star_ani"
 				}
 			],
 
@@ -54,10 +54,10 @@
 				{
 					"type": "scale",
 					"x_from": [0.3, 0.5],
-					"x_to": [0.1],
+					"x_to": 0.1,
 					"y_from": [0.3, 0.5],
-					"y_to": [0.1],
-					"duration": [300],
+					"y_to": 0.1,
+					"duration": 300,
 					"interpolation": "accelerate"
 				},
 
@@ -65,7 +65,7 @@
 					"type": "move",
 					"dx": [-50, 50],
 					"dy": [-50, 50],
-					"duration": [300],
+					"duration": 300,
 					"interpolation": "decelerate"
 				}
 			]
@@ -78,10 +78,10 @@
 				{
 					"type": "scale",
 					"x_from": [0.5, 1],
-					"x_to": [0.5],
+					"x_to": 0.5,
 					"y_from": [0.5, 1],
-					"y_to": [0.5],
-					"duration": [800],
+					"y_to": 0.5,
+					"duration": 800,
 					"interpolation": "accelerate"
 				},
 
@@ -89,15 +89,15 @@
 					"type": "move",
 					"dx": [-50, 50],
 					"dy": [-50, 50],
-					"duration": [800],
+					"duration": 800,
 					"interpolation": "decelerate"
 				},
 
 				{
 					"type": "alpha",
-					"from": [1],
-					"to": [0],
-					"duration": [800],
+					"from": 1,
+					"to": 0,
+					"duration": 800,
 					"interpolation": "decelerate"
 				}
 			]

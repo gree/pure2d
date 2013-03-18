@@ -30,10 +30,10 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
     public SinWaveAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        dx = NovaVO.getListInteger(json.optJSONArray("dx"));
-        dy = NovaVO.getListInteger(json.optJSONArray("dy"));
-        wave_radius = NovaVO.getListInteger(json.optJSONArray("wave_radius"));
-        wave_num = NovaVO.getListInteger(json.optJSONArray("wave_num"));
+        dx = NovaVO.getListInt(json, "dx");
+        dy = NovaVO.getListInt(json, "dy");
+        wave_radius = NovaVO.getListInt(json, "wave_radius");
+        wave_num = NovaVO.getListInt(json, "wave_num");
     }
 
     @Override

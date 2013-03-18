@@ -28,7 +28,7 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
         super(json);
 
         interpolation = json.optString("interpolation");
-        duration = NovaVO.getListInteger(json.optJSONArray("duration"));
+        duration = NovaVO.getListInt(json, "duration");
     }
 
     /*

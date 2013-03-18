@@ -28,8 +28,8 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
     public AlphaAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        from = NovaVO.getListFloat(json.optJSONArray("from"));
-        to = NovaVO.getListFloat(json.optJSONArray("to"));
+        from = NovaVO.getListFloat(json, "from");
+        to = NovaVO.getListFloat(json, "to");
     }
 
     @Override

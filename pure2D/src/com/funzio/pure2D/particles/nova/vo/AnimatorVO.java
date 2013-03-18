@@ -63,8 +63,8 @@ public abstract class AnimatorVO {
         }
 
         loop_mode = json.optString("loop_mode");
-        loop_count = NovaVO.getListInteger(json.optJSONArray("loop_count"));
-        lifespan = NovaVO.getListInteger(json.optJSONArray("lifespan"));
+        loop_count = NovaVO.getListInt(json, "loop_count");
+        lifespan = NovaVO.getListInt(json, "lifespan");
     }
 
     /**

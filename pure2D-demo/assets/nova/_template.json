@@ -6,8 +6,8 @@
 			"lifespan": 1000,
 			"particles": [
 				{
-					"sprite": ["some_key"],
-					"animator": ["my_ani"]
+					"sprite": "some_key",
+					"animator": "my_ani"
 				}
 			]
 		}
@@ -19,7 +19,7 @@
 			"type": "translate",
 			"dx": [-100, 100],
 			"dy": [-100, 100],
-			"duration": [1000],
+			"duration": 1000,
 			"interpolation": "decelerate"
 		}
 	]

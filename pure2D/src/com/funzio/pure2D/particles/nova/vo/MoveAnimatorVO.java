@@ -28,8 +28,8 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
     public MoveAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        dx = NovaVO.getListInteger(json.optJSONArray("dx"));
-        dy = NovaVO.getListInteger(json.optJSONArray("dy"));
+        dx = NovaVO.getListInt(json, "dx");
+        dy = NovaVO.getListInt(json, "dy");
     }
 
     @Override

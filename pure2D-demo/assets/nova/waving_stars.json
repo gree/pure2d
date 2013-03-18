@@ -6,10 +6,10 @@
 			"lifespan": 5000,
 			"particles": [
 				{
-					"sprite": ["star"],
+					"sprite": "star",
 					"start_frame": [0, 20],
-					"animator": ["wave_ani"],
-					"blend_mode": ["add"]
+					"animator": "wave_ani",
+					"blend_mode": "add"
 				}
 			]
 		}
@@ -21,12 +21,12 @@
 			"type": "sin_wave",
 			"dx": [-200, 200],
 			"dy": [-200, 200],
-			"wave_radius": [300],
-			"wave_num": [2],
-			"duration": [2000],
+			"wave_radius": 300,
+			"wave_num": 2,
+			"duration": 2000,
 			"interpolation": "accelerate_decelerate",
 			"loop_mode": "reverse",
-			"loop_count": [1]
+			"loop_count": 1
 		}
 
 	]

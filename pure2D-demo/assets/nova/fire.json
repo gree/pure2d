@@ -12,16 +12,16 @@
 					"start_delay": 500,
 					"duration": 5000,
 
-					"sprite": ["smoke"],
-					"animator": ["smoke_ani"],
-					"blend_mode": ["screen_alpha"]
+					"sprite": "smoke",
+					"animator": "smoke_ani",
+					"blend_mode": "screen_alpha"
 				},
 				{
 					"duration": 5000,
 
 					"sprite": ["fire", "fire", "fire", "smoke"],
-					"animator": ["fire_ani"],
-					"blend_mode": ["add"]
+					"animator": "fire_ani",
+					"blend_mode": "add"
 				}
 			],
 			"animator": "left_right"
@@ -32,8 +32,8 @@
 		{
 			"name": "left_right",
 			"type": "translate",
-			"dx": [200],
-			"duration": [2000],
+			"dx": 200,
+			"duration": 2000,
 			"interpolation": "accelerate_decelerate",
 			"loop_mode": "reverse"
 		},
@@ -42,9 +42,9 @@
 			"type": "parallel",
 			"animators": [
 				{"type": "translate", "dx": [-100, 100], "dy": [300, 500], "duration": [500, 1000], "interpolation": "accelerate_decelerate"},
-				{"type": "rotate", "angle": [0, 360], "duration": [1000]},
-				{"type": "alpha", "from": [1], "to": [0], "duration": [700]},
-				{"type": "scale", "x_from": [1.5], "y_from": [1.5], "x_to": [0.5], "y_to": [0.5], "duration": [700]}
+				{"type": "rotate", "angle": [0, 360], "duration": 1000},
+				{"type": "alpha", "from": 1, "to": 0, "duration": 700},
+				{"type": "scale", "x_from": 1.5, "y_from": 1.5, "x_to": 0.5, "y_to": 0.5, "duration": 700}
 			]
 		},
 		{
@@ -52,7 +52,7 @@
 			"type": "parallel",
 			"animators": [
 				{"type": "translate", "dx": [-20, 20], "dy": [100, 300], "duration": [500, 1000], "interpolation": "accelerate_decelerate"},
-				{"type": "scale", "x_from": [1], "y_from": [1], "x_to": [0.125], "y_to": [0.5], "duration": [1000]}
+				{"type": "scale", "x_from": 1, "y_from": 1, "x_to": 0.125, "y_to": 0.5, "duration": 1000}
 			]
 		}
 	]

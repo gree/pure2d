@@ -29,9 +29,9 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
     public TrajectoryAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        ground = NovaVO.getListFloat(json.optJSONArray("ground"));
-        velocity = NovaVO.getListFloat(json.optJSONArray("velocity"));
-        angle = NovaVO.getListFloat(json.optJSONArray("angle"));
+        ground = NovaVO.getListFloat(json, "ground");
+        velocity = NovaVO.getListFloat(json, "velocity");
+        angle = NovaVO.getListFloat(json, "angle");
     }
 
     @Override

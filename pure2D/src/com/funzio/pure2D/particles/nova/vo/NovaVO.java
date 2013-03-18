@@ -109,43 +109,112 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<Integer> getListInteger(final JSONArray array) throws JSONException {
-        if (array == null) {
+    // protected static List<Integer> getListInteger(final JSONArray array) throws JSONException {
+    // if (array == null) {
+    // return null;
+    // }
+    //
+    // final List<Integer> result = new ArrayList<Integer>();
+    // final int size = array.length();
+    // for (int i = 0; i < size; i++) {
+    // result.add(array.getInt(i));
+    // }
+    //
+    // return result;
+    // }
+
+    protected static List<Integer> getListInt(final JSONObject json, final String field) throws JSONException {
+        // field check
+        if (!json.has(field)) {
             return null;
         }
 
         final List<Integer> result = new ArrayList<Integer>();
-        final int size = array.length();
-        for (int i = 0; i < size; i++) {
-            result.add(array.getInt(i));
+        try {
+            final JSONArray array = json.getJSONArray(field);
+            if (array != null) {
+                final int size = array.length();
+                for (int i = 0; i < size; i++) {
+                    result.add(array.getInt(i));
+                }
+            }
+        } catch (JSONException e) {
+            // single value
+            result.add(json.getInt(field));
         }
 
         return result;
     }
 
-    protected static List<Float> getListFloat(final JSONArray array) throws JSONException {
-        if (array == null) {
+    // protected static List<Float> getListFloat(final JSONArray array) throws JSONException {
+    // if (array == null) {
+    // return null;
+    // }
+    //
+    // final List<Float> result = new ArrayList<Float>();
+    // final int size = array.length();
+    // for (int i = 0; i < size; i++) {
+    // result.add((float) array.getDouble(i));
+    // }
+    //
+    // return result;
+    // }
+
+    protected static List<Float> getListFloat(final JSONObject json, final String field) throws JSONException {
+        // field check
+        if (!json.has(field)) {
             return null;
         }
 
         final List<Float> result = new ArrayList<Float>();
-        final int size = array.length();
-        for (int i = 0; i < size; i++) {
-            result.add((float) array.getDouble(i));
+        try {
+            final JSONArray array = json.getJSONArray(field);
+            if (array != null) {
+                final int size = array.length();
+                for (int i = 0; i < size; i++) {
+                    result.add((float) array.getDouble(i));
+                }
+            }
+        } catch (JSONException e) {
+            // single value
+            result.add((float) json.getDouble(field));
         }
 
         return result;
     }
 
-    protected static List<String> getListString(final JSONArray array) throws JSONException {
-        if (array == null) {
+    // protected static List<String> getListString(final JSONArray array) throws JSONException {
+    // if (array == null) {
+    // return null;
+    // }
+    //
+    // final List<String> result = new ArrayList<String>();
+    // final int size = array.length();
+    // for (int i = 0; i < size; i++) {
+    // result.add(array.getString(i));
+    // }
+    //
+    // return result;
+    // }
+
+    protected static List<String> getListString(final JSONObject json, final String field) throws JSONException {
+        // field check
+        if (!json.has(field)) {
             return null;
         }
 
         final List<String> result = new ArrayList<String>();
-        final int size = array.length();
-        for (int i = 0; i < size; i++) {
-            result.add(array.getString(i));
+        try {
+            final JSONArray array = json.getJSONArray(field);
+            if (array != null) {
+                final int size = array.length();
+                for (int i = 0; i < size; i++) {
+                    result.add(array.getString(i));
+                }
+            }
+        } catch (JSONException e) {
+            // single value
+            result.add(json.optString(field));
         }
 
         return result;

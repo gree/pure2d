@@ -57,12 +57,12 @@ public class ParticleVO {
         }
 
         // optional
-        sprite = NovaVO.getListString(json.optJSONArray("sprite"));
-        start_frame = NovaVO.getListInteger(json.optJSONArray("start_frame"));
-        x = NovaVO.getListInteger(json.optJSONArray("x"));
-        y = NovaVO.getListInteger(json.optJSONArray("y"));
-        animator = NovaVO.getListString(json.optJSONArray("animator"));
-        blend_mode = NovaVO.getListString(json.optJSONArray("blend_mode"));
+        sprite = NovaVO.getListString(json, "sprite");
+        start_frame = NovaVO.getListInt(json, "start_frame");
+        x = NovaVO.getListInt(json, "x");
+        y = NovaVO.getListInt(json, "y");
+        animator = NovaVO.getListString(json, "animator");
+        blend_mode = NovaVO.getListString(json, "blend_mode");
     }
 
 }
