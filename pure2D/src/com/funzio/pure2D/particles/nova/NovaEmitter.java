@@ -71,6 +71,7 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
 
         // stop animator
         if (mAnimator != null) {
+            // stop animator first
             mAnimator.stop();
             // reset the animator
             if (mAnimator.getData() instanceof AnimatorVO) {
