@@ -158,7 +158,10 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
             mStage.queueEvent(new Runnable() {
                 @Override
                 public void run() {
-                    addObject(event.getX(), mDisplaySize.y - event.getY());
+                    final int pointerCount = event.getPointerCount();
+                    for (int i = 0; i < pointerCount; i++) {
+                        addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                    }
                 }
             });
         }
