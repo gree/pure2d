@@ -52,6 +52,19 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
         return pt;
     }
 
+    /**
+     * This one consume more memory to create a new instance of PointF
+     * 
+     * @return
+     */
+    public PointF getNextPosition() {
+        final PointF pt = new PointF();
+        pt.x = mPosition.x - mOrigin.x + mRandom.nextInt((int) mSize.x);
+        pt.y = mPosition.y - mOrigin.y + mRandom.nextInt((int) mSize.y);
+
+        return pt;
+    }
+
     protected boolean addParticle(final Particle particle) {
         if (particle.getEmitter() != this) {
             nNumParticles++;
