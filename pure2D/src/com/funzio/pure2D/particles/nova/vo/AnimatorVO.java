@@ -38,6 +38,7 @@ public abstract class AnimatorVO {
     public static final String TRAJECTORY = "trajectory";
     public static final String RECURSIVE_TRAJECTORY = "recursive_trajectory";
     public static final String SIN_WAVE = "sin_wave";
+    public static final String COLOR = "color";
 
     public String name;
     public String type;
@@ -120,6 +121,8 @@ public abstract class AnimatorVO {
             return new RecursiveTrajectoryAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SIN_WAVE)) {
             return new SinWaveAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(COLOR)) {
+            return new ColorAnimatorVO(json);
         } else {
             return null;
         }
