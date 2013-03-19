@@ -15,7 +15,9 @@ import android.opengl.GLSurfaceView.EGLConfigChooser;
 public class StencilEGLConfig implements EGLConfigChooser {
 
     private static int[] CONFIG_SPEC = {
-            EGL10.EGL_STENCIL_SIZE, 8, EGL10.EGL_NONE
+            EGL10.EGL_STENCIL_SIZE, 8, //
+            EGL10.EGL_DEPTH_SIZE, 8, //
+            EGL10.EGL_NONE
     };
 
     private static int[] MAJOR_MINOR = new int[] {
@@ -32,14 +34,24 @@ public class StencilEGLConfig implements EGLConfigChooser {
      */
     @Override
     public EGLConfig chooseConfig(final EGL10 egl, final EGLDisplay display) {
-        final EGLConfig[] configs = new EGLConfig[1];
+        // Find up to 5 EGL configurations which match our spec. 5 is an arbitrary number.
+        final EGLConfig[] configs = new EGLConfig[5];
         final int[] num_config = new int[1];
 
-        if (egl.eglInitialize(display, MAJOR_MINOR) && egl.eglChooseConfig(display, CONFIG_SPEC, configs, 1, num_config)) {
+        if (egl.eglInitialize(display, MAJOR_MINOR) && egl.eglChooseConfig(display, CONFIG_SPEC, configs, configs.length, num_config)) {
+            final int[] value = new int[1];
+
+            // return the first config with DEPTH_SIZE >= 16, if available
+            for (int i = 0; i < num_config[0]; i++) {
+                egl.eglGetConfigAttrib(display, configs[i], EGL10.EGL_DEPTH_SIZE, value);
+                if (value[0] >= 16) {
+                    return configs[i];
+                }
+            }
+
             return configs[0];
         }
 
         return null;
     }
-
 }

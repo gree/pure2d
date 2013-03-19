@@ -97,4 +97,6 @@ public interface DisplayObject extends Manipulatable {
     public void onAdded(Container parent);
 
     public void onRemoved();
+
+    public String getTrace(final String prefix);
 }

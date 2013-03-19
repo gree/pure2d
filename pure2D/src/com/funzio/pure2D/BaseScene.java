@@ -863,4 +863,28 @@ public class BaseScene implements Scene {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+    }
+
+    /**
+     * for Debugging
+     * 
+     * @return a string that has all the children in Tree format
+     */
+    public String getTrace() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(toString());
+        sb.append("\n");
+
+        for (int i = 0; i < mNumChildren; i++) {
+            DisplayObject child = mChildren.get(i);
+            sb.append(child.getTrace("   "));
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }

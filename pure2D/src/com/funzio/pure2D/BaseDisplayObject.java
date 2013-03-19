@@ -842,4 +842,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mParent = null;
         mScene = null;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+    }
+
+    /**
+     * for debugging
+     */
+    public String getTrace(final String prefix) {
+        return prefix + toString();
+    }
 }

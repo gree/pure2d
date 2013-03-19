@@ -112,7 +112,7 @@ public class TrajectoryAnimator extends BaseAnimator {
         final float vcos = mVelocity * mCos;
         // final float vsin = mVelocity * mSin;
         mDistance = deltaX;// (vcos / GRAVITY) * (vsin + (float)Math.sqrt(vsin * vsin + 2 * GRAVITY * mSrcY));
-        mDuration = TIME_FACTOR * mDistance / vcos;
+        mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
 
         start();
     }

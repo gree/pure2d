@@ -63,13 +63,17 @@ public class ClipParticle extends Clip implements Particle {
     }
 
     public void queueFinish() {
-        queueEvent(new Runnable() {
+        final boolean success = queueEvent(new Runnable() {
 
             @Override
             public void run() {
                 finish();
             }
         });
+
+        if (!success) {
+            finish();
+        }
     }
 
     public boolean isFinished() {
