@@ -33,6 +33,12 @@ public class ColorAnimator extends TweenAnimator {
         mDelta.setValues(dstR - srcR, dstG - srcG, dstB - srcB, dstA - srcA);
     }
 
+    public void setValues(final int srcR, final int srcG, final int srcB, final int srcA, final int dstR, final int dstG, final int dstB, final int dstA) {
+        mSrc.setValues(srcR, srcG, srcB, srcA);
+        mDst.setValues(dstR, dstG, dstB, dstA);
+        mDelta.setValues(dstR - srcR, dstG - srcG, dstB - srcB, dstA - srcA);
+    }
+
     public void start(final GLColor src, final GLColor dst) {
         setValues(src, dst);
 
@@ -46,6 +52,12 @@ public class ColorAnimator extends TweenAnimator {
     }
 
     public void start(final float srcR, final float srcG, final float srcB, final float srcA, final float dstR, final float dstG, final float dstB, final float dstA) {
+        setValues(srcR, srcG, srcB, srcA, dstR, dstG, dstB, dstA);
+
+        start();
+    }
+
+    public void start(final int srcR, final int srcG, final int srcB, final int srcA, final int dstR, final int dstG, final int dstB, final int dstA) {
         setValues(srcR, srcG, srcB, srcA, dstR, dstG, dstB, dstA);
 
         start();

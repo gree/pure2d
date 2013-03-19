@@ -52,6 +52,13 @@ public class GLColor {
         this.a = a;
     }
 
+    public void setValues(final int r, final int g, final int b, final int a) {
+        this.r = (float) r / 255;
+        this.g = (float) g / 255;
+        this.b = (float) b / 255;
+        this.a = (float) a / 255;
+    }
+
     public int toInt() {
         return Color.argb(Math.round(a * 255), Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
     }

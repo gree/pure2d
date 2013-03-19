@@ -18,14 +18,14 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class ColorAnimatorVO extends TweenAnimatorVO {
 
-    public List<Float> r_from;
-    public List<Float> r_to;
-    public List<Float> g_from;
-    public List<Float> g_to;
-    public List<Float> b_from;
-    public List<Float> b_to;
-    public List<Float> a_from;
-    public List<Float> a_to;
+    public List<Integer> r_from;
+    public List<Integer> r_to;
+    public List<Integer> g_from;
+    public List<Integer> g_to;
+    public List<Integer> b_from;
+    public List<Integer> b_to;
+    public List<Integer> a_from;
+    public List<Integer> a_to;
 
     public ColorAnimatorVO() {
         super();
@@ -34,14 +34,14 @@ public class ColorAnimatorVO extends TweenAnimatorVO {
     public ColorAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        r_from = NovaVO.getListFloat(json, "r_from");
-        r_to = NovaVO.getListFloat(json, "r_to");
-        g_from = NovaVO.getListFloat(json, "g_from");
-        g_to = NovaVO.getListFloat(json, "g_to");
-        b_from = NovaVO.getListFloat(json, "b_from");
-        b_to = NovaVO.getListFloat(json, "b_to");
-        a_from = NovaVO.getListFloat(json, "a_from");
-        a_to = NovaVO.getListFloat(json, "a_to");
+        r_from = NovaVO.getListInt(json, "r_from");
+        r_to = NovaVO.getListInt(json, "r_to");
+        g_from = NovaVO.getListInt(json, "g_from");
+        g_to = NovaVO.getListInt(json, "g_to");
+        b_from = NovaVO.getListInt(json, "b_from");
+        b_to = NovaVO.getListInt(json, "b_to");
+        a_from = NovaVO.getListInt(json, "a_from");
+        a_to = NovaVO.getListInt(json, "a_to");
     }
 
     @Override
@@ -55,14 +55,14 @@ public class ColorAnimatorVO extends TweenAnimatorVO {
 
         final ColorAnimator color = (ColorAnimator) animator;
         if (color != null) {
-            color.setValues(r_from != null ? NovaConfig.getRandomFloat(r_from) : 1, //
-                    g_from != null ? NovaConfig.getRandomFloat(g_from) : 1, //
-                    b_from != null ? NovaConfig.getRandomFloat(b_from) : 1, //
-                    a_from != null ? NovaConfig.getRandomFloat(a_from) : 1, //
-                    r_to != null ? NovaConfig.getRandomFloat(r_to) : 1, //
-                    g_to != null ? NovaConfig.getRandomFloat(g_to) : 1, //
-                    b_to != null ? NovaConfig.getRandomFloat(b_to) : 1, //
-                    a_to != null ? NovaConfig.getRandomFloat(a_to) : 1);
+            color.setValues(r_from != null ? NovaConfig.getRandomInt(r_from) : 255, //
+                    g_from != null ? NovaConfig.getRandomInt(g_from) : 255, //
+                    b_from != null ? NovaConfig.getRandomInt(b_from) : 255, //
+                    a_from != null ? NovaConfig.getRandomInt(a_from) : 255, //
+                    r_to != null ? NovaConfig.getRandomInt(r_to) : 255, //
+                    g_to != null ? NovaConfig.getRandomInt(g_to) : 255, //
+                    b_to != null ? NovaConfig.getRandomInt(b_to) : 255, //
+                    a_to != null ? NovaConfig.getRandomInt(a_to) : 255);
 
             color.setDuration(NovaConfig.getRandomInt(duration));
         }
