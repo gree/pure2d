@@ -65,6 +65,10 @@ public class EmitterVO {
         particles = getParticles(json.optJSONArray("particles"));
     }
 
+    public void applyScale(final float scale) {
+        // TODO
+    }
+
     private List<ParticleVO> getParticles(final JSONArray array) throws JSONException {
         final List<ParticleVO> list = new ArrayList<ParticleVO>();
         final int size = array.length();

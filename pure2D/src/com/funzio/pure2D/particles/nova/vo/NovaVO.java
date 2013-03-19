@@ -73,6 +73,27 @@ public class NovaVO {
         this(new JSONObject(json));
     }
 
+    /**
+     * Apply a screen's scale factor to some certain numbers such as x, y, dx, dy
+     * 
+     * @param scale
+     */
+    public void applyScale(final float scale) {
+        // scale emitters
+        for (EmitterVO vo : emitters) {
+            if (vo != null) {
+                vo.applyScale(scale);
+            }
+        }
+
+        // scale animators
+        for (AnimatorVO vo : animators) {
+            if (vo != null) {
+                vo.applyScale(scale);
+            }
+        }
+    }
+
     public EmitterVO getEmitterVO(final String name) {
         return mEmitterMap != null ? mEmitterMap.get(name) : null;
     }

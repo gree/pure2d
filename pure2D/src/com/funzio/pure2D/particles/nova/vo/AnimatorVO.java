@@ -97,6 +97,10 @@ public abstract class AnimatorVO {
         }
     }
 
+    public void applyScale(final float scale) {
+        // TODO
+    }
+
     public static AnimatorVO create(final JSONObject json) throws JSONException {
         if (!json.has("type")) {
             return null;
