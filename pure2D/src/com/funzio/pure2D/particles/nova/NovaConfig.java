@@ -53,14 +53,18 @@ public class NovaConfig {
     public static final String LOOP_REVERSE = "reverse";
 
     public static float getRandomFloat(final List<Float> values) {
+        return getRandomFloat(values, 0);
+    }
+
+    public static float getRandomFloat(final List<Float> values, final float defalutValue) {
         if (values == null) {
-            return 0;
+            return defalutValue;
         }
 
         final int size = values.size();
         if (size == 0) {
             // default value
-            return 0;
+            return defalutValue;
         } else if (size == 1) {
             // fixed value
             return values.get(0);
@@ -74,14 +78,18 @@ public class NovaConfig {
     }
 
     public static int getRandomInt(final List<Integer> values) {
+        return getRandomInt(values, 0);
+    }
+
+    public static int getRandomInt(final List<Integer> values, final int defaultValue) {
         if (values == null) {
-            return 0;
+            return defaultValue;
         }
 
         final int size = values.size();
         if (size == 0) {
             // default value
-            return 0;
+            return defaultValue;
         } else if (size == 1) {
             // fixed value
             return values.get(0);

@@ -55,14 +55,14 @@ public class ColorAnimatorVO extends TweenAnimatorVO {
 
         final ColorAnimator color = (ColorAnimator) animator;
         if (color != null) {
-            color.setValues(r_from != null ? NovaConfig.getRandomInt(r_from) : 255, //
-                    g_from != null ? NovaConfig.getRandomInt(g_from) : 255, //
-                    b_from != null ? NovaConfig.getRandomInt(b_from) : 255, //
-                    a_from != null ? NovaConfig.getRandomInt(a_from) : 255, //
-                    r_to != null ? NovaConfig.getRandomInt(r_to) : 255, //
-                    g_to != null ? NovaConfig.getRandomInt(g_to) : 255, //
-                    b_to != null ? NovaConfig.getRandomInt(b_to) : 255, //
-                    a_to != null ? NovaConfig.getRandomInt(a_to) : 255);
+            color.setValues(NovaConfig.getRandomInt(r_from, 255), //
+                    NovaConfig.getRandomInt(g_from, 255), //
+                    NovaConfig.getRandomInt(b_from, 255), //
+                    NovaConfig.getRandomInt(a_from, 255), //
+                    NovaConfig.getRandomInt(r_to, 255), //
+                    NovaConfig.getRandomInt(g_to, 255), //
+                    NovaConfig.getRandomInt(b_to, 255), //
+                    NovaConfig.getRandomInt(a_to, 255));
 
             color.setDuration(NovaConfig.getRandomInt(duration));
         }
