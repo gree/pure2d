@@ -19,12 +19,17 @@ public class ParticleVO {
     public int duration = 0; // <= 0 is unlimited
     public int step_quantity = 1;
 
-    // the layer
+    // the containing layer
     public int layer = 0;
+
+    // the sprite origin
+    public int origin_x = -1;
+    public int origin_y = -1;
 
     // optional
     public List<String> sprite;
     public List<Integer> start_frame;
+    // offset x, y
     public List<Integer> x;
     public List<Integer> y;
 
@@ -54,6 +59,14 @@ public class ParticleVO {
 
         if (json.has("layer")) {
             layer = json.getInt("layer");
+        }
+
+        if (json.has("origin_x")) {
+            origin_x = json.getInt("origin_x");
+        }
+
+        if (json.has("origin_y")) {
+            origin_y = json.getInt("origin_y");
         }
 
         // optional

@@ -62,7 +62,14 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         } else {
             playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
         }
-        setOriginAtCenter();
+
+        // origin
+        if (mParticleVO.origin_x == -1 && mParticleVO.origin_y == -1) {
+            setOriginAtCenter();
+        } else {
+            setOrigin(mParticleVO.origin_x, mParticleVO.origin_y);
+        }
+
         // and others
         setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
         // setZ(particleVO.z);
