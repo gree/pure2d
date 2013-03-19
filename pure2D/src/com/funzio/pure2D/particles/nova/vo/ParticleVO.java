@@ -14,6 +14,7 @@ import com.funzio.pure2D.Scene;
  * @author long
  */
 public class ParticleVO {
+    // emitting delay and rate
     public int start_delay = 0;
     public int step_delay = Scene.DEFAULT_MSPF;
     public int duration = 0; // <= 0 is unlimited
