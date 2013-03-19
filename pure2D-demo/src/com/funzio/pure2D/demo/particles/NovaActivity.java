@@ -44,6 +44,10 @@ public class NovaActivity extends StageActivity {
                 return mSidePlatformGlow;
             } else if (name.equalsIgnoreCase("side_ground_flare")) {
                 return mSideGroundFlare;
+            } else if (name.equalsIgnoreCase("middle_flare_static")) {
+                return mMiddleFlareStatic;
+            } else if (name.equalsIgnoreCase("glitter")) {
+                return mGlitter;
             } else if (name.equalsIgnoreCase("star")) {
                 return mStarAtlas.getMasterFrameSet();
             } else {
@@ -60,6 +64,8 @@ public class NovaActivity extends StageActivity {
     private SingleFrameSet mSidePlatformGlow;
     private SingleFrameSet mSideGroundFlare;
     private NovaFactory mNovaFactory;
+    private SingleFrameSet mMiddleFlareStatic;
+    private SingleFrameSet mGlitter;
 
     @Override
     protected int getNumObjects() {
@@ -137,8 +143,10 @@ public class NovaActivity extends StageActivity {
 
         mFireFrame = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/fire.png", options));
 
-        mSideGroundFlare = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/side_ground_flare.png", options));
-        mSidePlatformGlow = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/side_platform_glow.png", options));
+        mSideGroundFlare = new SingleFrameSet("a", mScene.getTextureManager().createAssetTexture("nova/side_ground_flare.png", options));
+        mSidePlatformGlow = new SingleFrameSet("b", mScene.getTextureManager().createAssetTexture("nova/side_platform_glow.png", options));
+        mMiddleFlareStatic = new SingleFrameSet("c", mScene.getTextureManager().createAssetTexture("nova/middle_flare_static.png", options));
+        mGlitter = new SingleFrameSet("c", mScene.getTextureManager().createAssetTexture("nova/glitter.png", options));
 
         // star texture and atlas
         try {
