@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 
@@ -228,7 +229,8 @@ public class BaseScene implements Scene {
 
         // Enable alpha blending
         gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glBlendFunc(BlendFunc.DEFAULT_SRC, BlendFunc.DEFAULT_DST);
+        // gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
         // Enable Texture, not here!
         // gl.glEnable(GL10.GL_TEXTURE_2D);

@@ -73,6 +73,16 @@ public class BlendFunc {
     }
 
     /**
+     * Pre-multiplied Alpha
+     * 
+     * @return
+     */
+    public static BlendFunc getPremultipliedAlpha() {
+        // (src * 1) + (dst * (1 - src_apha)) = src * 1 + dst - (dst * src_apha)
+        return new BlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /**
      * Screen blending
      * 
      * @return
