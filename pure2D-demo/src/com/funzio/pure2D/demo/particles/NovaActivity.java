@@ -16,7 +16,6 @@ import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
-import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
@@ -27,13 +26,6 @@ import com.funzio.pure2D.particles.nova.vo.NovaVO;
 public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();
     private static final String NOVA_DIR = "nova/";
-
-    private String mFilePath;
-
-    private JsonAtlas mStarAtlas;
-    private SingleFrameSet mSmokeFrame;
-    private SingleFrameSet mFireFrame;
-    private NovaFactory mNovaFactory;
 
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
@@ -48,6 +40,10 @@ public class NovaActivity extends StageActivity {
                 return mSmokeFrame;
             } else if (name.equalsIgnoreCase("fire")) {
                 return mFireFrame;
+            } else if (name.equalsIgnoreCase("side_platform_glow")) {
+                return mSidePlatformGlow;
+            } else if (name.equalsIgnoreCase("side_ground_flare")) {
+                return mSideGroundFlare;
             } else if (name.equalsIgnoreCase("star")) {
                 return mStarAtlas.getMasterFrameSet();
             } else {
@@ -55,6 +51,15 @@ public class NovaActivity extends StageActivity {
             }
         }
     };
+
+    private String mFilePath;
+
+    private JsonAtlas mStarAtlas;
+    private SingleFrameSet mSmokeFrame;
+    private SingleFrameSet mFireFrame;
+    private SingleFrameSet mSidePlatformGlow;
+    private SingleFrameSet mSideGroundFlare;
+    private NovaFactory mNovaFactory;
 
     @Override
     protected int getNumObjects() {
@@ -128,11 +133,12 @@ public class NovaActivity extends StageActivity {
         options.inMipmaps = 1;
 
         // create textures
-        AssetTexture smokeTexture = mScene.getTextureManager().createAssetTexture("nova/smoke.png", options);
-        mSmokeFrame = new SingleFrameSet("smoke", smokeTexture);
+        mSmokeFrame = new SingleFrameSet("smoke", mScene.getTextureManager().createAssetTexture("nova/smoke.png", options));
 
-        AssetTexture fireTexture = mScene.getTextureManager().createAssetTexture("nova/fire.png", options);
-        mFireFrame = new SingleFrameSet("fire", fireTexture);
+        mFireFrame = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/fire.png", options));
+
+        mSideGroundFlare = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/side_ground_flare.png", options));
+        mSidePlatformGlow = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/side_platform_glow.png", options));
 
         // star texture and atlas
         try {

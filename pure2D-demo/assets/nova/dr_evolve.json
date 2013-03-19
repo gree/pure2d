@@ -1,0 +1,139 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "dr_evolve",
+			"particles": [
+				{
+					"duration": 1,
+
+					"sprite": "side_ground_flare",
+					"animator": "ground_ani"
+				},
+
+				{
+					"duration": 1,
+					"start_delay": 30,
+					"origin_x": 180,
+					"origin_y": 45,
+					"x": 65,
+					"y": -10,
+
+					"sprite": "side_platform_glow",
+					"animator": "glow_ani"
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "ground_ani",
+			"type": "sequence",
+			"animators": [
+				{
+					"type": "parallel",
+					"animators": [
+						{
+							"type": "scale",
+							"duration": 300,
+							"x_from": 0.5,
+							"x_to": 1,
+							"y_from": 0.375,
+							"y_to": 0.75,
+							"interpolation": "decelerate"
+						},
+
+						{
+							"type": "rotate",
+							"duration": 300,
+							"from": 0,
+							"to": -15
+						},
+
+						{
+							"type": "alpha",
+							"duration": 300,
+							"from": 0,
+							"to": 1
+						}
+					]
+				},
+
+				{
+					"type": "delay",
+					"duration": 300
+				},
+
+				{
+					"type": "parallel",
+					"animators": [
+						{
+							"type": "rotate",
+							"duration": 300,
+							"delta": -10
+						},
+
+						{
+							"type": "alpha",
+							"duration": 300,
+							"from": 1,
+							"to": 0
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"name": "glow_ani",
+			"type": "sequence",
+			"animators": [
+				{
+					"type": "parallel",
+					"animators": [
+						{
+							"type": "scale",
+							"duration": 300,
+							"y_from": 0.5,
+							"y_to": 1,
+							"interpolation": "decelerate"
+						},
+
+						{
+							"type": "alpha",
+							"duration": 300,
+							"from": 0,
+							"to": 1
+						}
+					]
+				},
+
+				{
+					"type": "delay",
+					"duration": 300
+				},
+
+				{
+					"type": "parallel",
+					"animators": [
+						{
+							"type": "scale",
+							"duration": 300,
+							"y_from": 1,
+							"y_to": 0.75,
+							"interpolation": "accelerate"
+						},
+
+						{
+							"type": "alpha",
+							"duration": 300,
+							"from": 1,
+							"to": 0
+						}
+					]
+				}
+			]
+		}
+	]
+}
