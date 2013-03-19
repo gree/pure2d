@@ -10,10 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.animators.Animator;
-import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
@@ -27,7 +24,7 @@ import com.funzio.pure2D.particles.nova.NovaFactory.SpriteDelegator;
 import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
-public class NovaActivity extends StageActivity implements AnimatorListener {
+public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();
     private static final String NOVA_DIR = "nova/";
 
@@ -80,9 +77,6 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
                 // load the textures
                 loadTextures();
 
-                // generate a lot of squares
-                // addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-
                 NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
                     @Override
@@ -116,6 +110,17 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
         if (mNovaFactory != null) {
             mNovaFactory.dispose();
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see android.app.Activity#finish()
+     */
+    @Override
+    public void finish() {
+        super.finish();
+
+        Log.d(TAG, mScene.getTrace());
     }
 
     private void loadTextures() {
@@ -152,7 +157,7 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        final int action = event.getAction();
+        final int action = event.getAction() & MotionEvent.ACTION_MASK;
 
         if (action == MotionEvent.ACTION_DOWN) {
             mStage.queueEvent(new Runnable() {
@@ -167,23 +172,6 @@ public class NovaActivity extends StageActivity implements AnimatorListener {
         }
 
         return true;
-    }
-
-    @Override
-    public void onAnimationEnd(final Animator animator) {
-        mStage.queueEvent(new Runnable() {
-
-            @Override
-            public void run() {
-                ((DisplayObject) animator.getTarget()).removeFromParent();
-            }
-        });
-    }
-
-    @Override
-    public void onAnimationUpdate(final Animator animator, final float value) {
-        // TODO Auto-generated method stub
-
     }
 
 }

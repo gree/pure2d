@@ -68,21 +68,19 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // setZ(particleVO.z);
         // setAlphaTestEnabled(particleVO.z != 0);
 
-        if (mEmitter != null) {
-            // optional animators
-            if (mParticleVO.animator != null) {
-                // get a new animator from pool
-                mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
+        // optional animators
+        if (mParticleVO.animator != null) {
+            // get a new animator from pool
+            mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
 
-                // null check
-                if (mAnimator != null) {
-                    // add it
-                    mAnimator.setListener(this);
-                    addManipulator(mAnimator);
+            // null check
+            if (mAnimator != null) {
+                // add it
+                mAnimator.setListener(this);
+                addManipulator(mAnimator);
 
-                    // auto start
-                    mAnimator.start();
-                }
+                // auto start
+                mAnimator.start();
             }
         }
     }

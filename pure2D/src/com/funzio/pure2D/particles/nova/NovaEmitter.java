@@ -7,7 +7,6 @@ import android.graphics.PointF;
 import android.util.SparseArray;
 
 import com.funzio.pure2D.animators.Animator;
-import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.Timeline;
 import com.funzio.pure2D.animators.Timeline.Action;
 import com.funzio.pure2D.containers.Container;
@@ -22,7 +21,7 @@ import com.funzio.pure2D.utils.Reusable;
 /**
  * @author long
  */
-public class NovaEmitter extends RectangularEmitter implements AnimatorListener, Reusable, Timeline.Listener {
+public class NovaEmitter extends RectangularEmitter implements Reusable, Timeline.Listener {
 
     protected final Timeline mTimeline;
     protected final NovaFactory mFactory;
@@ -95,7 +94,6 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
         if (mEmitterVO.animator != null) {
             mAnimator = mFactory.createAnimator(this, mEmitterVO.animator);
             if (mAnimator != null) {
-                mAnimator.setListener(this);
                 addManipulator(mAnimator);
                 // auto start
                 mAnimator.start();
@@ -114,20 +112,6 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
                 mLayers.put(particle.layer, new DisplayGroup());
             }
         }
-    }
-
-    @Override
-    public void onAnimationEnd(final Animator animator) {
-        // only finish when lifespan is not set
-        // if (mEmitterVO.duration <= 0) {
-        // queueFinish();
-        // }
-    }
-
-    @Override
-    public void onAnimationUpdate(final Animator animator, final float value) {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -174,15 +158,16 @@ public class NovaEmitter extends RectangularEmitter implements AnimatorListener,
      */
     @Override
     public void onRemoved() {
-        super.onRemoved();
-
         // remove the layers
         if (mLayers != null) {
             final int size = mLayers.size();
             for (int i = 0; i < size; i++) {
                 mLayers.get(mLayers.keyAt(i)).removeFromParent();
             }
+            mLayers.clear();
         }
+
+        super.onRemoved();
     }
 
     @Override

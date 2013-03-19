@@ -128,13 +128,17 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
     }
 
     public void queueFinish() {
-        queueEvent(new Runnable() {
+        final boolean success = queueEvent(new Runnable() {
 
             @Override
             public void run() {
                 finish();
             }
         });
+
+        if (!success) {
+            finish();
+        }
     }
 
     public boolean isFinished() {
