@@ -8,7 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * @author long
  */
-public class BlendFunc {
+public final class BlendFunc {
     public final static int DEFAULT_SRC = GL10.GL_SRC_ALPHA;
     public final static int DEFAULT_DST = GL10.GL_ONE_MINUS_SRC_ALPHA;
 
