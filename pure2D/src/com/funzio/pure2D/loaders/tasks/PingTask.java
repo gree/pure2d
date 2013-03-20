@@ -68,6 +68,7 @@ public class PingTask implements Task, Retriable {
 
     public PingTask setRetryCount(final int retry) {
         if (retry >= 0) {
+            mMaxRetries = retry;
         }
         return this;
     }
