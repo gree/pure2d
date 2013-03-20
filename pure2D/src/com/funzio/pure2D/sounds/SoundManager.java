@@ -58,28 +58,6 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         Looper.loop();
     }
 
-    static class SoundHandler extends Handler {
-        private final WeakReference<SoundManager> mSoundManager;
-
-        SoundHandler(final SoundManager manager) {
-            mSoundManager = new WeakReference<SoundManager>(manager);
-        }
-
-        @Override
-        public void handleMessage(final Message msg) {
-            final int soundID = msg.arg1;
-            final int soundLoop = msg.arg2;
-
-            SoundManager manager = mSoundManager.get();
-            if (manager != null) {
-                int streamId = manager.privatePlay(soundID, soundLoop);
-                if (streamId != 0) {
-                    manager.mStreamIds.put(soundID, streamId);
-                }
-            }
-        }
-    }
-
     public boolean isSoundEnabled() {
         return mSoundEnabled;
     }
@@ -270,6 +248,28 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
 
         return true;
+    }
+
+    private static class SoundHandler extends Handler {
+        private final WeakReference<SoundManager> mSoundManager;
+
+        public SoundHandler(final SoundManager manager) {
+            mSoundManager = new WeakReference<SoundManager>(manager);
+        }
+
+        @Override
+        public void handleMessage(final Message msg) {
+            final int soundID = msg.arg1;
+            final int soundLoop = msg.arg2;
+
+            SoundManager manager = mSoundManager.get();
+            if (manager != null) {
+                int streamId = manager.privatePlay(soundID, soundLoop);
+                if (streamId != 0) {
+                    manager.mStreamIds.put(soundID, streamId);
+                }
+            }
+        }
     }
 
 }
