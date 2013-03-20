@@ -198,10 +198,12 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mHandler.sendMessage(msg);
     }
 
-    public void stop(final int streamID) {
-        mSoundPool.stop(streamID);
-        if (mStreamIds.indexOfValue(streamID) > 0) {
-            mStreamIds.removeAt(mStreamIds.indexOfValue(streamID));
+    public void stop(final int soundID) {
+        int streamID = mStreamIds.get(soundID, -1);
+
+        if (streamID > 0) {
+            mSoundPool.stop(streamID);
+            mStreamIds.delete(soundID);
         }
     }
 
