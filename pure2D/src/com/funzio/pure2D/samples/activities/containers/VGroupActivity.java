@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.funzio.pure2D.shapes.Sprite;
 
 public class VGroupActivity extends StageActivity {
     private List<Texture> mTextures = new ArrayList<Texture>();
-    private PointF mRegisteredPoint = new PointF();
     private VGroup mContainer;
 
     /*
@@ -36,7 +34,8 @@ public class VGroupActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // need to get the GL reference first
+        // to allow swiping
+        mScene.setUIEnabled(true);
         mScene.setListener(new BaseScene.Listener() {
 
             @Override
@@ -67,6 +66,7 @@ public class VGroupActivity extends StageActivity {
         mContainer = new VGroup();
         mContainer.setGap(50);
         mContainer.setSize(200, mDisplaySize.y);
+        mContainer.setSwipeEnabled(true);
 
         for (int n = 0; n < 3; n++) {
             Texture texture = mTextures.get(n % mTextures.size());
@@ -91,27 +91,8 @@ public class VGroupActivity extends StageActivity {
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        if (action == MotionEvent.ACTION_DOWN) {
-            mRegisteredPoint.x = x;
-            mRegisteredPoint.y = y;
-        } else if (action == MotionEvent.ACTION_MOVE) {
-            float delta = y - mRegisteredPoint.y;
-            mContainer.scrollBy(0, delta);
-            mRegisteredPoint.x = x;
-            mRegisteredPoint.y = y;
-        }
-
-        // if (action == MotionEvent.ACTION_DOWN) {
-        // Log.v("long", "touch");
-        // if (event.getPointerCount() == 1) {
-        // mContainer.scrollBy(0, 10.5f);
-        // } else {
-        // mContainer.scrollBy(0, -10.5f);
-        // }
-        // }
+        // forward the event to scene
+        mScene.onTouchEvent(event);
 
         return true;
     }

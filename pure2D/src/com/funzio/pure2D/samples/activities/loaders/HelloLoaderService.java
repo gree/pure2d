@@ -14,7 +14,7 @@ import com.funzio.pure2D.loaders.tasks.DownloadTask;
  */
 public class HelloLoaderService extends LoaderService {
     public static final String CLASS_NAME = HelloLoaderService.class.getName();
-    public static final String DST_DIR = Environment.getExternalStorageDirectory() + "/funzio/";
+    public static final String DST_DIR = Environment.getExternalStorageDirectory() + "/Android/data/com.funzio.pure2D/";
 
     private static final boolean OVERRIDING = false;
 

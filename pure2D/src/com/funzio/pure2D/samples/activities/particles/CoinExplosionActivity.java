@@ -55,6 +55,7 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         // create object
         Clip obj = new Clip(mAtlas.getMasterFrameSet());
         obj.setTexture(mTexture);
+        obj.playAt(mRandom.nextInt(obj.getNumFrames()));
         // obj.setRotation(mRandom.nextInt(360));
         // obj.setFps(30);
 

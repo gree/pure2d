@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.SoundPool;
 import android.os.AsyncTask;
@@ -15,8 +16,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
-public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener {
+public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener, OnErrorListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
+
+    protected static final float DEFAULT_MEDIA_VOLUME = 0.8f;
 
     protected volatile SparseArray<Soundable> mSoundMap;
 
@@ -27,6 +30,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     protected final AudioManager mAudioManager;
 
     protected MediaPlayer mMediaPlayer;
+    protected float mMediaVolume = DEFAULT_MEDIA_VOLUME;
 
     private Handler mHandler;
 
@@ -143,6 +147,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setOnErrorListener(this);
         }
 
         mMediaPlayer.reset(); // reset the mediaplayer state - IDLE
@@ -155,8 +160,16 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); // set type
         mMediaPlayer.setLooping(media.isLooping());
         mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.setVolume(mMediaVolume, mMediaVolume);
 
         mMediaPlayer.prepareAsync();
+    }
+
+    public void setMediaVolume(final float volume) {
+        mMediaVolume = volume;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setVolume(mMediaVolume, mMediaVolume);
+        }
     }
 
     public void stopMedia() {
@@ -229,6 +242,19 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     @Override
     public void onPrepared(final MediaPlayer mp) {
         mp.start();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see android.media.MediaPlayer.OnErrorListener#onError(android.media.MediaPlayer, int, int)
+     */
+    @Override
+    public boolean onError(final MediaPlayer mp, final int what, final int extra) {
+        if (mp != null) {
+            mp.reset();
+        }
+
+        return true;
     }
 
 }

@@ -239,6 +239,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".samples.activities.loaders.LoaderAsyncActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".samples.activities.mw.MWMenuActivity"
             android:label="@string/modern_war"
             android:screenOrientation="portrait" >

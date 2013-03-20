@@ -4,7 +4,6 @@
 package com.funzio.pure2D.geom;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 
 /**
  * @author long
@@ -57,8 +56,8 @@ public class Line {
      */
     public static PointF shiftLine(final PointF p1, final PointF p2, final float delta) {
         final float angle = (float) Math.atan2(p2.y - p1.y, p2.x - p1.x);
-        final float deltaX = -delta * FloatMath.sin(angle);
-        final float deltaY = delta * FloatMath.cos(angle);
+        final float deltaX = -delta * (float) Math.sin(angle);
+        final float deltaY = delta * (float) Math.cos(angle);
 
         p1.x += deltaX;
         p1.y += deltaY;
@@ -79,8 +78,8 @@ public class Line {
      * @return
      */
     public static PointF shiftLine(final PointF p1, final PointF p2, final float delta, final float angle) {
-        final float deltaX = -delta * FloatMath.sin(angle);
-        final float deltaY = delta * FloatMath.cos(angle);
+        final float deltaX = -delta * (float) Math.sin(angle);
+        final float deltaY = delta * (float) Math.cos(angle);
 
         p1.x += deltaX;
         p1.y += deltaY;

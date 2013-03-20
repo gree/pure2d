@@ -6,7 +6,9 @@ package com.funzio.pure2D.loaders;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.funzio.pure2D.loaders.tasks.Task;
 import com.funzio.pure2D.loaders.tasks.Task.TaskListener;
@@ -61,6 +63,23 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T
 
     public void setTaskListener(final TaskListener taskListener) {
         mTaskListener = taskListener;
+    }
+
+    /**
+     * If Thread Pool supported, use it to execute; otherwise execute normally
+     * 
+     * @param params
+     * @return
+     */
+    @SuppressLint("NewApi")
+    public AsyncTask<T, Void, List<T>> executeOnPool(final T... params) {
+        // run now
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+            return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        } else {
+            return execute(params);
+        }
+
     }
 
 }

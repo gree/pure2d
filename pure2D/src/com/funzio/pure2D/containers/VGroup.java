@@ -6,8 +6,10 @@ package com.funzio.pure2D.containers;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
 
@@ -20,6 +22,12 @@ public class VGroup extends LinearGroup {
 
     private int mStartIndex = 0;
     private float mStartY = 0;
+
+    private boolean mSwipeEnabled = false;
+    private float mSwipeMinThreshold = 0;
+    private float mSwipeAnchor;
+    private float mAnchoredScroll;
+    private boolean mSwiping = false;
 
     public VGroup() {
         super();
@@ -68,6 +76,35 @@ public class VGroup extends LinearGroup {
 
         // reposition the children
         invalidateChildrenPosition();
+    }
+
+    /**
+     * @param positive
+     * @return the delta to the closest child based on the specified direction which is either positive or negative
+     */
+    protected float getSnapDelta(final boolean positive) {
+        if (mNumChildren == 0) {
+            return 0;
+        }
+
+        final DisplayObject startChild = getChildAt(mStartIndex);
+        final float y = startChild.getY();
+
+        if (y < 0) {
+            if (positive) {
+                return y + (startChild.getSize().y + mGap);
+            } else {
+                return y;
+            }
+        } else {
+            if (positive) {
+                return y;
+            } else {
+                int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
+                final DisplayObject newChild = getChildAt(newIndex);
+                return y - (newChild.getSize().y + mGap);
+            }
+        }
     }
 
     /*
@@ -246,5 +283,82 @@ public class VGroup extends LinearGroup {
     @Override
     public PointF getScrollMax() {
         return mScrollMax;
+    }
+
+    public boolean isSwipeEnabled() {
+        return mSwipeEnabled;
+    }
+
+    public void setSwipeEnabled(final boolean swipeEnabled) {
+        mSwipeEnabled = swipeEnabled;
+        if (swipeEnabled) {
+            mSwipeAnchor = -1;
+        }
+    }
+
+    public float getSwipeMinThreshold() {
+        return mSwipeMinThreshold;
+    }
+
+    public void setSwipeMinThreshold(final float swipeMinThreshold) {
+        mSwipeMinThreshold = swipeMinThreshold;
+    }
+
+    protected void startSwipe() {
+        mAnchoredScroll = mScrollPosition.y;
+        mSwiping = true;
+    }
+
+    protected void stopSwipe(final float delta) {
+        mSwipeAnchor = -1;
+        mSwiping = false;
+    }
+
+    protected void swipe(final float delta) {
+        scrollTo(0, mAnchoredScroll - delta);
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
+        // swipe enabled?
+        if (mSwipeEnabled) {
+            final int action = event.getAction() & MotionEvent.ACTION_MASK;
+            float deltaY = event.getY() - mSwipeAnchor;
+            if (mScene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                deltaY = -deltaY;
+            }
+
+            if (action == MotionEvent.ACTION_DOWN) {
+                final PointF global = mScene.getTouchedPoint();
+                if (getBounds().contains(global.x, global.y)) {
+                    mSwipeAnchor = event.getY();
+                }
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                if (mSwipeAnchor >= 0) {
+                    if (Math.abs(deltaY) >= mSwipeMinThreshold || mSwiping) {
+                        if (!mSwiping) {
+                            // re-anchor
+                            mSwipeAnchor = event.getY();
+
+                            startSwipe();
+                        } else {
+                            swipe(deltaY);
+                        }
+                    }
+                }
+
+            } else if (action == MotionEvent.ACTION_UP) {
+                if (mSwiping) {
+                    stopSwipe(deltaY);
+                    return true;
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
     }
 }

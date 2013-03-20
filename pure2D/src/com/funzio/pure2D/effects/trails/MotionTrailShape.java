@@ -4,7 +4,6 @@
 package com.funzio.pure2D.effects.trails;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
@@ -17,7 +16,7 @@ public class MotionTrailShape extends Polyline {
 
     protected int mNumPoints = 10;
     protected int mMinLength = 0;
-    protected int mSegmentLength;
+    protected int mSegmentLength = 0;
     protected float mMotionEasing = 0.5f;
 
     protected DisplayObject mTarget;
@@ -59,7 +58,7 @@ public class MotionTrailShape extends Polyline {
                     p2 = mPoints[i - 1];
                     dx = p2.x - p1.x;
                     dy = p2.y - p1.y;
-                    if (mSegmentLength == 0 || FloatMath.sqrt(dx * dx + dy * dy) > mSegmentLength) {
+                    if (mSegmentLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
                         // move toward the leading point
                         p1.x += dx * mMotionEasing;
                         p1.y += dy * mMotionEasing;
@@ -76,11 +75,9 @@ public class MotionTrailShape extends Polyline {
 
             // apply
             setPoints(mPoints);
-
-            return true;
         }
 
-        return false;
+        return super.update(deltaTime);
     }
 
     public int getNumPoints() {
@@ -133,6 +130,12 @@ public class MotionTrailShape extends Polyline {
     public void setPointsAt(final float x, final float y) {
         for (int i = 0; i < mNumPoints; i++) {
             mPoints[i].set(x, y);
+        }
+    }
+
+    public void setPointsAt(final PointF p) {
+        for (int i = 0; i < mNumPoints; i++) {
+            mPoints[i].set(p.x, p.y);
         }
     }
 

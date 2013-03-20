@@ -13,4 +13,11 @@
         android:onClick="onClickButton"
         android:text="@string/loader_service" />
 
+    <Button
+        android:id="@+id/btn_loader_async"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/async_loader" />
+
 </LinearLayout>

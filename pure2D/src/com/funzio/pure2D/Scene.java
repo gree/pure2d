@@ -46,9 +46,9 @@ public interface Scene extends Renderer, Container {
 
     public PointF screenToGlobal(final PointF screen);
 
-    public void queueEvent(Runnable r);
+    public boolean queueEvent(Runnable r);
 
-    public void queueEvent(final Runnable r, final int delayMillis);
+    public boolean queueEvent(final Runnable r, final int delayMillis);
 
     public void pause();
 
