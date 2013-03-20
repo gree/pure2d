@@ -84,6 +84,7 @@ public class PingTask implements Task, Retriable {
     @Override
     public void reset() {
         mStatus = false;
+        mRetries = 0;
 
     }
 
@@ -93,25 +94,27 @@ public class PingTask implements Task, Retriable {
     @Override
     public boolean run() {
 
-        do {
-            Log.d(LOG_TAG, "pinging: " + mUrl);
-            //ping the url and get the status
-            mStatus = ping();
+        Log.d(LOG_TAG, "pinging: " + mUrl);
+        mStatus = ping();
 
-            if (!mStatus && mRetries < mMaxRetries) {
-                if (mBackoffMillis > 0) {
-                    Log.d(LOG_TAG, "backing off for " + mBackoffMillis + " millis");
-                    try {
-                        Thread.sleep(mBackoffMillis);
-                    } catch (InterruptedException e) {
+        while (!mStatus && mRetries < mMaxRetries) {
 
-                        e.printStackTrace();
-                    }
+            if (mBackoffMillis > 0) {
+                Log.d(LOG_TAG, "backing off for " + mBackoffMillis + " millis");
+                try {
+                    Thread.sleep(mBackoffMillis);
+                } catch (InterruptedException e) {
+
+                    e.printStackTrace();
                 }
-                Log.d(LOG_TAG, "Retries: " + mRetries + " MaxRetries: " + mMaxRetries);
             }
 
-        } while (!mStatus && mRetries++ <= mMaxRetries);
+            //ping the url and get the status
+            Log.d(LOG_TAG, "Retry #: " + (mRetries + 1) + " Max Retries: " + mMaxRetries);
+            mStatus = ping();
+            ++mRetries;
+
+        }
 
         return mStatus;
     }
