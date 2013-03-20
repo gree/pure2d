@@ -82,6 +82,12 @@ public class JsonAtlas extends Atlas {
                 }
 
             }
+
+            @Override
+            public void onTaskProgress(final float progress) {
+                // TODO Auto-generated method stub
+
+            }
         });
 
         // start loading

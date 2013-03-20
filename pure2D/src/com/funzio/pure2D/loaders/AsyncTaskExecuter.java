@@ -16,7 +16,7 @@ import com.funzio.pure2D.loaders.tasks.Task.TaskListener;
 /**
  * @author sajjadtabib
  */
-public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Integer, List<T>> {
+public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<T>> {
 
     private TaskListener mTaskListener;
     private int mNumTasksCompleted = 0;
@@ -36,7 +36,7 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Integer, Lis
 
             // callback
             if (mTaskListener != null) {
-                publishProgress((int) ((i / (float) taskList.length) * 100));
+                publishProgress((float) i / (float) taskList.length);
                 mTaskListener.onTaskComplete(task);
             }
 
@@ -48,8 +48,8 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Integer, Lis
     }
 
     @Override
-    protected void onProgressUpdate(final Integer... progress) {
-        mTaskListener.onTaskGroupProgress(progress[0]);
+    protected void onProgressUpdate(final Float... progress) {
+        mTaskListener.onTaskProgress(progress[0]);
     }
 
     // @Override
@@ -79,7 +79,7 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Integer, Lis
      * @return
      */
     @SuppressLint("NewApi")
-    public AsyncTask<T, Integer, List<T>> executeOnPool(final T... params) {
+    public AsyncTask<T, Float, List<T>> executeOnPool(final T... params) {
         // run now
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
             return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);

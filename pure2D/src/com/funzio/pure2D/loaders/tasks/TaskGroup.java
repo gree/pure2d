@@ -91,7 +91,7 @@ public class TaskGroup implements Task, Retriable {
             if (mTaskListener != null) {
                 // callback
                 if (taskSuccess) {
-                    mTaskListener.onTaskGroupProgress((++mNumTasksCompleted * 100) / size);
+                    mTaskListener.onTaskProgress((float) ++mNumTasksCompleted / (float) size);
                 }
                 mTaskListener.onTaskComplete(task);
             }

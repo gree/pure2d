@@ -15,7 +15,7 @@ public interface Task {
     public boolean isSucceeded();
 
     public static interface TaskListener {
-        void onTaskGroupProgress(int progress);
+        void onTaskProgress(float progress);
 
         void onTaskComplete(final Task task);
     }
