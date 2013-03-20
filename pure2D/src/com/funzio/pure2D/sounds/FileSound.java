@@ -14,7 +14,7 @@ import android.util.Log;
 public class FileSound extends AbstractSound {
     protected static final String TAG = FileSound.class.getSimpleName();
 
-    public static final long BITRATE = 16000;
+    public static final long BITRATE = 16L; // in kbps
 
     private final String mFilePath;
 
@@ -29,7 +29,7 @@ public class FileSound extends AbstractSound {
 
         File file = new File(mFilePath);
         long fileSize = file.length();
-        mLength = (long) Math.floor(fileSize * 1000 / BITRATE);
+        mLength = fileSize / BITRATE;
 
         return mSoundID = soundPool.load(mFilePath, mPriority);
     }
