@@ -30,7 +30,7 @@ public class PingTask implements Task, Retriable {
     protected int mReadTimeout;
     protected long mBackoffMillis;
 
-    private PingTask() {
+    public PingTask() {
         mRetries = 0; //the number of attempted retries
         mMaxRetries = DEFAULT_RETRY_COUNT;
         mConnectTimeout = DEFAULT_CONNECT_TIMEOUT;
