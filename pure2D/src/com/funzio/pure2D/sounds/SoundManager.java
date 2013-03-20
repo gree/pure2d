@@ -129,7 +129,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
-    public int privatePlay(final int soundID, final int loop) {
+    private int privatePlay(final int soundID, final int loop) {
         // Log.v(TAG, "play(" + sound + ")");
 
         if (mSoundEnabled && soundID > 0) {
