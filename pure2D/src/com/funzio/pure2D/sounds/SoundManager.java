@@ -229,6 +229,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
 
         mSoundPool.release();
+        mStreamIds.clear();
 
         releaseMedia();
     }
