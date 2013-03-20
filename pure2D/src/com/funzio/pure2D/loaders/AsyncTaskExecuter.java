@@ -20,7 +20,6 @@ import com.funzio.pure2D.loaders.tasks.Task.TaskListener2;
 public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<T>> {
 
     private TaskListener mTaskListener;
-    private int mNumTasksCompleted = 0;
 
     /*
      * (non-Javadoc)
