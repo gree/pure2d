@@ -17,4 +17,8 @@ public interface Task {
     public static interface TaskListener {
         void onTaskComplete(final Task task);
     }
+
+    public static interface TaskListener2 extends TaskListener {
+        void onTaskProgress(float progress);
+    }
 }
