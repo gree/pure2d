@@ -133,6 +133,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      * @return true if at least one of the corners of the child is in this container's rect.
      */
     protected boolean isChildInBounds(final DisplayObject child) {
+        // null check
+        if (child == null) {
+            return false;
+        }
+
         final PointF pos = child.getPosition();
         final PointF size = child.getSize();
         return ((pos.x >= 0 && pos.x < mSize.x) && (pos.y >= 0 && pos.y < mSize.y)) // TL
