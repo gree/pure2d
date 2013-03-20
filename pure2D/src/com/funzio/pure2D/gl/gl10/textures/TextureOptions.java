@@ -29,9 +29,12 @@ public class TextureOptions extends BitmapFactory.Options {
      */
     public static TextureOptions getDefault() {
         TextureOptions options = new TextureOptions();
+
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inScaled = false;
         options.inPurgeable = true; // for gc
+        // options.inDither = true;
+
         options.inScaleX = options.inScaleY = 1;
         options.inPo2 = !Pure2D.GL_NPOT_TEXTURE_SUPPORTED;
         options.inMipmaps = 0;
@@ -40,13 +43,14 @@ public class TextureOptions extends BitmapFactory.Options {
     }
 
     public void set(final TextureOptions options) {
+        inPreferredConfig = options.inPreferredConfig;
+        inScaled = options.inScaled;
+        inPurgeable = options.inPurgeable;
+        inDither = options.inDither;
+
         inScaleX = options.inScaleX;
         inScaleY = options.inScaleY;
         inPo2 = options.inPo2;
         inMipmaps = options.inMipmaps;
-
-        inPreferredConfig = options.inPreferredConfig;
-        inScaled = options.inScaled;
-        inPurgeable = options.inPurgeable;
     }
 }

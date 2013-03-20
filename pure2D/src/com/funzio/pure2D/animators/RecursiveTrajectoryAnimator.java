@@ -11,6 +11,10 @@ public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
     protected float mDecelerationRate = 0.75f;
     protected float mMinVelocity = 1;
 
+    public RecursiveTrajectoryAnimator() {
+        super();
+    }
+
     /**
      * @param ground
      */
@@ -25,7 +29,7 @@ public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
             stop();
 
             // and restart
-            start(newVelocity, mAngle);
+            start(newVelocity, mSin < 0 ? -mAngle : mAngle);
         } else {
             super.end();
         }

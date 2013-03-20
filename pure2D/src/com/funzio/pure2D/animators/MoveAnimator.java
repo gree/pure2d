@@ -12,8 +12,6 @@ import android.view.animation.Interpolator;
 public class MoveAnimator extends TweenAnimator {
     protected float mSrcX = 0;
     protected float mSrcY = 0;
-    protected float mDstX = 0;
-    protected float mDstY = 0;
     protected PointF mDelta = new PointF();
 
     public MoveAnimator(final Interpolator interpolator) {
@@ -23,18 +21,19 @@ public class MoveAnimator extends TweenAnimator {
     public void setValues(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;
-        mDstX = dstX;
-        mDstY = dstY;
 
         mDelta.x = dstX - srcX;
         mDelta.y = dstY - srcY;
     }
 
+    public void setDelta(final float dx, final float dy) {
+        mDelta.x = dx;
+        mDelta.y = dy;
+    }
+
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;
-        mDstX = dstX;
-        mDstY = dstY;
 
         mDelta.x = dstX - srcX;
         mDelta.y = dstY - srcY;
@@ -52,7 +51,11 @@ public class MoveAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y);
+            if (mAccumulating) {
+                mTarget.moveBy((value - mLastValue) * mDelta.x, (value - mLastValue) * mDelta.y);
+            } else {
+                mTarget.setPosition(mSrcX + value * mDelta.x, mSrcY + value * mDelta.y);
+            }
         }
 
         super.onUpdate(value);

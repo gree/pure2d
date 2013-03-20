@@ -11,10 +11,15 @@ import java.io.InputStream;
 import android.content.res.AssetManager;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.funzio.pure2D.loaders.AsyncTaskExecuter;
+import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
+import com.funzio.pure2D.loaders.tasks.Task;
 
 /**
  * @author long
@@ -47,6 +52,40 @@ public class JsonAtlas extends Atlas {
 
     public JsonAtlas(final String filePath, final float scale) throws IOException, JSONException {
         this(new FileInputStream(new File(filePath)), scale);
+    }
+
+    public void loadAsync(final AssetManager assets, final String filePath, final float scale) {
+        Log.v(TAG, "loadAsync(): " + filePath);
+
+        final ReadTextFileTask readTask = new ReadTextFileTask(assets, filePath);
+        final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
+        executer.setTaskListener(new Task.TaskListener() {
+
+            @Override
+            public void onTaskComplete(final Task task) {
+
+                if (task.isSucceeded()) {
+                    Log.v(TAG, "Load success: " + filePath);
+
+                    try {
+                        parse(((ReadTextFileTask) task).getContent(), scale);
+
+                        if (mListener != null) {
+                            mListener.onAtlasLoad(JsonAtlas.this);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Load failed: " + filePath, e);
+                    }
+
+                } else {
+                    Log.e(TAG, "Load failed: " + filePath);
+                }
+
+            }
+        });
+
+        // start loading
+        executer.executeOnPool(readTask);
     }
 
     public void parse(final String json, final float scale) throws JSONException {

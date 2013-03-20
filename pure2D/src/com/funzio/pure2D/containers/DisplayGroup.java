@@ -375,4 +375,24 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected void onRemovedChild(final DisplayObject child) {
         // TODO
     }
+
+    /**
+     * for Debugging
+     * 
+     * @return a string that has all the children in Tree format
+     */
+    @Override
+    public String getTrace(final String prefix) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(super.getTrace(prefix));
+        sb.append("\n");
+
+        for (int i = 0; i < mNumChildren; i++) {
+            DisplayObject child = mChildren.get(i);
+            sb.append(child.getTrace(prefix + "   "));
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }

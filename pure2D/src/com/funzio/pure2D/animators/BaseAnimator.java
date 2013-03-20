@@ -10,12 +10,31 @@ import com.funzio.pure2D.Manipulatable;
  */
 public class BaseAnimator implements Animator {
 
+    // input values
     protected Manipulatable mTarget;
     protected AnimatorListener mListener;
+    protected Object mData; // extra data
+    // no accumulating by default
+    protected boolean mAccumulating = false;
+    protected int mLifespan = 0; // <=0 ~ unlimited
 
+    // state values
     protected int mElapsedTime = 0;
     protected int mLastDeltaTime = 0;
     protected boolean mRunning = false;
+    protected boolean mLifeEnded = false;
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
+     */
+    @Override
+    public void reset(final Object... params) {
+        stop();
+
+        mTarget = null;
+        mListener = null;
+    }
 
     @Override
     public void setTarget(final Manipulatable target) {
@@ -30,8 +49,22 @@ public class BaseAnimator implements Animator {
     @Override
     public boolean update(final int deltaTime) {
         if (mRunning) {
+
+            // life check
+            if (mLifeEnded) {
+                end();
+                return false;
+            }
+
             mLastDeltaTime = deltaTime;
             mElapsedTime += deltaTime;
+
+            // has lifespan? check it
+            if (mLifespan > 0 && mElapsedTime >= mLifespan) {
+                // flag
+                mLifeEnded = true;
+            }
+
             return true;
         }
 
@@ -43,7 +76,7 @@ public class BaseAnimator implements Animator {
      * @see com.funzio.pure2D.animators.Animator#start()
      */
     @Override
-    public void start() {
+    final public void start() {
         startElapse(0);
     }
 
@@ -54,11 +87,14 @@ public class BaseAnimator implements Animator {
      */
     public void startElapse(final int elapsedTime) {
         if (mRunning) {
+            // force end
             end();
         }
 
         mElapsedTime = elapsedTime;
+        mLastDeltaTime = 0;
         mRunning = true;
+        mLifeEnded = false;
     }
 
     /*
@@ -109,6 +145,22 @@ public class BaseAnimator implements Animator {
         return mRunning;
     }
 
+    public int getLifespan() {
+        return mLifespan;
+    }
+
+    public void setLifespan(final int lifespan) {
+        mLifespan = lifespan;
+    }
+
+    public boolean isAccumulating() {
+        return mAccumulating;
+    }
+
+    public void setAccumulating(final boolean accumulating) {
+        mAccumulating = accumulating;
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.animators.Animator#setListener(com.funzio.pure2D.animators.Animator.AnimatorListener)
@@ -125,6 +177,16 @@ public class BaseAnimator implements Animator {
     @Override
     public AnimatorListener getListener() {
         return mListener;
+    }
+
+    @Override
+    public void setData(final Object data) {
+        mData = data;
+    }
+
+    @Override
+    public Object getData() {
+        return mData;
     }
 
 }

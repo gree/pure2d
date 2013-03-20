@@ -13,11 +13,13 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 
@@ -186,7 +188,7 @@ public class BaseScene implements Scene {
         // this might help but I have not seen any difference yet!
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        mStartTime = System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
         mDownTime = 0;
         mFrameCount = 0;
         mCurrentFps = 0;
@@ -227,7 +229,8 @@ public class BaseScene implements Scene {
 
         // Enable alpha blending
         gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glBlendFunc(BlendFunc.DEFAULT_SRC, BlendFunc.DEFAULT_DST);
+        // gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
         // Enable Texture, not here!
         // gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -298,10 +301,11 @@ public class BaseScene implements Scene {
         }
 
         // delta time
-        final long now = System.nanoTime();
-        final float delta = ((now - mStartTime) / 1000000f);
+        final long now = SystemClock.elapsedRealtime(); // System.nanoTime();
+        // final float delta = ((now - mStartTime) / 1000000f);
+        final long delta = now - mStartTime;
 
-        if ((int) delta == 0) {
+        if (delta == 0) {
             // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
             // We need to force invalidate!
             invalidate();
@@ -431,7 +435,7 @@ public class BaseScene implements Scene {
         }
 
         mPaused = false;
-        mStartTime = System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
     }
 
     public boolean isPaused() {
@@ -860,5 +864,29 @@ public class BaseScene implements Scene {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+    }
+
+    /**
+     * for Debugging
+     * 
+     * @return a string that has all the children in Tree format
+     */
+    public String getTrace() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(toString());
+        sb.append("\n");
+
+        for (int i = 0; i < mNumChildren; i++) {
+            DisplayObject child = mChildren.get(i);
+            sb.append(child.getTrace("   "));
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }

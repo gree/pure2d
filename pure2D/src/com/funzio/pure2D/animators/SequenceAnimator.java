@@ -3,17 +3,16 @@
  */
 package com.funzio.pure2D.animators;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author long
  */
-public class SequenceAnimator extends BaseAnimator implements Animator.AnimatorListener {
-    private List<Animator> mAnimators = new ArrayList<Animator>();
-    private int mCurrentIndex = -1;
-    private Animator mCurrentAnimator;
-    private int mNumAnimators = 0;
+public class SequenceAnimator extends GroupAnimator {
+    protected int mCurrentIndex = -1;
+    protected Animator mCurrentAnimator;
+
+    public SequenceAnimator(final Animator... animators) {
+        super(animators);
+    }
 
     /*
      * (non-Javadoc)
@@ -35,14 +34,31 @@ public class SequenceAnimator extends BaseAnimator implements Animator.AnimatorL
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#start()
+     * @see com.funzio.pure2D.animators.GroupAnimator#startElapse(int)
      */
     @Override
-    public void start() {
-        super.start();
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
 
         mCurrentIndex = -1;
         next();
+    }
+
+    protected Animator next() {
+        if (mCurrentIndex < mNumAnimators - 1) {
+            mCurrentAnimator = mAnimators.get(++mCurrentIndex);
+
+            // listening
+            mCurrentAnimator.setTarget(mTarget);
+            mCurrentAnimator.setListener(this);
+
+            // and start
+            mCurrentAnimator.start();
+        } else {
+            mCurrentAnimator = null;
+        }
+
+        return mCurrentAnimator;
     }
 
     /*
@@ -56,39 +72,6 @@ public class SequenceAnimator extends BaseAnimator implements Animator.AnimatorL
         mCurrentAnimator = null;
     }
 
-    synchronized protected Animator next() {
-        if (mCurrentIndex < mNumAnimators - 1) {
-            mCurrentAnimator = mAnimators.get(++mCurrentIndex);
-
-            // set up
-            mCurrentAnimator.setTarget(mTarget);
-            mCurrentAnimator.setListener(this);
-
-            // and start
-            mCurrentAnimator.start();
-        } else {
-            mCurrentAnimator = null;
-        }
-
-        return mCurrentAnimator;
-    }
-
-    synchronized public void add(final Animator action) {
-        mAnimators.add(action);
-        mNumAnimators++;
-    }
-
-    synchronized public void remove(final Animator action) {
-        mAnimators.remove(action);
-        mNumAnimators--;
-    }
-
-    synchronized public void clear() {
-        mAnimators.clear();
-        mNumAnimators = 0;
-        mCurrentIndex = -1;
-    }
-
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.animators.Animator.AnimatorListener#onAnimationEnd(com.funzio.pure2D.animators.Animator)
@@ -96,18 +79,12 @@ public class SequenceAnimator extends BaseAnimator implements Animator.AnimatorL
     @Override
     public void onAnimationEnd(final Animator animator) {
         if (next() == null) {
-            end();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.Animator.AnimatorListener#onAnimationUpdate(com.funzio.pure2D.animators.Animator)
-     */
-    @Override
-    public void onAnimationUpdate(final Animator animator, final float value) {
-        if (mListener != null) {
-            mListener.onAnimationUpdate(animator, value);
+            if (++mLooped > mLoopCount && mLoopCount >= 0) {
+                end();
+            } else {
+                // loop
+                start();
+            }
         }
     }
 

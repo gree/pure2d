@@ -72,6 +72,8 @@ public interface DisplayObject extends Manipulatable {
 
     public Container getParent();
 
+    public boolean queueEvent(final Runnable r);
+
     public boolean removeFromParent();
 
     public void dispose();
@@ -95,4 +97,6 @@ public interface DisplayObject extends Manipulatable {
     public void onAdded(Container parent);
 
     public void onRemoved();
+
+    public String getTrace(final String prefix);
 }

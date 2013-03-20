@@ -1,0 +1,116 @@
+/**
+ * 
+ */
+package com.funzio.pure2D.animators;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.funzio.pure2D.Manipulatable;
+
+/**
+ * @author long
+ */
+public abstract class GroupAnimator extends BaseAnimator implements Animator.AnimatorListener {
+    protected List<Animator> mAnimators = new ArrayList<Animator>();
+    protected int mNumAnimators = 0;
+
+    // looping
+    protected int mLooped = 0;
+    protected int mLoopCount = 0; // negative = UNLIMITED
+
+    public GroupAnimator(final Animator... animators) {
+        // null check
+        if (animators == null) {
+            return;
+        }
+
+        for (Animator animator : animators) {
+            add(animator);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
+     */
+    @Override
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
+
+        // reset values
+        mLooped = 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#stop()
+     */
+    @Override
+    public void stop() {
+        super.stop();
+
+        // also stop all the children
+        for (int i = 0; i < mNumAnimators; i++) {
+            mAnimators.get(i).stop();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#setTarget(com.funzio.pure2D.Manipulatable)
+     */
+    @Override
+    public void setTarget(final Manipulatable target) {
+        super.setTarget(target);
+
+        for (int i = 0; i < mNumAnimators; i++) {
+            mAnimators.get(i).setTarget(target);
+        }
+    }
+
+    public void add(final Animator animator) {
+        if (mAnimators.add(animator)) {
+            mNumAnimators++;
+        }
+    }
+
+    public void remove(final Animator animator) {
+        if (mAnimators.remove(animator)) {
+            mNumAnimators--;
+        }
+    }
+
+    public Animator getAnimatorAt(final int index) {
+        return (index < mAnimators.size() && index >= 0) ? mAnimators.get(index) : null;
+    }
+
+    public int getNumAnimators() {
+        return mNumAnimators;
+    }
+
+    public void clear() {
+        mAnimators.clear();
+        mNumAnimators = 0;
+    }
+
+    public int getLoopCount() {
+        return mLoopCount;
+    }
+
+    public void setLoopCount(final int value) {
+        mLoopCount = value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.Animator.AnimatorListener#onAnimationUpdate(com.funzio.pure2D.animators.Animator)
+     */
+    @Override
+    public void onAnimationUpdate(final Animator animator, final float value) {
+        if (mListener != null) {
+            mListener.onAnimationUpdate(animator, value);
+        }
+    }
+
+}
