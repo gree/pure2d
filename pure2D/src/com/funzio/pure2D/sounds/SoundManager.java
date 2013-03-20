@@ -9,10 +9,14 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
-public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPreparedListener, OnErrorListener {
+public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener, OnErrorListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
 
     protected static final float DEFAULT_MEDIA_VOLUME = 0.8f;
@@ -28,14 +32,40 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
     protected MediaPlayer mMediaPlayer;
     protected float mMediaVolume = DEFAULT_MEDIA_VOLUME;
 
+    protected Handler mHandler;
+
+    protected volatile SparseIntArray mStreamIds;
+
     protected SoundManager(final Context context, final int maxStream) {
         mContext = context;
         mSoundMap = new SparseArray<Soundable>();
+        mStreamIds = new SparseIntArray();
 
         mSoundPool = new SoundPool(maxStream, AudioManager.STREAM_MUSIC, 0);
         mSoundPool.setOnLoadCompleteListener(this);
 
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
+        start();
+    }
+
+    @Override
+    public void run() {
+        Looper.prepare();
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(final Message msg) {
+                int soundID = msg.arg1;
+                int soundLoop = msg.arg2;
+
+                int streamId = privatePlay(soundID, soundLoop);
+
+                if (streamId != 0) {
+                    mStreamIds.put(soundID, streamId);
+                }
+            }
+        };
+        Looper.loop();
     }
 
     public boolean isSoundEnabled() {
@@ -74,31 +104,37 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         }
     }
 
-    /**
-     * @param key
-     * @return a non-zero as the Stream ID if success
-     */
-    public int play(final int key) {
+    public void play(final int key) {
         // Log.v(TAG, "play(" + key + ")");
 
-        try {
-            return play(mSoundMap.get(key));
-        } catch (Exception e) {
-            Log.e(TAG, "Unable to play sound:", e);
-            return -1;
+        Soundable soundable = mSoundMap.get(key);
+        if (soundable != null) {
+            Message msg = new Message();
+            msg.arg1 = soundable.getSoundID();
+            msg.arg2 = soundable.getLoop();
+            mHandler.sendMessage(msg);
+        } else {
+            Log.e(TAG, "Unable to play sound: " + key);
         }
     }
 
-    /**
-     * @param sound
-     * @return a non-zero as the Stream ID if success
-     */
-    public int play(final Soundable sound) {
+    public void play(final Soundable sound) {
+        if (sound != null) {
+            Message msg = new Message();
+            msg.arg1 = sound.getSoundID();
+            msg.arg2 = sound.getLoop();
+            mHandler.sendMessage(msg);
+        } else {
+            Log.e(TAG, "Unable to play sound: " + sound);
+        }
+    }
+
+    private int privatePlay(final int soundID, final int loop) {
         // Log.v(TAG, "play(" + sound + ")");
 
-        if (mSoundEnabled && sound != null && sound.getSoundID() > 0) {
+        if (mSoundEnabled && soundID > 0) {
             final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            return mSoundPool.play(sound.getSoundID(), volume, volume, 1, sound.getLoop(), 1f);
+            return mSoundPool.play(soundID, volume, volume, 1, loop, 1f);
         }
 
         return 0;
@@ -153,19 +189,22 @@ public class SoundManager implements SoundPool.OnLoadCompleteListener, OnPrepare
         }
     }
 
-    protected int playByID(final int soundID) {
+    protected void playByID(final int soundID) {
         // Log.v(TAG, "playByID(" + soundID + ")");
 
-        if (mSoundEnabled && soundID > 0) {
-            final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            return mSoundPool.play(soundID, volume, volume, 1, 0, 1f);
-        }
-
-        return 0;
+        Message msg = new Message();
+        msg.arg1 = soundID;
+        msg.arg2 = 0;
+        mHandler.sendMessage(msg);
     }
 
-    public void stop(final int streamID) {
-        mSoundPool.stop(streamID);
+    public void stop(final int soundID) {
+        int streamID = mStreamIds.get(soundID, -1);
+
+        if (streamID > 0) {
+            mSoundPool.stop(streamID);
+            mStreamIds.delete(soundID);
+        }
     }
 
     public boolean unload(final int soundID) {
