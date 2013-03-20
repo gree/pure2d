@@ -111,7 +111,7 @@ public class PingTask implements Task, Retriable {
                 Log.d(LOG_TAG, "Retries: " + mRetries + " MaxRetries: " + mMaxRetries);
             }
 
-        } while (!mStatus && mRetries++ < mMaxRetries);
+        } while (!mStatus && mRetries++ <= mMaxRetries);
 
         return mStatus;
     }
