@@ -15,8 +15,10 @@ public interface Task {
     public boolean isSucceeded();
 
     public static interface TaskListener {
-        void onTaskProgress(float progress);
-
         void onTaskComplete(final Task task);
+    }
+
+    public static interface TaskListener2 extends TaskListener {
+        void onTaskProgress(float progress);
     }
 }

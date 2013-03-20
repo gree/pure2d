@@ -12,6 +12,7 @@ import android.os.Build;
 
 import com.funzio.pure2D.loaders.tasks.Task;
 import com.funzio.pure2D.loaders.tasks.Task.TaskListener;
+import com.funzio.pure2D.loaders.tasks.Task.TaskListener2;
 
 /**
  * @author sajjadtabib
@@ -49,7 +50,9 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
 
     @Override
     protected void onProgressUpdate(final Float... progress) {
-        mTaskListener.onTaskProgress(progress[0]);
+        if (mTaskListener instanceof TaskListener2) {
+            ((TaskListener2) mTaskListener).onTaskProgress(progress[0]);
+        }
     }
 
     // @Override

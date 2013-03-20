@@ -65,11 +65,6 @@ public class NovaLoader {
 
             }
 
-            @Override
-            public void onTaskProgress(final float progress) {
-                // TODO Auto-generated method stub
-
-            }
         });
 
         // start loading
