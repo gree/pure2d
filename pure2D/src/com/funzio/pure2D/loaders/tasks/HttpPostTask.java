@@ -52,7 +52,7 @@ public class HttpPostTask extends NetworkTask {
             conn.setFixedLengthStreamingMode(mData.getBytes().length);
 
         } catch (IOException e) {
-
+            Log.d(LOG_TAG, "error setting http params");
             e.printStackTrace();
             return false;
         }
@@ -63,8 +63,10 @@ public class HttpPostTask extends NetworkTask {
             os.write(mData);
             os.close();
             int responseCode = conn.getResponseCode();
+
+            Log.d(LOG_TAG, "posted url with status code: " + responseCode);
             if ((200 <= responseCode) && (responseCode < 300)) {
-                Log.d(LOG_TAG, "successfully posted url with status code: " + responseCode);
+
                 return true;
             }
 
