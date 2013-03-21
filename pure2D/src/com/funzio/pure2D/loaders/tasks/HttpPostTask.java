@@ -63,8 +63,9 @@ public class HttpPostTask extends NetworkTask {
             os.write(mData);
             os.close();
             int responseCode = conn.getResponseCode();
-            if (!(200 <= responseCode) && !(responseCode < 300)) {
-                return false;
+            if ((200 <= responseCode) && (responseCode < 300)) {
+                Log.d(LOG_TAG, "successfully posted url with status code: " + responseCode);
+                return true;
             }
 
         } catch (IOException e) {
@@ -72,10 +73,9 @@ public class HttpPostTask extends NetworkTask {
             if (LOG_ENABLED) {
                 Log.v(LOG_TAG, "WRITE ERROR!", e);
             }
-            return false;
         }
 
-        return true;
+        return false;
     }
 
     /* (non-Javadoc)
