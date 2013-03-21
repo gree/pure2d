@@ -33,23 +33,23 @@ public class HttpPostTask extends NetworkTask {
     }
 
     protected boolean postUrl() {
-        final HttpURLConnection conn;
+        final HttpURLConnection httpConn;
 
         try {
             URL address = new URL(mUrl);
-            conn = (HttpURLConnection) address.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
+            httpConn = (HttpURLConnection) address.openConnection();
+            httpConn.setDoOutput(true);
+            httpConn.setRequestMethod("POST");
 
             // add properties to the http post request
             for (String key : mHttpProperties.keySet()) {
                 String value = mHttpProperties.get(key);
                 if (value != null) {
-                    conn.setRequestProperty(key, value);
+                    httpConn.setRequestProperty(key, value);
                 }
             }
 
-            conn.setFixedLengthStreamingMode(mData.getBytes().length);
+            httpConn.setFixedLengthStreamingMode(mData.getBytes().length);
 
         } catch (IOException e) {
             Log.d(LOG_TAG, "error setting http params");
@@ -59,16 +59,20 @@ public class HttpPostTask extends NetworkTask {
 
         // now that connection is open send data
         try {
-            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
+            OutputStreamWriter os = new OutputStreamWriter(httpConn.getOutputStream());
             os.write(mData);
             os.close();
-            int responseCode = conn.getResponseCode();
+            int responseCode = httpConn.getResponseCode();
 
             Log.d(LOG_TAG, "posted url with status code: " + responseCode);
             if ((200 <= responseCode) && (responseCode < 300)) {
 
                 return true;
             }
+
+            //TODO: add ability to read the response later
+
+            httpConn.disconnect();
 
         } catch (IOException e) {
 

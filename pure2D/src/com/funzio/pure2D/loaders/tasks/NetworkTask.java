@@ -88,7 +88,7 @@ public abstract class NetworkTask implements Task {
      */
     @Override
     public final boolean run() {
-        Log.d(getLogTag(), "pinging: " + mUrl);
+        Log.d(getLogTag(), "connecting to: " + mUrl);
         mStatus = doNetworkTask();
 
         while (!mStatus && mRetries < mMaxRetries) {
