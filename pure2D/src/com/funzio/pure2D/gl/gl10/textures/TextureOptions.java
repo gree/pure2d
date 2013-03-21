@@ -32,8 +32,8 @@ public class TextureOptions extends BitmapFactory.Options {
 
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inScaled = false;
+        options.inDither = false;
         options.inPurgeable = true; // for gc
-        // options.inDither = true;
 
         options.inScaleX = options.inScaleY = 1;
         options.inPo2 = !Pure2D.GL_NPOT_TEXTURE_SUPPORTED;
@@ -45,8 +45,8 @@ public class TextureOptions extends BitmapFactory.Options {
     public void set(final TextureOptions options) {
         inPreferredConfig = options.inPreferredConfig;
         inScaled = options.inScaled;
-        inPurgeable = options.inPurgeable;
         inDither = options.inDither;
+        inPurgeable = options.inPurgeable;
 
         inScaleX = options.inScaleX;
         inScaleY = options.inScaleY;

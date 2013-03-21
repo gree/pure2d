@@ -1,5 +1,7 @@
 package com.funzio.pure2D.sounds;
 
+import java.lang.ref.WeakReference;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
@@ -52,19 +54,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     @Override
     public void run() {
         Looper.prepare();
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(final Message msg) {
-                int soundID = msg.arg1;
-                int soundLoop = msg.arg2;
-
-                int streamId = privatePlay(soundID, soundLoop);
-
-                if (streamId != 0) {
-                    mStreamIds.put(soundID, streamId);
-                }
-            }
-        };
+        mHandler = new SoundHandler(this);
         Looper.loop();
     }
 
@@ -129,7 +119,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
-    public int privatePlay(final int soundID, final int loop) {
+    private int privatePlay(final int soundID, final int loop) {
         // Log.v(TAG, "play(" + sound + ")");
 
         if (mSoundEnabled && soundID > 0) {
@@ -198,10 +188,12 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mHandler.sendMessage(msg);
     }
 
-    public void stop(final int streamID) {
-        mSoundPool.stop(streamID);
-        if (mStreamIds.indexOfValue(streamID) > 0) {
-            mStreamIds.removeAt(mStreamIds.indexOfValue(streamID));
+    public void stop(final int soundID) {
+        int streamID = mStreamIds.get(soundID, -1);
+
+        if (streamID > 0) {
+            mSoundPool.stop(streamID);
+            mStreamIds.delete(soundID);
         }
     }
 
@@ -227,6 +219,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
 
         mSoundPool.release();
+        mStreamIds.clear();
 
         releaseMedia();
     }
@@ -255,6 +248,28 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
 
         return true;
+    }
+
+    private static class SoundHandler extends Handler {
+        private final WeakReference<SoundManager> mSoundManager;
+
+        public SoundHandler(final SoundManager manager) {
+            mSoundManager = new WeakReference<SoundManager>(manager);
+        }
+
+        @Override
+        public void handleMessage(final Message msg) {
+            final int soundID = msg.arg1;
+            final int soundLoop = msg.arg2;
+
+            SoundManager manager = mSoundManager.get();
+            if (manager != null) {
+                int streamId = manager.privatePlay(soundID, soundLoop);
+                if (streamId != 0) {
+                    manager.mStreamIds.put(soundID, streamId);
+                }
+            }
+        }
     }
 
 }

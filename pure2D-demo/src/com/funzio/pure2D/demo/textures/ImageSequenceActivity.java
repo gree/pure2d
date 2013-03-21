@@ -3,15 +3,14 @@ package com.funzio.pure2D.demo.textures;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.Atlas;
 import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
@@ -19,7 +18,7 @@ import com.funzio.pure2D.shapes.Sprite;
 
 public class ImageSequenceActivity extends StageActivity {
     private static final String IMAGE_DIR = "mayan/symbols/majors/priest";
-    private static final String SDCARD_IMAGE_DIR = Environment.getExternalStorageDirectory() + "/funzio/casino/FarmRiches/images/symbols/majors/bonus";
+    // private static final String SDCARD_IMAGE_DIR = Environment.getExternalStorageDirectory() + "/funzio/casino/FarmRiches/images/symbols/majors/bonus";
 
     private Texture mTexture;
     private ImageSequenceBufferAtlas mAtlas;
