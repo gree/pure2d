@@ -27,6 +27,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     protected final SoundPool mSoundPool;
     protected volatile boolean mSoundEnabled = true;
+    protected volatile boolean mMediaEnabled = true;
 
     protected final Context mContext;
     protected final AudioManager mAudioManager;
@@ -131,10 +132,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     }
 
     public void play(final Media media) throws IllegalStateException {
-        // if (!mSoundEnabled && !forcePlay) {
-        // return;
-        // }
-
+        // initialize
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setOnErrorListener(this);
@@ -176,6 +174,20 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
+        }
+    }
+
+    public boolean isMediaEnabled() {
+        return mMediaEnabled;
+    }
+
+    public void setMediaEnabled(final boolean mediaEnabled) {
+        mMediaEnabled = mediaEnabled;
+
+        if (!mediaEnabled) {
+            stopMedia();
+        } else if (mMediaPlayer != null) {
+            mMediaPlayer.prepareAsync();
         }
     }
 
@@ -234,7 +246,11 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
      */
     @Override
     public void onPrepared(final MediaPlayer mp) {
-        mp.start();
+        // check first
+        if (mMediaEnabled) {
+            // start the media now
+            mp.start();
+        }
     }
 
     /*
