@@ -90,9 +90,11 @@ public class TaskGroup implements Task, Retriable {
             success &= taskSuccess;
             if (mTaskListener != null) {
                 // callback
-                if (taskSuccess && mTaskListener instanceof TaskListener2) {
-                    ((TaskListener2) mTaskListener).onTaskProgress((float) ++mNumTasksCompleted / (float) size);
+                if (taskSuccess) {
+                    mNumTasksCompleted++;
                 }
+
+                // complete doesn't mean success
                 mTaskListener.onTaskComplete(task);
             }
 
@@ -106,6 +108,10 @@ public class TaskGroup implements Task, Retriable {
         }
 
         return success;
+    }
+
+    public float getProgress() {
+        return (float) mNumTasksCompleted / (float) mTasks.size();
     }
 
     protected boolean retry() {

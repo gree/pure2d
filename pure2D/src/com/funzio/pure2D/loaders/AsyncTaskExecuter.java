@@ -12,7 +12,6 @@ import android.os.Build;
 
 import com.funzio.pure2D.loaders.tasks.Task;
 import com.funzio.pure2D.loaders.tasks.Task.TaskListener;
-import com.funzio.pure2D.loaders.tasks.Task.TaskListener2;
 
 /**
  * @author sajjadtabib
@@ -20,6 +19,8 @@ import com.funzio.pure2D.loaders.tasks.Task.TaskListener2;
 public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<T>> {
 
     private TaskListener mTaskListener;
+    protected int mNumTasks = 0;
+    protected int mNumTasksCompleted = 0;
 
     /*
      * (non-Javadoc)
@@ -27,16 +28,18 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
      */
     @Override
     protected List<T> doInBackground(final T... taskList) {
+        mNumTasks = taskList.length;
 
         final List<T> executedTasks = new ArrayList<T>();
-        for (int i = 0; i < taskList.length; i++) {
+        for (int i = 0; i < mNumTasks; i++) {
             final T task = taskList[i];
             // execute now
-            task.run();
+            if (task.run()) {
+                mNumTasksCompleted++;
+            }
 
             // callback
             if (mTaskListener != null) {
-                publishProgress((float) i / (float) taskList.length);
                 mTaskListener.onTaskComplete(task);
             }
 
@@ -45,13 +48,6 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
         }
 
         return executedTasks;
-    }
-
-    @Override
-    protected void onProgressUpdate(final Float... progress) {
-        if (mTaskListener instanceof TaskListener2) {
-            ((TaskListener2) mTaskListener).onTaskProgress(progress[0]);
-        }
     }
 
     // @Override
@@ -65,6 +61,10 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
     // }
     // }
     // }
+
+    public float getProgress() {
+        return (float) mNumTasksCompleted / (float) mNumTasks;
+    }
 
     public TaskListener getTaskListener() {
         return mTaskListener;
