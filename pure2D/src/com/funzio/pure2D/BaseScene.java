@@ -231,6 +231,10 @@ public class BaseScene implements Scene {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(BlendFunc.DEFAULT_SRC, BlendFunc.DEFAULT_DST);
         // gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
+        // if (gl instanceof GL11ExtensionPack) {
+        // final GL11ExtensionPack gl11 = (GL11ExtensionPack) gl;
+        // // gl11.glBlendEquationSeparate(GL11ExtensionPack.GL_FUNC_ADD, GL11ExtensionPack.GL_FUNC_ADD);
+        // }
 
         // Enable Texture, not here!
         // gl.glEnable(GL10.GL_TEXTURE_2D);
