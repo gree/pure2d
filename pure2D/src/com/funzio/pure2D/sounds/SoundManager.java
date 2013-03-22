@@ -185,9 +185,12 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mMediaEnabled = mediaEnabled;
 
         if (!mediaEnabled) {
-            stopMedia();
+            if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+                mMediaPlayer.pause();
+            }
         } else if (mMediaPlayer != null) {
-            mMediaPlayer.prepareAsync();
+            // mMediaPlayer.prepareAsync();
+            mMediaPlayer.start();
         }
     }
 
