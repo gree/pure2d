@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
@@ -37,6 +38,8 @@ public class Button extends Sprite implements UIObject {
 
         // for hit testing
         setAutoUpdateBounds(true);
+
+        setBlendFunc(BlendFunc.getPremultipliedAlpha());
     }
 
     @Override
