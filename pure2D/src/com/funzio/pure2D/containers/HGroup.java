@@ -316,6 +316,10 @@ public class HGroup extends LinearGroup {
         scrollTo(mAnchoredScroll - delta, 0);
     }
 
+    public boolean isSwiping() {
+        return mSwiping;
+    }
+
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         final boolean controlled = super.onTouchEvent(event);
