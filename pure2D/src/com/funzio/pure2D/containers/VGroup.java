@@ -318,11 +318,17 @@ public class VGroup extends LinearGroup {
         scrollTo(0, mAnchoredScroll - delta);
     }
 
+    public boolean isSwiping() {
+        return mSwiping;
+    }
+
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         if (mNumChildren == 0) {
             return false;
         }
+
+        final boolean controlled = super.onTouchEvent(event);
 
         // swipe enabled?
         if (mSwipeEnabled) {
@@ -359,6 +365,6 @@ public class VGroup extends LinearGroup {
             }
         }
 
-        return super.onTouchEvent(event);
+        return controlled;
     }
 }
