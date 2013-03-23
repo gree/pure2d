@@ -318,14 +318,7 @@ public class HGroup extends LinearGroup {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (mNumChildren == 0) {
-            return false;
-        }
-
-        // if some child took control already, exit!
-        if (super.onTouchEvent(event)) {
-            return true;
-        }
+        final boolean controlled = super.onTouchEvent(event);
 
         // swipe enabled?
         if (mSwipeEnabled) {
@@ -359,7 +352,6 @@ public class HGroup extends LinearGroup {
             }
         }
 
-        // no one takes control here
-        return false;
+        return controlled;
     }
 }
