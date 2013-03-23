@@ -322,6 +322,11 @@ public class HGroup extends LinearGroup {
             return false;
         }
 
+        // if some child took control already, exit!
+        if (super.onTouchEvent(event)) {
+            return true;
+        }
+
         // swipe enabled?
         if (mSwipeEnabled) {
             final int action = event.getAction() & MotionEvent.ACTION_MASK;
@@ -354,6 +359,7 @@ public class HGroup extends LinearGroup {
             }
         }
 
-        return super.onTouchEvent(event);
+        // no one takes control here
+        return false;
     }
 }
