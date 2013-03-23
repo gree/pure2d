@@ -6,7 +6,7 @@
 			"particles": [
 				{
 					"duration": 1,
-					"blend_mode": "screen",
+					"blend_mode": "premultiplied_alpha",
 
 					"sprite": "side_ground_flare",
 					"animator": "ground_ani"
@@ -19,7 +19,7 @@
 					"origin_y": 45,
 					"x": 65,
 					"y": -10,
-					"blend_mode": "screen",
+					"blend_mode": "premultiplied_alpha",
 
 					"sprite": "side_platform_glow",
 					"animator": "glow_ani"
@@ -29,7 +29,7 @@
 					"duration": 150,
 					"start_delay": 200,
 					"step_delay": 50,
-					"blend_mode": "screen",
+					"blend_mode": "premultiplied_alpha",
 					"x": [-30, 20],
 
 					"sprite": "glitter",
@@ -39,7 +39,7 @@
 				{
 					"duration": 1,
 					"start_delay": 200,
-					"blend_mode": "screen",
+					"blend_mode": "premultiplied_alpha",
 
 					"sprite": "middle_flare_static",
 					"animator": "flare_ani"
@@ -85,7 +85,7 @@
 
 				{
 					"type": "delay",
-					"duration": 100
+					"duration": 50
 				},
 
 				{
@@ -134,7 +134,7 @@
 
 				{
 					"type": "delay",
-					"duration": 100
+					"duration": 50
 				},
 
 				{
@@ -176,7 +176,7 @@
 							"type": "alpha",
 							"duration": 200,
 							"from": 0,
-							"to": 1
+							"to": 0.5
 						}
 					]
 				},
@@ -192,6 +192,13 @@
 							"y_from": 2,
 							"y_to": 0.5,
 							"interpolation": "bounce"
+						},
+
+						{
+							"type": "alpha",
+							"duration": 500,
+							"from": 0.5,
+							"to": 1
 						}
 
 					]
