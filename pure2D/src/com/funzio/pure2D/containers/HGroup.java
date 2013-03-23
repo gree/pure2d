@@ -322,6 +322,10 @@ public class HGroup extends LinearGroup {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
         final boolean controlled = super.onTouchEvent(event);
 
         // swipe enabled?
