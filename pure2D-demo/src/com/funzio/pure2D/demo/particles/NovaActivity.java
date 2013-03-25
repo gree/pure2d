@@ -27,7 +27,7 @@ import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
 public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();
-    private static final String NOVA_DIR = "nova/";
+    private static final String NOVA_DIR = "nova";
 
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
@@ -58,7 +58,7 @@ public class NovaActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFilePath = NOVA_DIR + getIntent().getExtras().getString("text");
+        mFilePath = NOVA_DIR + "/" + getIntent().getExtras().getString("text");
         mScene.setColor(new GLColor(0, 0.7f, 0, 1));
 
         // need to get the GL reference first
@@ -121,10 +121,10 @@ public class NovaActivity extends StageActivity {
         options.inMipmaps = 1;
 
         try {
-            String[] files = getAssets().list("nova");
+            String[] files = getAssets().list(NOVA_DIR);
             for (String file : files) {
                 if (file.contains(".png")) {
-                    final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture("nova/" + file, options));
+                    final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture(NOVA_DIR + "/" + file, options));
 
                     // map it
                     mFileToFrameMap.put(file, frameSet);
