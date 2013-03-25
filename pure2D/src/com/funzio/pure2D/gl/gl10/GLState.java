@@ -33,7 +33,9 @@ public class GLState {
     private boolean mColorArrayEnabled = false;
     private boolean mAlphaTestEnabled = false;
     private GLColor mColor = new GLColor(1f, 1f, 1f, 1f);
-    private BlendFunc mBlendFunc = new BlendFunc();
+    // blending
+    private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
+    private BlendFunc mBlendFunc = new BlendFunc(0, 0);
 
     // viewport and camera
     private int[] mViewport = new int[4];
@@ -348,6 +350,14 @@ public class GLState {
         return true;
     }
 
+    public BlendFunc getDefaultBlendFunc() {
+        return mDefaultBlendFunc;
+    }
+
+    public void setDefaultBlendFunc(final BlendFunc defaultBlendFunc) {
+        mDefaultBlendFunc.set(defaultBlendFunc);
+    }
+
     /**
      * @return the blendFunc
      */
@@ -361,8 +371,10 @@ public class GLState {
     public boolean setBlendFunc(final BlendFunc blendFunc) {
         // null check
         if (blendFunc == null) {
-            if (mBlendFunc.isSet()) {
-                mBlendFunc.reset();
+            if (!mBlendFunc.equals(mDefaultBlendFunc)) {
+                // set to default
+                mBlendFunc.set(mDefaultBlendFunc);
+                // apply
                 mGL.glBlendFunc(mBlendFunc.src, mBlendFunc.dst);
                 return true;
             } else {

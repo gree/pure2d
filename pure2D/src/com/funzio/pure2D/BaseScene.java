@@ -56,6 +56,7 @@ public class BaseScene implements Scene {
 
     // extra
     private GLColor mColor = new GLColor(0f, 0f, 0f, 1f);
+    private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
     private Listener mListener;
 
     // axis system
@@ -229,7 +230,6 @@ public class BaseScene implements Scene {
 
         // Enable alpha blending
         gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(BlendFunc.DEFAULT_SRC, BlendFunc.DEFAULT_DST);
         // gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
         // if (gl instanceof GL11ExtensionPack) {
         // final GL11ExtensionPack gl11 = (GL11ExtensionPack) gl;
@@ -256,6 +256,7 @@ public class BaseScene implements Scene {
 
         // init GL state
         mGLState = new GLState(gl, mStage);
+        mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
         mGLState.setCamera(mCamera);
 
         // init Texture manager with the new GL
@@ -487,6 +488,28 @@ public class BaseScene implements Scene {
     public void setColor(final GLColor color) {
         mColor = color;
         invalidate();
+    }
+
+    /**
+     * @return the current default Blending function
+     */
+    public BlendFunc getDefaultBlendFunc() {
+        return mDefaultBlendFunc;
+    }
+
+    /**
+     * Set the default Blending function for all child objects
+     * 
+     * @param defaultBlendFunc
+     */
+    public void setDefaultBlendFunc(final BlendFunc defaultBlendFunc) {
+        mDefaultBlendFunc.set(defaultBlendFunc);
+
+        // null check
+        if (mGLState != null) {
+            // apply to gl state
+            mGLState.setDefaultBlendFunc(defaultBlendFunc);
+        }
     }
 
     protected void clear() {
