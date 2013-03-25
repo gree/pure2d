@@ -115,7 +115,7 @@ public class LoaderService extends IntentService {
         }
 
         if (intent.getAction().equals(getIntentAction(INTENT_START))) {
-            runTasks(intent);
+            runTasks();
         }
         // } else if (intent.getAction().equals(getIntentAction(INTENT_STOP))) {
         // // flag
@@ -153,7 +153,7 @@ public class LoaderService extends IntentService {
         mTasks.clear();
     }
 
-    protected boolean runTasks(final Intent intent) {
+    protected boolean runTasks() {
         final int size = mTasks.size();
         if (size == 0 || mRunning) {
             return false;
