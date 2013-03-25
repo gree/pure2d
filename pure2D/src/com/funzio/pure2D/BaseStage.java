@@ -43,7 +43,12 @@ public class BaseStage extends GLSurfaceView implements Stage {
             mRect = new Rect();
         }
         if (mRect.width() == 0) {
+            int[] viewOffset = new int[2];
+            getLocationOnScreen(viewOffset);
+
             getGlobalVisibleRect(mRect);
+
+            mRect.offset(-viewOffset[0], -viewOffset[1]);
         }
 
         return mRect;
