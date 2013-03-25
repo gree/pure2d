@@ -33,18 +33,11 @@ public class NovaActivity extends StageActivity {
 
         @Override
         public AtlasFrameSet getFrameSet(final String name) {
-            // null check
-            if (name == null) {
-                return null;
-            }
-
-            return mFileToFrameMap.get(name);
+            return name == null ? null : mFileToFrameMap.get(name);
         }
+
     };
 
-    private String mFilePath;
-
-    private JsonAtlas mStarAtlas;
     private HashMap<String, AtlasFrameSet> mFileToFrameMap = new HashMap<String, AtlasFrameSet>();
 
     private NovaFactory mNovaFactory;
@@ -58,7 +51,6 @@ public class NovaActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFilePath = NOVA_DIR + "/" + getIntent().getExtras().getString("text");
         mScene.setColor(new GLColor(0, 0.7f, 0, 1));
 
         // need to get the GL reference first
@@ -86,8 +78,8 @@ public class NovaActivity extends StageActivity {
                     }
                 });
 
-                // load the file
-                loader.loadAsync(getAssets(), mFilePath);
+                // load the json file
+                loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
             }
         });
     }
@@ -134,13 +126,13 @@ public class NovaActivity extends StageActivity {
             Log.e(TAG, "File Error:", e);
         }
 
-        // star texture and atlas
         try {
-            mStarAtlas = new JsonAtlas(getAssets(), "atlas/star_03_60.json", 1);
-            mStarAtlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture("atlas/star_03_60.png", options));
+            // star texture and atlas
+            final JsonAtlas atlas = new JsonAtlas(getAssets(), "atlas/star_03_60.json", 1);
+            atlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture("atlas/star_03_60.png", options));
 
             // map it
-            mFileToFrameMap.put("star.json", mStarAtlas.getMasterFrameSet());
+            mFileToFrameMap.put("star.json", atlas.getMasterFrameSet());
         } catch (Exception e) {
             Log.e(TAG, "Load Error: ", e);
         }
