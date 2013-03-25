@@ -6,7 +6,7 @@
 			"lifespan": 1000,
 			"particles": [
 				{
-					"sprite": "some_key",
+					"sprite": "some_file.png",
 					"animator": "my_ani"
 				}
 			]

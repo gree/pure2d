@@ -1,5 +1,7 @@
 package com.funzio.pure2D.demo.particles;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -36,36 +38,16 @@ public class NovaActivity extends StageActivity {
                 return null;
             }
 
-            if (name.equals("smoke")) {
-                return mSmokeFrame;
-            } else if (name.equalsIgnoreCase("fire")) {
-                return mFireFrame;
-            } else if (name.equalsIgnoreCase("side_platform_glow")) {
-                return mSidePlatformGlow;
-            } else if (name.equalsIgnoreCase("side_ground_flare")) {
-                return mSideGroundFlare;
-            } else if (name.equalsIgnoreCase("middle_flare_static")) {
-                return mMiddleFlareStatic;
-            } else if (name.equalsIgnoreCase("glitter")) {
-                return mGlitter;
-            } else if (name.equalsIgnoreCase("star")) {
-                return mStarAtlas.getMasterFrameSet();
-            } else {
-                return null;
-            }
+            return mFileToFrameMap.get(name);
         }
     };
 
     private String mFilePath;
 
     private JsonAtlas mStarAtlas;
-    private SingleFrameSet mSmokeFrame;
-    private SingleFrameSet mFireFrame;
-    private SingleFrameSet mSidePlatformGlow;
-    private SingleFrameSet mSideGroundFlare;
+    private HashMap<String, AtlasFrameSet> mFileToFrameMap = new HashMap<String, AtlasFrameSet>();
+
     private NovaFactory mNovaFactory;
-    private SingleFrameSet mMiddleFlareStatic;
-    private SingleFrameSet mGlitter;
 
     @Override
     protected int getNumObjects() {
@@ -138,20 +120,27 @@ public class NovaActivity extends StageActivity {
         TextureOptions options = TextureOptions.getDefault();
         options.inMipmaps = 1;
 
-        // create textures
-        mSmokeFrame = new SingleFrameSet("smoke", mScene.getTextureManager().createAssetTexture("nova/smoke.png", options));
+        try {
+            String[] files = getAssets().list("nova");
+            for (String file : files) {
+                if (file.contains(".png")) {
+                    final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture("nova/" + file, options));
 
-        mFireFrame = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/fire.png", options));
-
-        mSideGroundFlare = new SingleFrameSet("a", mScene.getTextureManager().createAssetTexture("nova/side_ground_flare.png", options));
-        mSidePlatformGlow = new SingleFrameSet("b", mScene.getTextureManager().createAssetTexture("nova/side_platform_glow.png", options));
-        mMiddleFlareStatic = new SingleFrameSet("c", mScene.getTextureManager().createAssetTexture("nova/middle_flare_static.png", options));
-        mGlitter = new SingleFrameSet("c", mScene.getTextureManager().createAssetTexture("nova/glitter.png", options));
+                    // map it
+                    mFileToFrameMap.put(file, frameSet);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "File Error:", e);
+        }
 
         // star texture and atlas
         try {
             mStarAtlas = new JsonAtlas(getAssets(), "atlas/star_03_60.json", 1);
             mStarAtlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture("atlas/star_03_60.png", options));
+
+            // map it
+            mFileToFrameMap.put("star.json", mStarAtlas.getMasterFrameSet());
         } catch (Exception e) {
             Log.e(TAG, "Load Error: ", e);
         }

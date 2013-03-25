@@ -6,7 +6,7 @@
 			"lifespan": 5000,
 			"particles": [
 				{
-					"sprite": "star",
+					"sprite": "star.json",
 					"start_frame": [0, 20],
 					"animator": "wave_ani",
 					"blend_mode": "add"
