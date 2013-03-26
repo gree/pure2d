@@ -16,8 +16,8 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
@@ -47,11 +47,18 @@ public class NovaActivity extends StageActivity {
         return mScene.getNumGrandChildren();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
+     */
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_bg_colors;
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mScene.setColor(new GLColor(0, 0.7f, 0, 1));
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -175,6 +182,42 @@ public class NovaActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickRadio(final View view) {
+
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                switch (view.getId()) {
+                    case R.id.radio_black:
+                        mScene.setColor(COLOR_BLACK);
+                        break;
+
+                    case R.id.radio_gray:
+                        mScene.setColor(COLOR_GRAY);
+                        break;
+
+                    case R.id.radio_white:
+                        mScene.setColor(COLOR_WHITE);
+                        break;
+
+                    case R.id.radio_red:
+                        mScene.setColor(COLOR_RED);
+                        break;
+
+                    case R.id.radio_green:
+                        mScene.setColor(COLOR_GREEN);
+                        break;
+
+                    case R.id.radio_blue:
+                        mScene.setColor(COLOR_BLUE);
+                        break;
+                }
+            }
+        });
+
     }
 
 }

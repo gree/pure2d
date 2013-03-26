@@ -483,11 +483,19 @@ public class BaseScene implements Scene {
     }
 
     /**
-     * @param color the color to set
+     * This needs to be called on GL Thread
+     * 
+     * @param color the color to set.
      */
     public void setColor(final GLColor color) {
-        mColor = color;
-        invalidate();
+        mColor.setValues(color);
+
+        // apply
+        if (mGLState != null) {
+            mGLState.mGL.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
+
+            invalidate();
+        }
     }
 
     /**
