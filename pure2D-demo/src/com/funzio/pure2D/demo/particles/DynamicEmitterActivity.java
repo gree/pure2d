@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
@@ -25,7 +25,7 @@ public class DynamicEmitterActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // mScene.setColor(new GLColor(0, 0.7f, 0, 1));
+        // mScene.setColor(COLOR_GREEN);
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
 
@@ -63,7 +63,7 @@ public class DynamicEmitterActivity extends StageActivity {
 
     @Override
     protected int getLayout() {
-        return R.layout.stage_simple;
+        return R.layout.stage_bg_colors;
     }
 
     private void loadTextures() {
@@ -94,5 +94,41 @@ public class DynamicEmitterActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickRadio(final View view) {
+
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                switch (view.getId()) {
+                    case R.id.radio_black:
+                        mScene.setColor(COLOR_BLACK);
+                        break;
+
+                    case R.id.radio_gray:
+                        mScene.setColor(COLOR_GRAY);
+                        break;
+
+                    case R.id.radio_white:
+                        mScene.setColor(COLOR_WHITE);
+                        break;
+
+                    case R.id.radio_red:
+                        mScene.setColor(COLOR_RED);
+                        break;
+
+                    case R.id.radio_green:
+                        mScene.setColor(COLOR_GREEN);
+                        break;
+
+                    case R.id.radio_blue:
+                        mScene.setColor(COLOR_BLUE);
+                        break;
+                }
+            }
+        });
+
     }
 }
