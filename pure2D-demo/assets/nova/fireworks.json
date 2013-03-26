@@ -27,7 +27,7 @@
 					"step_quantity": 50,
 					"duration": 1,
 
-					"sprite": "star.json",
+					"sprite": ["atlas/star_03_60.json", "atlas/coin_01_60.json"],
 					"start_frame": [0, 20],
 					"blend_mode": "add",
 					"animator": "star_ani"

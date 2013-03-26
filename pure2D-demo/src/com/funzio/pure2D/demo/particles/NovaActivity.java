@@ -1,8 +1,8 @@
 package com.funzio.pure2D.demo.particles;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -59,16 +59,25 @@ public class NovaActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GL10 gl) {
 
-                // load the textures
-                loadTextures();
-
                 NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
                     @Override
                     public void onLoad(final NovaLoader loader, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
                         mNovaFactory = new NovaFactory(vo, mSpriteDelegator, 500);
-                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+
+                        // load textures on GL thread
+                        mScene.queueEvent(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // load the textures
+                                loadTextures();
+
+                                // sample object
+                                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                            }
+                        });
                     }
 
                     @Override
@@ -109,32 +118,31 @@ public class NovaActivity extends StageActivity {
     }
 
     private void loadTextures() {
-        TextureOptions options = TextureOptions.getDefault();
+        final TextureOptions options = TextureOptions.getDefault();
         options.inMipmaps = 1;
 
-        try {
-            String[] files = getAssets().list(NOVA_DIR);
-            for (String file : files) {
-                if (file.contains(".png")) {
-                    final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture(NOVA_DIR + "/" + file, options));
+        // find and load the textures being used by the json file
+        Set<String> files = mNovaFactory.getNovaVO().getUsedSprites();
+        for (String file : files) {
+            Log.v(TAG, "Loading sprite: " + file);
+
+            if (file.contains(".json")) {
+                // load json atlas and texture
+                try {
+                    final JsonAtlas atlas = new JsonAtlas(getAssets(), file, 1);
+                    atlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture(file.replace(".json", ".png"), options));
 
                     // map it
-                    mFileToFrameMap.put(file, frameSet);
+                    mFileToFrameMap.put(file, atlas.getMasterFrameSet());
+                } catch (Exception e) {
+                    Log.e(TAG, "Load Error: ", e);
                 }
+            } else {
+                // just load a single frame texture
+                final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture(NOVA_DIR + "/" + file, options));
+                // map it
+                mFileToFrameMap.put(file, frameSet);
             }
-        } catch (IOException e) {
-            Log.e(TAG, "File Error:", e);
-        }
-
-        try {
-            // star texture and atlas
-            final JsonAtlas atlas = new JsonAtlas(getAssets(), "atlas/star_03_60.json", 1);
-            atlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture("atlas/star_03_60.png", options));
-
-            // map it
-            mFileToFrameMap.put("star.json", atlas.getMasterFrameSet());
-        } catch (Exception e) {
-            Log.e(TAG, "Load Error: ", e);
         }
     }
 

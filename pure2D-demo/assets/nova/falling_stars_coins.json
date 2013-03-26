@@ -6,10 +6,16 @@
 			"lifespan": 5000,
 			"particles": [
 				{
-					"sprite": "star.json",
+					"sprite": "atlas/star_03_60.json",
 					"start_frame": [0, 20],
-					"animator": ["fall_ani", "shoot_ani"],
+					"animator": "fly_ani",
 					"blend_mode": ["", "screen", "add", "subtract"]
+				},
+
+				{
+					"sprite": "atlas/coin_01_60.json",
+					"start_frame": [0, 20],
+					"animator": "fall_ani"
 				}
 			]
 		}
@@ -24,7 +30,7 @@
 		},
 
 		{
-			"name": "shoot_ani",
+			"name": "fly_ani",
 			"type": "translate",
 			"dx": [-500, 500],
 			"dy": [-500, 500],
