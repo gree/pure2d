@@ -6,7 +6,7 @@
 			"lifespan": 5000,
 			"particles": [
 				{
-					"sprite": "star",
+					"sprite": "atlas/star_03_60.json",
 					"start_frame": [0, 20],
 					"animator": "wave_ani",
 					"blend_mode": "add"

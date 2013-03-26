@@ -9,8 +9,8 @@ import javax.microedition.khronos.opengles.GL10;
  * @author long
  */
 public final class BlendFunc {
-    public final static int DEFAULT_SRC = GL10.GL_SRC_ALPHA;
-    public final static int DEFAULT_DST = GL10.GL_ONE_MINUS_SRC_ALPHA;
+    private final static int DEFAULT_SRC = GL10.GL_SRC_ALPHA;
+    private final static int DEFAULT_DST = GL10.GL_ONE_MINUS_SRC_ALPHA;
 
     public int src = DEFAULT_SRC;
     public int dst = DEFAULT_DST;
@@ -24,18 +24,23 @@ public final class BlendFunc {
         this.dst = dst;
     }
 
-    public void reset() {
-        src = DEFAULT_SRC;
-        dst = DEFAULT_DST;
-    }
+    // public void reset() {
+    // src = DEFAULT_SRC;
+    // dst = DEFAULT_DST;
+    // }
+
+    // public boolean isSet() {
+    // return src != DEFAULT_SRC || dst != DEFAULT_DST;
+    // }
 
     public void setValues(final int src, final int dst) {
         this.src = src;
         this.dst = dst;
     }
 
-    public boolean isSet() {
-        return src != DEFAULT_SRC || dst != DEFAULT_DST;
+    public void set(final BlendFunc value) {
+        this.src = value.src;
+        this.dst = value.dst;
     }
 
     public boolean equals(final BlendFunc func) {

@@ -4,7 +4,9 @@
 package com.funzio.pure2D.particles.nova.vo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,8 @@ public class EmitterVO {
 
     // and particles this will emit
     public List<ParticleVO> particles;
+
+    private Set<String> mUsedSprites;
 
     public EmitterVO() {
     }
@@ -77,6 +81,24 @@ public class EmitterVO {
         }
 
         return list;
+    }
+
+    /**
+     * @return the set of Sprites being used
+     */
+    public Set<String> getUsedSprites() {
+        if (mUsedSprites == null) {
+            mUsedSprites = new HashSet<String>();
+
+            // collect from the particles
+            for (ParticleVO particleVO : particles) {
+                for (String sprite : particleVO.sprite) {
+                    mUsedSprites.add(sprite);
+                }
+            }
+        }
+
+        return mUsedSprites;
     }
 
 }

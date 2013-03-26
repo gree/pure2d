@@ -45,6 +45,10 @@ public class NovaFactory {
         }
     }
 
+    public NovaVO getNovaVO() {
+        return mNovaVO;
+    }
+
     /**
      * Create a list of Emitters with an initial position
      * 

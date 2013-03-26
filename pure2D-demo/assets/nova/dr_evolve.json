@@ -8,7 +8,7 @@
 					"duration": 1,
 					"blend_mode": "premultiplied_alpha",
 
-					"sprite": "side_ground_flare",
+					"sprite": "side_ground_flare.png",
 					"animator": "ground_ani"
 				},
 
@@ -21,7 +21,7 @@
 					"y": -10,
 					"blend_mode": "premultiplied_alpha",
 
-					"sprite": "side_platform_glow",
+					"sprite": "side_platform_glow.png",
 					"animator": "glow_ani"
 				},
 
@@ -32,7 +32,7 @@
 					"blend_mode": "premultiplied_alpha",
 					"x": [-30, 20],
 
-					"sprite": "glitter",
+					"sprite": "glitter.png",
 					"animator": "glitter_ani"
 				},
 
@@ -41,7 +41,7 @@
 					"start_delay": 200,
 					"blend_mode": "premultiplied_alpha",
 
-					"sprite": "middle_flare_static",
+					"sprite": "middle_flare_static.png",
 					"animator": "flare_ani"
 				}
 

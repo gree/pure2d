@@ -20,11 +20,19 @@ import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.BaseStage;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.demo.R;
+import com.funzio.pure2D.gl.GLColor;
 
 public class StageActivity extends Activity implements OnTouchListener {
     final protected static int OBJ_INIT_NUM = 1000;
     final protected static int OBJ_STEP_NUM = 100;
     final protected static Random RANDOM = new Random();
+
+    final protected static GLColor COLOR_BLACK = GLColor.BLACK;
+    final protected static GLColor COLOR_WHITE = GLColor.WHITE;
+    final protected static GLColor COLOR_GRAY = new GLColor(0.5f, 0.5f, 0.5f, 1);
+    final protected static GLColor COLOR_RED = new GLColor(0.7f, 0, 0, 1);
+    final protected static GLColor COLOR_GREEN = new GLColor(0, 0.7f, 0, 1);
+    final protected static GLColor COLOR_BLUE = new GLColor(0, 0, 0.7f, 1);
 
     protected BaseStage mStage;
     protected BaseScene mScene;

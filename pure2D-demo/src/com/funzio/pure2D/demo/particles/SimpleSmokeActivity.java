@@ -10,10 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 
@@ -27,7 +26,7 @@ public class SimpleSmokeActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mScene.setColor(new GLColor(0, 0.7f, 0, 1));
+        mScene.setColor(COLOR_GREEN);
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
 

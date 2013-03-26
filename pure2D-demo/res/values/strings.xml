@@ -133,5 +133,12 @@
     <string name="sequence">Sequence</string>
     <string name="parallel_animations">Parallel\nAnimations</string>
     <string name="nova_particle_system">Nova System</string>
+    <string name="black">Black</string>
+    <string name="white">White</string>
+    <string name="green">Green</string>
+    <string name="background">Background</string>
+    <string name="red">Red</string>
+    <string name="blue">Blue</string>
+    <string name="gray">Gray</string>
 
 </resources>
