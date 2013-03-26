@@ -316,11 +316,17 @@ public class HGroup extends LinearGroup {
         scrollTo(mAnchoredScroll - delta, 0);
     }
 
+    public boolean isSwiping() {
+        return mSwiping;
+    }
+
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         if (mNumChildren == 0) {
             return false;
         }
+
+        final boolean controlled = super.onTouchEvent(event);
 
         // swipe enabled?
         if (mSwipeEnabled) {
@@ -354,6 +360,6 @@ public class HGroup extends LinearGroup {
             }
         }
 
-        return super.onTouchEvent(event);
+        return controlled;
     }
 }
