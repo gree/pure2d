@@ -345,15 +345,15 @@ public class VGroup extends LinearGroup {
                 }
             } else if (action == MotionEvent.ACTION_MOVE) {
                 if (mSwipeAnchor >= 0) {
-                    if (Math.abs(deltaY) >= mSwipeMinThreshold || mSwiping) {
-                        if (!mSwiping) {
+                    if (!mSwiping) {
+                        if (Math.abs(deltaY) >= mSwipeMinThreshold) {
                             // re-anchor
                             mSwipeAnchor = event.getY();
 
                             startSwipe();
-                        } else {
-                            swipe(deltaY);
                         }
+                    } else {
+                        swipe(deltaY);
                     }
                 }
 

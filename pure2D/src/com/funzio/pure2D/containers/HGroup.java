@@ -340,15 +340,15 @@ public class HGroup extends LinearGroup {
                 }
             } else if (action == MotionEvent.ACTION_MOVE) {
                 if (mSwipeAnchor >= 0) {
-                    if (Math.abs(deltaX) >= mSwipeMinThreshold || mSwiping) {
-                        if (!mSwiping) {
+                    if (!mSwiping) {
+                        if (Math.abs(deltaX) >= mSwipeMinThreshold) {
                             // re-anchor
                             mSwipeAnchor = event.getX();
 
                             startSwipe();
-                        } else {
-                            swipe(deltaX);
                         }
+                    } else {
+                        swipe(deltaX);
                     }
                 }
 

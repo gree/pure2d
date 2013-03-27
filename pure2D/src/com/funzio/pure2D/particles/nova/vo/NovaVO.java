@@ -5,8 +5,10 @@ package com.funzio.pure2D.particles.nova.vo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +25,8 @@ public class NovaVO {
     // for fast look up
     private Map<String, EmitterVO> mEmitterMap;
     private Map<String, AnimatorVO> mAnimatorMap;
+
+    private Set<String> mUsedSprites;
 
     // @JsonCreator
     // public NovaVO( //
@@ -239,6 +243,22 @@ public class NovaVO {
         }
 
         return result;
+    }
+
+    /**
+     * @return the set of Sprites being used
+     */
+    public Set<String> getUsedSprites() {
+        if (mUsedSprites == null) {
+            mUsedSprites = new HashSet<String>();
+
+            // collect from the emitters
+            for (EmitterVO emitterVO : emitters) {
+                mUsedSprites.addAll(emitterVO.getUsedSprites());
+            }
+        }
+
+        return mUsedSprites;
     }
 
     /*

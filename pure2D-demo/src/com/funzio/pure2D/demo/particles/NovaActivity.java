@@ -1,6 +1,8 @@
 package com.funzio.pure2D.demo.particles;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -14,8 +16,8 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
@@ -25,59 +27,38 @@ import com.funzio.pure2D.particles.nova.vo.NovaVO;
 
 public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();
-    private static final String NOVA_DIR = "nova/";
+    private static final String NOVA_DIR = "nova";
 
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
         @Override
         public AtlasFrameSet getFrameSet(final String name) {
-            // null check
-            if (name == null) {
-                return null;
-            }
-
-            if (name.equals("smoke")) {
-                return mSmokeFrame;
-            } else if (name.equalsIgnoreCase("fire")) {
-                return mFireFrame;
-            } else if (name.equalsIgnoreCase("side_platform_glow")) {
-                return mSidePlatformGlow;
-            } else if (name.equalsIgnoreCase("side_ground_flare")) {
-                return mSideGroundFlare;
-            } else if (name.equalsIgnoreCase("middle_flare_static")) {
-                return mMiddleFlareStatic;
-            } else if (name.equalsIgnoreCase("glitter")) {
-                return mGlitter;
-            } else if (name.equalsIgnoreCase("star")) {
-                return mStarAtlas.getMasterFrameSet();
-            } else {
-                return null;
-            }
+            return name == null ? null : mFileToFrameMap.get(name);
         }
+
     };
 
-    private String mFilePath;
+    private HashMap<String, AtlasFrameSet> mFileToFrameMap = new HashMap<String, AtlasFrameSet>();
 
-    private JsonAtlas mStarAtlas;
-    private SingleFrameSet mSmokeFrame;
-    private SingleFrameSet mFireFrame;
-    private SingleFrameSet mSidePlatformGlow;
-    private SingleFrameSet mSideGroundFlare;
     private NovaFactory mNovaFactory;
-    private SingleFrameSet mMiddleFlareStatic;
-    private SingleFrameSet mGlitter;
 
     @Override
     protected int getNumObjects() {
         return mScene.getNumGrandChildren();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
+     */
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_bg_colors;
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mFilePath = NOVA_DIR + getIntent().getExtras().getString("text");
-        mScene.setColor(new GLColor(0, 0.7f, 0, 1));
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -85,16 +66,25 @@ public class NovaActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GL10 gl) {
 
-                // load the textures
-                loadTextures();
-
                 NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
                     @Override
                     public void onLoad(final NovaLoader loader, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
                         mNovaFactory = new NovaFactory(vo, mSpriteDelegator, 500);
-                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+
+                        // load textures on GL thread
+                        mScene.queueEvent(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // load the textures
+                                loadTextures();
+
+                                // sample object
+                                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                            }
+                        });
                     }
 
                     @Override
@@ -104,8 +94,8 @@ public class NovaActivity extends StageActivity {
                     }
                 });
 
-                // load the file
-                loader.loadAsync(getAssets(), mFilePath);
+                // load the json file
+                loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
             }
         });
     }
@@ -135,25 +125,31 @@ public class NovaActivity extends StageActivity {
     }
 
     private void loadTextures() {
-        TextureOptions options = TextureOptions.getDefault();
+        final TextureOptions options = TextureOptions.getDefault();
         options.inMipmaps = 1;
 
-        // create textures
-        mSmokeFrame = new SingleFrameSet("smoke", mScene.getTextureManager().createAssetTexture("nova/smoke.png", options));
+        // find and load the textures being used by the json file
+        Set<String> files = mNovaFactory.getNovaVO().getUsedSprites();
+        for (String file : files) {
+            Log.v(TAG, "Loading sprite: " + file);
 
-        mFireFrame = new SingleFrameSet("fire", mScene.getTextureManager().createAssetTexture("nova/fire.png", options));
+            if (file.contains(".json")) {
+                // load json atlas and texture
+                try {
+                    final JsonAtlas atlas = new JsonAtlas(getAssets(), file, 1);
+                    atlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture(file.replace(".json", ".png"), options));
 
-        mSideGroundFlare = new SingleFrameSet("a", mScene.getTextureManager().createAssetTexture("nova/side_ground_flare.png", options));
-        mSidePlatformGlow = new SingleFrameSet("b", mScene.getTextureManager().createAssetTexture("nova/side_platform_glow.png", options));
-        mMiddleFlareStatic = new SingleFrameSet("c", mScene.getTextureManager().createAssetTexture("nova/middle_flare_static.png", options));
-        mGlitter = new SingleFrameSet("c", mScene.getTextureManager().createAssetTexture("nova/glitter.png", options));
-
-        // star texture and atlas
-        try {
-            mStarAtlas = new JsonAtlas(getAssets(), "atlas/star_03_60.json", 1);
-            mStarAtlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture("atlas/star_03_60.png", options));
-        } catch (Exception e) {
-            Log.e(TAG, "Load Error: ", e);
+                    // map it
+                    mFileToFrameMap.put(file, atlas.getMasterFrameSet());
+                } catch (Exception e) {
+                    Log.e(TAG, "Load Error: ", e);
+                }
+            } else {
+                // just load a single frame texture
+                final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture(NOVA_DIR + "/" + file, options));
+                // map it
+                mFileToFrameMap.put(file, frameSet);
+            }
         }
     }
 
@@ -186,6 +182,42 @@ public class NovaActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickRadio(final View view) {
+
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                switch (view.getId()) {
+                    case R.id.radio_black:
+                        mScene.setColor(COLOR_BLACK);
+                        break;
+
+                    case R.id.radio_gray:
+                        mScene.setColor(COLOR_GRAY);
+                        break;
+
+                    case R.id.radio_white:
+                        mScene.setColor(COLOR_WHITE);
+                        break;
+
+                    case R.id.radio_red:
+                        mScene.setColor(COLOR_RED);
+                        break;
+
+                    case R.id.radio_green:
+                        mScene.setColor(COLOR_GREEN);
+                        break;
+
+                    case R.id.radio_blue:
+                        mScene.setColor(COLOR_BLUE);
+                        break;
+                }
+            }
+        });
+
     }
 
 }
