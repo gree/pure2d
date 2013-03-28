@@ -24,6 +24,13 @@ public class GLColor {
         this.a = a;
     }
 
+    public GLColor(final float n) {
+        this.r = n;
+        this.g = n;
+        this.b = n;
+        this.a = n;
+    }
+
     public GLColor(final int r, final int g, final int b, final int a) {
         this.r = (float) r / 255;
         this.g = (float) g / 255;
@@ -57,6 +64,20 @@ public class GLColor {
         this.g = (float) g / 255;
         this.b = (float) b / 255;
         this.a = (float) a / 255;
+    }
+
+    public void multiply(final float n) {
+        this.r *= n;
+        this.g *= n;
+        this.b *= n;
+        this.a *= n;
+    }
+
+    public void multiply(final GLColor color) {
+        this.r *= color.r;
+        this.g *= color.g;
+        this.b *= color.b;
+        this.a *= color.a;
     }
 
     public int toInt() {
