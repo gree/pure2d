@@ -23,14 +23,15 @@ public class VGroup extends LinearGroup {
     private int mStartIndex = 0;
     private float mStartY = 0;
 
-    private boolean mSwipeEnabled = false;
-    private float mSwipeMinThreshold = 0;
-    private float mSwipeAnchor;
-    private float mAnchoredScroll;
-    private boolean mSwiping = false;
+    // swiping
+    protected boolean mSwipeEnabled = false;
+    protected float mSwipeMinThreshold = 0;
+    protected float mSwipeAnchor;
+    protected float mAnchoredScroll;
+    protected boolean mSwiping = false;
 
     // positive orientation should be true by default
-    private boolean mPositiveOrientation = true;
+    protected boolean mPositiveOrientation = true;
 
     public VGroup() {
         super();
@@ -370,6 +371,9 @@ public class VGroup extends LinearGroup {
                 final PointF global = mScene.getTouchedPoint();
                 if (getBounds().contains(global.x, global.y)) {
                     mSwipeAnchor = event.getY();
+
+                    // callback
+                    onTouchDown(event);
                 }
             } else if (action == MotionEvent.ACTION_MOVE) {
                 if (mSwipeAnchor >= 0) {
@@ -394,5 +398,15 @@ public class VGroup extends LinearGroup {
         }
 
         return controlled;
+    }
+
+    /**
+     * This is called when a touch down
+     * 
+     * @param event
+     */
+    protected void onTouchDown(final MotionEvent event) {
+        // TODO Auto-generated method stub
+
     }
 }

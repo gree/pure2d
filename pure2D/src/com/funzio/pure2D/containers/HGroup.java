@@ -22,11 +22,11 @@ public class HGroup extends LinearGroup {
     private int mStartIndex = 0;
     private float mStartX = 0;
 
-    private boolean mSwipeEnabled = false;
-    private float mSwipeMinThreshold = 0;
-    private float mSwipeAnchor;
-    private float mAnchoredScroll;
-    private boolean mSwiping = false;
+    protected boolean mSwipeEnabled = false;
+    protected float mSwipeMinThreshold = 0;
+    protected float mSwipeAnchor;
+    protected float mAnchoredScroll;
+    protected boolean mSwiping = false;
 
     public HGroup() {
         super();
@@ -337,6 +337,9 @@ public class HGroup extends LinearGroup {
                 final PointF global = mScene.getTouchedPoint();
                 if (getBounds().contains(global.x, global.y)) {
                     mSwipeAnchor = event.getX();
+
+                    // callback
+                    onTouchDown(event);
                 }
             } else if (action == MotionEvent.ACTION_MOVE) {
                 if (mSwipeAnchor >= 0) {
@@ -361,5 +364,15 @@ public class HGroup extends LinearGroup {
         }
 
         return controlled;
+    }
+
+    /**
+     * This is called when a touch down
+     * 
+     * @param event
+     */
+    protected void onTouchDown(final MotionEvent event) {
+        // TODO Auto-generated method stub
+
     }
 }
