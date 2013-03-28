@@ -1,5 +1,8 @@
 package com.funzio.pure2D.containers;
 
+import android.view.MotionEvent;
+
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.VelocityAnimator;
@@ -8,9 +11,11 @@ import com.funzio.pure2D.animators.VelocityAnimator;
  * @author long
  */
 public class HWheel extends HGroup implements Wheel, AnimatorListener {
-
     // spinning
     protected VelocityAnimator mAnimator;
+
+    private float mSwipeDelta = 0;
+    private float mSwipeVelocity = 0;
 
     public HWheel() {
         // always, because this is a wheel
@@ -20,6 +25,29 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         mAnimator = new VelocityAnimator();
         mAnimator.setListener(this);
         addManipulator(mAnimator);
+    }
+
+    @Override
+    protected void swipe(final float delta) {
+        super.swipe(delta);
+
+        mSwipeVelocity = (delta - mSwipeDelta) / Scene.DEFAULT_MSPF;
+        mSwipeDelta = delta;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
+     */
+    @Override
+    protected void stopSwipe(final float delta) {
+        super.stopSwipe(delta);
+
+        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);
+
+        // reset
+        mSwipeDelta = 0;
+        mSwipeVelocity = 0;
     }
 
     public void spin(final float veloc) {
@@ -58,6 +86,18 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         spinDistance(getSnapDelta(positive), acceleration, duration);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HGroup#startSwipe()
+     */
+    @Override
+    protected void startSwipe() {
+        // stop animation first
+        mAnimator.stop();
+
+        super.startSwipe();
+    }
+
     public void stop() {
         mAnimator.stop();
     }
@@ -89,5 +129,17 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
     public void onAnimationUpdate(final Animator animator, final float value) {
         scrollBy(-value, 0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HGroup#onTouchDown(android.view.MotionEvent)
+     */
+    @Override
+    protected void onTouchDown(final MotionEvent event) {
+        super.onTouchDown(event);
+
+        // stop spining
+        mAnimator.stop();
     }
 }
