@@ -22,7 +22,7 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
     protected int mNumTasks = 0;
     protected int mNumTasksCompleted = 0;
 
-    private boolean mStopWhenTaskFailed = false;
+    protected boolean mStopOnTaskFailed = false;
 
     /*
      * (non-Javadoc)
@@ -48,7 +48,7 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
             // add to the list
             executedTasks.add(task);
 
-            if (mStopWhenTaskFailed && !task.isSucceeded()) {
+            if (mStopOnTaskFailed && !task.isSucceeded()) {
                 break;
             }
         }
@@ -80,12 +80,12 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
         mTaskListener = taskListener;
     }
 
-    public boolean isStopWhenTaskFailed() {
-        return mStopWhenTaskFailed;
+    public boolean isStopOnTaskFailed() {
+        return mStopOnTaskFailed;
     }
 
-    public void setStopWhenTaskFailed(final boolean stopWhenTaskFailed) {
-        mStopWhenTaskFailed = stopWhenTaskFailed;
+    public void setStopOnTaskFailed(final boolean stopOnTaskFailed) {
+        mStopOnTaskFailed = stopOnTaskFailed;
     }
 
     /**
