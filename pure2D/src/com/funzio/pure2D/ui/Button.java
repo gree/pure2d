@@ -46,7 +46,7 @@ public class Button extends DisplayGroup implements UIObject {
         setAutoUpdateBounds(true);
     }
 
-    private void createChildren() {
+    protected void createChildren() {
         mButtonSprite = new Sprite();
         mButtonSprite.setAutoUpdateBounds(true);
         addChild(mButtonSprite);
@@ -73,15 +73,21 @@ public class Button extends DisplayGroup implements UIObject {
     }
 
     public void setContent(final DisplayObject contentGroup) {
+        queueEvent(new Runnable() {
 
-        if (mContentGroup != null) {
-            mContentGroup.removeFromParent();
-        }
-        mContentGroup = contentGroup;
+            @Override
+            public void run() {
+                if (mContentGroup != null) {
+                    mContentGroup.removeFromParent();
+                }
 
-        if (mContentGroup != null) {
-            addChild(mContentGroup);
-        }
+                if (contentGroup != null) {
+                    addChild(contentGroup);
+                }
+
+                mContentGroup = contentGroup;
+            }
+        });
     }
 
     protected void setState(final int state) {
