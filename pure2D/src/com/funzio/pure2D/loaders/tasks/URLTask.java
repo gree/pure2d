@@ -98,10 +98,10 @@ public abstract class URLTask implements IntentTask {
             return false;
         }
 
-        // verify the size if it's specified
-        // return mContentLength < 0 || (mContentLength == mTotalBytesLoaded);
+        // verify the size if it's specified. NOTE: this only works with gzip disabled!
+        return mContentLength < 0 || (mContentLength == mTotalBytesLoaded);
         // NOTE: content length can be smaller if it's gzip compressed!
-        return mContentLength <= mTotalBytesLoaded;
+        // return mContentLength <= mTotalBytesLoaded;
     }
 
     protected boolean postURL(final String data, final Map<String, String> properties) {
