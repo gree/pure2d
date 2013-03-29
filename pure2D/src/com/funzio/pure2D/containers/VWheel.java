@@ -1,5 +1,8 @@
 package com.funzio.pure2D.containers;
 
+import android.view.MotionEvent;
+
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.VelocityAnimator;
 
@@ -10,6 +13,9 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     // spinning
     protected VelocityAnimator mAnimator;
 
+    private float mSwipeDelta = 0;
+    private float mSwipeVelocity = 0;
+
     public VWheel() {
         // always, because this is a wheel
         mRepeating = true;
@@ -18,6 +24,30 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         mAnimator = new VelocityAnimator();
         mAnimator.setListener(this);
         addManipulator(mAnimator);
+    }
+
+    @Override
+    protected void swipe(final float delta) {
+        super.swipe(delta);
+
+        mSwipeVelocity = (delta - mSwipeDelta) / Scene.DEFAULT_MSPF;
+        mSwipeDelta = delta;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
+     */
+    @Override
+    protected void stopSwipe(final float delta) {
+        super.stopSwipe(delta);
+
+        // spin
+        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);
+
+        // reset
+        mSwipeDelta = 0;
+        mSwipeVelocity = 0;
     }
 
     public void spin(final float veloc) {
@@ -44,6 +74,18 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         final float accel = distance2Travel > 0 ? -acceleration : acceleration;
         float veloc = distance2Travel / duration - 0.5f * accel * duration; // Real physics!
         spin(-veloc, -accel, duration);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.VGroup#startSwipe()
+     */
+    @Override
+    protected void startSwipe() {
+        // stop animation first
+        mAnimator.stop();
+
+        super.startSwipe();
     }
 
     public void stop() {
@@ -77,5 +119,17 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
 
     public void onAnimationUpdate(final Animator animator, final float value) {
         scrollBy(0, -value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.VGroup#onTouchDown(android.view.MotionEvent)
+     */
+    @Override
+    protected void onTouchDown(final MotionEvent event) {
+        super.onTouchDown(event);
+
+        // stop spinning
+        mAnimator.stop();
     }
 }

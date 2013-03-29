@@ -23,11 +23,15 @@ public class VGroup extends LinearGroup {
     private int mStartIndex = 0;
     private float mStartY = 0;
 
-    private boolean mSwipeEnabled = false;
-    private float mSwipeMinThreshold = 0;
-    private float mSwipeAnchor;
-    private float mAnchoredScroll;
-    private boolean mSwiping = false;
+    // swiping
+    protected boolean mSwipeEnabled = false;
+    protected float mSwipeMinThreshold = 0;
+    protected float mSwipeAnchor;
+    protected float mAnchoredScroll;
+    protected boolean mSwiping = false;
+
+    // positive orientation should be true by default
+    protected boolean mPositiveOrientation = true;
 
     public VGroup() {
         super();
@@ -157,6 +161,10 @@ public class VGroup extends LinearGroup {
         // }
     }
 
+    protected float convertY(final float y, final float size) {
+        return mPositiveOrientation ? y : mSize.y - y - size;
+    }
+
     @Override
     protected void positionChildren() {
         float nextX = -mScrollPosition.x;
@@ -175,7 +183,7 @@ public class VGroup extends LinearGroup {
                 } else if ((mAlignment & Alignment.RIGHT) != 0) {
                     alignedX = (mSize.x - childSize.x);
                 }
-                child.setPosition(nextX + alignedX, nextY);
+                child.setPosition(nextX + alignedX, convertY(nextY, childSize.y));
 
                 // find nextY
                 nextY += childSize.y + mGap;
@@ -188,7 +196,7 @@ public class VGroup extends LinearGroup {
                     index += mNumChildren;
                 }
                 child = mChildren.get(index);
-                child.setPosition(child.getPosition().x, mStartY - child.getSize().y - mGap);
+                child.setPosition(child.getPosition().x, convertY(mStartY - child.getSize().y - mGap, child.getSize().y));
             }
         } else {
             float nextY = -mScrollPosition.y;
@@ -200,7 +208,7 @@ public class VGroup extends LinearGroup {
                 } else if ((mAlignment & Alignment.RIGHT) != 0) {
                     alignedX = (mSize.x - childSize.x);
                 }
-                child.setPosition(nextX + alignedX, nextY);
+                child.setPosition(nextX + alignedX, convertY(nextY, childSize.y));
 
                 // update sizes
                 nextY += childSize.y + mGap;
@@ -322,6 +330,21 @@ public class VGroup extends LinearGroup {
         return mSwiping;
     }
 
+    public boolean isPositiveOrientation() {
+        return mPositiveOrientation;
+    }
+
+    /**
+     * Change display order of the children
+     * 
+     * @param positiveOrder
+     */
+    public void setPositiveOrientation(final boolean positive) {
+        mPositiveOrientation = positive;
+
+        invalidateChildrenPosition();
+    }
+
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         if (mNumChildren == 0) {
@@ -335,6 +358,12 @@ public class VGroup extends LinearGroup {
             final int action = event.getAction() & MotionEvent.ACTION_MASK;
             float deltaY = event.getY() - mSwipeAnchor;
             if (mScene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                // flip
+                deltaY = -deltaY;
+            }
+
+            if (!mPositiveOrientation) {
+                // flip again
                 deltaY = -deltaY;
             }
 
@@ -342,6 +371,9 @@ public class VGroup extends LinearGroup {
                 final PointF global = mScene.getTouchedPoint();
                 if (getBounds().contains(global.x, global.y)) {
                     mSwipeAnchor = event.getY();
+
+                    // callback
+                    onTouchDown(event);
                 }
             } else if (action == MotionEvent.ACTION_MOVE) {
                 if (mSwipeAnchor >= 0) {
@@ -366,5 +398,15 @@ public class VGroup extends LinearGroup {
         }
 
         return controlled;
+    }
+
+    /**
+     * This is called when a touch down
+     * 
+     * @param event
+     */
+    protected void onTouchDown(final MotionEvent event) {
+        // TODO Auto-generated method stub
+
     }
 }

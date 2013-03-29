@@ -8,12 +8,13 @@ import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.containers.MaskGroup;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.StencilEGLConfig;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Rectangular;
 import com.funzio.pure2D.shapes.Sprite;
@@ -26,7 +27,7 @@ public class StencilBufferActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mScene.setColor(new GLColor(0, 0.5f, 0, 1f));
+        mScene.setColor(COLOR_GREEN);
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
 
@@ -47,8 +48,7 @@ public class StencilBufferActivity extends StageActivity {
     protected BaseScene createScene() {
         // NOTE: this is needed for some certain devices such as Galaxy Tab
         // and need to be set before Scene assignment
-        mStage.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
-
+        mStage.setEGLConfigChooser(new StencilEGLConfig());
         return super.createScene();
     }
 
@@ -60,7 +60,7 @@ public class StencilBufferActivity extends StageActivity {
 
         // create a rect for the mask group
         Rectangular rect = new Rectangular();
-        rect.setColor(GLColor.BLACK);
+        rect.setColor(new GLColor(0, 0, 0, 0.5f));
         rect.setSize(mDisplaySize.x, mDisplaySize.x);
         rect.setOriginAtCenter();
         mMask.addChild(rect);
