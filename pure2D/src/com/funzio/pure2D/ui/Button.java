@@ -6,8 +6,10 @@ package com.funzio.pure2D.ui;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
+import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
@@ -15,7 +17,7 @@ import com.funzio.pure2D.shapes.Sprite;
 /**
  * @author long
  */
-public class Button extends Sprite implements UIObject {
+public class Button extends DisplayGroup implements UIObject {
     public static final GLColor DIMMED_COLOR = new GLColor(0.75f, 0.75f, 0.75f, 1f);
 
     public static final int STATE_UP = 0;
@@ -30,18 +32,24 @@ public class Button extends Sprite implements UIObject {
     protected boolean mTouchable = true; // true by default
     protected boolean mFocus = false;
 
+    protected Sprite mButtonSprite;
+    protected DisplayObject mContentGroup;
+
     protected Listener mListener;
 
     public Button() {
         super();
 
+        createChildren();
+
         // for hit testing
         setAutoUpdateBounds(true);
     }
 
-    @Override
-    public void setTexture(final Texture texture) {
-        setTextures(texture);
+    private void createChildren() {
+        mButtonSprite = new Sprite();
+        mButtonSprite.setAutoUpdateBounds(true);
+        addChild(mButtonSprite);
     }
 
     public void setTextures(final Texture... textures) {
@@ -60,6 +68,20 @@ public class Button extends Sprite implements UIObject {
 
         // update
         setState(mState);
+
+        setSize(mButtonSprite.getSize());
+    }
+
+    public void setContent(final DisplayObject contentGroup) {
+
+        if (mContentGroup != null) {
+            mContentGroup.removeFromParent();
+        }
+        mContentGroup = contentGroup;
+
+        if (mContentGroup != null) {
+            addChild(mContentGroup);
+        }
     }
 
     protected void setState(final int state) {
@@ -74,7 +96,7 @@ public class Button extends Sprite implements UIObject {
                 forceDim = true;
             }
         }
-        setAtlasFrame(frame);
+        mButtonSprite.setAtlasFrame(frame);
         // dim it if there is missing frame
         setColor((state > mNumFrames - 1 || forceDim) ? DIMMED_COLOR : null);
     }
@@ -98,10 +120,12 @@ public class Button extends Sprite implements UIObject {
         return mBounds.contains(x, y);
     }
 
+    @Override
     public void setTouchable(final boolean touchable) {
         mTouchable = touchable;
     }
 
+    @Override
     public boolean isTouchable() {
         return mTouchable;
     }
