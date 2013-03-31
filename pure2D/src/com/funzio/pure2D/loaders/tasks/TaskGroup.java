@@ -18,6 +18,7 @@ public class TaskGroup implements Task, Retriable {
 
     protected TaskListener mTaskListener;
     protected long mTaskDelay = 0;
+    protected int mNumTasksCompleted = 0;
 
     private boolean mSucceeded = false;
 
@@ -40,6 +41,7 @@ public class TaskGroup implements Task, Retriable {
     public void reset() {
         mSucceeded = false;
         mRetriedAlready = 0;
+        mNumTasksCompleted = 0;
     }
 
     public void addTask(final Task task) {
@@ -84,9 +86,15 @@ public class TaskGroup implements Task, Retriable {
             }
 
             // run now
-            success &= task.run();
+            boolean taskSuccess = task.run();
+            success &= taskSuccess;
             if (mTaskListener != null) {
                 // callback
+                if (taskSuccess) {
+                    mNumTasksCompleted++;
+                }
+
+                // complete doesn't mean success
                 mTaskListener.onTaskComplete(task);
             }
 
@@ -100,6 +108,10 @@ public class TaskGroup implements Task, Retriable {
         }
 
         return success;
+    }
+
+    public float getProgress() {
+        return (float) mNumTasksCompleted / (float) mTasks.size();
     }
 
     protected boolean retry() {
