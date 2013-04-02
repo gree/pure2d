@@ -140,5 +140,6 @@
     <string name="red">Red</string>
     <string name="blue">Blue</string>
     <string name="gray">Gray</string>
+    <string name="_9_patch_scale">9-Patch Scale</string>
 
 </resources>

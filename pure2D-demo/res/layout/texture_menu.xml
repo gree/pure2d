@@ -28,6 +28,13 @@
         android:text="@string/multiple_texture" />
 
     <Button
+        android:id="@+id/btn_sprite_9"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/_9_patch_scale" />
+
+    <Button
         android:id="@+id/btn_masking"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

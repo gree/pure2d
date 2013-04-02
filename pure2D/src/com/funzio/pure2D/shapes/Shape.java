@@ -72,7 +72,7 @@ public class Shape extends BaseDisplayObject {
     /**
      * validate texture coords
      */
-    private void validateTextureCoordBuffer() {
+    protected void validateTextureCoordBuffer() {
         // match texture coordinates with the Axis system
         final Scene scene = getScene();
         if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
