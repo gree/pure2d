@@ -118,6 +118,9 @@ public class Sprite9 extends Rectangular {
             ty -= th;
             tyInverted += th;
         }
+
+        // clear flag: texture coords
+        validate(InvalidateFlags.TEXTURE_COORDS);
     }
 
     /*
