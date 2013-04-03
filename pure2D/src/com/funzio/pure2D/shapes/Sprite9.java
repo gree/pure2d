@@ -174,29 +174,13 @@ public class Sprite9 extends Rectangular {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#draw(com.funzio.pure2D.gl.gl10.GLState)
+     * @see com.funzio.pure2D.shapes.Shape#drawChildren(com.funzio.pure2D.gl.gl10.GLState)
      */
     @Override
-    public boolean draw(final GLState glState) {
+    protected boolean drawChildren(final GLState glState) {
         // texture check
         if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
-            return super.draw(glState);
-        }
-
-        drawStart(glState);
-
-        // blend mode
-        final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
-
-        // color and alpha
-        glState.setColor(getSumColor());
-
-        // color buffer
-        if (mColorBuffer == null) {
-            glState.setColorArrayEnabled(false);
-        } else {
-            // apply color buffer
-            mColorBuffer.apply(glState);
+            return super.drawChildren(glState);
         }
 
         // bind the texture
@@ -213,14 +197,6 @@ public class Sprite9 extends Rectangular {
                 quad.draw(glState);
             }
         }
-
-        if (blendChanged) {
-            // recover the blending
-            glState.setBlendFunc(null);
-        }
-
-        // wrap up
-        drawEnd(glState);
 
         return true;
     }

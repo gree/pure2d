@@ -72,6 +72,35 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
 
+    abstract protected boolean drawChildren(final GLState glState);
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.DisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
+     */
+    @Override
+    public boolean draw(final GLState glState) {
+        drawStart(glState);
+
+        // blend mode
+        final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+
+        // color and alpha
+        glState.setColor(getSumColor());
+
+        drawChildren(glState);
+
+        if (blendChanged) {
+            // recover the blending
+            glState.setBlendFunc(null);
+        }
+
+        // wrap up
+        drawEnd(glState);
+
+        return true;
+    }
+
     protected void drawStart(final GLState glState) {
         // keep the matrix
         glState.mGL.glPushMatrix();
