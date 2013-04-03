@@ -12,11 +12,12 @@ import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.UIObject;
 
 /**
  * @author long
  */
-public class VGroup extends LinearGroup {
+public class VGroup extends LinearGroup implements UIObject {
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 

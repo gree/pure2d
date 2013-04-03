@@ -160,11 +160,18 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean addChild(final DisplayObject child) {
         if (mChildren.indexOf(child) < 0) {
+
+            // child callback
+            child.onPreAdded(this);
+
             mChildren.add(child);
             mNumChildren++;
+
+            // child callback
             child.onAdded(this);
             invalidate();
 
+            // internal callback
             onAddedChild(child);
             return true;
         }
@@ -173,8 +180,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean addChild(final DisplayObject child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
+
+            // child callback
+            child.onPreAdded(this);
+
             mChildren.add(index, child);
             mNumChildren++;
+
+            // child callback
             child.onAdded(this);
             invalidate();
 
@@ -185,8 +198,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public boolean removeChild(final DisplayObject child) {
-        if (mChildren.remove(child)) {
+        if (mChildren.indexOf(child) >= 0) {
+
+            // child callback
+            child.onPreRemoved();
+
+            mChildren.remove(child);
             mNumChildren--;
+
+            // child callback
             child.onRemoved();
             invalidate();
 
@@ -199,8 +219,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean removeChild(final int index) {
         if (index < mNumChildren) {
-            DisplayObject child = mChildren.remove(index);
+            final DisplayObject child = mChildren.get(index);
+
+            // child callback
+            child.onPreRemoved();
+
+            mChildren.remove(child);
             mNumChildren--;
+
+            // child callback
             child.onRemoved();
             invalidate();
 
@@ -212,9 +239,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public void removeAllChildren() {
-        // update children
+        // call children
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            final DisplayObject child = mChildren.get(i);
+            // pre callback
+            child.onPreRemoved();
+        }
+        for (int i = 0; i < mNumChildren; i++) {
+            final DisplayObject child = mChildren.get(i);
+            // callback
             child.onRemoved();
             onRemovedChild(child);
         }

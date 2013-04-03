@@ -94,7 +94,11 @@ public interface DisplayObject extends Manipulatable {
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
-    public void onAdded(Container parent);
+    public void onPreAdded(Container container);
+
+    public void onAdded(Container container);
+
+    public void onPreRemoved();
 
     public void onRemoved();
 
