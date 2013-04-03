@@ -224,7 +224,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             // child callback
             child.onPreRemoved();
 
-            mChildren.remove(index);
+            mChildren.remove(child);
             mNumChildren--;
 
             // child callback

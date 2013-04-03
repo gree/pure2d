@@ -11,11 +11,12 @@ import android.view.MotionEvent;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.UIObject;
 
 /**
  * @author long
  */
-public class HGroup extends LinearGroup {
+public class HGroup extends LinearGroup implements UIObject {
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 

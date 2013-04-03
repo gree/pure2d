@@ -890,7 +890,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * This is called before this object is added to a Container
      */
     public void onPreAdded(final Container container) {
-        // TODO nothing
+        // TODO nothing yet
     }
 
     /**
@@ -908,7 +908,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * This is called before this object is remove from a Container
      */
     public void onPreRemoved() {
-        // TODO nothing
+        // TODO nothing yet
     }
 
     /**
