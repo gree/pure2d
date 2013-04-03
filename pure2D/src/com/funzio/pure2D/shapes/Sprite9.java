@@ -87,12 +87,15 @@ public class Sprite9 extends Rectangular {
             }
         }
 
+        // some constants
         final float left = m9Patches.left;
         final float right = m9Patches.right;
         final float top = m9Patches.top;
         final float bottom = m9Patches.bottom;
         final float textureW = mTexture.getSize().x;
         final float textureH = mTexture.getSize().y;
+        final float tsx = mTexture.mCoordScaleX;
+        final float tsy = mTexture.mCoordScaleY;
         final float middleW = mSize.x - left - right;
         final float middleH = mSize.y - top - bottom;
 
@@ -111,10 +114,10 @@ public class Sprite9 extends Rectangular {
 
         // texture coordinates
         final float[] scaleX = {
-                (left / textureW) * mTexture.mCoordScaleX, ((textureW - left - right) / textureW) * mTexture.mCoordScaleX, (right / textureW) * mTexture.mCoordScaleX
+                left / textureW, (textureW - left - right) / textureW, right / textureW
         };
         final float[] scaleY = {
-                (bottom / textureH) * mTexture.mCoordScaleY, ((textureH - top - bottom) / textureH) * mTexture.mCoordScaleY, (top / textureH) * mTexture.mCoordScaleY
+                bottom / textureH, (textureH - top - bottom) / textureH, top / textureH
         };
         // swap for AXIS_TOP_LEFT
         if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
@@ -141,9 +144,9 @@ public class Sprite9 extends Rectangular {
 
                 // set the coordinates
                 if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-                    mCoordBuffers[index].setXYWH(tx, tyInverted, tw, th);
+                    mCoordBuffers[index].setXYWH(tx * tsx, tyInverted * tsy, tw * tsx, th * tsy);
                 } else {
-                    mCoordBuffers[index].setXYWH(tx, ty, tw, -th);
+                    mCoordBuffers[index].setXYWH(tx * tsx, ty * tsy, tw * tsx, -th * tsy);
                 }
 
                 vx += vw;
