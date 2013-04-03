@@ -18,27 +18,37 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 public class Sprite9 extends Rectangular {
     protected static final int NUM_PATCHES = 9;
 
-    private final RectF m9Patches = new RectF(0, 0, 0, 0);
-    private final QuadBuffer[] mQuadBuffers = new QuadBuffer[NUM_PATCHES];
-    private final TextureCoordBuffer[] mCoordBuffers = new TextureCoordBuffer[NUM_PATCHES];;
+    private RectF m9Patches;
+    private QuadBuffer[] mQuadBuffers;
+    private TextureCoordBuffer[] mCoordBuffers;
 
-    public Sprite9() {
-        super();
-
-        for (int i = 0; i < NUM_PATCHES; i++) {
-            mQuadBuffers[i] = new QuadBuffer();
-            mCoordBuffers[i] = new TextureCoordBuffer();
-        }
-    }
+    private boolean m9PatchEnabled = true;
+    private boolean mHasPatches = false;
 
     public void set9Patches(final float left, final float right, final float top, final float bottom) {
-        m9Patches.set(left, top, right, bottom);
+        if (m9Patches == null) {
+            m9Patches = new RectF(left, top, right, bottom);
+        } else {
+            m9Patches.set(left, top, right, bottom);
+        }
+
+        mHasPatches = left > 0 || right > 0 || top > 0 || bottom > 0;
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
     public RectF get9Patches() {
         return m9Patches;
+    }
+
+    public boolean is9PatchEnabled() {
+        return m9PatchEnabled;
+    }
+
+    public void set9PatchEnabled(final boolean value) {
+        m9PatchEnabled = value;
+
+        invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
     /*
@@ -61,8 +71,20 @@ public class Sprite9 extends Rectangular {
      */
     @Override
     protected void validateTextureCoordBuffer() {
-        if (mTexture == null) {
+        if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
+            super.validateTextureCoordBuffer();
             return;
+        }
+
+        // init the arrays
+        if (mQuadBuffers == null) {
+            mQuadBuffers = new QuadBuffer[NUM_PATCHES];
+            mCoordBuffers = new TextureCoordBuffer[NUM_PATCHES];
+
+            for (int i = 0; i < NUM_PATCHES; i++) {
+                mQuadBuffers[i] = new QuadBuffer();
+                mCoordBuffers[i] = new TextureCoordBuffer();
+            }
         }
 
         final float left = m9Patches.left;
@@ -157,7 +179,7 @@ public class Sprite9 extends Rectangular {
     @Override
     public boolean draw(final GLState glState) {
         // texture check
-        if (mTexture == null) {
+        if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
             return super.draw(glState);
         }
 
@@ -201,5 +223,18 @@ public class Sprite9 extends Rectangular {
         drawEnd(glState);
 
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.shapes.Shape#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        m9Patches = null;
+        mQuadBuffers = null;
+        mCoordBuffers = null;
     }
 }

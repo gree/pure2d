@@ -334,7 +334,7 @@ public class HGroup extends LinearGroup {
             final float deltaX = event.getX() - mSwipeAnchor;
 
             if (action == MotionEvent.ACTION_DOWN) {
-                final PointF global = mScene.getTouchedPoint();
+                final PointF global = getScene().getTouchedPoint();
                 if (getBounds().contains(global.x, global.y)) {
                     mSwipeAnchor = event.getX();
 
