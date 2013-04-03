@@ -27,9 +27,10 @@ public class VGroup extends LinearGroup implements UIObject {
     // swiping
     protected boolean mSwipeEnabled = false;
     protected float mSwipeMinThreshold = 0;
-    protected float mSwipeAnchor;
-    protected float mAnchoredScroll;
     protected boolean mSwiping = false;
+
+    private float mSwipeAnchor = -1;
+    private float mAnchoredScroll = -1;
 
     // positive orientation should be true by default
     protected boolean mPositiveOrientation = true;
@@ -397,6 +398,9 @@ public class VGroup extends LinearGroup implements UIObject {
                 if (mSwiping) {
                     stopSwipe(deltaY);
                     return true;
+                } else {
+                    // clear anchor, important!
+                    mSwipeAnchor = -1;
                 }
             }
         }

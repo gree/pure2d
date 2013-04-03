@@ -25,9 +25,10 @@ public class HGroup extends LinearGroup implements UIObject {
 
     protected boolean mSwipeEnabled = false;
     protected float mSwipeMinThreshold = 0;
-    protected float mSwipeAnchor;
-    protected float mAnchoredScroll;
     protected boolean mSwiping = false;
+
+    private float mSwipeAnchor = -1;
+    private float mAnchoredScroll = -1;
 
     public HGroup() {
         super();
@@ -362,6 +363,9 @@ public class HGroup extends LinearGroup implements UIObject {
                 if (mSwiping) {
                     stopSwipe(deltaX);
                     return true;
+                } else {
+                    // clear anchor, important!
+                    mSwipeAnchor = -1;
                 }
             }
         }
