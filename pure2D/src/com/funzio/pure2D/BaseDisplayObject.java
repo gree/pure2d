@@ -886,14 +886,34 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.VISUAL);
     }
 
-    public void onAdded(final Container parent) {
-        mParent = parent;
+    /**
+     * This is called before this object is added to a Container
+     */
+    public void onPreAdded(final Container container) {
+        // TODO nothing
+    }
+
+    /**
+     * This is called after this object is added to a Container
+     */
+    public void onAdded(final Container container) {
+        mParent = container;
         mScene = findScene();
 
         // flag the bounds are changed now
         invalidate(InvalidateFlags.BOUNDS);
     }
 
+    /**
+     * This is called before this object is remove from a Container
+     */
+    public void onPreRemoved(final Container container) {
+        // TODO nothing
+    }
+
+    /**
+     * This is called after this object is removed from a Container
+     */
     public void onRemoved() {
         mParent = null;
         mScene = null;
