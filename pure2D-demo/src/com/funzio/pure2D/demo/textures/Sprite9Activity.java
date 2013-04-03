@@ -53,7 +53,7 @@ public class Sprite9Activity extends StageActivity {
         obj.setSize(mRandom.nextInt(400) + 100, mRandom.nextInt(400) + 100);
 
         if (m9PatchEnabled) {
-            obj.setPatches(20, 20, 20, 20);
+            obj.set9Patches(20, 20, 20, 20);
         }
         // obj.setRotation(mRandom.nextInt(360));
         // obj.setColor(new GLColor(mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat(), 0.5f));
@@ -94,9 +94,9 @@ public class Sprite9Activity extends StageActivity {
                     for (int n = 0; n < num; n++) {
                         Sprite9 obj = (Sprite9) mScene.getChildAt(n);
                         if (m9PatchEnabled) {
-                            obj.setPatches(20, 20, 20, 20);
+                            obj.set9Patches(20, 20, 20, 20);
                         } else {
-                            obj.setPatches(0, 0, 0, 0);
+                            obj.set9Patches(0, 0, 0, 0);
                         }
                     }
                 }

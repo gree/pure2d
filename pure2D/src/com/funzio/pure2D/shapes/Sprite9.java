@@ -9,6 +9,7 @@ import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
+import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
@@ -17,7 +18,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 public class Sprite9 extends Rectangular {
     protected static final int NUM_PATCHES = 9;
 
-    private final RectF mPatches = new RectF(0, 0, 0, 0);
+    private final RectF m9Patches = new RectF(0, 0, 0, 0);
     private final QuadBuffer[] mQuadBuffers = new QuadBuffer[NUM_PATCHES];
     private final TextureCoordBuffer[] mCoordBuffers = new TextureCoordBuffer[NUM_PATCHES];;
 
@@ -30,14 +31,28 @@ public class Sprite9 extends Rectangular {
         }
     }
 
-    public void setPatches(final float left, final float right, final float top, final float bottom) {
-        mPatches.set(left, top, right, bottom);
+    public void set9Patches(final float left, final float right, final float top, final float bottom) {
+        m9Patches.set(left, top, right, bottom);
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    public RectF getPatches() {
-        return mPatches;
+    public RectF get9Patches() {
+        return m9Patches;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.shapes.Shape#setTexture(com.funzio.pure2D.gl.gl10.textures.Texture)
+     */
+    @Override
+    public void setTexture(final Texture texture) {
+        super.setTexture(texture);
+
+        // auto set size if it's not set
+        if (mSize.x <= 1 && mSize.y <= 1) {
+            setSize(texture.getSize());
+        }
     }
 
     /*
@@ -50,10 +65,10 @@ public class Sprite9 extends Rectangular {
             return;
         }
 
-        final float left = mPatches.left;
-        final float right = mPatches.right;
-        final float top = mPatches.top;
-        final float bottom = mPatches.bottom;
+        final float left = m9Patches.left;
+        final float right = m9Patches.right;
+        final float top = m9Patches.top;
+        final float bottom = m9Patches.bottom;
         final float textureW = mTexture.getSize().x;
         final float textureH = mTexture.getSize().y;
         final float middleW = mSize.x - left - right;
