@@ -907,7 +907,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * This is called before this object is remove from a Container
      */
-    public void onPreRemoved(final Container container) {
+    public void onPreRemoved() {
         // TODO nothing
     }
 
