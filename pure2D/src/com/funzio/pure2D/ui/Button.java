@@ -156,7 +156,7 @@ public class Button extends DisplayGroup implements UIObject {
         }
 
         final int action = event.getAction() & MotionEvent.ACTION_MASK;
-        final PointF touchedPoint = mScene.getTouchedPoint();
+        final PointF touchedPoint = getScene().getTouchedPoint();
 
         if (action == MotionEvent.ACTION_DOWN) {
             if (hitTest(touchedPoint.x, touchedPoint.y)) {

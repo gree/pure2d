@@ -357,7 +357,8 @@ public class VGroup extends LinearGroup {
         if (mSwipeEnabled) {
             final int action = event.getAction() & MotionEvent.ACTION_MASK;
             float deltaY = event.getY() - mSwipeAnchor;
-            if (mScene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+            final Scene scene = getScene();
+            if (scene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
                 // flip
                 deltaY = -deltaY;
             }
@@ -368,7 +369,7 @@ public class VGroup extends LinearGroup {
             }
 
             if (action == MotionEvent.ACTION_DOWN) {
-                final PointF global = mScene.getTouchedPoint();
+                final PointF global = scene.getTouchedPoint();
                 if (getBounds().contains(global.x, global.y)) {
                     mSwipeAnchor = event.getY();
 
