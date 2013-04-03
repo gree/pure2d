@@ -11,7 +11,7 @@ import com.funzio.pure2D.shapes.Rectangular;
  */
 public class VList extends VWheel {
 
-    protected MaskGroup mMask;
+    protected MaskGroup mMaskGroup;
     protected Rectangular mMaskRect;
 
     public VList() {
@@ -23,12 +23,24 @@ public class VList extends VWheel {
         setRepeating(false);
 
         // prepare the mask
-        mMask = new MaskGroup();
+        mMaskGroup = new MaskGroup();
         // create a rect for the mask group
-        mMask.addChild(mMaskRect = new Rectangular());
+        mMaskGroup.addChild(mMaskRect = new Rectangular());
 
         // apply the mask
-        setMask(mMask);
+        setMask(mMaskGroup);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
+     */
+    @Override
+    public void setPosition(final float x, final float y) {
+        super.setPosition(x, y);
+
+        // follow me
+        mMaskGroup.setPosition(x, y);
     }
 
     /*
@@ -52,7 +64,7 @@ public class VList extends VWheel {
         super.onPreAdded(container);
 
         // mask needs to be added first
-        container.addChild(mMask);
+        container.addChild(mMaskGroup);
     }
 
     /*
@@ -64,7 +76,7 @@ public class VList extends VWheel {
         super.onRemoved();
 
         // also remove the mask
-        mMask.removeFromParent();
+        mMaskGroup.removeFromParent();
     }
 
     /*

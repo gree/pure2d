@@ -10,7 +10,7 @@ import com.funzio.pure2D.shapes.Rectangular;
  * @author long
  */
 public class HList extends HWheel {
-    protected MaskGroup mMask;
+    protected MaskGroup mMaskGroup;
     protected Rectangular mMaskRect;
 
     public HList() {
@@ -22,12 +22,24 @@ public class HList extends HWheel {
         setRepeating(false);
 
         // prepare the mask
-        mMask = new MaskGroup();
+        mMaskGroup = new MaskGroup();
         // create a rect for the mask group
-        mMask.addChild(mMaskRect = new Rectangular());
+        mMaskGroup.addChild(mMaskRect = new Rectangular());
 
         // apply the mask
-        setMask(mMask);
+        setMask(mMaskGroup);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
+     */
+    @Override
+    public void setPosition(final float x, final float y) {
+        super.setPosition(x, y);
+
+        // follow me
+        mMaskGroup.setPosition(x, y);
     }
 
     /*
@@ -51,7 +63,7 @@ public class HList extends HWheel {
         super.onPreAdded(container);
 
         // mask needs to be added first
-        container.addChild(mMask);
+        container.addChild(mMaskGroup);
     }
 
     /*
@@ -63,7 +75,7 @@ public class HList extends HWheel {
         super.onRemoved();
 
         // remove the mask
-        mMask.removeFromParent();
+        mMaskGroup.removeFromParent();
     }
 
     /*
