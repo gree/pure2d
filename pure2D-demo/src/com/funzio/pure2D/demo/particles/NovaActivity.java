@@ -66,7 +66,7 @@ public class NovaActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GL10 gl) {
 
-                NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
+                final NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
                     @Override
                     public void onLoad(final NovaLoader loader, final NovaVO vo) {
@@ -94,8 +94,12 @@ public class NovaActivity extends StageActivity {
                     }
                 });
 
-                // load the json file
-                loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
+                // load the json file, some old Android requires this to run on UI Thread
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
+                    }
+                });
             }
         });
     }

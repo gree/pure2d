@@ -78,19 +78,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     @Override
     public boolean draw(final GLState glState) {
-        drawStart(glState);
+        if (mNumChildren == 0) {
+            return false;
+        }
 
-        // final GLState glState = GLState.getInstance();
-        // blend mode
-        // boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+        drawStart(glState);
 
         // draw the children
         drawChildren(glState);
-
-        // if (blendChanged) {
-        // recover the blending
-        // glState.setBlendFunc(null);
-        // }
 
         drawEnd(glState);
 

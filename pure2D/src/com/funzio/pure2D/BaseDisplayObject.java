@@ -83,17 +83,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
         drawStart(glState);
 
         // blend mode
-        final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
-
+        // final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+        glState.setBlendFunc(mBlendFunc);
         // color and alpha
         glState.setColor(getSumColor());
 
+        // draw the content
         drawChildren(glState);
 
-        if (blendChanged) {
-            // recover the blending
-            glState.setBlendFunc(null);
-        }
+        // if (blendChanged) {
+        // // recover the blending
+        // glState.setBlendFunc(null);
+        // }
 
         // wrap up
         drawEnd(glState);

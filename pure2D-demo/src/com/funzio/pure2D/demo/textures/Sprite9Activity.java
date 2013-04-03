@@ -27,6 +27,7 @@ public class Sprite9Activity extends StageActivity {
         super.onCreate(savedInstanceState);
 
         mScene.setColor(COLOR_GREEN);
+        // mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
 
@@ -60,7 +61,7 @@ public class Sprite9Activity extends StageActivity {
         obj.setOriginAtCenter();
 
         // set positions
-        obj.setPosition(x, y);
+        obj.setPosition(mScene.screenToGlobal(x, y));
 
         // add to scene
         mScene.addChild(obj);
@@ -73,7 +74,7 @@ public class Sprite9Activity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addObject(event.getX(), mDisplaySize.y - event.getY());
+                    addObject(event.getX(), event.getY());
                 }
             });
         }

@@ -2,7 +2,6 @@ package com.funzio.pure2D.animation;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
  * @author long
@@ -70,38 +69,6 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
         }
 
         return mNumFrames > 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayObject#draw(com.funzio.pure2D.gl.gl10.GLState)
-     */
-    @Override
-    public boolean draw(final GLState glState) {
-        if (mNumFrames > 0) {
-            drawStart(glState);
-
-            // blend mode
-            final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
-            // color and alpha
-            glState.setColor(getSumColor());
-            // color buffer
-            glState.setColorArrayEnabled(false);
-
-            // now draw the children
-            drawChildren(glState);
-
-            if (blendChanged) {
-                // recover the blending
-                glState.setBlendFunc(null);
-            }
-
-            drawEnd(glState);
-
-            return true;
-        }
-
-        return false;
     }
 
     public void play() {

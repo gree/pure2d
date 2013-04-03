@@ -164,7 +164,7 @@ public class Shape extends BaseDisplayObject {
             mColorBuffer.apply(glState);
         }
 
-        // texture and color
+        // texture
         if (mTexture != null) {
             // bind the texture
             mTexture.bind();
