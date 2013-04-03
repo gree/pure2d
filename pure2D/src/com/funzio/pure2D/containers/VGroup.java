@@ -116,7 +116,7 @@ public class VGroup extends LinearGroup {
      * @see com.funzio.pure2D.containers.DisplayGroup#drawChildren(javax.microedition.khronos.opengles.GL10)
      */
     @Override
-    protected void drawChildren(final GLState glState) {
+    protected boolean drawChildren(final GLState glState) {
         if (mTouchable) {
             if (mVisibleTouchables == null) {
                 mVisibleTouchables = new ArrayList<Touchable>();
@@ -159,6 +159,8 @@ public class VGroup extends LinearGroup {
         // child.draw(glState);
         // child.setPosition(oldX, oldY);
         // }
+
+        return true;
     }
 
     protected float convertY(final float y, final float size) {

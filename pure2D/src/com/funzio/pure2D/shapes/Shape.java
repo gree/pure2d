@@ -150,23 +150,11 @@ public class Shape extends BaseDisplayObject {
         return mColorBuffer;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
-     */
     @Override
-    public boolean draw(final GLState glState) {
+    protected boolean drawChildren(final GLState glState) {
         if (mVertexBuffer == null) {
             return false;
         }
-
-        drawStart(glState);
-
-        // blend mode
-        final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
-
-        // color and alpha
-        glState.setColor(getSumColor());
 
         // color buffer
         if (mColorBuffer == null) {
@@ -192,14 +180,6 @@ public class Shape extends BaseDisplayObject {
 
         // now draw, woo hoo!
         mVertexBuffer.draw(glState);
-
-        if (blendChanged) {
-            // recover the blending
-            glState.setBlendFunc(null);
-        }
-
-        // wrap up
-        drawEnd(glState);
 
         return true;
     }

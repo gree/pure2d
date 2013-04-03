@@ -22,7 +22,12 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
 
     protected Listener mListener;
 
-    public boolean draw(final GLState glState) {
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#drawChildren(com.funzio.pure2D.gl.gl10.GLState)
+     */
+    @Override
+    protected boolean drawChildren(final GLState glState) {
         // draw nothing
         return false;
     }

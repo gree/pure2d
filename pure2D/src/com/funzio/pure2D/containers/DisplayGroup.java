@@ -97,9 +97,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return true;
     }
 
-    protected void drawChildren(final GLState glState) {
+    @Override
+    protected boolean drawChildren(final GLState glState) {
         if (mNumChildren == 0) {
-            return;
+            return false;
         }
 
         if (mTouchable) {
@@ -128,6 +129,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 }
             }
         }
+
+        return true;
     }
 
     /**

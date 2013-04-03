@@ -18,8 +18,6 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
 
     abstract protected void updateFrame(final int frame);
 
-    abstract protected void drawChildren(final GLState glState);
-
     @Override
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
