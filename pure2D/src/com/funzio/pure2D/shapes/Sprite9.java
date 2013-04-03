@@ -88,16 +88,26 @@ public class Sprite9 extends Rectangular {
         }
 
         // some constants
-        final float left = m9Patches.left;
-        final float right = m9Patches.right;
-        final float top = m9Patches.top;
-        final float bottom = m9Patches.bottom;
         final float textureW = mTexture.getSize().x;
         final float textureH = mTexture.getSize().y;
         final float tsx = mTexture.mCoordScaleX;
         final float tsy = mTexture.mCoordScaleY;
-        final float middleW = mSize.x - left - right;
-        final float middleH = mSize.y - top - bottom;
+        float left = m9Patches.left;
+        float right = m9Patches.right;
+        float top = m9Patches.top;
+        float bottom = m9Patches.bottom;
+        float middleW = mSize.x - left - right;
+        float middleH = mSize.y - top - bottom;
+        // if width is too small
+        if (middleW < 0) {
+            left = right = 0;
+            middleW = mSize.x;
+        }
+        // if height is too small
+        if (middleH < 0) {
+            top = bottom = 0;
+            middleH = mSize.y;
+        }
 
         // vertices
         final float[] widths = {
