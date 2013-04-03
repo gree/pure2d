@@ -22,6 +22,8 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
     protected int mNumTasks = 0;
     protected int mNumTasksCompleted = 0;
 
+    protected boolean mStopOnTaskFailed = false;
+
     /*
      * (non-Javadoc)
      * @see android.os.AsyncTask#doInBackground(Params[])
@@ -45,6 +47,10 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
 
             // add to the list
             executedTasks.add(task);
+
+            if (mStopOnTaskFailed && !task.isSucceeded()) {
+                break;
+            }
         }
 
         return executedTasks;
@@ -72,6 +78,14 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<
 
     public void setTaskListener(final TaskListener taskListener) {
         mTaskListener = taskListener;
+    }
+
+    public boolean isStopOnTaskFailed() {
+        return mStopOnTaskFailed;
+    }
+
+    public void setStopOnTaskFailed(final boolean stopOnTaskFailed) {
+        mStopOnTaskFailed = stopOnTaskFailed;
     }
 
     /**

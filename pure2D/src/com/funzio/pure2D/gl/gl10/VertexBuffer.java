@@ -25,11 +25,11 @@ public class VertexBuffer extends GLFloatBuffer {
         setVertices(primitive, verticesNum, vertices, indices);
     }
 
-    public VertexBuffer(final int primitive, final int verticesNum, final float[] vertices) {
+    public VertexBuffer(final int primitive, final int verticesNum, final float... vertices) {
         setVertices(primitive, verticesNum, vertices, null);
     }
 
-    public void setVertices(final int primitive, final int verticesNum, final float[] vertices) {
+    public void setVertices(final int primitive, final int verticesNum, final float... vertices) {
         setVertices(primitive, verticesNum, vertices, null);
     }
 

@@ -21,7 +21,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
 
     private float[] mValues;
 
-    public TextureCoordBuffer(final float[] textCoords) {
+    public TextureCoordBuffer(final float... textCoords) {
         super(textCoords);
     }
 
@@ -30,7 +30,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
      * @see com.funzio.pure2D.gl.GLFloatBuffer#setValues(float[])
      */
     @Override
-    public void setValues(final float[] values) {
+    public void setValues(final float... values) {
         super.setValues(values);
 
         if (mValues == null) {
@@ -44,6 +44,15 @@ public class TextureCoordBuffer extends GLFloatBuffer {
 
     public float[] getValues() {
         return mValues;
+    }
+
+    public void setXYWH(final float x, final float y, final float width, final float height) {
+        setValues(//
+                x, y + height, // TL
+                x, y, // BL
+                x + width, y + height, // TR
+                x + width, y // BR
+        );
     }
 
     public void scale(final float sx, final float sy) {

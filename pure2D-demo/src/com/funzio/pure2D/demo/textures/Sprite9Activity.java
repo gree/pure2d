@@ -11,15 +11,15 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.shapes.Sprite;
+import com.funzio.pure2D.shapes.Sprite9;
 
-public class HelloTextureActivity extends StageActivity {
+public class Sprite9Activity extends StageActivity {
     private Texture mTexture;
-    protected boolean mUseTexture = true;
+    protected boolean m9PatchEnabled = true;
 
     @Override
     protected int getLayout() {
-        return R.layout.stage_textures;
+        return R.layout.stage_texture_9_patch;
     }
 
     @Override
@@ -43,19 +43,20 @@ public class HelloTextureActivity extends StageActivity {
 
     private void loadTexture() {
         // create texture
-        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_128, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.panel_collection_reward, null);
     }
 
     private void addObject(final float x, final float y) {
         // create object
-        Sprite obj = new Sprite();
-        // obj.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
-        if (mUseTexture) {
-            obj.setTexture(mTexture);
-        } else {
-            int size = 128;
-            obj.setSize(size, size);
+        Sprite9 obj = new Sprite9();
+        obj.setTexture(mTexture);
+        obj.setSize(mRandom.nextInt(400) + 100, mRandom.nextInt(400) + 100);
+
+        if (m9PatchEnabled) {
+            obj.set9Patches(20, 20, 20, 20);
         }
+        // obj.setRotation(mRandom.nextInt(360));
+        // obj.setColor(new GLColor(mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat(), 0.5f));
 
         // center origin
         obj.setOriginAtCenter();
@@ -82,17 +83,21 @@ public class HelloTextureActivity extends StageActivity {
         return true;
     }
 
-    public void onClickTextures(final View view) {
-        if (view.getId() == R.id.cb_textures) {
-            mUseTexture = ((CheckBox) findViewById(R.id.cb_textures)).isChecked();
+    public void onClick9Patch(final View view) {
+        if (view.getId() == R.id.cb_texture_9_patch) {
+            m9PatchEnabled = ((CheckBox) findViewById(R.id.cb_texture_9_patch)).isChecked();
             mStage.queueEvent(new Runnable() {
 
                 @Override
                 public void run() {
                     final int num = mScene.getNumChildren();
                     for (int n = 0; n < num; n++) {
-                        Sprite obj = (Sprite) mScene.getChildAt(n);
-                        obj.setTexture(mUseTexture ? mTexture : null);
+                        Sprite9 obj = (Sprite9) mScene.getChildAt(n);
+                        if (m9PatchEnabled) {
+                            obj.set9Patches(20, 20, 20, 20);
+                        } else {
+                            obj.set9Patches(0, 0, 0, 0);
+                        }
                     }
                 }
             });

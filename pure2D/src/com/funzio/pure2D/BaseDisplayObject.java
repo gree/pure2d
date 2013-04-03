@@ -445,20 +445,46 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof DisplayObject) {
-            DisplayObject parent = (DisplayObject) mParent;
-            GLColor color = parent.getColor();
-            if (color != null) {
-                mSumColor.r *= color.r;
-                mSumColor.g *= color.g;
-                mSumColor.b *= color.b;
-                mSumColor.a *= color.a;
+        if (mParent != null && mParent instanceof BaseDisplayObject) {
+            final BaseDisplayObject parent = (BaseDisplayObject) mParent;
+            final GLColor parentColor = parent.getSumColor();
+            if (parentColor != null) {
+                mSumColor.multiply(parentColor);
             }
-            mSumColor.a *= parent.getAlpha();
         }
 
         return mSumColor;
     }
+
+    /**
+     * This looks better in Premultiplied-alpha mode
+     * 
+     * @return
+     */
+    // final protected GLColor getSumColor() {
+    // if (mSumColor == null) {
+    // // init the mSumColor
+    // mSumColor = (mColor == null) ? new GLColor(1f, 1f, 1f, 1f) : new GLColor(mColor);
+    // mSumColor.multiply(mAlpha);
+    // } else {
+    // // recycle the mSumColor object to prevent GC
+    // if (mColor == null) {
+    // mSumColor.setValues(mAlpha, mAlpha, mAlpha, mAlpha);
+    // } else {
+    // mSumColor.setValues(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
+    // }
+    // }
+    // // multiply by parent's attributes
+    // if (mParent != null && mParent instanceof BaseDisplayObject) {
+    // final BaseDisplayObject parent = (BaseDisplayObject) mParent;
+    // final GLColor color = parent.getSumColor();
+    // if (color != null) {
+    // mSumColor.multiply(color);
+    // }
+    // }
+    //
+    // return mSumColor;
+    // }
 
     /**
      * @return the alpha

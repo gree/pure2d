@@ -18,11 +18,11 @@ public class GLFloatBuffer {
         // nothing now
     }
 
-    public GLFloatBuffer(final float[] values) {
+    public GLFloatBuffer(final float... values) {
         setValues(values);
     }
 
-    public void setValues(final float[] values) {
+    public void setValues(final float... values) {
         // null check and create new buffer
         if (values != null) {
             if (mBuffer == null || mCapacity != values.length) {

@@ -7,12 +7,10 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.atlas.AtlasFrame;
-import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.shapes.Sprite;
+import com.funzio.pure2D.shapes.Sprite9;
 
 /**
  * @author long
@@ -26,13 +24,12 @@ public class Button extends DisplayGroup implements UIObject {
 
     protected boolean mEnabled = true;
     protected int mState = STATE_UP;
-    protected AtlasFrameSet mFrameSet;
-    protected int mNumFrames = 0;
+    protected Texture[] mTextures;
 
     protected boolean mTouchable = true; // true by default
     protected boolean mFocus = false;
 
-    protected Sprite mButtonSprite;
+    protected Sprite9 mButtonSprite;
     protected DisplayObject mContentGroup;
 
     protected Listener mListener;
@@ -41,70 +38,75 @@ public class Button extends DisplayGroup implements UIObject {
         super();
 
         createChildren();
-
-        // for hit testing
-        setAutoUpdateBounds(true);
     }
 
     protected void createChildren() {
-        mButtonSprite = new Sprite();
+        mButtonSprite = new Sprite9();
         mButtonSprite.setAutoUpdateBounds(true);
         addChild(mButtonSprite);
     }
 
     public void setTextures(final Texture... textures) {
-        if (mFrameSet == null) {
-            mFrameSet = new AtlasFrameSet("");
-        } else {
-            mFrameSet.removeAllFrames();
-        }
-
-        int i = 0;
-        for (Texture texture : textures) {
-            AtlasFrame frame = new AtlasFrame(texture, i++, "");
-            mFrameSet.addFrame(frame);
-        }
-        mNumFrames = i;
+        mTextures = textures;
 
         // update
         setState(mState);
+    }
 
-        setSize(mButtonSprite.getSize());
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#setSize(float, float)
+     */
+    @Override
+    public void setSize(final float w, final float h) {
+        super.setSize(w, h);
+
+        // also set the button size
+        mButtonSprite.setSize(w, h);
     }
 
     public void setContent(final DisplayObject contentGroup) {
-        queueEvent(new Runnable() {
+        final boolean success = queueEvent(new Runnable() {
 
             @Override
             public void run() {
-                if (mContentGroup != null) {
-                    mContentGroup.removeFromParent();
-                }
-
-                if (contentGroup != null) {
-                    addChild(contentGroup);
-                }
-
-                mContentGroup = contentGroup;
+                setContentForced(contentGroup);
             }
         });
+
+        // if scene is not ready, set content directly
+        if (!success) {
+            setContentForced(contentGroup);
+        }
+    }
+
+    public void set9Patches(final float left, final float right, final float top, final float bottom) {
+        mButtonSprite.set9Patches(left, right, top, bottom);
+    }
+
+    protected void setContentForced(final DisplayObject contentGroup) {
+        if (mContentGroup != null) {
+            mContentGroup.removeFromParent();
+        }
+
+        if (contentGroup != null) {
+            addChild(contentGroup);
+        }
+
+        mContentGroup = contentGroup;
     }
 
     protected void setState(final int state) {
         mState = state;
         // go to the state's frame
-        AtlasFrame frame = mNumFrames == 0 ? null : mFrameSet.getFrame(Math.min(state, mNumFrames - 1));
-        boolean forceDim = false;
-        if (frame == null) {
-            if (mNumFrames > 0) {
-                // use first frame as default
-                frame = mFrameSet.getFrame(0);
-                forceDim = true;
-            }
-        }
-        mButtonSprite.setAtlasFrame(frame);
+        final Texture texture = mTextures == null || mTextures.length == 0 ? null : mTextures[Math.min(state, mTextures.length - 1)];
+        mButtonSprite.setTexture(texture);
+
         // dim it if there is missing frame
-        setColor((state > mNumFrames - 1 || forceDim) ? DIMMED_COLOR : null);
+        setColor((texture == null || state >= mTextures.length) ? DIMMED_COLOR : null);
+
+        // match the size
+        setSize(mButtonSprite.getSize());
     }
 
     public boolean isEnabled() {

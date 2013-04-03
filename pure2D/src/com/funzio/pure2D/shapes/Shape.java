@@ -53,9 +53,6 @@ public class Shape extends BaseDisplayObject {
         mTexture = texture;
 
         invalidate(InvalidateFlags.TEXTURE | InvalidateFlags.TEXTURE_COORDS);
-
-        // texture coordinates might need to change
-        // validateTextureCoordBuffer();
     }
 
     /*
@@ -75,7 +72,7 @@ public class Shape extends BaseDisplayObject {
     /**
      * validate texture coords
      */
-    private void validateTextureCoordBuffer() {
+    protected void validateTextureCoordBuffer() {
         // match texture coordinates with the Axis system
         final Scene scene = getScene();
         if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
@@ -123,7 +120,6 @@ public class Shape extends BaseDisplayObject {
         mTextureFlippedForAxis = false;
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
-        // validateTextureCoordBuffer();
 
         return true;
     }
@@ -140,7 +136,6 @@ public class Shape extends BaseDisplayObject {
         mTextureFlippedForAxis = false;
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
-        // validateTextureCoordBuffer();
     }
 
     public TextureCoordBuffer getTextureCoordBuffer() {
@@ -256,7 +251,6 @@ public class Shape extends BaseDisplayObject {
 
         if (flipped) {
             invalidate(InvalidateFlags.TEXTURE_COORDS);
-            // validateTextureCoordBuffer();
         }
     }
 
@@ -269,6 +263,5 @@ public class Shape extends BaseDisplayObject {
         super.onAdded(parent);
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
-        // validateTextureCoordBuffer();
     }
 }
