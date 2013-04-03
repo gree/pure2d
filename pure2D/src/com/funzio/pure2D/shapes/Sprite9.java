@@ -6,6 +6,7 @@ package com.funzio.pure2D.shapes;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
@@ -14,7 +15,6 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  * @author long
  */
 public class Sprite9 extends Rectangular {
-
     protected static final int NUM_PATCHES = 9;
 
     private final RectF mPatches = new RectF(0, 0, 0, 0);
@@ -59,22 +59,35 @@ public class Sprite9 extends Rectangular {
         final float middleW = mSize.x - left - right;
         final float middleH = mSize.y - top - bottom;
 
+        // vertices
         final float[] widths = {
                 left, middleW, right
         };
         final float[] heights = {
                 bottom, middleH, top
         };
+        // swap for AXIS_TOP_LEFT
+        if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+            heights[0] = top;
+            heights[2] = bottom;
+        }
 
+        // texture coordinates
         final float[] scaleX = {
                 (left / textureW) * mTexture.mCoordScaleX, ((textureW - left - right) / textureW) * mTexture.mCoordScaleX, (right / textureW) * mTexture.mCoordScaleX
         };
         final float[] scaleY = {
                 (bottom / textureH) * mTexture.mCoordScaleY, ((textureH - top - bottom) / textureH) * mTexture.mCoordScaleY, (top / textureH) * mTexture.mCoordScaleY
         };
+        // swap for AXIS_TOP_LEFT
+        if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+            final float temp = scaleY[0];
+            scaleY[0] = scaleY[2];
+            scaleY[2] = temp;
+        }
 
         float vx = 0, vy = 0; // vertex start x,y
-        float tx = 0, ty = 1; // texture coord start x,y
+        float tx = 0, ty = 1, tyInverted = 0; // texture coord start x,y
         int index = 0;
         for (int row = 0; row < 3; row++) {
             float vh = heights[row];
@@ -90,7 +103,11 @@ public class Sprite9 extends Rectangular {
                 mQuadBuffers[index].setXYWH(vx, vy, vw, vh);
 
                 // set the coordinates
-                mCoordBuffers[index].setXYWH(tx, ty, tw, -th);
+                if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+                    mCoordBuffers[index].setXYWH(tx, tyInverted, tw, th);
+                } else {
+                    mCoordBuffers[index].setXYWH(tx, ty, tw, -th);
+                }
 
                 vx += vw;
                 tx += tw;
@@ -99,6 +116,7 @@ public class Sprite9 extends Rectangular {
 
             vy += vh;
             ty -= th;
+            tyInverted += th;
         }
     }
 

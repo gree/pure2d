@@ -55,6 +55,8 @@ public class Sprite9Activity extends StageActivity {
         if (m9PatchEnabled) {
             obj.setPatches(20, 20, 20, 20);
         }
+        // obj.setRotation(mRandom.nextInt(360));
+        // obj.setColor(new GLColor(mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat(), 0.5f));
 
         // center origin
         obj.setOriginAtCenter();
