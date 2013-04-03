@@ -50,7 +50,7 @@ public class Sprite9 extends Rectangular {
         super.setTexture(texture);
 
         // auto set size if it's not set
-        if (mSize.x <= 1 && mSize.y <= 1) {
+        if (texture != null && mSize.x <= 1 && mSize.y <= 1) {
             setSize(texture.getSize());
         }
     }
