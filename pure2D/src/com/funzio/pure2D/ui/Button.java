@@ -123,6 +123,10 @@ public class Button extends DisplayGroup implements UIObject {
         setState(enabled ? STATE_UP : STATE_DISABLED);
     }
 
+    public Sprite9 getButtonSprite() {
+        return mButtonSprite;
+    }
+
     /**
      * @param x
      * @param y
