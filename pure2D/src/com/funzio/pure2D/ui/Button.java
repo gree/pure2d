@@ -65,10 +65,6 @@ public class Button extends DisplayGroup implements UIObject {
         mButtonSprite.setSize(w, h);
     }
 
-    public Sprite9 getButtonSprite() {
-        return mButtonSprite;
-    }
-
     public void setContent(final DisplayObject contentGroup) {
         final boolean success = queueEvent(new Runnable() {
 
