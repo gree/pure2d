@@ -28,6 +28,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     protected final SoundPool mSoundPool;
     protected volatile boolean mSoundEnabled = true;
     protected volatile boolean mMediaEnabled = true;
+    protected boolean mMediaPrepared;
 
     protected final Context mContext;
     protected final AudioManager mAudioManager;
@@ -139,6 +140,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
 
         mMediaPlayer.reset(); // reset the mediaplayer state - IDLE
+        mMediaPrepared = false;
 
         // load - Transitions to the INITIALIZED State
         if (media.load(mMediaPlayer, mContext) == 0) { // NOTE: Must be called before setting audio related stuff!
@@ -163,6 +165,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public void stopMedia() {
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
+            mMediaPrepared = false;
         }
     }
 
@@ -174,6 +177,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
+            mMediaPrepared = false;
         }
     }
 
@@ -190,7 +194,9 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
             }
         } else if (mMediaPlayer != null) {
             // mMediaPlayer.prepareAsync();
-            mMediaPlayer.start();
+            if (mMediaPrepared) {
+                mMediaPlayer.start();
+            }
         }
     }
 
@@ -251,6 +257,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public void onPrepared(final MediaPlayer mp) {
         // check first
         if (mMediaEnabled) {
+            mMediaPrepared = true;
             // start the media now
             mp.start();
         }
@@ -264,6 +271,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
         if (mp != null) {
             mp.reset();
+            mMediaPrepared = false;
         }
 
         return true;
