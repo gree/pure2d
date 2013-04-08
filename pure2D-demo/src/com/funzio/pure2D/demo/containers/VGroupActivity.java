@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.BaseScene;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.containers.VGroup;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;

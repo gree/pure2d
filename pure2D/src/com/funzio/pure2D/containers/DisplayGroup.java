@@ -162,7 +162,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         if (mChildren.indexOf(child) < 0) {
 
             // child callback
-            child.onPreAdded(this);
+            // child.onPreAdded(this);
 
             mChildren.add(child);
             mNumChildren++;
@@ -182,7 +182,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
 
             // child callback
-            child.onPreAdded(this);
+            // child.onPreAdded(this);
 
             mChildren.add(index, child);
             mNumChildren++;
@@ -201,7 +201,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         if (mChildren.indexOf(child) >= 0) {
 
             // child callback
-            child.onPreRemoved();
+            // child.onPreRemoved();
 
             mChildren.remove(child);
             mNumChildren--;
@@ -222,7 +222,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             final DisplayObject child = mChildren.get(index);
 
             // child callback
-            child.onPreRemoved();
+            // child.onPreRemoved();
 
             mChildren.remove(child);
             mNumChildren--;
@@ -240,11 +240,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public void removeAllChildren() {
         // call children
-        for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
-            // pre callback
-            child.onPreRemoved();
-        }
+        // for (int i = 0; i < mNumChildren; i++) {
+        // final DisplayObject child = mChildren.get(i);
+        // // pre callback
+        // child.onPreRemoved();
+        // }
+
         for (int i = 0; i < mNumChildren; i++) {
             final DisplayObject child = mChildren.get(i);
             // callback

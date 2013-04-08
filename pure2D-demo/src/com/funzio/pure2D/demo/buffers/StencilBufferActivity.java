@@ -59,11 +59,18 @@ public class StencilBufferActivity extends StageActivity {
         mScene.addChild(mMask);
 
         // create a rect for the mask group
-        Rectangular rect = new Rectangular();
-        rect.setColor(new GLColor(0, 0, 0, 0.5f));
-        rect.setSize(mDisplaySize.x, mDisplaySize.x);
-        rect.setOriginAtCenter();
-        mMask.addChild(rect);
+        Rectangular rect1 = new Rectangular();
+        rect1.setColor(new GLColor(0, 0, 0, 0.5f));
+        rect1.setSize(mDisplaySize.x, mDisplaySize.x);
+        rect1.setOriginAtCenter();
+        mMask.addChild(rect1);
+
+        Rectangular rect2 = new Rectangular();
+        rect2.setColor(new GLColor(0, 0, 0, 0.5f));
+        rect2.setSize(mDisplaySize.x, mDisplaySize.x);
+        rect2.setOriginAtCenter();
+        rect2.rotateBy(45);
+        mMask.addChild(rect2);
 
         // rotating
         RotateAnimator animator = new RotateAnimator(null);

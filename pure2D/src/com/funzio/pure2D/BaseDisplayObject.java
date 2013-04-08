@@ -886,12 +886,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.VISUAL);
     }
 
-    /**
-     * This is called before this object is added to a Container
-     */
-    public void onPreAdded(final Container container) {
-        // TODO nothing yet
-    }
+    // /**
+    // * This is called before this object is added to a Container
+    // */
+    // public void onPreAdded(final Container container) {
+    // // TODO nothing yet
+    // }
 
     /**
      * This is called after this object is added to a Container
@@ -904,12 +904,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.BOUNDS);
     }
 
-    /**
-     * This is called before this object is remove from a Container
-     */
-    public void onPreRemoved() {
-        // TODO nothing yet
-    }
+    // /**
+    // * This is called before this object is remove from a Container
+    // */
+    // public void onPreRemoved() {
+    // // TODO nothing yet
+    // }
 
     /**
      * This is called after this object is removed from a Container
