@@ -57,14 +57,14 @@ public class VList extends VWheel {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#onPreAdded(com.funzio.pure2D.containers.Container)
+     * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
      */
     @Override
-    public void onPreAdded(final Container container) {
-        super.onPreAdded(container);
+    public void onAdded(final Container container) {
+        super.onAdded(container);
 
         // mask needs to be added first
-        container.addChild(mMaskGroup);
+        container.addChild(mMaskGroup, container.getChildIndex(this));
     }
 
     /*

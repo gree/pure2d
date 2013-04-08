@@ -552,6 +552,21 @@ public class BaseScene implements Scene {
         return false;
     }
 
+    public boolean addChild(final DisplayObject child, final int index) {
+        if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
+
+            mChildren.add(index, child);
+            mNumChildren++;
+
+            // child callback
+            child.onAdded(this);
+            invalidate();
+
+            return true;
+        }
+        return false;
+    }
+
     public boolean removeChild(final DisplayObject child) {
         if (mChildren.remove(child)) {
             mNumChildren--;
@@ -578,6 +593,10 @@ public class BaseScene implements Scene {
 
     public DisplayObject getChildAt(final int index) {
         return index < mNumChildren ? mChildren.get(index) : null;
+    }
+
+    public int getChildIndex(final DisplayObject child) {
+        return mChildren.indexOf(child);
     }
 
     /**
