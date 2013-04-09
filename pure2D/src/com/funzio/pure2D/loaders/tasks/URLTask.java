@@ -33,6 +33,7 @@ public abstract class URLTask implements IntentTask {
     protected final String mURL;
     protected int mContentLength = -1;
     protected int mTotalBytesLoaded = 0;
+    protected boolean mGzipEnabled = true; // enabled by default
 
     public URLTask(final String url) {
         mURL = url;
@@ -41,6 +42,14 @@ public abstract class URLTask implements IntentTask {
     public URLTask(final String url, final int bufferSize) {
         mURL = url;
         mBufferSize = bufferSize;
+    }
+
+    public boolean isGzipEnabled() {
+        return mGzipEnabled;
+    }
+
+    public void setGzipEnabled(final boolean gzipEnabled) {
+        mGzipEnabled = gzipEnabled;
     }
 
     public String getURL() {
@@ -60,6 +69,10 @@ public abstract class URLTask implements IntentTask {
 
             conn = address.openConnection();
             conn.setConnectTimeout(DEFAULT_TIMEOUT);
+            if (!mGzipEnabled) {
+                // disable gzip
+                conn.setRequestProperty("Accept-Encoding", "identity");
+            }
 
             // add properties to the post http request
             if (properties != null) {
@@ -99,9 +112,7 @@ public abstract class URLTask implements IntentTask {
         }
 
         // verify the size if it's specified. NOTE: this only works with gzip disabled!
-        return mContentLength < 0 || (mContentLength == mTotalBytesLoaded);
-        // NOTE: content length can be smaller if it's gzip compressed!
-        // return mContentLength <= mTotalBytesLoaded;
+        return mContentLength < 0 || (mContentLength == mTotalBytesLoaded) || (mGzipEnabled && mTotalBytesLoaded > 0);
     }
 
     protected boolean postURL(final String data, final Map<String, String> properties) {
