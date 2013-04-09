@@ -65,7 +65,7 @@ public class BaseScene implements Scene {
     // UI
     private boolean mUIEnabled = false;
     private List<Touchable> mVisibleTouchables;
-    private MotionEvent mMotionEvent = null;
+    // private MotionEvent mMotionEvent = null;
     private PointF mTouchedPoint;
 
     // GL extensions
@@ -410,20 +410,19 @@ public class BaseScene implements Scene {
 
             // validated
             mInvalidated--;
-            // mStage.requestRender();
         }
 
-        if (mUIEnabled && mMotionEvent != null) {
-            // start from front to back
-            for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
-                if (mVisibleTouchables.get(i).onTouchEvent(mMotionEvent)) {
-                    break;
-                }
-            }
-
-            // clear
-            mMotionEvent = null;
-        }
+        // if (mUIEnabled && mMotionEvent != null) {
+        // // start from front to back
+        // for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+        // if (mVisibleTouchables.get(i).onTouchEvent(mMotionEvent)) {
+        // break;
+        // }
+        // }
+        //
+        // // clear
+        // mMotionEvent = null;
+        // }
     }
 
     public void pause() {
@@ -912,7 +911,19 @@ public class BaseScene implements Scene {
                 @Override
                 public void run() {
                     mTouchedPoint = screenToGlobal(event.getX(), event.getY());
-                    mMotionEvent = event;
+                    // mMotionEvent = event;
+
+                    if (mVisibleTouchables != null) {
+                        // start from front to back
+                        for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+                            if (mVisibleTouchables.get(i).onTouchEvent(event)) {
+                                break;
+                            }
+                        }
+                    }
+
+                    // clear
+                    // mMotionEvent = null;
                 }
             });
         }
