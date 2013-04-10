@@ -30,7 +30,8 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     protected void swipe(final float delta) {
         super.swipe(delta);
 
-        mSwipeVelocity = (delta - mSwipeDelta) / Scene.DEFAULT_MSPF;
+        // average velocity
+        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f;
         mSwipeDelta = delta;
     }
 

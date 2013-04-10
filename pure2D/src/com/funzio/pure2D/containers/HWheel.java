@@ -31,7 +31,8 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
     protected void swipe(final float delta) {
         super.swipe(delta);
 
-        mSwipeVelocity = (delta - mSwipeDelta) / Scene.DEFAULT_MSPF;
+        // average velocity
+        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f;
         mSwipeDelta = delta;
     }
 
