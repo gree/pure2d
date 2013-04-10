@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
 
@@ -107,14 +108,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         // draw the children
+        DisplayObject child;
+        Scene scene = getScene();
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
 
                 // stack the visible child
-                if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                if (scene.isUIEnabled() && mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
                     int j = mVisibleTouchables.size();
                     while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
