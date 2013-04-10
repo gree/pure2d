@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
@@ -29,6 +30,7 @@ public class HGroup extends LinearGroup implements UIObject {
 
     private float mSwipeAnchor = -1;
     private float mAnchoredScroll = -1;
+    private int mSwipePointerID = -1;
 
     public HGroup() {
         super();
@@ -311,9 +313,10 @@ public class HGroup extends LinearGroup implements UIObject {
         mSwiping = true;
     }
 
-    protected void stopSwipe(final float delta) {
+    protected void stopSwipe() {
         mSwipeAnchor = -1;
         mSwiping = false;
+        mSwipePointerID = -1;
     }
 
     protected void swipe(final float delta) {
@@ -334,35 +337,48 @@ public class HGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            final int action = event.getAction() & MotionEvent.ACTION_MASK;
-            final float deltaX = event.getX() - mSwipeAnchor;
+            final int action = event.getActionMasked();
+            final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 
-            if (action == MotionEvent.ACTION_DOWN) {
-                final PointF global = getScene().getTouchedPoint();
-                if (getBounds().contains(global.x, global.y)) {
-                    mSwipeAnchor = event.getX();
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                final RectF bounds = getBounds();
+                final PointF global = getScene().getTouchedPoint(pointerIndex);
+                if (bounds.contains(global.x, global.y)) {
+                    if (!mSwiping) {
+                        mSwipeAnchor = event.getX(pointerIndex);
+                        // keep pointer id
+                        mSwipePointerID = event.getPointerId(pointerIndex);
+                    }
 
                     // callback
                     onTouchDown(event);
                 }
-            } else if (action == MotionEvent.ACTION_MOVE) {
-                if (mSwipeAnchor >= 0) {
-                    if (!mSwiping) {
-                        if (Math.abs(deltaX) >= mSwipeMinThreshold) {
-                            // re-anchor
-                            mSwipeAnchor = event.getX();
 
-                            startSwipe();
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
+                if (swipePointerIndex >= 0) {
+                    final float deltaX = event.getX(swipePointerIndex) - mSwipeAnchor;
+                    if (mSwipeAnchor >= 0) {
+                        if (!mSwiping) {
+                            if (Math.abs(deltaX) >= mSwipeMinThreshold) {
+                                // re-anchor
+                                mSwipeAnchor = event.getX(swipePointerIndex);
+
+                                startSwipe();
+                            }
+                        } else {
+                            swipe(deltaX);
                         }
-                    } else {
-                        swipe(deltaX);
                     }
                 }
 
-            } else if (action == MotionEvent.ACTION_UP) {
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
                 if (mSwiping) {
-                    stopSwipe(deltaX);
-                    return true;
+                    // check pointer
+                    if (event.getPointerId(pointerIndex) == mSwipePointerID) {
+                        stopSwipe();
+                        return true;
+                    }
                 } else {
                     // clear anchor, important!
                     mSwipeAnchor = -1;

@@ -13,8 +13,8 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     // spinning
     protected VelocityAnimator mAnimator;
 
-    private float mSwipeDelta = 0;
-    private float mSwipeVelocity = 0;
+    protected float mSwipeDelta = 0;
+    protected float mSwipeVelocity = 0;
 
     public VWheel() {
         // always, because this is a wheel
@@ -30,7 +30,8 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     protected void swipe(final float delta) {
         super.swipe(delta);
 
-        mSwipeVelocity = (delta - mSwipeDelta) / Scene.DEFAULT_MSPF;
+        // average velocity
+        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f;
         mSwipeDelta = delta;
     }
 
@@ -39,8 +40,8 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
      * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
      */
     @Override
-    protected void stopSwipe(final float delta) {
-        super.stopSwipe(delta);
+    protected void stopSwipe() {
+        super.stopSwipe();
 
         // spin
         spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);

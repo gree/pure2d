@@ -9,6 +9,9 @@ import android.view.MotionEvent;
  * @author long
  */
 public interface Touchable {
+    /**
+     * Note: This is called from UI-Thread
+     */
     public boolean onTouchEvent(final MotionEvent event);
 
     public void setTouchable(boolean touchable);

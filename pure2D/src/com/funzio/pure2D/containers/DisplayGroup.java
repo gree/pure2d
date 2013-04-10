@@ -384,6 +384,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return n;
     }
 
+    /**
+     * Note: This is called from UI-Thread
+     */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
 

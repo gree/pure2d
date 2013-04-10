@@ -18,7 +18,7 @@ import com.funzio.pure2D.shapes.Clip;
 public class HWheelActivity extends StageActivity {
     private static final int WHEEL_HEIGHT = 150;
     private int NUM_WHEELS;
-    private HWheel[] mWheels;
+
     private FunzioAtlas mAtlas;
     private String[] mFrameSetNames;
     private Texture mTexture;
@@ -27,8 +27,7 @@ public class HWheelActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        NUM_WHEELS = Math.round(mDisplaySize.y / WHEEL_HEIGHT);
-        mWheels = new HWheel[NUM_WHEELS];
+        NUM_WHEELS = Math.round(mDisplaySize.y / (float) WHEEL_HEIGHT);
 
         // to allow swiping
         mScene.setUIEnabled(true);
@@ -41,8 +40,8 @@ public class HWheelActivity extends StageActivity {
                 // load the textures
                 loadTextures();
 
-                // generate a lot of squares
-                addWheels(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                // generate a lot of wheels
+                addWheels();
             }
         });
 
@@ -56,7 +55,7 @@ public class HWheelActivity extends StageActivity {
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
     }
 
-    private void addWheels(final float x, final float y) {
+    private void addWheels() {
         for (int i = 0; i < NUM_WHEELS; i++) {
             HWheel wheel = new HWheel();
             wheel.setGap(10);
@@ -75,7 +74,6 @@ public class HWheelActivity extends StageActivity {
 
             // add to scene
             mScene.addChild(wheel);
-            mWheels[i] = wheel;
         }
     }
 

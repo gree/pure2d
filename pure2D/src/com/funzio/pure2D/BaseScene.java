@@ -63,10 +63,11 @@ public class BaseScene implements Scene {
     private int mAxisSystem = AXIS_BOTTOM_LEFT;
 
     // UI
+    private final Object mUILock = new Object();
     private boolean mUIEnabled = false;
     private List<Touchable> mVisibleTouchables;
-    // private MotionEvent mMotionEvent = null;
-    private PointF mTouchedPoint;
+    private List<PointF> mTouchedPoints = new ArrayList<PointF>();
+    private int mPointerCount = 0;
 
     // GL extensions
     protected boolean mNpotTextureSupported = false;
@@ -309,6 +310,7 @@ public class BaseScene implements Scene {
         final long now = SystemClock.elapsedRealtime(); // System.nanoTime();
         // final float delta = ((now - mStartTime) / 1000000f);
         final long delta = now - mStartTime;
+        DisplayObject child;
 
         if (delta == 0) {
             // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
@@ -360,7 +362,7 @@ public class BaseScene implements Scene {
 
             // update children
             for (int i = 0; i < mNumChildren; i++) {
-                DisplayObject child = mChildren.get(i);
+                child = mChildren.get(i);
                 if (child.isAlive()) {
                     // heart beat
                     child.update((int) delta);
@@ -382,28 +384,40 @@ public class BaseScene implements Scene {
             }
 
             if (mUIEnabled) {
-                if (mVisibleTouchables == null) {
-                    mVisibleTouchables = new ArrayList<Touchable>();
-                } else {
-                    mVisibleTouchables.clear();
-                }
-            }
+                // lock the array
+                synchronized (mUILock) {
+                    if (mVisibleTouchables == null) {
+                        mVisibleTouchables = new ArrayList<Touchable>();
+                    } else {
+                        mVisibleTouchables.clear();
+                    }
 
-            for (int i = 0; i < mNumChildren; i++) {
-                DisplayObject child = mChildren.get(i);
-                final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
-                if (visible) {
-                    // draw frame
-                    child.draw(mGLState);
+                    for (int i = 0; i < mNumChildren; i++) {
+                        child = mChildren.get(i);
+                        final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
+                        if (visible) {
+                            // draw frame
+                            child.draw(mGLState);
 
-                    // stack the visible child
-                    if (mUIEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
-                        float childZ = child.getZ();
-                        int j = mVisibleTouchables.size();
-                        while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
-                            j--;
+                            // stack the visible child
+                            if (child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                                float childZ = child.getZ();
+                                int j = mVisibleTouchables.size();
+                                while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                                    j--;
+                                }
+                                mVisibleTouchables.add(j, (Touchable) child);
+                            }
                         }
-                        mVisibleTouchables.add(j, (Touchable) child);
+                    }
+                }
+            } else {
+                for (int i = 0; i < mNumChildren; i++) {
+                    child = mChildren.get(i);
+                    final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
+                    if (visible) {
+                        // draw frame
+                        child.draw(mGLState);
                     }
                 }
             }
@@ -411,18 +425,6 @@ public class BaseScene implements Scene {
             // validated
             mInvalidated--;
         }
-
-        // if (mUIEnabled && mMotionEvent != null) {
-        // // start from front to back
-        // for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
-        // if (mVisibleTouchables.get(i).onTouchEvent(mMotionEvent)) {
-        // break;
-        // }
-        // }
-        //
-        // // clear
-        // mMotionEvent = null;
-        // }
     }
 
     public void pause() {
@@ -899,33 +901,56 @@ public class BaseScene implements Scene {
         return mNpotTextureSupported;
     }
 
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
     public PointF getTouchedPoint() {
-        return mTouchedPoint;
+        return mTouchedPoints.get(0);
     }
 
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
+    public PointF getTouchedPoint(final int pointerIndex) {
+        return mTouchedPoints.get(pointerIndex);
+    }
+
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
+    public int getPointerCount() {
+        return mPointerCount;
+    }
+
+    /**
+     * Note: This is called from UI-Thread
+     */
     public boolean onTouchEvent(final MotionEvent event) {
         if (mUIEnabled) {
-            // queue the touch event
-            queueEvent(new Runnable() {
+            // NOTE: event is NOT safe to queue because it's recycled by Android. So we do this approach...
+            // lock the array
+            synchronized (mUILock) {
+                mTouchedPoints.clear();
+                mPointerCount = event.getPointerCount();
+                for (int i = 0; i < mPointerCount; i++) {
+                    mTouchedPoints.add(screenToGlobal(event.getX(i), event.getY(i)));
+                }
 
-                @Override
-                public void run() {
-                    mTouchedPoint = screenToGlobal(event.getX(), event.getY());
-                    // mMotionEvent = event;
-
-                    if (mVisibleTouchables != null) {
-                        // start from front to back
-                        for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
-                            if (mVisibleTouchables.get(i).onTouchEvent(event)) {
-                                break;
-                            }
+                if (mVisibleTouchables != null) {
+                    // start from front to back
+                    for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+                        if (mVisibleTouchables.get(i).onTouchEvent(event)) {
+                            break;
                         }
                     }
-
-                    // clear
-                    // mMotionEvent = null;
                 }
-            });
+            }
         }
 
         return false;

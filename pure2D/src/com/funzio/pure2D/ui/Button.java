@@ -151,6 +151,8 @@ public class Button extends DisplayGroup implements UIObject {
     }
 
     /**
+     * Note: This is called from UI-Thread
+     * 
      * @hide
      */
     @Override
