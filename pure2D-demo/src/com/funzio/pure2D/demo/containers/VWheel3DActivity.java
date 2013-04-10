@@ -3,31 +3,34 @@ package com.funzio.pure2D.demo.containers;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.Resources;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.atlas.FunzioAtlas;
 import com.funzio.pure2D.containers.Wheel3D;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 
 public class VWheel3DActivity extends StageActivity {
-    private PointF mRegisteredPoint = new PointF();
-    private Wheel3D mWheel;
+    private static final int WHEEL_WIDTH = 150;
+
+    private int NUM_WHEELS;
     private FunzioAtlas mAtlas;
     private String[] mFrameSetNames;
     private Texture mTexture;
-    private float mDelta;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        NUM_WHEELS = Math.round(mDisplaySize.x / (float) WHEEL_WIDTH);
+
+        // for swiping
+        mScene.setUIEnabled(true);
         // need to get the GL reference first
         mScene.setListener(new BaseScene.Listener() {
 
@@ -37,8 +40,8 @@ public class VWheel3DActivity extends StageActivity {
                 // load the textures
                 loadTextures();
 
-                // generate a lot of squares
-                addWheel(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                // generate a lot of wheels
+                addWheels();
             }
         });
 
@@ -52,30 +55,39 @@ public class VWheel3DActivity extends StageActivity {
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
     }
 
-    private void addWheel(final float x, final float y) {
-        mWheel = new Wheel3D();
+    private void addWheels() {
         float itemSize = -1;
 
-        for (int n = 0; n < mFrameSetNames.length * 2; n++) {
-            // create object
-            Clip obj = new Clip(mAtlas.getSubFrameSet(mFrameSetNames[n % mFrameSetNames.length]));
-            obj.setTexture(mTexture);
-            obj.setOriginAtCenter();
-            obj.setAlphaTestEnabled(true);
-            // obj.stop();
+        for (int i = 0; i < NUM_WHEELS; i++) {
+            Wheel3D wheel = new Wheel3D();
+            wheel.setOrientation(Wheel3D.ORIENTATION_Y);
+            wheel.setSwipeEnabled(true);
+            wheel.setSize(WHEEL_WIDTH, mDisplaySize.y);
 
-            // add to container
-            mWheel.addChild(obj);
-            if (itemSize < 0) {
-                itemSize = obj.getWidth();
+            for (int n = 0; n < mFrameSetNames.length * 2; n++) {
+                // create object
+                Clip obj = new Clip(mAtlas.getSubFrameSet(mFrameSetNames[n % mFrameSetNames.length]));
+                obj.setTexture(mTexture);
+                obj.setOriginAtCenter();
+                obj.setAlphaTestEnabled(true);
+
+                // add to container
+                wheel.addChild(obj);
+
+                // add to container
+                wheel.addChild(obj);
+                if (itemSize < 0) {
+                    itemSize = obj.getHeight();
+                }
             }
-        }
-        mWheel.setOrientation(Wheel3D.ORIENTATION_Y);
-        mWheel.setRadius(mDisplaySizeDiv2.y - itemSize / 2);
-        mWheel.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+            // wheel.setGapAngle(30);
+            wheel.setRadius(mDisplaySizeDiv2.y - itemSize / 2f);
+            wheel.setPosition(i * WHEEL_WIDTH + (itemSize / 2f), mDisplaySizeDiv2.y);
+            // wheel.setDepthRange(-100, 100);
 
-        // add to scene
-        mScene.addChild(mWheel);
+            // add to scene
+            mScene.addChild(wheel);
+        }
     }
 
     @Override
@@ -85,25 +97,8 @@ public class VWheel3DActivity extends StageActivity {
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        if (mWheel == null) {
-            return false;
-        }
-
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        if (action == MotionEvent.ACTION_DOWN) {
-            mRegisteredPoint.x = x;
-            mRegisteredPoint.y = y;
-            mWheel.stop();
-        } else if (action == MotionEvent.ACTION_MOVE) {
-            mDelta = -(y - mRegisteredPoint.y);
-            mWheel.scrollByDistance(mDelta);
-            mRegisteredPoint.x = x;
-            mRegisteredPoint.y = y;
-        } else if (action == MotionEvent.ACTION_UP) {
-            mWheel.spin(-mDelta / BaseScene.DEFAULT_MSPF, mDelta > 0 ? 0.002f : -0.002f);
-        }
+        // forward the event to scene
+        mScene.onTouchEvent(event);
 
         return true;
     }

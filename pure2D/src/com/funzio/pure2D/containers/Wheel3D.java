@@ -3,16 +3,20 @@
  */
 package com.funzio.pure2D.containers;
 
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.FloatMath;
+import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.VelocityAnimator;
 
 /**
  * @author long
  */
-public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
+public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, Wheel {
     public static final int ORIENTATION_X = 0;
     public static final int ORIENTATION_Y = 1;
 
@@ -35,8 +39,27 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
 
     // spinning
     protected VelocityAnimator mAnimator;
-
     private boolean mChildrenPositionInvalidated = false;
+
+    // swiping
+    protected boolean mSwipeEnabled = false;
+    protected float mSwipeMinThreshold = 0;
+    protected boolean mSwiping = false;
+    protected float mSwipeDelta = 0;
+    protected float mSwipeVelocity = 0;
+    private float mSwipeAnchor = -1;
+    private float mAnchoredScroll = -1;
+    private int mSwipePointerID = -1;
+
+    private RectF mTouchBounds;
+
+    public Wheel3D() {
+        super();
+
+        mAnimator = new VelocityAnimator();
+        mAnimator.setListener(this);
+        addManipulator(mAnimator);
+    }
 
     /*
      * (non-Javadoc)
@@ -47,6 +70,19 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         if (mChildrenPositionInvalidated) {
             positionChildren();
             mChildrenPositionInvalidated = false;
+        }
+
+        if (mTouchBounds == null) {
+            mTouchBounds = new RectF(getBounds());
+        } else {
+            mTouchBounds.set(getBounds());
+        }
+        float childX = mNumChildren > 0 ? mChildren.get(0).getOrigin().x : 0;
+        float childY = mNumChildren > 0 ? mChildren.get(0).getOrigin().y : 0;
+        if (mOrientation == ORIENTATION_X) {
+            mTouchBounds.offset(-mRadius - childX, -childY);
+        } else {
+            mTouchBounds.offset(-childX, -mRadius - childY);
         }
 
         return super.update(deltaTime);
@@ -317,11 +353,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     }
 
     public void spin(final float veloc, final float acceleration, final int maxSpinTime) {
-        if (mAnimator == null) {
-            mAnimator = new VelocityAnimator();
-            mAnimator.setListener(this);
-            addManipulator(mAnimator);
-        }
         mAnimator.start(veloc, acceleration, maxSpinTime);
     }
 
@@ -349,10 +380,63 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
         spin(veloc, acceleration, durationPerDegree);
     }
 
+    @Override
+    public float getVelocity() {
+        return mAnimator.getVelocity();
+    }
+
     public void stop() {
         if (mAnimator != null) {
             mAnimator.stop();
         }
+    }
+
+    public boolean isSwipeEnabled() {
+        return mSwipeEnabled;
+    }
+
+    public void setSwipeEnabled(final boolean swipeEnabled) {
+        mSwipeEnabled = swipeEnabled;
+        if (swipeEnabled) {
+            mSwipeAnchor = -1;
+        }
+    }
+
+    public float getSwipeMinThreshold() {
+        return mSwipeMinThreshold;
+    }
+
+    public void setSwipeMinThreshold(final float swipeMinThreshold) {
+        mSwipeMinThreshold = swipeMinThreshold;
+    }
+
+    protected void startSwipe() {
+        mAnchoredScroll = mStartAngle;
+        mSwiping = true;
+    }
+
+    protected void stopSwipe() {
+        mSwipeAnchor = -1;
+        mSwiping = false;
+        mSwipePointerID = -1;
+
+        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);
+
+        // reset
+        mSwipeDelta = 0;
+        mSwipeVelocity = 0;
+    }
+
+    protected void swipe(final float delta) {
+        scrollToDistance(-mAnchoredScroll + delta);
+
+        // average velocity
+        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f;
+        mSwipeDelta = delta;
+    }
+
+    public boolean isSwiping() {
+        return mSwiping;
     }
 
     public void onAnimationEnd(final Animator animator) {
@@ -360,7 +444,113 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener {
     }
 
     public void onAnimationUpdate(final Animator animator, final float value) {
-        scrollByAngle(-value);
+        scrollByAngle(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.DisplayGroup#onTouchEvent(android.view.MotionEvent)
+     */
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
+        final boolean controlled = super.onTouchEvent(event);
+
+        // swipe enabled?
+        if (mSwipeEnabled) {
+            final int action = event.getActionMasked();
+            final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                final PointF global = getScene().getTouchedPoint(pointerIndex);
+                if (mTouchBounds.contains(global.x, global.y)) {
+                    if (!mSwiping) {
+                        if (mOrientation == ORIENTATION_X) {
+                            mSwipeAnchor = event.getX(pointerIndex);
+                        } else {
+                            mSwipeAnchor = event.getY(pointerIndex);
+                        }
+
+                        // keep pointer id
+                        mSwipePointerID = event.getPointerId(pointerIndex);
+                    }
+
+                    // callback
+                    onTouchDown(event);
+                }
+
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
+                if (swipePointerIndex >= 0) {
+
+                    if (mOrientation == ORIENTATION_X) {
+                        final float deltaX = event.getX(swipePointerIndex) - mSwipeAnchor;
+                        if (mSwipeAnchor >= 0) {
+                            if (!mSwiping) {
+                                if (Math.abs(deltaX) >= mSwipeMinThreshold) {
+                                    // re-anchor
+                                    mSwipeAnchor = event.getX(swipePointerIndex);
+
+                                    startSwipe();
+                                }
+                            } else {
+                                swipe(deltaX);
+                            }
+                        }
+
+                    } else {
+
+                        final Scene scene = getScene();
+                        float deltaY = event.getY(swipePointerIndex) - mSwipeAnchor;
+                        if (scene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                            // flip
+                            deltaY = -deltaY;
+                        }
+
+                        if (mSwipeAnchor >= 0) {
+                            if (!mSwiping) {
+                                if (Math.abs(deltaY) >= mSwipeMinThreshold) {
+                                    // re-anchor
+                                    mSwipeAnchor = event.getY(swipePointerIndex);
+
+                                    startSwipe();
+                                }
+                            } else {
+                                swipe(deltaY);
+                            }
+                        }
+                    }
+
+                }
+
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+                if (mSwiping) {
+                    // check pointer
+                    if (event.getPointerId(pointerIndex) == mSwipePointerID) {
+                        stopSwipe();
+                        return true;
+                    }
+                } else {
+                    // clear anchor, important!
+                    mSwipeAnchor = -1;
+                }
+            }
+        }
+
+        return controlled;
+    }
+
+    /**
+     * This is called when a touch down
+     * 
+     * @param event
+     */
+    protected void onTouchDown(final MotionEvent event) {
+        // stop spining
+        mAnimator.stop();
     }
 
 }
