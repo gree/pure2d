@@ -13,8 +13,8 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     // spinning
     protected VelocityAnimator mAnimator;
 
-    private float mSwipeDelta = 0;
-    private float mSwipeVelocity = 0;
+    protected float mSwipeDelta = 0;
+    protected float mSwipeVelocity = 0;
 
     public VWheel() {
         // always, because this is a wheel
@@ -49,10 +49,6 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         // reset
         mSwipeDelta = 0;
         mSwipeVelocity = 0;
-    }
-
-    public float getSwipeVelocity() {
-        return mSwipeVelocity;
     }
 
     public void spin(final float veloc) {
