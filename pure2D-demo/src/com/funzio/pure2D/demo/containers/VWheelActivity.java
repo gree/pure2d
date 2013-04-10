@@ -16,7 +16,9 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 
 public class VWheelActivity extends StageActivity {
-    private VWheel mWheel;
+    private static final int WHEEL_WIDTH = 150;
+
+    private int NUM_WHEELS;
     private FunzioAtlas mAtlas;
     private String[] mFrameSetNames;
     private Texture mTexture;
@@ -24,6 +26,8 @@ public class VWheelActivity extends StageActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        NUM_WHEELS = Math.round(mDisplaySize.x / (float) WHEEL_WIDTH);
 
         // for swiping
         mScene.setUIEnabled(true);
@@ -36,8 +40,8 @@ public class VWheelActivity extends StageActivity {
                 // load the textures
                 loadTextures();
 
-                // generate a lot of squares
-                addWheel(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                // generate a lot of wheels
+                addWheels();
             }
         });
 
@@ -51,25 +55,26 @@ public class VWheelActivity extends StageActivity {
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
     }
 
-    private void addWheel(final float x, final float y) {
-        mWheel = new VWheel();
-        mWheel.setSwipeEnabled(true);
-        mWheel.setGap(50);
-        mWheel.setSize(200, mDisplaySize.y);
+    private void addWheels() {
+        for (int i = 0; i < NUM_WHEELS; i++) {
+            VWheel wheel = new VWheel();
+            wheel.setGap(10);
+            wheel.setSwipeEnabled(true);
+            wheel.setSize(WHEEL_WIDTH, mDisplaySize.y);
 
-        for (int n = 0; n < mFrameSetNames.length; n++) {
-            // create object
-            Clip obj = new Clip(mAtlas.getSubFrameSet(mFrameSetNames[n % mFrameSetNames.length]));
-            obj.setTexture(mTexture);
-            // obj.stop();
+            for (int n = 0; n < mFrameSetNames.length; n++) {
+                // create object
+                Clip obj = new Clip(mAtlas.getSubFrameSet(mFrameSetNames[n % mFrameSetNames.length]));
+                obj.setTexture(mTexture);
 
-            // add to container
-            mWheel.addChild(obj);
+                // add to container
+                wheel.addChild(obj);
+            }
+            wheel.setPosition(i * WHEEL_WIDTH, 0);
+
+            // add to scene
+            mScene.addChild(wheel);
         }
-        mWheel.setPosition(mDisplaySizeDiv2.x - mWheel.getContentSize().x / 2, 0);
-
-        // add to scene
-        mScene.addChild(mWheel);
     }
 
     @Override

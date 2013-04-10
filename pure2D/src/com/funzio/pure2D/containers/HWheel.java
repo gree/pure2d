@@ -41,14 +41,18 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
      * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
      */
     @Override
-    protected void stopSwipe(final float delta) {
-        super.stopSwipe(delta);
+    protected void stopSwipe() {
+        super.stopSwipe();
 
         spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);
 
         // reset
         mSwipeDelta = 0;
         mSwipeVelocity = 0;
+    }
+
+    public float getSwipeVelocity() {
+        return mSwipeVelocity;
     }
 
     public void spin(final float veloc) {

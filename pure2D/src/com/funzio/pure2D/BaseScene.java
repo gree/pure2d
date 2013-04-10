@@ -66,7 +66,8 @@ public class BaseScene implements Scene {
     private final Object mUILock = new Object();
     private boolean mUIEnabled = false;
     private List<Touchable> mVisibleTouchables;
-    private PointF mTouchedPoint;
+    private List<PointF> mTouchedPoints = new ArrayList<PointF>();
+    private int mPointerCount = 0;
 
     // GL extensions
     protected boolean mNpotTextureSupported = false;
@@ -900,8 +901,31 @@ public class BaseScene implements Scene {
         return mNpotTextureSupported;
     }
 
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
     public PointF getTouchedPoint() {
-        return mTouchedPoint;
+        return mTouchedPoints.get(0);
+    }
+
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
+    public PointF getTouchedPoint(final int pointerIndex) {
+        return mTouchedPoints.get(pointerIndex);
+    }
+
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
+    public int getPointerCount() {
+        return mPointerCount;
     }
 
     /**
@@ -909,10 +933,14 @@ public class BaseScene implements Scene {
      */
     public boolean onTouchEvent(final MotionEvent event) {
         if (mUIEnabled) {
-            // NOTE: event is NOT safe to queue because it's recycled by Android.
+            // NOTE: event is NOT safe to queue because it's recycled by Android. So we do this approach...
             // lock the array
             synchronized (mUILock) {
-                mTouchedPoint = screenToGlobal(event.getX(), event.getY());
+                mTouchedPoints.clear();
+                mPointerCount = event.getPointerCount();
+                for (int i = 0; i < mPointerCount; i++) {
+                    mTouchedPoints.add(screenToGlobal(event.getX(i), event.getY(i)));
+                }
 
                 if (mVisibleTouchables != null) {
                     // start from front to back

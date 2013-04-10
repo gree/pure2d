@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
@@ -31,6 +32,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
     private float mSwipeAnchor = -1;
     private float mAnchoredScroll = -1;
+    private int mSwipePointerID = -1;
 
     // positive orientation should be true by default
     protected boolean mPositiveOrientation = true;
@@ -321,8 +323,9 @@ public class VGroup extends LinearGroup implements UIObject {
         mSwiping = true;
     }
 
-    protected void stopSwipe(final float delta) {
+    protected void stopSwipe() {
         mSwipeAnchor = -1;
+        mSwipePointerID = -1;
         mSwiping = false;
     }
 
@@ -359,45 +362,58 @@ public class VGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            final int action = event.getAction() & MotionEvent.ACTION_MASK;
-            float deltaY = event.getY() - mSwipeAnchor;
+            final int action = event.getActionMasked();
+            final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
             final Scene scene = getScene();
-            if (scene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
-                // flip
-                deltaY = -deltaY;
-            }
 
-            if (!mPositiveOrientation) {
-                // flip again
-                deltaY = -deltaY;
-            }
-
-            if (action == MotionEvent.ACTION_DOWN) {
-                final PointF global = scene.getTouchedPoint();
-                if (getBounds().contains(global.x, global.y)) {
-                    mSwipeAnchor = event.getY();
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                final RectF bounds = getBounds();
+                final PointF global = getScene().getTouchedPoint(pointerIndex);
+                if (bounds.contains(global.x, global.y)) {
+                    if (!mSwiping) {
+                        mSwipeAnchor = event.getY(pointerIndex);
+                        // keep pointer id
+                        mSwipePointerID = event.getPointerId(pointerIndex);
+                    }
 
                     // callback
                     onTouchDown(event);
                 }
-            } else if (action == MotionEvent.ACTION_MOVE) {
-                if (mSwipeAnchor >= 0) {
-                    if (!mSwiping) {
-                        if (Math.abs(deltaY) >= mSwipeMinThreshold) {
-                            // re-anchor
-                            mSwipeAnchor = event.getY();
 
-                            startSwipe();
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
+                if (swipePointerIndex >= 0) {
+                    float deltaY = event.getY(swipePointerIndex) - mSwipeAnchor;
+                    if (scene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                        // flip
+                        deltaY = -deltaY;
+                    }
+
+                    if (!mPositiveOrientation) {
+                        // flip again
+                        deltaY = -deltaY;
+                    }
+                    if (mSwipeAnchor >= 0) {
+                        if (!mSwiping) {
+                            if (Math.abs(deltaY) >= mSwipeMinThreshold) {
+                                // re-anchor
+                                mSwipeAnchor = event.getY(swipePointerIndex);
+
+                                startSwipe();
+                            }
+                        } else {
+                            swipe(deltaY);
                         }
-                    } else {
-                        swipe(deltaY);
                     }
                 }
 
-            } else if (action == MotionEvent.ACTION_UP) {
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
                 if (mSwiping) {
-                    stopSwipe(deltaY);
-                    return true;
+                    // check pointer
+                    if (event.getPointerId(pointerIndex) == mSwipePointerID) {
+                        stopSwipe();
+                        return true;
+                    }
                 } else {
                     // clear anchor, important!
                     mSwipeAnchor = -1;

@@ -64,6 +64,10 @@ public interface Scene extends Renderer, Container {
 
     public PointF getTouchedPoint();
 
+    public PointF getTouchedPoint(final int pointerIndex);
+
+    public int getPointerCount();
+
     public boolean onTouchEvent(final MotionEvent event);
 
     public interface Listener {
