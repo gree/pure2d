@@ -107,20 +107,24 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         // draw the children
+        DisplayObject child;
+        int numVisibles = 0;
+        final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
 
                 // stack the visible child
-                if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
-                    int j = mVisibleTouchables.size();
+                    int j = numVisibles;
                     while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
+                    numVisibles++;
                 }
             }
         }
