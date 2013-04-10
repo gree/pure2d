@@ -904,6 +904,9 @@ public class BaseScene implements Scene {
         return mTouchedPoint;
     }
 
+    /**
+     * Note: This is called from UI-Thread
+     */
     public boolean onTouchEvent(final MotionEvent event) {
         if (mUIEnabled) {
             // NOTE: event is NOT safe to queue because it's recycled by Android.
