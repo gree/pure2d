@@ -28,6 +28,7 @@ public class Button extends DisplayGroup implements UIObject {
 
     protected boolean mTouchable = true; // true by default
     protected boolean mFocus = false;
+    private int mTouchPointerID = -1;
 
     protected Sprite9 mButtonSprite;
     protected DisplayObject mContentGroup;
@@ -161,11 +162,14 @@ public class Button extends DisplayGroup implements UIObject {
             return false;
         }
 
-        final int action = event.getAction() & MotionEvent.ACTION_MASK;
-        final PointF touchedPoint = getScene().getTouchedPoint();
+        final int action = event.getActionMasked();
+        final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+        final PointF touchedPoint = getScene().getTouchedPoint(pointerIndex);
 
-        if (action == MotionEvent.ACTION_DOWN) {
-            if (hitTest(touchedPoint.x, touchedPoint.y)) {
+        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+            if (!mFocus && hitTest(touchedPoint.x, touchedPoint.y)) {
+                // keep pointer id
+                mTouchPointerID = event.getPointerId(pointerIndex);
                 // flag focus
                 mFocus = true;
                 setState(STATE_DOWN);
@@ -177,14 +181,10 @@ public class Button extends DisplayGroup implements UIObject {
 
                 // take control
                 return true;
-            } else if (mFocus) {
-                // if for some reason, there's another ACTION_DOWN while we're on focus?
-                // unflag focus
-                mFocus = false;
-                setState(STATE_UP);
             }
-        } else if (action == MotionEvent.ACTION_UP) {
-            if (mFocus) {
+        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+            if (mFocus && event.getPointerId(pointerIndex) == mTouchPointerID) {
+                mTouchPointerID = -1;
                 // unflag focus
                 mFocus = false;
                 setState(STATE_UP);
@@ -200,8 +200,10 @@ public class Button extends DisplayGroup implements UIObject {
                 }
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
-            if (mFocus) {
-                if (hitTest(touchedPoint.x, touchedPoint.y)) {
+            final int touchPointerIndex = event.findPointerIndex(mTouchPointerID);
+            if (mFocus && touchPointerIndex >= 0) {
+                final PointF movePoint = getScene().getTouchedPoint(touchPointerIndex);
+                if (hitTest(movePoint.x, movePoint.y)) {
                     setState(STATE_DOWN);
                 } else {
                     setState(STATE_UP);

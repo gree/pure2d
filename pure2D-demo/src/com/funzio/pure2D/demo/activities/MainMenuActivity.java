@@ -14,8 +14,8 @@ import com.funzio.pure2D.demo.particles.NovaMenuActivity;
 import com.funzio.pure2D.demo.particles.ParticleMenuActivity;
 import com.funzio.pure2D.demo.physics.PhysicsMenuActivity;
 import com.funzio.pure2D.demo.simple3D.Simple3DMenuActivity;
-import com.funzio.pure2D.demo.text.TextMenuActivity;
 import com.funzio.pure2D.demo.textures.TextureMenuActivity;
+import com.funzio.pure2D.demo.ui.UIMenuActivity;
 
 public class MainMenuActivity extends MenuActivity {
 
@@ -40,7 +40,7 @@ public class MainMenuActivity extends MenuActivity {
         addMenu(R.id.btn_physics, PhysicsMenuActivity.class);
         addMenu(R.id.btn_loaders, LoaderMenuActivity.class);
         addMenu(R.id.btn_mw, MWMenuActivity.class);
-        addMenu(R.id.btn_text, TextMenuActivity.class);
+        addMenu(R.id.btn_ui, UIMenuActivity.class);
         addMenu(R.id.btn_casino, CasinoMenuActivity.class);
     }
 

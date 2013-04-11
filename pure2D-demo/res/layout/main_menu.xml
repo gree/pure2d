@@ -53,11 +53,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_text"
+        android:id="@+id/btn_ui"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="onClickButton"
-        android:text="@string/text" />
+        android:text="@string/ui_components" />
 
     <Button
         android:id="@+id/btn_camera"

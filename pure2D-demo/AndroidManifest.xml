@@ -149,12 +149,17 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".text.TextMenuActivity"
+            android:name=".ui.UIMenuActivity"
             android:label="@string/display_objects"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".text.HelloTextActivity"
+            android:name=".ui.HelloTextActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".ui.ButtonActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>

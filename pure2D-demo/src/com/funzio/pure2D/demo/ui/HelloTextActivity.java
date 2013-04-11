@@ -1,4 +1,4 @@
-package com.funzio.pure2D.demo.text;
+package com.funzio.pure2D.demo.ui;
 
 import javax.microedition.khronos.opengles.GL10;
 
