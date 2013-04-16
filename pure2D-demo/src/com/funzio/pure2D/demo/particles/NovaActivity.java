@@ -69,7 +69,7 @@ public class NovaActivity extends StageActivity {
                 final NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
                     @Override
-                    public void onLoad(final NovaLoader loader, final NovaVO vo) {
+                    public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
                         mNovaFactory = new NovaFactory(vo, mSpriteDelegator, 500);
 
@@ -88,9 +88,8 @@ public class NovaActivity extends StageActivity {
                     }
 
                     @Override
-                    public void onError(final NovaLoader loader) {
-                        // TODO Auto-generated method stub
-
+                    public void onError(final NovaLoader loader, final String filePath) {
+                        Log.e(TAG, "Nova Loading Error! " + filePath);
                     }
                 });
 

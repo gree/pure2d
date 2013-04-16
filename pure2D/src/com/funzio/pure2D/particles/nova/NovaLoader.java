@@ -46,13 +46,13 @@ public class NovaLoader {
 
                     try {
                         if (mListener != null) {
-                            mListener.onLoad(NovaLoader.this, new NovaVO(((ReadTextFileTask) task).getContent()));
+                            mListener.onLoad(NovaLoader.this, filePath, new NovaVO(((ReadTextFileTask) task).getContent()));
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Load failed: " + filePath, e);
 
                         if (mListener != null) {
-                            mListener.onError(NovaLoader.this);
+                            mListener.onError(NovaLoader.this, filePath);
                         }
                     }
 
@@ -60,7 +60,7 @@ public class NovaLoader {
                     Log.e(TAG, "Load failed: " + filePath);
 
                     if (mListener != null) {
-                        mListener.onError(NovaLoader.this);
+                        mListener.onError(NovaLoader.this, filePath);
                     }
                 }
 
@@ -86,13 +86,13 @@ public class NovaLoader {
 
             try {
                 if (mListener != null) {
-                    mListener.onLoad(NovaLoader.this, new NovaVO(readTask.getContent()));
+                    mListener.onLoad(NovaLoader.this, filePath, new NovaVO(readTask.getContent()));
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
 
                 if (mListener != null) {
-                    mListener.onError(NovaLoader.this);
+                    mListener.onError(NovaLoader.this, filePath);
                 }
             }
 
@@ -100,7 +100,7 @@ public class NovaLoader {
             Log.e(TAG, "Load failed: " + filePath);
 
             if (mListener != null) {
-                mListener.onError(NovaLoader.this);
+                mListener.onError(NovaLoader.this, filePath);
             }
         }
     }
@@ -114,9 +114,9 @@ public class NovaLoader {
     }
 
     public static interface Listener {
-        public void onLoad(NovaLoader loader, NovaVO vo);
+        public void onLoad(NovaLoader loader, String filePath, NovaVO vo);
 
-        public void onError(NovaLoader loader);
+        public void onError(NovaLoader loader, String filePath);
     }
 
 }
