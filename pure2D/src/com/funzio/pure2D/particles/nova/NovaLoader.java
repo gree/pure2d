@@ -20,7 +20,6 @@ public class NovaLoader {
     protected final String TAG = NovaLoader.class.getSimpleName();
 
     protected Listener mListener;
-    protected NovaVO mNovaVO;
 
     public NovaLoader(final Listener listener) {
         mListener = listener;
@@ -35,8 +34,6 @@ public class NovaLoader {
     public void loadAsync(final AssetManager assets, final String filePath) {
         Log.v(TAG, "loadAsync(): " + filePath);
 
-        mNovaVO = null;
-
         final ReadTextFileTask readTask = new ReadTextFileTask(assets, filePath);
         final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
         executer.setTaskListener(new Task.TaskListener() {
@@ -48,10 +45,8 @@ public class NovaLoader {
                     Log.v(TAG, "Load success: " + filePath);
 
                     try {
-                        mNovaVO = new NovaVO(((ReadTextFileTask) task).getContent());
-
                         if (mListener != null) {
-                            mListener.onLoad(NovaLoader.this, mNovaVO);
+                            mListener.onLoad(NovaLoader.this, new NovaVO(((ReadTextFileTask) task).getContent()));
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Load failed: " + filePath, e);
@@ -85,17 +80,13 @@ public class NovaLoader {
     public void load(final AssetManager assets, final String filePath) {
         Log.v(TAG, "load(): " + filePath);
 
-        mNovaVO = null;
-
         final ReadTextFileTask readTask = new ReadTextFileTask(assets, filePath);
         if (readTask.run()) {
             Log.v(TAG, "Load success: " + filePath);
 
             try {
-                mNovaVO = new NovaVO(readTask.getContent());
-
                 if (mListener != null) {
-                    mListener.onLoad(NovaLoader.this, mNovaVO);
+                    mListener.onLoad(NovaLoader.this, new NovaVO(readTask.getContent()));
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
@@ -112,10 +103,6 @@ public class NovaLoader {
                 mListener.onError(NovaLoader.this);
             }
         }
-    }
-
-    public NovaVO getNovaVO() {
-        return mNovaVO;
     }
 
     public Listener getListener() {
