@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.graphics.PointF;
 
@@ -108,7 +109,23 @@ public class NovaFactory {
     }
 
     /**
-     * Clear everything!
+     * Clear the pools. This might be useful when you need more memory.
+     */
+    public void clearPools() {
+        if (mParticlePool != null) {
+            mParticlePool.clear();
+        }
+
+        if (mAnimatorPools != null) {
+            final Set<String> keys = mAnimatorPools.keySet();
+            for (String key : keys) {
+                mAnimatorPools.get(key).clear();
+            }
+        }
+    }
+
+    /**
+     * Clear everything! Call when this object is no longer being used.
      */
     public void dispose() {
         if (mParticlePool != null) {
