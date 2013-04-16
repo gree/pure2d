@@ -94,12 +94,15 @@ public class NovaActivity extends StageActivity {
                     }
                 });
 
-                // load the json file, some old Android requires this to run on UI Thread
+                // load asynchronously the json file, some old Android requires this to run on UI Thread
                 runOnUiThread(new Runnable() {
                     public void run() {
                         loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
                     }
                 });
+
+                // Or load synchronously
+                // loader.load(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
             }
         });
     }

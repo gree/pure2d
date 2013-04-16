@@ -26,6 +26,12 @@ public class NovaLoader {
         mListener = listener;
     }
 
+    /**
+     * Load a specific Nova file, asynchronously. Note: some old Android version required to call this on UI Thread first off.
+     * 
+     * @param assets
+     * @param filePath
+     */
     public void loadAsync(final AssetManager assets, final String filePath) {
         Log.v(TAG, "loadAsync(): " + filePath);
 
@@ -70,42 +76,43 @@ public class NovaLoader {
         executer.executeOnPool(readTask);
     }
 
-    // public void load(final AssetManager assets, final String filePath, final ObjectMapper mapper) {
-    // Log.v(TAG, "load(): " + assets + ", " + filePath);
-    //
-    // final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
-    // final RunnableTask readTask = new RunnableTask(new Runnable() {
-    //
-    // @Override
-    // public void run() {
-    // mNovaVO = null;
-    //
-    // try {
-    // if (assets == null) {
-    // // load from file system
-    // mNovaVO = mapper.readValue(new File(filePath), NovaVO.class);
-    // } else {
-    // // load from asset folder
-    // mNovaVO = mapper.readValue(assets.open(filePath), NovaVO.class);
-    // }
-    // } catch (IOException e) {
-    // Log.e(TAG, "Load failed: " + filePath, e);
-    //
-    // if (mListener != null) {
-    // mListener.onError(NovaLoader.this);
-    // }
-    // return;
-    // }
-    //
-    // if (mListener != null) {
-    // mListener.onLoad(NovaLoader.this, mNovaVO);
-    // }
-    // }
-    // });
-    //
-    // // start loading
-    // executer.executeOnPool(readTask);
-    // }
+    /**
+     * Load a specific Nova file, synchronously
+     * 
+     * @param assets
+     * @param filePath
+     */
+    public void load(final AssetManager assets, final String filePath) {
+        Log.v(TAG, "load(): " + filePath);
+
+        mNovaVO = null;
+
+        final ReadTextFileTask readTask = new ReadTextFileTask(assets, filePath);
+        if (readTask.run()) {
+            Log.v(TAG, "Load success: " + filePath);
+
+            try {
+                mNovaVO = new NovaVO(readTask.getContent());
+
+                if (mListener != null) {
+                    mListener.onLoad(NovaLoader.this, mNovaVO);
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Load failed: " + filePath, e);
+
+                if (mListener != null) {
+                    mListener.onError(NovaLoader.this);
+                }
+            }
+
+        } else {
+            Log.e(TAG, "Load failed: " + filePath);
+
+            if (mListener != null) {
+                mListener.onError(NovaLoader.this);
+            }
+        }
+    }
 
     public NovaVO getNovaVO() {
         return mNovaVO;
