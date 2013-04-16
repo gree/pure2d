@@ -50,4 +50,21 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.nova.vo.AnimatorVO#applyScale(float)
+     */
+    @Override
+    public void applyScale(final float scale) {
+        super.applyScale(scale);
+
+        // scale velocity
+        if (velocity != null) {
+            final int size = velocity.size();
+            for (int i = 0; i < size; i++) {
+                velocity.set(i, velocity.get(i) * scale);
+            }
+        }
+    }
+
 }

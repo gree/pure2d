@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
 
 /**
@@ -97,6 +98,10 @@ public abstract class AnimatorVO {
         }
     }
 
+    /**
+     * @param scale
+     * @see TextureOptions
+     */
     public void applyScale(final float scale) {
         // TODO
     }

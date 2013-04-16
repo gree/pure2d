@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+
 /**
  * @author long
  */
@@ -78,9 +80,10 @@ public class NovaVO {
     }
 
     /**
-     * Apply a screen's scale factor to some certain numbers such as x, y, dx, dy
+     * Apply a screen's scale factor to some certain numbers such as x, y, dx, dy. This is used when you scale the texture.
      * 
      * @param scale
+     * @see TextureOptions
      */
     public void applyScale(final float scale) {
         // scale emitters
