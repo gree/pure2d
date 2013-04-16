@@ -29,18 +29,22 @@ public class NovaFactory {
     protected NovaVO mNovaVO;
     protected SpriteDelegator mSpriteDelegator;
     // pools
-    private int mPoolLimit = 0;
+    private int mPoolSize = 0;
     protected ObjectPool<NovaParticle> mParticlePool;
     protected Map<String, ObjectPool<Animator>> mAnimatorPools;
 
-    public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator, final int poolLimit) {
+    public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator) {
+        this(novaVO, spriteDelegator, novaVO.particle_pool_size);
+    }
+
+    public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator, final int poolSize) {
         mNovaVO = novaVO;
         mSpriteDelegator = spriteDelegator;
 
         // pool is optional
-        if (poolLimit > 0) {
-            mPoolLimit = poolLimit;
-            mParticlePool = new ObjectPool<NovaParticle>(poolLimit);
+        if (poolSize > 0) {
+            mPoolSize = poolSize;
+            mParticlePool = new ObjectPool<NovaParticle>(poolSize);
             mAnimatorPools = new HashMap<String, ObjectPool<Animator>>();
         }
     }
@@ -136,7 +140,7 @@ public class NovaFactory {
             ObjectPool<Animator> pool = mAnimatorPools.get(animationName);
             if (pool == null) {
                 // no pool created yet, create one
-                pool = new ObjectPool<Animator>(mPoolLimit);
+                pool = new ObjectPool<Animator>(mPoolSize);
                 mAnimatorPools.put(animationName, pool);
             } else {
                 // there is a pool, try to acquire
