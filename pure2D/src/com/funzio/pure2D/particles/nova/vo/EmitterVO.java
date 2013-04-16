@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+
 /**
  * @author long
  */
@@ -69,8 +71,25 @@ public class EmitterVO {
         particles = getParticles(json.optJSONArray("particles"));
     }
 
+    /**
+     * Apply scale to the coordinates and sizes
+     * 
+     * @param scale
+     * @see TextureOptions
+     */
     public void applyScale(final float scale) {
-        // TODO
+        x *= scale;
+        y *= scale;
+        width *= scale;
+        height *= scale;
+
+        // also apply to all particles
+        if (particles != null) {
+            final int size = particles.size();
+            for (int i = 0; i < size; i++) {
+                particles.get(i).applyScale(scale);
+            }
+        }
     }
 
     private List<ParticleVO> getParticles(final JSONArray array) throws JSONException {

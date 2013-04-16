@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 
 /**
  * @author long
@@ -77,6 +78,40 @@ public class ParticleVO {
         y = NovaVO.getListInt(json, "y");
         animator = NovaVO.getListString(json, "animator");
         blend_mode = NovaVO.getListString(json, "blend_mode");
+    }
+
+    /**
+     * Apply scale to all coordinates and sizes. This is used when you scale the texture.
+     * 
+     * @param scale
+     * @see TextureOptions
+     */
+    public void applyScale(final float scale) {
+        // only scale if origin is not at the center
+        if (!hasOriginAtCenter()) {
+            origin_x = Math.round(origin_x * scale);
+            origin_y = Math.round(origin_y * scale);
+        }
+
+        // scale x
+        if (x != null) {
+            final int size = x.size();
+            for (int i = 0; i < size; i++) {
+                x.set(i, Math.round(x.get(i) * scale));
+            }
+        }
+
+        // scale y
+        if (y != null) {
+            final int size = y.size();
+            for (int i = 0; i < size; i++) {
+                y.set(i, Math.round(y.get(i) * scale));
+            }
+        }
+    }
+
+    public boolean hasOriginAtCenter() {
+        return origin_x == -1 && origin_y == -1;
     }
 
 }

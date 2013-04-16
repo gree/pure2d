@@ -65,7 +65,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         }
 
         // origin
-        if (mParticleVO.origin_x == -1 && mParticleVO.origin_y == -1) {
+        if (mParticleVO.hasOriginAtCenter()) {
             setOriginAtCenter();
         } else {
             setOrigin(mParticleVO.origin_x, mParticleVO.origin_y);

@@ -58,4 +58,21 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
             }
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.particles.nova.vo.AnimatorVO#applyScale(float)
+     */
+    @Override
+    public void applyScale(final float scale) {
+        super.applyScale(scale);
+
+        // apply to all child animators
+        if (animators != null) {
+            final int size = animators.size();
+            for (int i = 0; i < size; i++) {
+                animators.get(i).applyScale(scale);
+            }
+        }
+    }
 }
