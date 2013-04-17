@@ -15,6 +15,7 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
 
     protected float mSwipeDelta = 0;
     protected float mSwipeVelocity = 0;
+    protected boolean mStoppable = true;
 
     public VWheel() {
         // always, because this is a wheel
@@ -130,7 +131,9 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     protected void onTouchDown(final MotionEvent event) {
         super.onTouchDown(event);
 
-        // stop spinning
-        mAnimator.stop();
+        // stop spining
+        if (mAnimator.isRunning() && mStoppable) {
+            mAnimator.stop();
+        }
     }
 }

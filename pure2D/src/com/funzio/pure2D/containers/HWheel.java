@@ -16,6 +16,7 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
     protected float mSwipeDelta = 0;
     protected float mSwipeVelocity = 0;
+    protected boolean mStoppable = true;
 
     public HWheel() {
         // always, because this is a wheel
@@ -141,6 +142,8 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         super.onTouchDown(event);
 
         // stop spining
-        mAnimator.stop();
+        if (mAnimator.isRunning() && mStoppable) {
+            mAnimator.stop();
+        }
     }
 }
