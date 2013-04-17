@@ -31,9 +31,9 @@
 
 		{
 			"name": "fly_ani",
-			"type": "translate",
-			"dx": [-500, 500],
-			"dy": [-500, 500],
+			"type": "translate_radius",
+			"radius": [300, 500],
+			"degree": [0, 360],
 			"duration": 1000,
 			"interpolation": "decelerate"
 		}
