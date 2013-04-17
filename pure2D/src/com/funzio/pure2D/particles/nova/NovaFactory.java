@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
@@ -39,6 +40,8 @@ public class NovaFactory {
     }
 
     public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator, final int poolSize) {
+        Log.v(TAG, "NovaFactory(): " + novaVO + ", " + poolSize);
+
         mNovaVO = novaVO;
         mSpriteDelegator = spriteDelegator;
 
@@ -61,6 +64,8 @@ public class NovaFactory {
      * @return
      */
     public List<NovaEmitter> createEmitters(final PointF position) {
+        Log.v(TAG, "createEmitters(): " + position.x + ", " + position.y);
+
         final int size = mNovaVO.emitters.size();
         final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
         EmitterVO vo;
@@ -82,6 +87,8 @@ public class NovaFactory {
      * @return
      */
     public NovaEmitter createEmitter(final String name, final PointF position) {
+        Log.v(TAG, "createEmitters(): " + name + ", " + position.x + ", " + position.y);
+
         final EmitterVO vo = mNovaVO.getEmitterVO(name);
         return vo == null ? null : createEmitter(vo, position);
     }
@@ -112,6 +119,8 @@ public class NovaFactory {
      * Clear the pools. This might be useful when you need more memory.
      */
     public void clearPools() {
+        Log.v(TAG, "clearPools()");
+
         if (mParticlePool != null) {
             mParticlePool.clear();
         }
@@ -128,6 +137,8 @@ public class NovaFactory {
      * Clear everything! Call when this object is no longer being used.
      */
     public void dispose() {
+        Log.v(TAG, "dispose()");
+
         if (mParticlePool != null) {
             mParticlePool.clear();
             mParticlePool = null;
@@ -146,7 +157,9 @@ public class NovaFactory {
      * @return
      */
     public Animator createAnimator(final Manipulatable target, final String animationName) {
-        AnimatorVO vo = mNovaVO.getAnimatorVO(animationName);
+        // Log.v(TAG, "createAnimator(): " + animationName);
+
+        final AnimatorVO vo = mNovaVO.getAnimatorVO(animationName);
         // null check
         if (vo == null) {
             return null;
