@@ -47,6 +47,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
     protected boolean mSwiping = false;
     protected float mSwipeDelta = 0;
     protected float mSwipeVelocity = 0;
+    protected boolean mStoppable = true;
     private float mSwipeAnchor = -1;
     private float mAnchoredScroll = -1;
     private int mSwipePointerID = -1;
@@ -550,7 +551,9 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
      */
     protected void onTouchDown(final MotionEvent event) {
         // stop spining
-        mAnimator.stop();
+        if (mAnimator.isRunning() && mStoppable) {
+            mAnimator.stop();
+        }
     }
 
 }
