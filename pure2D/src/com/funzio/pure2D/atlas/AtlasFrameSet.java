@@ -19,6 +19,7 @@ public class AtlasFrameSet {
     protected List<AtlasFrame> mFrames = new ArrayList<AtlasFrame>();
     protected PointF mFrameMaxSize = new PointF();
     protected Texture mTexture;
+    protected int mFps = 0;
 
     public AtlasFrameSet(final String name) {
         mName = name;
@@ -139,5 +140,13 @@ public class AtlasFrameSet {
 
     public void setFrameMaxSize(final PointF frameMaxSize) {
         mFrameMaxSize = frameMaxSize;
+    }
+
+    public int getFps() {
+        return mFps;
+    }
+
+    public void setFps(final int fps) {
+        mFps = fps;
     }
 }

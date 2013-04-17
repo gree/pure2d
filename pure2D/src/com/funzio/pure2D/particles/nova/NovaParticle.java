@@ -48,7 +48,6 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
         // init the particle
         mPosition = mNovaEmitter.getNextPosition(mPosition);
-        mFps = mParticleVO.fps;
         // add offsets
         mPosition.x += NovaConfig.getRandomInt(mParticleVO.x);
         mPosition.y += NovaConfig.getRandomInt(mParticleVO.y);

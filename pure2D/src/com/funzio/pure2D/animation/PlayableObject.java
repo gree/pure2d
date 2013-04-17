@@ -25,7 +25,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
         if (mNumFrames > 0 && mPlaying) {
             int frames = 1;
             // if there is specific fps
-            if (mFps > 0) {
+            if (getFps() > 0) {
                 mPendingTime += deltaTime;
                 frames = mPendingTime / (int) mFrameDuration;
                 if (frames > 0) {
