@@ -21,7 +21,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
  */
 public class NovaVO {
     public int version;
-    public int particle_pool_size = 0;
+    public int pool_size = 0;
 
     public List<EmitterVO> emitters;
     public List<AnimatorVO> animators;
@@ -56,7 +56,7 @@ public class NovaVO {
 
     public NovaVO(final JSONObject json) throws JSONException {
         version = json.optInt("version");
-        particle_pool_size = json.optInt("particle_pool_size");
+        pool_size = json.optInt("pool_size");
         emitters = getEmitters(json.optJSONArray("emitters"));
         animators = getAnimators(json.optJSONArray("animators"));
 

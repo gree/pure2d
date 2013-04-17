@@ -35,7 +35,7 @@ public class NovaFactory {
     protected Map<String, ObjectPool<Animator>> mAnimatorPools;
 
     public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator) {
-        this(novaVO, spriteDelegator, novaVO.particle_pool_size);
+        this(novaVO, spriteDelegator, novaVO.pool_size);
     }
 
     public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator, final int poolSize) {
