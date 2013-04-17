@@ -38,13 +38,14 @@ public class Clip extends Sprite implements Playable {
     public void setAtlasFrameSet(final AtlasFrameSet frameSet) {
         mFrameSet = frameSet;
 
-        if (mFrameSet != null) {
-            mNumFrames = mFrameSet.getNumFrames();
+        if (frameSet != null) {
+            mNumFrames = frameSet.getNumFrames();
+            setFps(frameSet.getFps());
 
             // start from first frame
             mCurrentFrame = 0;
 
-            setAtlasFrame(mNumFrames > 0 ? mFrameSet.getFrame(mCurrentFrame) : null);
+            setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
         } else {
             mNumFrames = 0;
         }
@@ -89,7 +90,7 @@ public class Clip extends Sprite implements Playable {
         if (mNumFrames > 1 && mPlaying) {
             int frames = 1;
             // if there is specific fps
-            if (mFps > 0) {
+            if (getFps() > 0) {
                 mPendingTime += deltaTime;
                 frames = mPendingTime / (int) mFrameDuration;
                 if (frames > 0) {

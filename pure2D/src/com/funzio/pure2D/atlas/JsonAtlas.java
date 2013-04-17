@@ -98,6 +98,8 @@ public class JsonAtlas extends Atlas {
         mWidth = size.getInt("w") * scale;
         mHeight = size.getInt("h") * scale;
         mImage = meta.getString("image");
+        // framerate
+        getMasterFrameSet().setFps(meta.optInt("fps"));
 
         // create the frames
         final JSONArray frames = jsonObject.getJSONArray("frames");

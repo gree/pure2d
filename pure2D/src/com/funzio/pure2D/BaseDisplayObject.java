@@ -44,7 +44,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAlive = true;
 
     // framerate
-    protected int mFps = 0; // frames per second
+    private int mFps = 0; // frames per second
     protected float mFrameDuration = 0; // ms per frame
 
     // reference to the parent container
@@ -543,7 +543,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setFps(final int fps) {
         mFps = fps;
-        mFrameDuration = 1000f / mFps;
+
+        if (mFps > 0) {
+            mFrameDuration = 1000f / mFps;
+        } else {
+            mFrameDuration = Scene.DEFAULT_MSPF;
+        }
     }
 
     public boolean addManipulator(final Manipulator manipulator) {

@@ -28,9 +28,6 @@ public class ParticleVO {
     public int origin_x = -1;
     public int origin_y = -1;
 
-    // framerate
-    public int fps = 0; // unlimited by default
-
     // optional
     public List<String> sprite;
     public List<Integer> start_frame;
@@ -72,10 +69,6 @@ public class ParticleVO {
 
         if (json.has("origin_y")) {
             origin_y = json.getInt("origin_y");
-        }
-
-        if (json.has("fps")) {
-            fps = json.getInt("fps");
         }
 
         // optional
