@@ -30,6 +30,14 @@ public class SingleFrameSet extends AtlasFrameSet {
         // set the rect
         if (texture != null) {
             mFrame.setRect(0, 0, (int) texture.getSize().x - 1, (int) texture.getSize().y - 1);
+
+            // find the max frame size
+            if (mFrame.mSize.x > mFrameMaxSize.x) {
+                mFrameMaxSize.x = mFrame.mSize.x;
+            }
+            if (mFrame.mSize.y > mFrameMaxSize.y) {
+                mFrameMaxSize.y = mFrame.mSize.y;
+            }
         }
     }
 }
