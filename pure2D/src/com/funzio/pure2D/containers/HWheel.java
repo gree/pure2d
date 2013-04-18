@@ -74,6 +74,11 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
      * @param duration
      */
     public void spinDistance(final float distance, final float acceleration, final int duration) {
+        // range check
+        if (Math.abs(distance) < 1) {
+            return;
+        }
+
         final float accel = distance > 0 ? -acceleration : acceleration; // against veloc
         final float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
         mAnimator.start(-veloc, accel, duration);
@@ -88,6 +93,37 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
      */
     public void spinToSnap(final boolean positive, final float acceleration, final int duration) {
         spinDistance(getSnapDelta(positive), acceleration, duration);
+    }
+
+    /**
+     * Spin to a specific position
+     * 
+     * @param position
+     * @param acceleration
+     * @param duration
+     */
+    public void spinTo(final float position, final float acceleration, final int duration) {
+        spinDistance(position - mScrollPosition.x, acceleration, duration);
+    }
+
+    /**
+     * Spin to the Start
+     * 
+     * @param acceleration
+     * @param duration
+     */
+    public void spinToStart(final float acceleration, final int duration) {
+        spinTo(0, acceleration, duration);
+    }
+
+    /**
+     * Spin to the End
+     * 
+     * @param acceleration
+     * @param duration
+     */
+    public void spinToEnd(final float acceleration, final int duration) {
+        spinTo(mScrollMax.x, acceleration, duration);
     }
 
     /*

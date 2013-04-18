@@ -946,7 +946,7 @@ public class BaseScene implements Scene {
                     // start from front to back
                     for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
                         if (mVisibleTouchables.get(i).onTouchEvent(event)) {
-                            break;
+                            return true;
                         }
                     }
                 }

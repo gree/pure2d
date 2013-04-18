@@ -144,5 +144,6 @@
     <string name="ui_components">UI Components</string>
     <string name="button">Button</string>
     <string name="lists">Lists</string>
+    <string name="test">Test</string>
 
 </resources>
