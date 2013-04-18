@@ -532,7 +532,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
                     // check pointer
                     if (event.getPointerId(pointerIndex) == mSwipePointerID) {
                         stopSwipe();
-                        return true;
                     }
                 } else {
                     // clear anchor, important!

@@ -11,6 +11,7 @@ import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.atlas.FunzioAtlas;
 import com.funzio.pure2D.containers.HList;
 import com.funzio.pure2D.containers.VList;
+import com.funzio.pure2D.containers.Wheel;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
@@ -22,6 +23,18 @@ public class ListActivity extends StageActivity {
     private FunzioAtlas mAtlas;
     private String[] mFrameSetNames;
     private Texture mTexture;
+
+    private VList mVList;
+    private HList mHList;
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
+     */
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_test;
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -55,10 +68,10 @@ public class ListActivity extends StageActivity {
     }
 
     private void addVList() {
-        VList list = new VList();
-        // list.setPositiveOrientation(false);
-        list.setGap(10);
-        list.setSize(LIST_WIDTH, mDisplaySize.y - LIST_WIDTH);
+        mVList = new VList();
+        // mVList.setPositiveOrientation(false);
+        mVList.setGap(10);
+        mVList.setSize(LIST_WIDTH, mDisplaySize.y - LIST_WIDTH);
 
         for (int n = 0; n < mFrameSetNames.length * 2; n++) {
             // create object
@@ -66,18 +79,18 @@ public class ListActivity extends StageActivity {
             obj.setTexture(mTexture);
 
             // add to container
-            list.addChild(obj);
+            mVList.addChild(obj);
         }
-        list.setPosition(0, LIST_WIDTH);
+        mVList.setPosition(0, LIST_WIDTH);
 
         // add to scene
-        mScene.addChild(list);
+        mScene.addChild(mVList);
     }
 
     private void addHList() {
-        HList list = new HList();
-        list.setGap(10);
-        list.setSize(mDisplaySize.x, LIST_WIDTH);
+        mHList = new HList();
+        mHList.setGap(10);
+        mHList.setSize(mDisplaySize.x, LIST_WIDTH);
 
         for (int n = 0; n < mFrameSetNames.length * 2; n++) {
             // create object
@@ -85,12 +98,12 @@ public class ListActivity extends StageActivity {
             obj.setTexture(mTexture);
 
             // add to container
-            list.addChild(obj);
+            mHList.addChild(obj);
         }
-        list.setPosition(0, 0);
+        mHList.setPosition(0, 0);
 
         // add to scene
-        mScene.addChild(list);
+        mScene.addChild(mHList);
     }
 
     @Override
@@ -104,5 +117,10 @@ public class ListActivity extends StageActivity {
         mScene.onTouchEvent(event);
 
         return true;
+    }
+
+    public void onClickTest(final View view) {
+        mVList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
+        mHList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
     }
 }

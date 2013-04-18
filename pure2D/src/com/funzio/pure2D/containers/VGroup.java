@@ -412,7 +412,6 @@ public class VGroup extends LinearGroup implements UIObject {
                     // check pointer
                     if (event.getPointerId(pointerIndex) == mSwipePointerID) {
                         stopSwipe();
-                        return true;
                     }
                 } else {
                     // clear anchor, important!
