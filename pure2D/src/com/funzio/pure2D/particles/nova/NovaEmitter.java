@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.particles.nova;
 
+import java.util.Properties;
+
 import android.graphics.PointF;
 import android.util.SparseArray;
 
@@ -27,16 +29,18 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected final NovaFactory mFactory;
 
     protected EmitterVO mEmitterVO;
+    protected Properties mProperties;
     protected Animator mAnimator;
 
     // layers for particles
     protected SparseArray<DisplayGroup> mLayers;
 
-    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos) {
+    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos, final Properties properties) {
         super();
 
         mFactory = factory;
         mEmitterVO = vo;
+        mProperties = properties;
         // auto remove
         mRemoveOnFinish = true;
 
