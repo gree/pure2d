@@ -8,6 +8,8 @@ import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.VelocityAnimator;
 
 /**
+ * Wheel is an extended Group that allows you to spin!
+ * 
  * @author long
  */
 public class HWheel extends HGroup implements Wheel, AnimatorListener {
@@ -45,7 +47,7 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
     protected void stopSwipe() {
         super.stopSwipe();
 
-        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);
+        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -DEFAULT_SPIN_ACCELERATION : DEFAULT_SPIN_ACCELERATION);
 
         // reset
         mSwipeDelta = 0;
@@ -73,7 +75,7 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
      */
     public void spinDistance(final float distance, final float acceleration, final int duration) {
         final float accel = distance > 0 ? -acceleration : acceleration; // against veloc
-        float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
+        final float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
         mAnimator.start(-veloc, accel, duration);
     }
 

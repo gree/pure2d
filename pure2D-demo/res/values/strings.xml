@@ -143,5 +143,6 @@
     <string name="_9_patch_scale">9-Patch Scale</string>
     <string name="ui_components">UI Components</string>
     <string name="button">Button</string>
+    <string name="lists">Lists</string>
 
 </resources>
