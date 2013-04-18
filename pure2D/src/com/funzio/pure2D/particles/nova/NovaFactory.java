@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import android.graphics.PointF;
@@ -64,8 +63,8 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public List<NovaEmitter> createEmitters(final PointF position, final Properties properties) {
-        Log.v(TAG, "createEmitters(): " + properties);
+    public List<NovaEmitter> createEmitters(final PointF position, final Object extra) {
+        Log.v(TAG, "createEmitters(): " + extra);
 
         final int size = mNovaVO.emitters.size();
         final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
@@ -73,7 +72,7 @@ public class NovaFactory {
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
-                emitters.add(createEmitter(vo, position, properties));
+                emitters.add(createEmitter(vo, position, extra));
             }
         }
 
@@ -87,16 +86,16 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public NovaEmitter createEmitter(final String name, final PointF position, final Properties properties) {
-        Log.v(TAG, "createEmitters(): " + name + ", " + properties);
+    public NovaEmitter createEmitter(final String name, final PointF position, final Object extra) {
+        Log.v(TAG, "createEmitters(): " + name + ", " + extra);
 
         final EmitterVO vo = mNovaVO.getEmitterVO(name);
-        return vo == null ? null : createEmitter(vo, position, properties);
+        return vo == null ? null : createEmitter(vo, position, extra);
     }
 
-    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Properties properties) {
+    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Object extra) {
         // TODO use pool
-        return new NovaEmitter(this, emitterVO, pos, properties);
+        return new NovaEmitter(this, emitterVO, pos, extra);
     }
 
     protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
@@ -243,12 +242,12 @@ public class NovaFactory {
         mSpriteDelegator = frameMapper;
     }
 
-    public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Properties properties) {
-        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(particleVO, properties);
+    public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object extra) {
+        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(particleVO, extra);
     }
 
     public static interface SpriteDelegator {
-        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, Properties properties);
+        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object extra);
     }
 
 }

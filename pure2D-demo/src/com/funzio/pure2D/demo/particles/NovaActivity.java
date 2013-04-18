@@ -2,7 +2,6 @@ package com.funzio.pure2D.demo.particles;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -35,7 +34,7 @@ public class NovaActivity extends StageActivity {
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
         @Override
-        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Properties properties) {
+        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object extra) {
             final String sprite = NovaConfig.getRandomString(particleVO.sprite);
             return sprite == null ? null : mFileToFrameMap.get(sprite);
         }
