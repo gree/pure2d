@@ -15,6 +15,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
  * @author long
  */
 public class ParticleVO {
+    public String name;
+
     // emitting delay and rate
     public int start_delay = 0;
     public int step_delay = Scene.DEFAULT_MSPF;
@@ -44,6 +46,8 @@ public class ParticleVO {
     }
 
     public ParticleVO(final JSONObject json) throws JSONException {
+        name = json.optString("name");
+
         if (json.has("start_delay")) {
             start_delay = json.getInt("start_delay");
         }
