@@ -88,6 +88,7 @@ public final class R {
         public static final int btn_image_sequence=0x7f080002;
         public static final int btn_json_atlas=0x7f080001;
         public static final int btn_jumping_objects=0x7f080031;
+        public static final int btn_lists=0x7f080076;
         public static final int btn_load=0x7f080040;
         public static final int btn_loader_async=0x7f08001a;
         public static final int btn_loader_service=0x7f080019;
@@ -131,9 +132,9 @@ public final class R {
         public static final int cb_show_atlas=0x7f080038;
         public static final int cb_texture_9_patch=0x7f080061;
         public static final int cb_textures=0x7f080067;
-        public static final int debug=0x7f080077;
+        public static final int debug=0x7f080078;
         public static final int nova_menu_layout=0x7f08002e;
-        public static final int pause=0x7f080076;
+        public static final int pause=0x7f080077;
         public static final int radio_1=0x7f08005a;
         public static final int radio_2=0x7f08005b;
         public static final int radio_3=0x7f08005c;
@@ -286,6 +287,7 @@ public final class R {
         public static final int jumping_objects=0x7f050007;
         public static final int leopard=0x7f050021;
         public static final int linear=0x7f050047;
+        public static final int lists=0x7f05007c;
         public static final int loader_service=0x7f050055;
         public static final int loaders=0x7f050054;
         public static final int loading=0x7f050057;

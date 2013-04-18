@@ -7,12 +7,16 @@ import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.shapes.Rectangular;
 
 /**
+ * List is an extended Wheel that also handles masking and snapping. Mainly used for UI.
+ * 
  * @author long
  */
 public class VList extends VWheel {
 
     protected MaskGroup mMaskGroup;
     protected Rectangular mMaskRect;
+
+    protected boolean mSnapping = false;
 
     public VList() {
         super();
@@ -57,6 +61,28 @@ public class VList extends VWheel {
 
     /*
      * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HWheel#startSwipe()
+     */
+    @Override
+    protected void startSwipe() {
+        super.startSwipe();
+
+        mSnapping = false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HWheel#stopSwipe()
+     */
+    @Override
+    protected void stopSwipe() {
+        super.stopSwipe();
+
+        mSnapping = false;
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
      */
     @Override
@@ -87,12 +113,30 @@ public class VList extends VWheel {
     public void onAnimationUpdate(final Animator animator, final float value) {
         super.onAnimationUpdate(animator, value);
 
-        if (mScrollPosition.y < 0) {
-            mScrollPosition.y = 0;
-            stop();
-        } else if (mScrollPosition.y > mScrollMax.y) {
-            mScrollPosition.y = mScrollMax.y;
-            stop();
+        if (!mSnapping) {
+            // out of range?
+            if (mScrollPosition.y < 0 || mScrollPosition.y > mScrollMax.y) {
+                stop();
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HWheel#onAnimationEnd(com.funzio.pure2D.animators.Animator)
+     */
+    @Override
+    public void onAnimationEnd(final Animator animator) {
+        super.onAnimationEnd(animator);
+
+        if (!mSnapping) {
+            if (mScrollPosition.y < 0) {
+                mSnapping = true;
+                spinDistance(-mScrollPosition.y, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
+            } else if (mScrollPosition.y > mScrollMax.y) {
+                mSnapping = true;
+                spinDistance(-mScrollPosition.y + mScrollMax.y, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
+            }
         }
     }
 

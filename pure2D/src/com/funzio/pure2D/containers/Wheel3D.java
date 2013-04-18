@@ -421,7 +421,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
         mSwiping = false;
         mSwipePointerID = -1;
 
-        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -SPIN_ACCELERATION : SPIN_ACCELERATION);
+        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -DEFAULT_SPIN_ACCELERATION : DEFAULT_SPIN_ACCELERATION);
 
         // reset
         mSwipeDelta = 0;

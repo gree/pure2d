@@ -27,4 +27,25 @@
         android:onClick="onClickButton"
         android:text="@string/button" />
 
+    <Button
+        android:id="@+id/btn_vwheel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/vertical_wheel" />
+
+    <Button
+        android:id="@+id/btn_hwheel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/horizontal_wheel" />
+
+    <Button
+        android:id="@+id/btn_lists"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/lists" />
+
 </LinearLayout>
