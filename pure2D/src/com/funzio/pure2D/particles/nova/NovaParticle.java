@@ -56,7 +56,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         mAlpha = 1;
         mColor = null;
         // frames
-        setAtlasFrameSet(mNovaEmitter.mFactory.getFrameSet(mParticleVO, mNovaEmitter.mProperties));
+        setAtlasFrameSet(mNovaEmitter.mFactory.getFrameSet(mParticleVO, mNovaEmitter.mExtra));
         if (getAtlasFrameSet() == null) {
             // just a box
             setSize(50, 50);
