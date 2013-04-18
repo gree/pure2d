@@ -73,8 +73,9 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
         // and others
         setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
-        // setZ(particleVO.z);
-        // setAlphaTestEnabled(particleVO.z != 0);
+        // z depth
+        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
+        setAlphaTestEnabled(getZ() > 0);
 
         // optional animators
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {

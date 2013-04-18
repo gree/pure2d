@@ -34,6 +34,7 @@ public class ParticleVO {
     // offset x, y
     public List<Integer> x;
     public List<Integer> y;
+    public List<Float> z;
 
     public List<String> animator;
     public List<String> blend_mode;
@@ -76,6 +77,7 @@ public class ParticleVO {
         start_frame = NovaVO.getListInt(json, "start_frame");
         x = NovaVO.getListInt(json, "x");
         y = NovaVO.getListInt(json, "y");
+        z = NovaVO.getListFloat(json, "z");
         animator = NovaVO.getListString(json, "animator");
         blend_mode = NovaVO.getListString(json, "blend_mode");
     }
