@@ -243,12 +243,12 @@ public class NovaFactory {
         mSpriteDelegator = frameMapper;
     }
 
-    public AtlasFrameSet getFrameSet(final String sprite, final Properties properties) {
-        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(sprite, properties);
+    public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Properties properties) {
+        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(particleVO, properties);
     }
 
     public static interface SpriteDelegator {
-        public AtlasFrameSet getFrameSet(String name, Properties properties);
+        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, Properties properties);
     }
 
 }
