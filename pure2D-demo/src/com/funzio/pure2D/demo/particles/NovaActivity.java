@@ -20,11 +20,13 @@ import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+import com.funzio.pure2D.particles.nova.NovaConfig;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
 import com.funzio.pure2D.particles.nova.NovaFactory.SpriteDelegator;
 import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
+import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 
 public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();
@@ -33,8 +35,9 @@ public class NovaActivity extends StageActivity {
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
         @Override
-        public AtlasFrameSet getFrameSet(final String name, final Properties properties) {
-            return name == null ? null : mFileToFrameMap.get(name);
+        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Properties properties) {
+            final String sprite = NovaConfig.getRandomString(particleVO.sprite);
+            return sprite == null ? null : mFileToFrameMap.get(sprite);
         }
 
     };
