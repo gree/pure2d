@@ -2,6 +2,7 @@ package com.funzio.pure2D.demo.particles;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -32,7 +33,7 @@ public class NovaActivity extends StageActivity {
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
         @Override
-        public AtlasFrameSet getFrameSet(final String name) {
+        public AtlasFrameSet getFrameSet(final String name, final Properties properties) {
             return name == null ? null : mFileToFrameMap.get(name);
         }
 
@@ -165,7 +166,7 @@ public class NovaActivity extends StageActivity {
             return;
         }
 
-        List<NovaEmitter> emitters = mNovaFactory.createEmitters(new PointF(x, y));
+        List<NovaEmitter> emitters = mNovaFactory.createEmitters(new PointF(x, y), null);
         for (NovaEmitter emitter : emitters) {
             mScene.addChild(emitter);
         }

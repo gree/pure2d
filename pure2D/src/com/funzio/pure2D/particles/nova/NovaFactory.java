@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import android.graphics.PointF;
@@ -63,8 +64,8 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public List<NovaEmitter> createEmitters(final PointF position) {
-        Log.v(TAG, "createEmitters(): " + position.x + ", " + position.y);
+    public List<NovaEmitter> createEmitters(final PointF position, final Properties properties) {
+        Log.v(TAG, "createEmitters(): " + properties);
 
         final int size = mNovaVO.emitters.size();
         final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
@@ -72,7 +73,7 @@ public class NovaFactory {
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
-                emitters.add(createEmitter(vo, position));
+                emitters.add(createEmitter(vo, position, properties));
             }
         }
 
@@ -86,16 +87,16 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public NovaEmitter createEmitter(final String name, final PointF position) {
-        Log.v(TAG, "createEmitters(): " + name + ", " + position.x + ", " + position.y);
+    public NovaEmitter createEmitter(final String name, final PointF position, final Properties properties) {
+        Log.v(TAG, "createEmitters(): " + name + ", " + properties);
 
         final EmitterVO vo = mNovaVO.getEmitterVO(name);
-        return vo == null ? null : createEmitter(vo, position);
+        return vo == null ? null : createEmitter(vo, position, properties);
     }
 
-    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos) {
+    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Properties properties) {
         // TODO use pool
-        return new NovaEmitter(this, emitterVO, pos);
+        return new NovaEmitter(this, emitterVO, pos, properties);
     }
 
     protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
@@ -242,12 +243,12 @@ public class NovaFactory {
         mSpriteDelegator = frameMapper;
     }
 
-    public AtlasFrameSet getFrameSet(final String sprite) {
-        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(sprite);
+    public AtlasFrameSet getFrameSet(final String sprite, final Properties properties) {
+        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(sprite, properties);
     }
 
     public static interface SpriteDelegator {
-        public AtlasFrameSet getFrameSet(String name);
+        public AtlasFrameSet getFrameSet(String name, Properties properties);
     }
 
 }
