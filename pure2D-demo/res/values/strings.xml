@@ -145,5 +145,6 @@
     <string name="button">Button</string>
     <string name="lists">Lists</string>
     <string name="test">Test</string>
+    <string name="tornado_animation">Tornado Animation</string>
 
 </resources>

@@ -155,7 +155,7 @@ public class NovaActivity extends StageActivity {
                 }
             } else {
                 // just load a single frame texture
-                final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture(NOVA_DIR + "/" + file, options));
+                final SingleFrameSet frameSet = new SingleFrameSet(file, mScene.getTextureManager().createAssetTexture(file, options));
                 // map it
                 mFileToFrameMap.put(file, frameSet);
             }
