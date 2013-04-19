@@ -22,10 +22,10 @@ public class TornadoAnimator extends TweenAnimator {
     private float mCircleRadius;
     private float mCircleRatio;
     private float mCircleNum;
-    private boolean mCircleDirection;
+    private float mCircleMultiplier;
     private Interpolator mCircleInterpolator;
-    private float mRadianLength;
 
+    private float mRadianLength;
     private float mLastX;
     private float mLastY;
     private float mLengthX;
@@ -47,10 +47,10 @@ public class TornadoAnimator extends TweenAnimator {
         mCircleRadius = DEFAULT_CIRCLE_RADIUS;
         mCircleRatio = DEFAULT_CIRCLE_RATIO;
         mCircleNum = DEFAULT_CIRLCLE_NUM;
-        mCircleDirection = true;
+        mCircleMultiplier = 1;
 
         // find implicit radian length
-        mRadianLength = (float) Math.PI * (mCircleNum * 2) * (mCircleDirection ? 1 : -1);
+        mRadianLength = ((float) Math.PI * (mCircleNum * 2)) * mCircleMultiplier;
 
         mLastX = mLastY = 0;
     }
@@ -63,15 +63,15 @@ public class TornadoAnimator extends TweenAnimator {
         mCircleInterpolator = CircleInterpolator;
     }
 
-    public boolean isCircleDirection() {
-        return mCircleDirection;
+    public float isCircleMultiplier() {
+        return mCircleMultiplier;
     }
 
-    public void setCircleDirection(final boolean circleDirection) {
-        mCircleDirection = circleDirection;
+    public void setCircleMultiplier(final float circleMultiplier) {
+        mCircleMultiplier = circleMultiplier;
 
         // find implicit radian length
-        mRadianLength = (float) Math.PI * (mCircleNum * 2) * (mCircleDirection ? 1 : -1);
+        mRadianLength = ((float) Math.PI * (mCircleNum * 2)) * mCircleMultiplier;
     }
 
     public void setValues(final float srcX, final float srcY, final float dstX, final float dstY) {
@@ -89,7 +89,7 @@ public class TornadoAnimator extends TweenAnimator {
         mCircleInterpolator = CircleInterpolator;
 
         // find implicit radian length
-        mRadianLength = (float) Math.PI * (mCircleNum * 2) * (mCircleDirection ? 1 : -1);
+        mRadianLength = ((float) Math.PI * (mCircleNum * 2)) * mCircleMultiplier;
 
         // travel length for the center
         mLengthX = mDelta.x - mCircleRadius * mCircleRatio * mCosAngle;
