@@ -6,6 +6,7 @@ package com.funzio.pure2D.particles.nova;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
@@ -19,6 +20,7 @@ import com.funzio.pure2D.gl.gl10.BlendFunc;
  * @author long
  */
 public class NovaConfig {
+    private static final String TAG = NovaConfig.class.getSimpleName();
 
     public static final Random RANDOM = new Random();
 
@@ -168,5 +170,57 @@ public class NovaConfig {
         }
 
         return Playable.LOOP_NONE;
+    }
+
+    /**
+     * @param prefix
+     * @param param
+     * @return the param index. For example: $text returns 0, $text0 returns 0, $text3 returns 3
+     */
+    public static int getParamIndex(final String prefix, final String param) {
+        // null check
+        if (param == null) {
+            // no index
+            return -1;
+        }
+
+        if (param.equals(prefix)) {
+            // default index
+            return 0;
+        } else if (param.indexOf(prefix) == 0) {
+            final String indexString = param.substring(prefix.length());
+            try {
+                // variable index
+                return Integer.valueOf(indexString);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "Invalid Param! " + param, e);
+
+                // no idex
+                return -1;
+            }
+        } else {
+            // no index
+            return -1;
+        }
+    }
+
+    /**
+     * @param prefix
+     * @param param
+     * @param values
+     * @return the value for a param
+     */
+    public static Object getParamValue(final String prefix, final String param, final Object[] values) {
+        // null check
+        if (values == null) {
+            return null;
+        }
+
+        final int index = getParamIndex(prefix, param);
+        if (index >= 0 && index < values.length) {
+            return values[index];
+        } else {
+            return null;
+        }
     }
 }
