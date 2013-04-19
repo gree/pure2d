@@ -9,7 +9,7 @@ public class TornadoAnimationActivity extends AnimationActivity {
     protected Animator createAnimator() {
         final TornadoAnimator animator = new TornadoAnimator(null);
         animator.setDuration(5000);
-        animator.setCircles(mDisplaySizeDiv2.x, 10, 0.25f);
+        animator.setCircles(mDisplaySizeDiv2.x, 10, 0.25f, BOUNCE);
         animator.start(mDisplaySizeDiv2.x, OBJ_SIZE / 2f, mDisplaySizeDiv2.x, mDisplaySize.y - OBJ_SIZE / 2f);
 
         return animator;
