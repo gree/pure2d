@@ -210,7 +210,7 @@ public class NovaConfig {
      * @param values
      * @return the value for a param
      */
-    public static Object getParamValue(final String prefix, final String param, final Object[] values) {
+    public static Object getParamValue(final String prefix, final String param, final Object... values) {
         // null check
         if (values == null) {
             return null;
