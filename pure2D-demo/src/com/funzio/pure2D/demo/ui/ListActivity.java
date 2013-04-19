@@ -120,7 +120,9 @@ public class ListActivity extends StageActivity {
     }
 
     public void onClickTest(final View view) {
-        mVList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
-        mHList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
+        if (mVList != null || mHList != null) {
+            mVList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
+            mHList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
+        }
     }
 }
