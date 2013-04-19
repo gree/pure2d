@@ -63,8 +63,8 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public List<NovaEmitter> createEmitters(final PointF position, final Object extra) {
-        Log.v(TAG, "createEmitters(): " + extra);
+    public List<NovaEmitter> createEmitters(final PointF position, final Object... params) {
+        Log.v(TAG, "createEmitters(): " + params);
 
         final int size = mNovaVO.emitters.size();
         final List<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
@@ -72,7 +72,7 @@ public class NovaFactory {
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
-                emitters.add(createEmitter(vo, position, extra));
+                emitters.add(createEmitter(vo, position, params));
             }
         }
 
@@ -86,16 +86,16 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public NovaEmitter createEmitter(final String name, final PointF position, final Object extra) {
-        Log.v(TAG, "createEmitters(): " + name + ", " + extra);
+    public NovaEmitter createEmitter(final String name, final PointF position, final Object... params) {
+        Log.v(TAG, "createEmitters(): " + name + ", " + params);
 
         final EmitterVO vo = mNovaVO.getEmitterVO(name);
-        return vo == null ? null : createEmitter(vo, position, extra);
+        return vo == null ? null : createEmitter(vo, position, params);
     }
 
-    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Object extra) {
+    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Object... params) {
         // TODO use pool
-        return new NovaEmitter(this, emitterVO, pos, extra);
+        return new NovaEmitter(this, emitterVO, pos, params);
     }
 
     protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
@@ -242,12 +242,12 @@ public class NovaFactory {
         mSpriteDelegator = frameMapper;
     }
 
-    public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object extra) {
-        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(particleVO, extra);
+    public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object... params) {
+        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(particleVO, params);
     }
 
     public static interface SpriteDelegator {
-        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object extra);
+        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object... params);
     }
 
 }

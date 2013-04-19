@@ -34,7 +34,7 @@ public class NovaActivity extends StageActivity {
     private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
 
         @Override
-        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object extra) {
+        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object... params) {
             final String sprite = NovaConfig.getRandomString(particleVO.sprite);
             return sprite == null ? null : mFileToFrameMap.get(sprite);
         }
