@@ -51,6 +51,8 @@ public class TornadoAnimator extends TweenAnimator {
 
         // find implicit radian length
         mRadianLength = (float) Math.PI * (mCircleNum * 2) * (mCircleDirection ? 1 : -1);
+
+        mLastX = mLastY = 0;
     }
 
     public Interpolator getCircleInterpolator() {
