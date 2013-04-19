@@ -6,11 +6,11 @@
 			"lifespan": 6000,
 			"particles": [
 				{
-					"sprite": ["smoke.png"],
+					"sprite": ["sprites/smoke.png"],
 					"animator": ["smoke_ani"]
 				},
 				{
-					"sprite": ["fire.png"],
+					"sprite": ["sprites/fire.png"],
 					"animator": ["fire_ani"]
 				}
 			]
