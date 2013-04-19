@@ -27,18 +27,18 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected final NovaFactory mFactory;
 
     protected EmitterVO mEmitterVO;
-    protected Object mExtra;
+    protected Object[] mParams;
     protected Animator mAnimator;
 
     // layers for particles
     protected SparseArray<DisplayGroup> mLayers;
 
-    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos, final Object extra) {
+    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos, final Object... params) {
         super();
 
         mFactory = factory;
         mEmitterVO = vo;
-        mExtra = extra;
+        mParams = params;
         // auto remove
         mRemoveOnFinish = true;
 
