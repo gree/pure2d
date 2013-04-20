@@ -62,6 +62,12 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
             mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
         }
 
+        // and others attributes
+        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
+        // z depth
+        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
+        setAlphaTestEnabled(getZ() > 0);
+
         // delegate something to this particle, such as AtlasFrameSet
         if (mNovaEmitter.mFactory.mNovaDelegator != null) {
             mNovaEmitter.mFactory.mNovaDelegator.delegateParticle(this, mNovaEmitter.mParams);
@@ -70,7 +76,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         if (getAtlasFrameSet() != null) {
             playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
         } else if (mTexture == null) {
-            // just a box
+            // just a dummy box
             setSize(50, 50);
         }
 
@@ -80,12 +86,6 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         } else {
             setOrigin(mParticleVO.origin_x, mParticleVO.origin_y);
         }
-
-        // and others
-        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
-        // z depth
-        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
-        setAlphaTestEnabled(getZ() > 0);
 
         // check and start animator, Go!
         if (mAnimator != null) {
