@@ -11,9 +11,9 @@ import com.funzio.pure2D.particles.nova.vo.ParticleVO;
  * @author long
  */
 public class NovaParticle extends ClipParticle implements Animator.AnimatorListener {
-    protected ParticleVO mParticleVO;
-    protected Animator mAnimator;
-    protected NovaEmitter mNovaEmitter;
+    private ParticleVO mParticleVO;
+    private Animator mAnimator;
+    private NovaEmitter mNovaEmitter;
 
     public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
         super();
@@ -42,7 +42,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
             mAnimator = null;
         }
 
-        // set
+        // set properties
         setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
         mParticleVO = (ParticleVO) params[1];
 
@@ -55,16 +55,26 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         mRotation = 0;
         mAlpha = 1;
         mColor = null;
-        // frames
-        setAtlasFrameSet(mNovaEmitter.mFactory.getFrameSet(mParticleVO, mNovaEmitter.mParams));
-        if (getAtlasFrameSet() == null) {
-            // just a box
-            setSize(50, 50);
-        } else {
-            playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
+
+        // now, find optional animator
+        if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
+            // get a new animator from pool
+            mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
         }
 
-        // origin
+        // delegate something to this particle, such as AtlasFrameSet
+        if (mNovaEmitter.mFactory.mNovaDelegator != null) {
+            mNovaEmitter.mFactory.mNovaDelegator.delegateParticle(this, mNovaEmitter.mParams);
+        }
+
+        if (getAtlasFrameSet() != null) {
+            playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
+        } else if (mTexture == null) {
+            // just a box
+            setSize(50, 50);
+        }
+
+        // origin based on the frames
         if (mParticleVO.hasOriginAtCenter()) {
             setOriginAtCenter();
         } else {
@@ -77,21 +87,23 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         setZ(NovaConfig.getRandomFloat(mParticleVO.z));
         setAlphaTestEnabled(getZ() > 0);
 
-        // optional animators
-        if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
-            // get a new animator from pool
-            mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
+        // check and start animator, Go!
+        if (mAnimator != null) {
+            // add it
+            mAnimator.setListener(this);
+            addManipulator(mAnimator);
 
-            // null check
-            if (mAnimator != null) {
-                // add it
-                mAnimator.setListener(this);
-                addManipulator(mAnimator);
-
-                // auto start
-                mAnimator.start();
-            }
+            // auto start
+            mAnimator.start();
         }
+    }
+
+    public ParticleVO getParticleVO() {
+        return mParticleVO;
+    }
+
+    public Animator getAnimator() {
+        return mAnimator;
     }
 
     @Override
