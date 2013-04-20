@@ -81,6 +81,14 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         }
     }
 
+    public EmitterVO getEmitterVO() {
+        return mEmitterVO;
+    }
+
+    public Animator getAnimator() {
+        return mAnimator;
+    }
+
     protected void createManipulators() {
         // emitting action for particles
         int size = mEmitterVO.particles.size();
@@ -95,11 +103,18 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         // optional emitter animator
         if (mEmitterVO.animator != null && mEmitterVO.animator != "") {
             mAnimator = mFactory.createAnimator(this, mEmitterVO.animator);
-            if (mAnimator != null) {
-                addManipulator(mAnimator);
-                // auto start
-                mAnimator.start();
-            }
+        }
+
+        // delegate something
+        if (mFactory.mNovaDelegator != null) {
+            mFactory.mNovaDelegator.delegateEmitter(this, mParams);
+        }
+
+        // check and start animator, Go!
+        if (mAnimator != null) {
+            addManipulator(mAnimator);
+            // auto start
+            mAnimator.start();
         }
     }
 

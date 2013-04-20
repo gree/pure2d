@@ -14,7 +14,6 @@ import android.util.Log;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
-import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
@@ -29,21 +28,21 @@ public class NovaFactory {
     protected static final String TAG = NovaFactory.class.getSimpleName();
 
     protected NovaVO mNovaVO;
-    protected SpriteDelegator mSpriteDelegator;
+    protected NovaDelegator mNovaDelegator;
     // pools
     private int mPoolSize = 0;
     protected ObjectPool<NovaParticle> mParticlePool;
     protected Map<String, ObjectPool<Animator>> mAnimatorPools;
 
-    public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator) {
-        this(novaVO, spriteDelegator, novaVO.pool_size);
+    public NovaFactory(final NovaVO novaVO, final NovaDelegator NovaDelegator) {
+        this(novaVO, NovaDelegator, novaVO.pool_size);
     }
 
-    public NovaFactory(final NovaVO novaVO, final SpriteDelegator spriteDelegator, final int poolSize) {
+    public NovaFactory(final NovaVO novaVO, final NovaDelegator NovaDelegator, final int poolSize) {
         Log.v(TAG, "NovaFactory(): " + novaVO + ", " + poolSize);
 
         mNovaVO = novaVO;
-        mSpriteDelegator = spriteDelegator;
+        mNovaDelegator = NovaDelegator;
 
         // pool is optional
         if (poolSize > 0) {
@@ -234,20 +233,12 @@ public class NovaFactory {
         return animators;
     }
 
-    public SpriteDelegator getSpriteDelegator() {
-        return mSpriteDelegator;
+    public NovaDelegator getNovaDelegator() {
+        return mNovaDelegator;
     }
 
-    public void setSpriteDeletator(final SpriteDelegator frameMapper) {
-        mSpriteDelegator = frameMapper;
-    }
-
-    public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object... params) {
-        return mSpriteDelegator == null ? null : mSpriteDelegator.getFrameSet(particleVO, params);
-    }
-
-    public static interface SpriteDelegator {
-        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object... params);
+    public void setNovaDeletator(final NovaDelegator delegator) {
+        mNovaDelegator = delegator;
     }
 
 }

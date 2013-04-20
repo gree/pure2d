@@ -20,23 +20,30 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
+import com.funzio.pure2D.particles.nova.NovaDelegator;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
-import com.funzio.pure2D.particles.nova.NovaFactory.SpriteDelegator;
 import com.funzio.pure2D.particles.nova.NovaLoader;
+import com.funzio.pure2D.particles.nova.NovaParticle;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 
 public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();
     private static final String NOVA_DIR = "nova";
 
-    private SpriteDelegator mSpriteDelegator = new SpriteDelegator() {
+    private NovaDelegator mNovaDelegator = new NovaDelegator() {
 
         @Override
-        public AtlasFrameSet getFrameSet(final ParticleVO particleVO, final Object... params) {
-            final String sprite = NovaConfig.getRandomString(particleVO.sprite);
-            return sprite == null ? null : mFileToFrameMap.get(sprite);
+        public void delegateEmitter(final NovaEmitter emitter, final Object... params) {
+            // Nothing now
+        }
+
+        @Override
+        public void delegateParticle(final NovaParticle particle, final Object... params) {
+            final String sprite = NovaConfig.getRandomString(particle.getParticleVO().sprite);
+
+            // apply the frameset
+            particle.setAtlasFrameSet(sprite == null ? null : mFileToFrameMap.get(sprite));
         }
 
     };
@@ -74,7 +81,7 @@ public class NovaActivity extends StageActivity {
                     @Override
                     public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
-                        mNovaFactory = new NovaFactory(vo, mSpriteDelegator, 500);
+                        mNovaFactory = new NovaFactory(vo, mNovaDelegator, 500);
 
                         // load textures on GL thread
                         mScene.queueEvent(new Runnable() {
