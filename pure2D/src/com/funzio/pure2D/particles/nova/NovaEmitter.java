@@ -11,6 +11,7 @@ import com.funzio.pure2D.animators.Timeline;
 import com.funzio.pure2D.animators.Timeline.Action;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
+import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
@@ -29,6 +30,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected EmitterVO mEmitterVO;
     protected Object[] mParams;
     protected Animator mAnimator;
+    protected MotionTrail mMotionTrail;
 
     // layers for particles
     protected SparseArray<DisplayGroup> mLayers;
@@ -102,7 +104,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
 
         // optional emitter animator
         if (mEmitterVO.animator != null && mEmitterVO.animator != "") {
-            mAnimator = mFactory.createAnimator(this, mEmitterVO.animator);
+            mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator));
         }
 
         // delegate something
@@ -164,7 +166,19 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         if (mLayers != null) {
             final int size = mLayers.size();
             for (int i = 0; i < size; i++) {
-                mParent.addChild(mLayers.get(mLayers.keyAt(i)));
+                parent.addChild(mLayers.get(mLayers.keyAt(i)));
+            }
+        }
+
+        // now, find optional trail
+        if (mEmitterVO.motion_trail != null) {
+            // get a new trail from pool
+            mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
+
+            // also add trail if there is any
+            if (mMotionTrail != null) {
+                // add below this object
+                parent.addChild(mMotionTrail, parent.getChildIndex(this));
             }
         }
     }
@@ -175,6 +189,15 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
      */
     @Override
     public void onRemoved() {
+        // remove animator
+        if (mAnimator != null) {
+            removeManipulator(mAnimator);
+
+            // release it
+            mFactory.releaseAnimator(mAnimator);
+            mAnimator = null;
+        }
+
         // remove the layers
         if (mLayers != null) {
             final int size = mLayers.size();
@@ -182,6 +205,15 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
                 mLayers.get(mLayers.keyAt(i)).removeFromParent();
             }
             mLayers.clear();
+        }
+
+        // also remove trail if there is any
+        if (mMotionTrail != null) {
+            mMotionTrail.removeFromParent();
+
+            // release it
+            mFactory.releaseMotionTrail(mMotionTrail);
+            mMotionTrail = null;
         }
 
         super.onRemoved();

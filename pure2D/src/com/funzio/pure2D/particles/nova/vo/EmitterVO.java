@@ -31,6 +31,7 @@ public class EmitterVO {
 
     // animator for this emitter
     public String animator;
+    public String motion_trail;
 
     // and particles this will emit
     public List<ParticleVO> particles;
@@ -68,6 +69,7 @@ public class EmitterVO {
         y = json.optInt("y");
 
         animator = json.optString("animator");
+        motion_trail = json.optString("motion_trail");
         particles = getParticles(json.optJSONArray("particles"));
     }
 

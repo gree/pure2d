@@ -14,6 +14,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 
 /**
@@ -115,6 +116,24 @@ public class NovaConfig {
         if (size == 0) {
             // default value
             return null;
+        } else if (size == 1) {
+            // fixed value
+            return values.get(0);
+        } else {
+            // randomly pick one of the given values
+            return values.get(RANDOM.nextInt(size));
+        }
+    }
+
+    public static GLColor getRandomColor(final List<GLColor> values, final GLColor defaultValue) {
+        if (values == null) {
+            return defaultValue;
+        }
+
+        final int size = values.size();
+        if (size == 0) {
+            // default value
+            return defaultValue;
         } else if (size == 1) {
             // fixed value
             return values.get(0);

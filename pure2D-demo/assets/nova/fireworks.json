@@ -5,14 +5,7 @@
 			"name": "shooter_smoke",
 			"lifespan": 2000,
 			"particles": [
-				{
-					"duration": 1000,
-					"layer": 1,
 
-					"sprite": "sprites/smoke.png",
-					"animator": "smoke_ani",
-					"blend_mode": "interpolate_color"
-				},
 
 				{
 					"duration": 1000,
@@ -29,11 +22,13 @@
 
 					"sprite": ["atlas/star_03_60.json", "atlas/coin_01_60.json"],
 					"start_frame": [0, 20],
-					"animator": "star_ani"
+					"animator": "star_ani",
+					"motion_trail": "small_trail"
 				}
 			],
 
-			"animator": "shoot_ani"
+			"animator": "shoot_ani",
+			"motion_trail": "big_trail"
 		}
 	],
 	
@@ -107,6 +102,26 @@
 			"type": "recursive_trajectory",
 			"velocity": [20, 100],
 			"angle": [0, 6.28]
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "small_trail",
+			"type": "shape",
+			"stroke1": 10,
+			"stroke1_color": 0xFFFFFF00,
+			"stroke2_color": 0x00FF0000
+		},
+
+		{
+			"name": "big_trail",
+			"type": "shape",
+			"stroke1": 30,
+			"stroke2": 60,
+			"stroke1_color": 0xFFFF0000,
+			"stroke2_color": 0x00FFFF00,
+			"stroke_interpolation": "decelerate"
 		}
 	]
 }

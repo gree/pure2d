@@ -12,7 +12,7 @@ import com.funzio.pure2D.shapes.Polyline;
 /**
  * @author long
  */
-public class MotionTrailShape extends Polyline {
+public class MotionTrailShape extends Polyline implements MotionTrail {
 
     protected int mNumPoints = 10;
     protected int mMinLength = 0;
@@ -21,12 +21,40 @@ public class MotionTrailShape extends Polyline {
 
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
+    protected Object mData;
 
     public MotionTrailShape() {
+        this(null);
+    }
+
+    public MotionTrailShape(final DisplayObject target) {
         super();
 
         // set default num points
         setNumPoints(mNumPoints);
+
+        if (target != null) {
+            setTarget(target);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
+     */
+    @Override
+    public void reset(final Object... params) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public Object getData() {
+        return mData;
+    }
+
+    @Override
+    public void setData(final Object data) {
+        mData = data;
     }
 
     /*

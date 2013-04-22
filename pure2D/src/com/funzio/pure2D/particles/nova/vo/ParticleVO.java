@@ -39,6 +39,7 @@ public class ParticleVO {
     public List<Float> z;
 
     public List<String> animator;
+    public List<String> motion_trail;
     public List<String> blend_mode;
 
     public ParticleVO() {
@@ -84,6 +85,7 @@ public class ParticleVO {
         z = NovaVO.getListFloat(json, "z");
         animator = NovaVO.getListString(json, "animator");
         blend_mode = NovaVO.getListString(json, "blend_mode");
+        motion_trail = NovaVO.getListString(json, "motion_trail");
     }
 
     /**

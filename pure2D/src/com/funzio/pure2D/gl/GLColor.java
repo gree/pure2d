@@ -31,6 +31,13 @@ public class GLColor {
         this.a = n;
     }
 
+    /**
+     * @param color. E.g 0xFFFF0000
+     */
+    public GLColor(final int color) {
+        this(Color.red(color), Color.green(color), Color.blue(color), Color.alpha(color));
+    }
+
     public GLColor(final int r, final int g, final int b, final int a) {
         this.r = (float) r / 255;
         this.g = (float) g / 255;
