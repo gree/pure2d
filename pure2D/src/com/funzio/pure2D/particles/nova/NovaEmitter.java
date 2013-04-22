@@ -22,7 +22,7 @@ import com.funzio.pure2D.utils.Reusable;
 /**
  * @author long
  */
-public class NovaEmitter extends RectangularEmitter implements Reusable, Timeline.Listener {
+public class NovaEmitter extends RectangularEmitter implements Reusable, Timeline.Listener, Animator.AnimatorListener {
 
     protected final Timeline mTimeline;
     protected final NovaFactory mFactory;
@@ -105,6 +105,17 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         // optional emitter animator
         if (mEmitterVO.animator != null && mEmitterVO.animator != "") {
             mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator));
+
+            if (mAnimator != null) {
+                // only create trail when there is an animator
+                if (mEmitterVO.motion_trail != null) {
+                    // get a new trail from pool
+                    mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
+                }
+
+                // add animator
+                addManipulator(mAnimator);
+            }
         }
 
         // delegate something
@@ -114,7 +125,11 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
 
         // check and start animator, Go!
         if (mAnimator != null) {
-            addManipulator(mAnimator);
+            // only listen if there is motion trail
+            if (mMotionTrail != null) {
+                mAnimator.setListener(this);
+            }
+
             // auto start
             mAnimator.start();
         }
@@ -154,6 +169,19 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         });
     }
 
+    /**
+     * Check and remove motion trail
+     */
+    private void removeMotionTrail() {
+        if (mMotionTrail != null) {
+            mMotionTrail.removeFromParent();
+
+            // release it
+            mFactory.releaseMotionTrail(mMotionTrail);
+            mMotionTrail = null;
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
@@ -170,16 +198,10 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
             }
         }
 
-        // now, find optional trail
-        if (mEmitterVO.motion_trail != null) {
-            // get a new trail from pool
-            mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
-
-            // also add trail if there is any
-            if (mMotionTrail != null) {
-                // add below this object
-                parent.addChild(mMotionTrail, parent.getChildIndex(this));
-            }
+        // also add trail if there is any
+        if (mMotionTrail != null) {
+            // add below this object
+            parent.addChild(mMotionTrail, parent.getChildIndex(this));
         }
     }
 
@@ -207,16 +229,20 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
             mLayers.clear();
         }
 
-        // also remove trail if there is any
-        if (mMotionTrail != null) {
-            mMotionTrail.removeFromParent();
-
-            // release it
-            mFactory.releaseMotionTrail(mMotionTrail);
-            mMotionTrail = null;
-        }
+        // check and remove motion trail
+        removeMotionTrail();
 
         super.onRemoved();
+    }
+
+    @Override
+    public void onAnimationEnd(final Animator animator) {
+        // also remove trail if there is any because the trail looks weird by being alone.
+        removeMotionTrail();
+    }
+
+    @Override
+    public void onAnimationUpdate(final Animator animator, final float value) {
     }
 
     @Override

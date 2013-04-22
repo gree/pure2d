@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +19,11 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class MotionTrailShapeVO extends MotionTrailVO {
 
-    public List<Integer> stroke1;
-    public List<Integer> stroke2;
-    public List<GLColor> stroke1_color;
-    public List<GLColor> stroke2_color;
-    public List<String> stroke_interpolation;
+    public ArrayList<Integer> stroke1;
+    public ArrayList<Integer> stroke2;
+    public ArrayList<GLColor> stroke1_color;
+    public ArrayList<GLColor> stroke2_color;
+    public ArrayList<String> stroke_interpolation;
 
     public MotionTrailShapeVO() {
         super();

@@ -5,7 +5,6 @@ package com.funzio.pure2D.particles.nova;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import android.graphics.PointF;
@@ -66,7 +65,7 @@ public class NovaFactory {
      * @param position
      * @return
      */
-    public List<NovaEmitter> createEmitters(final PointF position, final Object... params) {
+    public ArrayList<NovaEmitter> createEmitters(final PointF position, final Object... params) {
         Log.v(TAG, "createEmitters(): " + params);
 
         final int size = mNovaVO.emitters.size();
@@ -234,7 +233,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    protected Animator[] createChildAnimators(final Manipulatable target, final List<AnimatorVO> vos) {
+    protected Animator[] createChildAnimators(final Manipulatable target, final ArrayList<AnimatorVO> vos) {
         // null check
         if (vos == null) {
             return null;

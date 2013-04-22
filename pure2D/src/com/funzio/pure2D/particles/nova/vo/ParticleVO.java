@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,16 +31,16 @@ public class ParticleVO {
     public int origin_y = -1;
 
     // optional
-    public List<String> sprite;
-    public List<Integer> start_frame;
+    public ArrayList<String> sprite;
+    public ArrayList<Integer> start_frame;
     // offset x, y
-    public List<Integer> x;
-    public List<Integer> y;
-    public List<Float> z;
+    public ArrayList<Integer> x;
+    public ArrayList<Integer> y;
+    public ArrayList<Float> z;
 
-    public List<String> animator;
-    public List<String> motion_trail;
-    public List<String> blend_mode;
+    public ArrayList<String> animator;
+    public ArrayList<String> motion_trail;
+    public ArrayList<String> blend_mode;
 
     public ParticleVO() {
 

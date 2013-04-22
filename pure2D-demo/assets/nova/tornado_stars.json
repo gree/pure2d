@@ -8,8 +8,10 @@
 				{
 					"sprite": "atlas/star_03_60.json",
 					"start_frame": [0, 20],
+					"step_delay": 100,
 					"animator": "tornado_ani",
-					"blend_mode": "add"
+					"blend_mode": "add",
+					"motion_trail": "yellow_trail"
 				}
 			],
 			"animator": "left_right_ani"
@@ -37,7 +39,15 @@
 			"circle_interpolation": "accelerate",
 			"interpolation": "decelerate"
 		}
+	],
 
-
+	"motion_trails": [
+		{
+			"name": "yellow_trail",
+			"type": "shape",
+			"stroke1": 10,
+			"stroke1_color": 0xFFFF0000,
+			"stroke2_color": 0xFFFFFF00
+		}
 	]
 }

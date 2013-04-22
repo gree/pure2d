@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +18,7 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class RecursiveTrajectoryAnimatorVO extends TrajectoryAnimatorVO {
 
-    public List<Float> deceleration_rate;
+    public ArrayList<Float> deceleration_rate;
 
     public RecursiveTrajectoryAnimatorVO() {
         super();

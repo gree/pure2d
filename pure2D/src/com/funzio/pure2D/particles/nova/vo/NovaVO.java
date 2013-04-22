@@ -6,9 +6,6 @@ package com.funzio.pure2D.particles.nova.vo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,16 +22,16 @@ public class NovaVO {
     public String name;
     public int pool_size = 0;
 
-    public List<EmitterVO> emitters;
-    public List<AnimatorVO> animators;
-    public List<MotionTrailVO> motion_trails;
+    public ArrayList<EmitterVO> emitters;
+    public ArrayList<AnimatorVO> animators;
+    public ArrayList<MotionTrailVO> motion_trails;
 
     // for fast look up
-    private Map<String, EmitterVO> mEmitterMap;
-    private Map<String, AnimatorVO> mAnimatorMap;
-    private Map<String, MotionTrailVO> mMotionTrailMap;
+    private HashMap<String, EmitterVO> mEmitterMap;
+    private HashMap<String, AnimatorVO> mAnimatorMap;
+    private HashMap<String, MotionTrailVO> mMotionTrailMap;
 
-    private Set<String> mUsedSprites;
+    private HashSet<String> mUsedSprites;
 
     // @JsonCreator
     // public NovaVO( //
@@ -42,10 +39,10 @@ public class NovaVO {
     // final int version, //
     //
     // @JsonProperty("emitters")//
-    // final List<EmitterVO> emitters, //
+    // final ArrayList<EmitterVO> emitters, //
     //
     // @JsonProperty("animators")//
-    // final List<AnimatorVO> animators //
+    // final ArrayList<AnimatorVO> animators //
     // ) {
     // this.version = version;
     // this.emitters = emitters;
@@ -138,7 +135,7 @@ public class NovaVO {
         return mMotionTrailMap != null ? mMotionTrailMap.get(name) : null;
     }
 
-    protected static List<EmitterVO> getEmitters(final JSONArray array) throws JSONException {
+    protected static ArrayList<EmitterVO> getEmitters(final JSONArray array) throws JSONException {
         if (array == null) {
             return null;
         }
@@ -152,7 +149,7 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<AnimatorVO> getAnimators(final JSONArray array) throws JSONException {
+    protected static ArrayList<AnimatorVO> getAnimators(final JSONArray array) throws JSONException {
         if (array == null) {
             return null;
         }
@@ -166,7 +163,7 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<MotionTrailVO> getMotionTrails(final JSONArray array) throws JSONException {
+    protected static ArrayList<MotionTrailVO> getMotionTrails(final JSONArray array) throws JSONException {
         if (array == null) {
             return null;
         }
@@ -180,7 +177,7 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<Integer> getListInt(final JSONObject json, final String field) throws JSONException {
+    protected static ArrayList<Integer> getListInt(final JSONObject json, final String field) throws JSONException {
         // field check
         if (!json.has(field)) {
             return null;
@@ -203,7 +200,7 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<Float> getListFloat(final JSONObject json, final String field) throws JSONException {
+    protected static ArrayList<Float> getListFloat(final JSONObject json, final String field) throws JSONException {
         // field check
         if (!json.has(field)) {
             return null;
@@ -226,7 +223,7 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<String> getListString(final JSONObject json, final String field) throws JSONException {
+    protected static ArrayList<String> getListString(final JSONObject json, final String field) throws JSONException {
         // field check
         if (!json.has(field)) {
             return null;
@@ -249,7 +246,7 @@ public class NovaVO {
         return result;
     }
 
-    protected static List<GLColor> getListColor(final JSONObject json, final String field) throws JSONException {
+    protected static ArrayList<GLColor> getListColor(final JSONObject json, final String field) throws JSONException {
         // field check
         if (!json.has(field)) {
             return null;
@@ -275,7 +272,7 @@ public class NovaVO {
     /**
      * @return the set of Sprites being used
      */
-    public Set<String> getUsedSprites() {
+    public HashSet<String> getUsedSprites() {
         if (mUsedSprites == null) {
             mUsedSprites = new HashSet<String>();
 

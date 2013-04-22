@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,9 +18,9 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class TrajectoryAnimatorVO extends AnimatorVO {
 
-    public List<Float> ground;
-    public List<Float> velocity;
-    public List<Float> angle;
+    public ArrayList<Float> ground;
+    public ArrayList<Float> velocity;
+    public ArrayList<Float> angle;
 
     public TrajectoryAnimatorVO() {
         super();

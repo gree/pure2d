@@ -69,11 +69,17 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
             // get a new animator from pool
             mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getRandomString(mParticleVO.animator)));
-        }
-        // now, find optional trail
-        if (mParticleVO.motion_trail != null && !mParticleVO.motion_trail.isEmpty()) {
-            // get a new trail from pool
-            mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)));
+
+            if (mAnimator != null) {
+                // now, find optional trail
+                if (mParticleVO.motion_trail != null && !mParticleVO.motion_trail.isEmpty()) {
+                    // get a new trail from pool
+                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)));
+                }
+
+                // add it
+                addManipulator(mAnimator);
+            }
         }
 
         // and others attributes
@@ -103,9 +109,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
         // check and start animator, Go!
         if (mAnimator != null) {
-            // add it
             mAnimator.setListener(this);
-            addManipulator(mAnimator);
 
             // auto start
             mAnimator.start();

@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 import android.util.Log;
@@ -57,11 +57,11 @@ public class NovaConfig {
     public static final String LOOP_REPEAT = "repeat";
     public static final String LOOP_REVERSE = "reverse";
 
-    public static float getRandomFloat(final List<Float> values) {
+    public static float getRandomFloat(final ArrayList<Float> values) {
         return getRandomFloat(values, 0);
     }
 
-    public static float getRandomFloat(final List<Float> values, final float defalutValue) {
+    public static float getRandomFloat(final ArrayList<Float> values, final float defalutValue) {
         if (values == null) {
             return defalutValue;
         }
@@ -82,11 +82,11 @@ public class NovaConfig {
         }
     }
 
-    public static int getRandomInt(final List<Integer> values) {
+    public static int getRandomInt(final ArrayList<Integer> values) {
         return getRandomInt(values, 0);
     }
 
-    public static int getRandomInt(final List<Integer> values, final int defaultValue) {
+    public static int getRandomInt(final ArrayList<Integer> values, final int defaultValue) {
         if (values == null) {
             return defaultValue;
         }
@@ -107,7 +107,7 @@ public class NovaConfig {
         }
     }
 
-    public static String getRandomString(final List<String> values) {
+    public static String getRandomString(final ArrayList<String> values) {
         if (values == null) {
             return null;
         }
@@ -125,7 +125,7 @@ public class NovaConfig {
         }
     }
 
-    public static GLColor getRandomColor(final List<GLColor> values, final GLColor defaultValue) {
+    public static GLColor getRandomColor(final ArrayList<GLColor> values, final GLColor defaultValue) {
         if (values == null) {
             return defaultValue;
         }

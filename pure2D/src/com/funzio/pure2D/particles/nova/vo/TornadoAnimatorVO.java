@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +18,12 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class TornadoAnimatorVO extends TweenAnimatorVO {
 
-    public List<Integer> dx;
-    public List<Integer> dy;
-    public List<Integer> circle_radius;
-    public List<Integer> circle_num;
-    public List<String> circle_interpolation;
-    public List<Float> circle_multiplier;
+    public ArrayList<Integer> dx;
+    public ArrayList<Integer> dy;
+    public ArrayList<Integer> circle_radius;
+    public ArrayList<Integer> circle_num;
+    public ArrayList<String> circle_interpolation;
+    public ArrayList<Float> circle_multiplier;
 
     public TornadoAnimatorVO() {
         super();

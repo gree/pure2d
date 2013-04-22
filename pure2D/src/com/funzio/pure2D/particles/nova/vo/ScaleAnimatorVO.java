@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,10 +18,10 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class ScaleAnimatorVO extends TweenAnimatorVO {
 
-    public List<Float> x_from;
-    public List<Float> x_to;
-    public List<Float> y_from;
-    public List<Float> y_to;
+    public ArrayList<Float> x_from;
+    public ArrayList<Float> x_to;
+    public ArrayList<Float> y_from;
+    public ArrayList<Float> y_to;
 
     public ScaleAnimatorVO() {
         super();
