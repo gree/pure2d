@@ -102,23 +102,29 @@ public class NovaVO {
      */
     public void applyScale(final float scale) {
         // scale emitters
-        for (final EmitterVO vo : emitters) {
-            if (vo != null) {
-                vo.applyScale(scale);
+        if (emitters != null) {
+            for (final EmitterVO vo : emitters) {
+                if (vo != null) {
+                    vo.applyScale(scale);
+                }
             }
         }
 
         // scale animators
-        for (final AnimatorVO vo : animators) {
-            if (vo != null) {
-                vo.applyScale(scale);
+        if (animators != null) {
+            for (final AnimatorVO vo : animators) {
+                if (vo != null) {
+                    vo.applyScale(scale);
+                }
             }
         }
 
         // scale trails
-        for (final MotionTrailVO vo : motion_trails) {
-            if (vo != null) {
-                vo.applyScale(scale);
+        if (motion_trails != null) {
+            for (final MotionTrailVO vo : motion_trails) {
+                if (vo != null) {
+                    vo.applyScale(scale);
+                }
             }
         }
     }
