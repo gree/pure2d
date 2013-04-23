@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,9 +17,9 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  * @author long
  */
 public class RotateAnimatorVO extends TweenAnimatorVO {
-    public List<Float> from;
-    public List<Float> to;
-    public List<Float> delta;
+    public ArrayList<Float> from;
+    public ArrayList<Float> to;
+    public ArrayList<Float> delta;
 
     public RotateAnimatorVO() {
         super();

@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,10 +18,10 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
-    public List<Integer> dx;
-    public List<Integer> dy;
-    public List<Integer> wave_radius;
-    public List<Integer> wave_num;
+    public ArrayList<Integer> dx;
+    public ArrayList<Integer> dy;
+    public ArrayList<Integer> wave_radius;
+    public ArrayList<Integer> wave_num;
 
     public SinWaveAnimatorVO() {
         super();

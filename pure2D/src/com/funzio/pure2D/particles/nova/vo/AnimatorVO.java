@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,8 +51,8 @@ public abstract class AnimatorVO {
 
     // looping
     public String loop_mode;
-    public List<Integer> loop_count;
-    public List<Integer> lifespan;
+    public ArrayList<Integer> loop_count;
+    public ArrayList<Integer> lifespan;
 
     public abstract Animator createAnimator(Manipulatable target, Animator... animators);
 

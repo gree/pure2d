@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +18,7 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public abstract class GroupAnimatorVO extends AnimatorVO {
     // child animators
-    public List<AnimatorVO> animators;
+    public ArrayList<AnimatorVO> animators;
 
     public GroupAnimatorVO() {
 

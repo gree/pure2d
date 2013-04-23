@@ -4,7 +4,6 @@
 package com.funzio.pure2D.containers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -20,11 +19,11 @@ import com.funzio.pure2D.gl.gl10.GLState;
  */
 public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
 
-    protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected int mNumChildren = 0;
 
     // UI
-    protected List<Touchable> mVisibleTouchables;
+    protected ArrayList<Touchable> mVisibleTouchables;
     protected boolean mTouchable = true; // true by default
 
     public DisplayGroup() {

@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,14 +18,14 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class ColorAnimatorVO extends TweenAnimatorVO {
 
-    public List<Integer> r_from;
-    public List<Integer> r_to;
-    public List<Integer> g_from;
-    public List<Integer> g_to;
-    public List<Integer> b_from;
-    public List<Integer> b_to;
-    public List<Integer> a_from;
-    public List<Integer> a_to;
+    public ArrayList<Integer> r_from;
+    public ArrayList<Integer> r_to;
+    public ArrayList<Integer> g_from;
+    public ArrayList<Integer> g_to;
+    public ArrayList<Integer> b_from;
+    public ArrayList<Integer> b_to;
+    public ArrayList<Integer> a_from;
+    public ArrayList<Integer> a_to;
 
     public ColorAnimatorVO() {
         super();

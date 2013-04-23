@@ -4,7 +4,6 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -62,7 +61,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     private boolean mHasOrigin = false;
     private GLColor mSumColor;
 
-    protected List<Manipulator> mManipulators;
+    protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
 
     // rect and bounds

@@ -4,7 +4,6 @@
 package com.funzio.pure2D.animators;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.funzio.pure2D.Manipulatable;
 
@@ -17,7 +16,7 @@ public class Timeline implements Manipulator {
     protected int mElapsedTime = 0;
     protected boolean mRunning = false;
 
-    protected List<Action> mActions = new ArrayList<Action>();
+    protected ArrayList<Action> mActions = new ArrayList<Action>();
     protected int mNumActions = 0;
     protected int mNumEndedActions = 0;
 

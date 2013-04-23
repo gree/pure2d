@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +18,13 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class TornadoAnimatorVO extends TweenAnimatorVO {
 
-    public List<Integer> dx;
-    public List<Integer> dy;
-    public List<Integer> circle_radius;
-    public List<Integer> circle_num;
-    public List<String> circle_interpolation;
-    public List<Float> circle_multiplier;
+    public ArrayList<Integer> dx;
+    public ArrayList<Integer> dy;
+    public ArrayList<Integer> circle_radius;
+    public ArrayList<Integer> circle_num;
+    public ArrayList<String> circle_interpolation;
+    public ArrayList<Float> circle_multiplier;
+    public ArrayList<Float> circle_ratio;
 
     public TornadoAnimatorVO() {
         super();
@@ -38,6 +39,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
         circle_num = NovaVO.getListInt(json, "circle_num");
         circle_interpolation = NovaVO.getListString(json, "circle_interpolation");
         circle_multiplier = NovaVO.getListFloat(json, "circle_multiplier");
+        circle_ratio = NovaVO.getListFloat(json, "circle_ratio");
     }
 
     @Override
@@ -52,7 +54,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
         final TornadoAnimator move = (TornadoAnimator) animator;
         if (move != null) {
             move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), TornadoAnimator.DEFAULT_CIRCLE_RATIO,
+            move.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), NovaConfig.getRandomFloat(circle_ratio, TornadoAnimator.DEFAULT_CIRCLE_RATIO),
                     NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
             move.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
             move.setDuration(NovaConfig.getRandomInt(duration));

@@ -4,7 +4,6 @@
 package com.funzio.pure2D.animators;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.funzio.pure2D.Manipulatable;
 
@@ -12,7 +11,7 @@ import com.funzio.pure2D.Manipulatable;
  * @author long
  */
 public abstract class GroupAnimator extends BaseAnimator implements Animator.AnimatorListener {
-    protected List<Animator> mAnimators = new ArrayList<Animator>();
+    protected ArrayList<Animator> mAnimators = new ArrayList<Animator>();
     protected int mNumAnimators = 0;
 
     // looping

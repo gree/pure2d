@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.particles.nova.vo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +18,8 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
 
-    public List<Integer> radius;
-    public List<Integer> degree;
+    public ArrayList<Integer> radius;
+    public ArrayList<Integer> degree;
 
     public MoveRadiusAnimatorVO() {
         super();

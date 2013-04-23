@@ -4,6 +4,8 @@
 package com.funzio.pure2D.particles.nova;
 
 import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.ClipParticle;
 import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 
@@ -13,6 +15,7 @@ import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 public class NovaParticle extends ClipParticle implements Animator.AnimatorListener {
     private ParticleVO mParticleVO;
     private Animator mAnimator;
+    private MotionTrail mMotionTrail;
     private NovaEmitter mNovaEmitter;
 
     public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
@@ -29,7 +32,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
     public void reset(final Object... params) {
         super.reset(params);
 
-        // clean up first
+        // clean up animator
         if (mAnimator != null) {
             // stop it
             mAnimator.stop();
@@ -40,6 +43,12 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
             // flag
             mAnimator = null;
+        }
+
+        // clean up trail
+        if (mMotionTrail != null) {
+            mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
+            mMotionTrail = null;
         }
 
         // set properties
@@ -59,8 +68,25 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // now, find optional animator
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
             // get a new animator from pool
-            mAnimator = mNovaEmitter.mFactory.createAnimator(this, NovaConfig.getRandomString(mParticleVO.animator));
+            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getRandomString(mParticleVO.animator)));
+
+            if (mAnimator != null) {
+                // now, find optional trail
+                if (mParticleVO.motion_trail != null && !mParticleVO.motion_trail.isEmpty()) {
+                    // get a new trail from pool
+                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)));
+                }
+
+                // add it
+                addManipulator(mAnimator);
+            }
         }
+
+        // and others attributes
+        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
+        // z depth
+        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
+        setAlphaTestEnabled(getZ() > 0);
 
         // delegate something to this particle, such as AtlasFrameSet
         if (mNovaEmitter.mFactory.mNovaDelegator != null) {
@@ -70,7 +96,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         if (getAtlasFrameSet() != null) {
             playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
         } else if (mTexture == null) {
-            // just a box
+            // just a dummy box
             setSize(50, 50);
         }
 
@@ -81,21 +107,14 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
             setOrigin(mParticleVO.origin_x, mParticleVO.origin_y);
         }
 
-        // and others
-        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
-        // z depth
-        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
-        setAlphaTestEnabled(getZ() > 0);
-
         // check and start animator, Go!
         if (mAnimator != null) {
-            // add it
             mAnimator.setListener(this);
-            addManipulator(mAnimator);
 
             // auto start
             mAnimator.start();
         }
+
     }
 
     public ParticleVO getParticleVO() {
@@ -104,6 +123,35 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
     public Animator getAnimator() {
         return mAnimator;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.shapes.Shape#onAdded(com.funzio.pure2D.containers.Container)
+     */
+    @Override
+    public void onAdded(final Container parent) {
+        super.onAdded(parent);
+
+        // also add trail if there is any
+        if (mMotionTrail != null) {
+            // add below this object
+            parent.addChild(mMotionTrail, parent.getChildIndex(this));
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#onRemoved()
+     */
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        // also remove trail if there is any
+        if (mMotionTrail != null) {
+            mMotionTrail.removeFromParent();
+        }
     }
 
     @Override
