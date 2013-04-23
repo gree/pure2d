@@ -8,7 +8,7 @@
 				{
 					"sprite": "atlas/star_03_60.json",
 					"start_frame": [0, 20],
-					"step_delay": 100,
+					"step_delay": 50,
 					"animator": "wave_ani",
 					"motion_trail": "yellow_trail",
 					"blend_mode": "add"
@@ -36,9 +36,9 @@
 		{
 			"name": "yellow_trail",
 			"type": "shape",
-			"stroke1": 10,
-			"stroke1_color": 0xFFFF0000,
-			"stroke2_color": 0xFFFFFF00
+			"stroke1": [10, 20],
+			"color1": 0xFFFF0000,
+			"color2": 0x00FF0000
 		}
 	]
 }

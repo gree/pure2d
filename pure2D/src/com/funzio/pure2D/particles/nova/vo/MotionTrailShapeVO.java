@@ -21,8 +21,8 @@ public class MotionTrailShapeVO extends MotionTrailVO {
 
     public ArrayList<Integer> stroke1;
     public ArrayList<Integer> stroke2;
-    public ArrayList<GLColor> stroke1_color;
-    public ArrayList<GLColor> stroke2_color;
+    public ArrayList<GLColor> color1;
+    public ArrayList<GLColor> color2;
     public ArrayList<String> stroke_interpolation;
 
     public MotionTrailShapeVO() {
@@ -38,8 +38,8 @@ public class MotionTrailShapeVO extends MotionTrailVO {
 
         stroke1 = NovaVO.getListInt(json, "stroke1");
         stroke2 = NovaVO.getListInt(json, "stroke2");
-        stroke1_color = NovaVO.getListColor(json, "stroke1_color");
-        stroke2_color = NovaVO.getListColor(json, "stroke2_color");
+        color1 = NovaVO.getListColor(json, "color1");
+        color2 = NovaVO.getListColor(json, "color2");
         stroke_interpolation = NovaVO.getListString(json, "stroke_interpolation");
     }
 
@@ -87,7 +87,7 @@ public class MotionTrailShapeVO extends MotionTrailVO {
 
         final MotionTrailShape shape = (MotionTrailShape) trail;
         shape.setStrokeRange(NovaConfig.getRandomInt(stroke1, 1), NovaConfig.getRandomInt(stroke2, 1));
-        shape.setStrokeColorRange(NovaConfig.getRandomColor(stroke1_color, GLColor.WHITE), NovaConfig.getRandomColor(stroke2_color, GLColor.WHITE));
+        shape.setStrokeColorRange(NovaConfig.getRandomColor(color1, GLColor.WHITE), NovaConfig.getRandomColor(color2, GLColor.WHITE));
         shape.setStrokeInterpolator(NovaConfig.getInterpolator(NovaConfig.getRandomString(stroke_interpolation)));
     }
 

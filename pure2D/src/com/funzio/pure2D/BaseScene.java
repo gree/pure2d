@@ -4,7 +4,6 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -34,7 +33,7 @@ public class BaseScene implements Scene {
     protected GLState mGLState;
     protected Camera mCamera;
     protected TextureManager mTextureManager;
-    protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     private int mNumChildren;
 
     private PointF mSize = new PointF();
@@ -65,8 +64,8 @@ public class BaseScene implements Scene {
     // UI
     private final Object mUILock = new Object();
     private boolean mUIEnabled = false;
-    private List<Touchable> mVisibleTouchables;
-    private List<PointF> mTouchedPoints = new ArrayList<PointF>();
+    private ArrayList<Touchable> mVisibleTouchables;
+    private ArrayList<PointF> mTouchedPoints = new ArrayList<PointF>();
     private int mPointerCount = 0;
 
     // GL extensions

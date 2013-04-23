@@ -4,7 +4,6 @@
 package com.funzio.pure2D.gl.gl10.textures;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -24,7 +23,7 @@ public class TextureManager {
     public static final String TAG = TextureManager.class.getSimpleName();
 
     protected Scene mScene;
-    protected List<Texture> mTextures = new ArrayList<Texture>();
+    protected ArrayList<Texture> mTextures = new ArrayList<Texture>();
     protected GLState mGLState;
     protected GL10 mGL;
 

@@ -5,7 +5,6 @@ package com.funzio.pure2D.atlas;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import android.graphics.PointF;
 
@@ -16,7 +15,7 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
  */
 public class AtlasFrameSet {
     protected final String mName;
-    protected List<AtlasFrame> mFrames = new ArrayList<AtlasFrame>();
+    protected ArrayList<AtlasFrame> mFrames = new ArrayList<AtlasFrame>();
     protected PointF mFrameMaxSize = new PointF();
     protected Texture mTexture;
     protected int mFps = 0;

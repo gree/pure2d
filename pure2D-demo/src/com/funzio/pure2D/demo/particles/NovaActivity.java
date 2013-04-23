@@ -1,7 +1,7 @@
 package com.funzio.pure2D.demo.particles;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -175,7 +175,7 @@ public class NovaActivity extends StageActivity {
             return;
         }
 
-        List<NovaEmitter> emitters = mNovaFactory.createEmitters(new PointF(x, y));
+        ArrayList<NovaEmitter> emitters = mNovaFactory.createEmitters(new PointF(x, y));
         for (NovaEmitter emitter : emitters) {
             mScene.addChild(emitter);
         }

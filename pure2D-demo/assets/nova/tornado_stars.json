@@ -46,8 +46,8 @@
 			"name": "yellow_trail",
 			"type": "shape",
 			"stroke1": 10,
-			"stroke1_color": 0xFFFF0000,
-			"stroke2_color": 0xFFFFFF00
+			"color1": 0xFFFF0000,
+			"color2": 0xFFFFFF00
 		}
 	]
 }

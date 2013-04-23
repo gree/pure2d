@@ -110,8 +110,8 @@
 			"name": "small_trail",
 			"type": "shape",
 			"stroke1": 10,
-			"stroke1_color": 0xFFFFFF00,
-			"stroke2_color": 0x00FF0000
+			"color1": 0xFFFFFF00,
+			"color2": 0x00FF0000
 		},
 
 		{
@@ -119,8 +119,8 @@
 			"type": "shape",
 			"stroke1": 30,
 			"stroke2": 60,
-			"stroke1_color": 0xFFFF0000,
-			"stroke2_color": 0x00FFFF00,
+			"color1": 0xFFFF0000,
+			"color2": 0x00FFFF00,
 			"stroke_interpolation": "decelerate"
 		}
 	]

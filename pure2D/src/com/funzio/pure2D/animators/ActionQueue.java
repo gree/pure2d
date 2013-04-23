@@ -4,13 +4,12 @@
 package com.funzio.pure2D.animators;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author long
  */
 public class ActionQueue extends BaseAnimator {
-    private List<Action> mActions = new ArrayList<Action>();
+    private ArrayList<Action> mActions = new ArrayList<Action>();
     private Action mCurrentAction;
     private int mCurrentIndex = -1;
     private int mNumActions = 0;

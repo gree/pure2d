@@ -4,7 +4,6 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -31,7 +30,7 @@ public class Camera implements Manipulatable {
     private PointF mHalfSize = new PointF(0, 0);
     private boolean mInvalidated;
 
-    protected List<Manipulator> mManipulators;
+    protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
 
     private boolean mClipping = false;
