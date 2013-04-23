@@ -3,12 +3,13 @@
 	"emitters": [
 		{
 			"name": "falling_stars",
-			"lifespan": 5000,
+			"lifespan": 1000,
 			"particles": [
 				{
 					"sprite": "atlas/star_03_60.json",
 					"step_delay": 50,
-					"animator": "wave_ani",
+					"step_quantity": 5,
+					"animator": "tornado_ani",
 					"motion_trail": "small_trail",
 					"blend_mode": "add"
 				}
@@ -18,16 +19,16 @@
 	
 	"animators": [
 		{
-			"name": "wave_ani",
-			"type": "sin_wave",
-			"dx": [-200, 200],
-			"dy": [-200, 200],
-			"wave_radius": 300,
-			"wave_num": 2,
+			"name": "tornado_ani",
+			"type": "tornado",
+			"dx": [-100, 100],
+			"dy": [-100, 100],
+			"circle_radius": 300,
+			"circle_num": 1,
+			"circle_ratio": 1,
 			"duration": 2000,
 			"interpolation": "accelerate_decelerate",
-			"loop_mode": "reverse",
-			"loop_count": 1
+			"loop_mode": "reverse"
 		}
 	],
 
@@ -35,7 +36,9 @@
 		{
 			"name": "small_trail",
 			"type": "shape",
-			"stroke1": [10, 20],
+			"num_points": 15,
+			"stroke1": 20,
+			"stroke2": 50,
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF],
 			"color2": 0x00FF0000
 		}

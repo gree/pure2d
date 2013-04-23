@@ -24,6 +24,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Integer> circle_num;
     public ArrayList<String> circle_interpolation;
     public ArrayList<Float> circle_multiplier;
+    public ArrayList<Float> circle_ratio;
 
     public TornadoAnimatorVO() {
         super();
@@ -38,6 +39,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
         circle_num = NovaVO.getListInt(json, "circle_num");
         circle_interpolation = NovaVO.getListString(json, "circle_interpolation");
         circle_multiplier = NovaVO.getListFloat(json, "circle_multiplier");
+        circle_ratio = NovaVO.getListFloat(json, "circle_ratio");
     }
 
     @Override
@@ -52,7 +54,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
         final TornadoAnimator move = (TornadoAnimator) animator;
         if (move != null) {
             move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), TornadoAnimator.DEFAULT_CIRCLE_RATIO,
+            move.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), NovaConfig.getRandomFloat(circle_ratio, TornadoAnimator.DEFAULT_CIRCLE_RATIO),
                     NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
             move.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
             move.setDuration(NovaConfig.getRandomInt(duration));
