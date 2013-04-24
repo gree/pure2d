@@ -9,13 +9,15 @@
 					"sprite": "atlas/star_03_60.json",
 					"start_frame": [0, 20],
 					"animator": "fly_ani",
-					"blend_mode": ["", "screen", "add", "subtract"]
+					"blend_mode": ["", "screen", "add", "subtract"],
+					"motion_trail": "trail1"
 				},
 
 				{
 					"sprite": "atlas/coin_01_60.json",
 					"start_frame": [0, 20],
-					"animator": "fall_ani"
+					"animator": "fall_ani",
+					"motion_trail": "trail2"
 				}
 			]
 		}
@@ -32,10 +34,29 @@
 		{
 			"name": "fly_ani",
 			"type": "translate_radius",
-			"radius": [300, 500],
+			"radius": [300, 700],
 			"degree": [0, 360],
 			"duration": 1000,
 			"interpolation": "decelerate"
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "trail1",
+			"type": "shape",
+			"stroke1": 10,
+			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF, 0xFF00FF00, 0xFF00FFFF, 0xFFFF00FF],
+			"color2": 0x00FFFFFF
+		},
+
+		{
+			"name": "trail2",
+			"type": "shape",
+			"stroke1": 0,
+			"stroke2": 20,
+			"color1": 0x99FFFF00,
+			"color2": 0x00FFFFFF
 		}
 	]
 }

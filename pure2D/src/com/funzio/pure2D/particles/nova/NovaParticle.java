@@ -33,23 +33,22 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         super.reset(params);
 
         // clean up animator
-        if (mAnimator != null) {
-            // stop it
-            mAnimator.stop();
-            removeManipulator(mAnimator);
-
-            // release to pool
-            mNovaEmitter.mFactory.releaseAnimator(mAnimator);
-
-            // flag
-            mAnimator = null;
-        }
+        // if (mAnimator != null) {
+        // // stop it
+        // mAnimator.stop();
+        // removeManipulator(mAnimator);
+        //
+        // // release to pool
+        // mNovaEmitter.mFactory.releaseAnimator(mAnimator);
+        // // flag
+        // mAnimator = null;
+        // }
 
         // clean up trail
-        if (mMotionTrail != null) {
-            mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
-            mMotionTrail = null;
-        }
+        // if (mMotionTrail != null) {
+        // mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
+        // mMotionTrail = null;
+        // }
 
         // set properties
         setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
@@ -146,12 +145,25 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
      */
     @Override
     public void onRemoved() {
-        super.onRemoved();
+        // clean up animator
+        if (mAnimator != null) {
+            removeManipulator(mAnimator);
+            // release to pool
+            mNovaEmitter.mFactory.releaseAnimator(mAnimator);
+            // flag
+            mAnimator = null;
+        }
 
         // also remove trail if there is any
         if (mMotionTrail != null) {
             mMotionTrail.removeFromParent();
+            // release
+            mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
+            // flag
+            mMotionTrail = null;
         }
+
+        super.onRemoved();
     }
 
     @Override

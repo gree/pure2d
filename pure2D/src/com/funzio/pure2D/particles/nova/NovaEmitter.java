@@ -175,9 +175,9 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     private void removeMotionTrail() {
         if (mMotionTrail != null) {
             mMotionTrail.removeFromParent();
-
             // release it
             mFactory.releaseMotionTrail(mMotionTrail);
+            // flag
             mMotionTrail = null;
         }
     }
@@ -214,7 +214,6 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         // remove animator
         if (mAnimator != null) {
             removeManipulator(mAnimator);
-
             // release it
             mFactory.releaseAnimator(mAnimator);
             mAnimator = null;

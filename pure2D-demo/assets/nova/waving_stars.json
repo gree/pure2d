@@ -20,9 +20,9 @@
 		{
 			"name": "wave_ani",
 			"type": "sin_wave",
-			"dx": [-200, 200],
-			"dy": [-200, 200],
-			"wave_radius": 300,
+			"dx": [-400, 400],
+			"dy": [-400, 400],
+			"wave_radius": 200,
 			"wave_num": 2,
 			"duration": 2000,
 			"interpolation": "accelerate_decelerate",
@@ -35,7 +35,9 @@
 		{
 			"name": "small_trail",
 			"type": "shape",
-			"stroke1": [10, 20],
+			"stroke1": 1,
+			"stroke2": [10, 30],
+			"num_points": 15,
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF],
 			"color2": 0x00FF0000
 		}

@@ -39,12 +39,12 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         super.resetAnimator(target, animator);
 
-        if (animator instanceof TweenAnimator) {
-            ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
+        // if (animator instanceof TweenAnimator) {
+        ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
 
-            if (loop_count != null) {
-                ((TweenAnimator) animator).setLoopCount(NovaConfig.getRandomInt(loop_count));
-            }
+        if (loop_count != null) {
+            ((TweenAnimator) animator).setLoopCount(NovaConfig.getRandomInt(loop_count));
         }
+        // }
     }
 }

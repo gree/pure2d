@@ -95,10 +95,10 @@ public abstract class AnimatorVO {
      * @param animator
      */
     public void resetAnimator(final Manipulatable target, final Animator animator) {
-        if (animator != null) {
-            animator.reset();
-            animator.setLifespan(NovaConfig.getRandomInt(lifespan));
-        }
+        // if (animator != null) {
+        animator.reset();
+        animator.setLifespan(NovaConfig.getRandomInt(lifespan));
+        // }
     }
 
     /**

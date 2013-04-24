@@ -52,11 +52,9 @@ public abstract class MotionTrailVO {
      * @param trail
      */
     public void resetTrail(final DisplayObject target, final MotionTrail trail) {
-        if (trail != null) {
-            trail.reset();
-            trail.setNumPoints(num_points);
-            trail.setTarget(target);
-        }
+        trail.reset();
+        trail.setNumPoints(num_points);
+        trail.setTarget(target);
     }
 
     /**

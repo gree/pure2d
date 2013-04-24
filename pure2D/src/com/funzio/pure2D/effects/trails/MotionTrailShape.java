@@ -136,8 +136,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
             mSegmentLength = mMinLength / (numPoints - 1);
         }
 
-        // re-count
-        mVerticesNum = numPoints * 2;
+        // re-count, each point has 2 vertices
+        allocateVertices(numPoints * 2);
     }
 
     public DisplayObject getTarget() {

@@ -39,10 +39,7 @@ public class DelayAnimatorVO extends AnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         super.resetAnimator(target, animator);
 
-        final DelayAnimator move = (DelayAnimator) animator;
-        if (move != null) {
-            move.setLifespan(NovaConfig.getRandomInt(duration));
-        }
+        animator.setLifespan(NovaConfig.getRandomInt(duration));
     }
 
 }

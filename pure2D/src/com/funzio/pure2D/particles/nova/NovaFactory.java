@@ -201,10 +201,15 @@ public class NovaFactory {
         return createAnimatorInstance(target, vo);
     }
 
+    /**
+     * Called when the animator is done and ready for recycle
+     * 
+     * @param animator
+     */
     protected void releaseAnimator(final Animator animator) {
         if (mAnimatorPools != null && animator.getData() instanceof AnimatorVO) {
             final AnimatorVO vo = (AnimatorVO) animator.getData();
-            ObjectPool<Animator> pool = mAnimatorPools.get(vo.name); // use name as key
+            final ObjectPool<Animator> pool = mAnimatorPools.get(vo.name); // use name as key
             if (pool != null) {
                 pool.release(animator);
             }
@@ -279,10 +284,15 @@ public class NovaFactory {
         return trailVO.createTrail(target);
     }
 
+    /**
+     * Called when the trail is done and ready for recycle
+     * 
+     * @param trail
+     */
     protected void releaseMotionTrail(final MotionTrail trail) {
         if (mMotionTrailPools != null && trail.getData() instanceof MotionTrailVO) {
             final MotionTrailVO vo = (MotionTrailVO) trail.getData();
-            ObjectPool<MotionTrail> pool = mMotionTrailPools.get(vo.type); // use type as key
+            final ObjectPool<MotionTrail> pool = mMotionTrailPools.get(vo.type); // use type as key
             if (pool != null) {
                 pool.release(trail);
             }

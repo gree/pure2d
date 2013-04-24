@@ -44,10 +44,10 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
         super.resetAnimator(target, animator);
 
         final TrajectoryAnimator move = (TrajectoryAnimator) animator;
-        if (move != null) {
-            move.setGround(NovaConfig.getRandomFloat(ground));
-            move.setValues(target.getPosition().x, target.getPosition().y, NovaConfig.getRandomFloat(velocity), NovaConfig.getRandomFloat(angle));
-        }
+        // if (move != null) {
+        move.setGround(NovaConfig.getRandomFloat(ground));
+        move.setValues(target.getPosition().x, target.getPosition().y, NovaConfig.getRandomFloat(velocity), NovaConfig.getRandomFloat(angle));
+        // }
     }
 
     /*

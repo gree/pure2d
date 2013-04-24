@@ -38,13 +38,7 @@ public class Polyline extends Shape {
         mPoints = points;
         final int len = mPoints.length;
 
-        mVerticesNum = len * 2; // each point has upper and lower points
-        if (mVertices == null || mVerticesNum > mVertices.length) {
-            mVertices = new float[mVerticesNum * 2];
-
-            // only set colors ONCE!
-            setStrokeColorRange(mStrokeColor1, mStrokeColor2);
-        }
+        allocateVertices(len * 2);// each point has upper and lower points
 
         final float strokeDelta = mStroke2 - mStroke1;
         float dx, dy, segment = 0;
@@ -112,6 +106,16 @@ public class Polyline extends Shape {
         }
 
         invalidate();
+    }
+
+    protected void allocateVertices(final int numVertices) {
+        mVerticesNum = numVertices; // each point has upper and lower points
+        if (mVertices == null || mVerticesNum * 2 > mVertices.length) {
+            mVertices = new float[mVerticesNum * 2];
+
+            // only set colors ONCE!
+            setStrokeColorRange(mStrokeColor1, mStrokeColor2);
+        }
     }
 
     public void setStrokeRange(final float stroke1, final float stroke2) {

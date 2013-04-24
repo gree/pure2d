@@ -38,25 +38,25 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         super.resetAnimator(target, animator);
 
-        if (animator != null) {
-            GroupAnimator group = (GroupAnimator) animator;
+        // if (animator != null) {
+        final GroupAnimator group = (GroupAnimator) animator;
 
-            if (loop_count != null) {
-                group.setLoopCount(NovaConfig.getRandomInt(loop_count));
-            }
+        if (loop_count != null) {
+            group.setLoopCount(NovaConfig.getRandomInt(loop_count));
+        }
 
-            Animator childAnimator;
-            AnimatorVO vo;
-            // reset the children
-            final int size = group.getNumAnimators();
-            for (int i = 0; i < size; i++) {
-                childAnimator = group.getAnimatorAt(i);
-                if (childAnimator != null && childAnimator.getData() instanceof AnimatorVO) {
-                    vo = (AnimatorVO) childAnimator.getData();
-                    vo.resetAnimator(target, childAnimator);
-                }
+        Animator childAnimator;
+        AnimatorVO vo;
+        // reset the children
+        final int size = group.getNumAnimators();
+        for (int i = 0; i < size; i++) {
+            childAnimator = group.getAnimatorAt(i);
+            if (childAnimator != null && childAnimator.getData() instanceof AnimatorVO) {
+                vo = (AnimatorVO) childAnimator.getData();
+                vo.resetAnimator(target, childAnimator);
             }
         }
+        // }
     }
 
     /*
