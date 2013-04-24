@@ -111,8 +111,10 @@ public class EmitterVO {
 
             // collect from the particles
             for (ParticleVO particleVO : particles) {
-                for (String sprite : particleVO.sprite) {
-                    mUsedSprites.add(sprite);
+                if (particleVO.sprite != null) {
+                    for (String sprite : particleVO.sprite) {
+                        mUsedSprites.add(sprite);
+                    }
                 }
             }
         }

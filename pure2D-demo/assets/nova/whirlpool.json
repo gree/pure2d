@@ -1,0 +1,42 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "falling_stars",
+			"particles": [
+				{
+					"step_delay": 160,
+					"animator": "whirl_ani",
+					"alpha": 0,
+					"motion_trail": ["trail1"]
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "whirl_ani",
+			"type": "whirl",
+			"radius1": 800,
+			"radius2": 0,
+			"degree1": [1000, 3600],
+			"degree2": [0, 360],
+			"duration": 10000,
+			"circle_interpolation": "accelerate",
+			"circle_ratio": [0.75, 1.25]
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "trail1",
+			"type": "shape",
+			"num_points": 20,
+			"stroke1": 0,
+			"stroke2": [80, 120],
+			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF],
+			"color2": 0x00FFFF00
+		}
+	]
+}

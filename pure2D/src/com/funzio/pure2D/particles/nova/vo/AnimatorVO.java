@@ -42,6 +42,7 @@ public abstract class AnimatorVO {
     public static final String RECURSIVE_TRAJECTORY = "recursive_trajectory";
     public static final String SIN_WAVE = "sin_wave";
     public static final String TORNADO = "tornado";
+    public static final String WHIRL = "whirl";
     public static final String COLOR = "color";
     public static final String DELAY = "delay";
 
@@ -138,6 +139,8 @@ public abstract class AnimatorVO {
             return new SinWaveAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TORNADO)) {
             return new TornadoAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(WHIRL)) {
+            return new WhirlAnimatorVO(json);
         } else if (type.equalsIgnoreCase(COLOR)) {
             return new ColorAnimatorVO(json);
         } else if (type.equalsIgnoreCase(DELAY)) {
