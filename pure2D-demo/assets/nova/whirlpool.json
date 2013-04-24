@@ -23,8 +23,8 @@
 			"degree1": [1800, 3600, 1800],
 			"degree2": [0, 360],
 			"duration": 10000,
-			"circle_interpolation": "accelerate",
-			"circle_ratio": [0.75, 1.25]
+			"circle_ratio": [0.75, 1.25],
+			"circle_interpolation": "accelerate"
 		}
 	],
 

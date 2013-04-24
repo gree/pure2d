@@ -63,7 +63,7 @@ public class TornadoAnimator extends TweenAnimator {
         mCircleInterpolator = circleInterpolator;
     }
 
-    public float isCircleMultiplier() {
+    public float getCircleMultiplier() {
         return mCircleMultiplier;
     }
 

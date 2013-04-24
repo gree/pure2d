@@ -24,6 +24,7 @@ public class WhirlAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Integer> degree2;
     public ArrayList<String> circle_interpolation;
     public ArrayList<Float> circle_ratio;
+    public ArrayList<Float> circle_multiplier;
 
     public WhirlAnimatorVO() {
         super();
@@ -38,6 +39,7 @@ public class WhirlAnimatorVO extends TweenAnimatorVO {
         degree2 = NovaVO.getListInt(json, "degree2");
         circle_interpolation = NovaVO.getListString(json, "circle_interpolation");
         circle_ratio = NovaVO.getListFloat(json, "circle_ratio");
+        circle_multiplier = NovaVO.getListFloat(json, "circle_multiplier");
     }
 
     @Override
@@ -55,6 +57,7 @@ public class WhirlAnimatorVO extends TweenAnimatorVO {
                     NovaConfig.getRandomInt(degree2, (int) WhirlAnimator.DEFAULT_ANGLE * 180));
             move.setCircleInterpolator(NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
             move.setCircleRatio(NovaConfig.getRandomFloat(circle_ratio, WhirlAnimator.DEFAULT_CIRCLE_RATIO));
+            move.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
             move.setDuration(NovaConfig.getRandomInt(duration));
         }
     }

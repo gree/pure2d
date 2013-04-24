@@ -29,6 +29,7 @@ public class WhirlAnimator extends TweenAnimator {
     private float mRadianLength;
     private float mLastX;
     private float mLastY;
+    private float mCircleMultiplier;
 
     public WhirlAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -46,10 +47,11 @@ public class WhirlAnimator extends TweenAnimator {
         mRadianAngle1 = 0;
         mRadianAngle2 = DEFAULT_ANGLE;
         mCircleRatio = DEFAULT_CIRCLE_RATIO;
+        mCircleMultiplier = 1;
 
         // find implicit radian length
         mRadiusLength = mRadius2 - mRadius1;
-        mRadianLength = mRadianAngle2 - mRadianAngle1;
+        mRadianLength = (mRadianAngle2 - mRadianAngle1) * mCircleMultiplier;
 
         mLastX = mLastY = 0;
     }
@@ -68,6 +70,17 @@ public class WhirlAnimator extends TweenAnimator {
 
     public void setCircleRatio(final float circleRatio) {
         mCircleRatio = circleRatio;
+    }
+
+    public float getCircleMultiplier() {
+        return mCircleMultiplier;
+    }
+
+    public void setCircleMultiplier(final float circleMultiplier) {
+        mCircleMultiplier = circleMultiplier;
+
+        // find implicit radian length
+        mRadianLength = (mRadianAngle2 - mRadianAngle1) * mCircleMultiplier;
     }
 
     public void setValues(final float srcX, final float srcY, final float radius1, final float radius2, final float radianAngle1, final float radianAngle2) {
