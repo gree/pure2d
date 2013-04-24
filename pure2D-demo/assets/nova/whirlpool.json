@@ -5,7 +5,7 @@
 			"name": "falling_stars",
 			"particles": [
 				{
-					"step_delay": 160,
+					"step_delay": 100,
 					"animator": "whirl_ani",
 					"alpha": 0,
 					"motion_trail": ["trail1"]
@@ -18,9 +18,9 @@
 		{
 			"name": "whirl_ani",
 			"type": "whirl",
-			"radius1": 800,
+			"radius1": 1100,
 			"radius2": 0,
-			"degree1": [1000, 3600],
+			"degree1": [1800, 3600, 1800],
 			"degree2": [0, 360],
 			"duration": 10000,
 			"circle_interpolation": "accelerate",
@@ -34,7 +34,7 @@
 			"type": "shape",
 			"num_points": 20,
 			"stroke1": 0,
-			"stroke2": [80, 120],
+			"stroke2": [100, 150],
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF],
 			"color2": 0x00FFFF00
 		}

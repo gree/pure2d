@@ -64,7 +64,8 @@
     <string name="textures">Textures</string>
     <string name="hello_texture">Hello Texture!</string>
     <string name="multiple_texture">Multiple Textures</string>
-    <string name="masking">Masking / Blending</string>
+    <string name="blending">Blending</string>
+    <string name="masking">Masking</string>
     <string name="zeus">Zeus</string>
     <string name="rock_checker">Rock Checker</string>
     <string name="checker">Checker</string>

@@ -242,6 +242,10 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
 
     @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
+        if (mMotionTrail != null && mMotionTrail.getTarget() == null) {
+            // initial position for trail
+            mMotionTrail.setTarget(this);
+        }
     }
 
     @Override

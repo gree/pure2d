@@ -59,9 +59,9 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // add offsets
         mPosition.x += NovaConfig.getRandomInt(mParticleVO.x);
         mPosition.y += NovaConfig.getRandomInt(mParticleVO.y);
+        mAlpha = NovaConfig.getRandomFloat(mParticleVO.alpha, 1);
         mScale.x = mScale.y = 1;
         mRotation = 0;
-        mAlpha = NovaConfig.getRandomFloat(mParticleVO.alpha, 1);
         mColor = null;
 
         // now, find optional animator
@@ -174,8 +174,10 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
     @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
-        // TODO Auto-generated method stub
-
+        if (mMotionTrail != null && mMotionTrail.getTarget() == null) {
+            // initial position for trail
+            mMotionTrail.setTarget(this);
+        }
     }
 
 }

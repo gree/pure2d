@@ -12,7 +12,7 @@ import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.shapes.Sprite;
 
-public class TextureMaskingActivity extends StageActivity {
+public class TextureBlendingActivity extends StageActivity {
     private Sprite mGirl;
     private Sprite mChecker;
     private Sprite mGuy;

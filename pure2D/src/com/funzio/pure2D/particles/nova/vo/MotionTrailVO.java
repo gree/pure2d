@@ -50,11 +50,12 @@ public abstract class MotionTrailVO {
     /**
      * @param target
      * @param trail
+     * @see NovaEmitter#onAnimationUpdate(com.funzio.pure2D.animators.Animator, float), NovaParticle#onAnimationUpdate(com.funzio.pure2D.animators.Animator, float)
      */
     public void resetTrail(final DisplayObject target, final MotionTrail trail) {
         trail.reset();
         trail.setNumPoints(num_points);
-        trail.setTarget(target);
+        trail.setTarget(null); // maybe wait until animation start to set the real target
     }
 
     /**
