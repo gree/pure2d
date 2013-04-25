@@ -16,9 +16,10 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
 /**
  * @author long
  */
+@Deprecated
 public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
 
-    public ArrayList<Integer> radius;
+    public ArrayList<Integer> distance;
     public ArrayList<Integer> degree;
 
     public MoveRadiusAnimatorVO() {
@@ -28,7 +29,7 @@ public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
     public MoveRadiusAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
-        radius = NovaVO.getListInt(json, "radius");
+        distance = NovaVO.getListInt(json, "distance");
         degree = NovaVO.getListInt(json, "degree");
     }
 
@@ -42,10 +43,10 @@ public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(target, animator);
 
         final MoveRadiusAnimator move = (MoveRadiusAnimator) animator;
-        if (move != null) {
-            move.setValues(NovaConfig.getRandomInt(radius), NovaConfig.getRandomInt(degree));
-            move.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        // if (move != null) {
+        move.setValues(NovaConfig.getRandomInt(distance), NovaConfig.getRandomInt(degree));
+        move.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 
     /*
@@ -56,11 +57,11 @@ public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
     public void applyScale(final float scale) {
         super.applyScale(scale);
 
-        // scale radius
-        if (radius != null) {
-            final int size = radius.size();
+        // scale distance
+        if (distance != null) {
+            final int size = distance.size();
             for (int i = 0; i < size; i++) {
-                radius.set(i, Math.round(radius.get(i) * scale));
+                distance.set(i, Math.round(distance.get(i) * scale));
             }
         }
     }

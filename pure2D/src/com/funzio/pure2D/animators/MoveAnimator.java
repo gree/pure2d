@@ -31,6 +31,15 @@ public class MoveAnimator extends TweenAnimator {
         mDelta.y = dy;
     }
 
+    public void setDistance(final float distance, final float radianAngle) {
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
+    public void setDistance(final float distance, final int degreeAngle) {
+        final float radianAngle = degreeAngle * (float) Math.PI / 180;
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
         mSrcX = srcX;
         mSrcY = srcY;

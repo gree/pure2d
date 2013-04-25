@@ -14,7 +14,7 @@ import com.funzio.pure2D.animators.ColorAnimator;
 import com.funzio.pure2D.particles.nova.NovaConfig;
 
 /**
- * @author long
+ * @author juni
  */
 public class ColorAnimatorVO extends TweenAnimatorVO {
 
@@ -54,17 +54,17 @@ public class ColorAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(target, animator);
 
         final ColorAnimator color = (ColorAnimator) animator;
-        if (color != null) {
-            color.setValues(NovaConfig.getRandomInt(r_from, 255), //
-                    NovaConfig.getRandomInt(g_from, 255), //
-                    NovaConfig.getRandomInt(b_from, 255), //
-                    NovaConfig.getRandomInt(a_from, 255), //
-                    NovaConfig.getRandomInt(r_to, 255), //
-                    NovaConfig.getRandomInt(g_to, 255), //
-                    NovaConfig.getRandomInt(b_to, 255), //
-                    NovaConfig.getRandomInt(a_to, 255));
+        // if (color != null) {
+        color.setValues(NovaConfig.getRandomInt(r_from, 255), //
+                NovaConfig.getRandomInt(g_from, 255), //
+                NovaConfig.getRandomInt(b_from, 255), //
+                NovaConfig.getRandomInt(a_from, 255), //
+                NovaConfig.getRandomInt(r_to, 255), //
+                NovaConfig.getRandomInt(g_to, 255), //
+                NovaConfig.getRandomInt(b_to, 255), //
+                NovaConfig.getRandomInt(a_to, 255));
 
-            color.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        color.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 }

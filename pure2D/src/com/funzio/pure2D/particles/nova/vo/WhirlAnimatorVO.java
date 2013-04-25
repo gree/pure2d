@@ -51,15 +51,15 @@ public class WhirlAnimatorVO extends TweenAnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         super.resetAnimator(target, animator);
 
-        final WhirlAnimator move = (WhirlAnimator) animator;
-        if (move != null) {
-            move.setValues(NovaConfig.getRandomInt(radius1), NovaConfig.getRandomInt(radius2, WhirlAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(degree1),
-                    NovaConfig.getRandomInt(degree2, (int) WhirlAnimator.DEFAULT_ANGLE * 180));
-            move.setCircleInterpolator(NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
-            move.setCircleRatio(NovaConfig.getRandomFloat(circle_ratio, WhirlAnimator.DEFAULT_CIRCLE_RATIO));
-            move.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
-            move.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        final WhirlAnimator whirl = (WhirlAnimator) animator;
+        // if (whirl != null) {
+        whirl.setValues(NovaConfig.getRandomInt(radius1), NovaConfig.getRandomInt(radius2, WhirlAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(degree1),
+                NovaConfig.getRandomInt(degree2, (int) WhirlAnimator.DEFAULT_ANGLE * 180));
+        whirl.setCircleInterpolator(NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
+        whirl.setCircleRatio(NovaConfig.getRandomFloat(circle_ratio, WhirlAnimator.DEFAULT_CIRCLE_RATIO));
+        whirl.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
+        whirl.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 
     /*

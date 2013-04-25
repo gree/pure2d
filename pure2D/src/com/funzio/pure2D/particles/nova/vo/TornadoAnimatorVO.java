@@ -51,14 +51,14 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         super.resetAnimator(target, animator);
 
-        final TornadoAnimator move = (TornadoAnimator) animator;
-        if (move != null) {
-            move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), NovaConfig.getRandomFloat(circle_ratio, TornadoAnimator.DEFAULT_CIRCLE_RATIO),
-                    NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
-            move.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
-            move.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        final TornadoAnimator tornado = (TornadoAnimator) animator;
+        // if (tornado != null) {
+        tornado.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
+        tornado.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), NovaConfig.getRandomFloat(circle_ratio, TornadoAnimator.DEFAULT_CIRCLE_RATIO),
+                NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
+        tornado.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
+        tornado.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 
     /*

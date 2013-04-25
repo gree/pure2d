@@ -18,10 +18,17 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
+    // param set 1
     public ArrayList<Integer> dx;
     public ArrayList<Integer> dy;
-    public ArrayList<Integer> radius1;
-    public ArrayList<Integer> radius2;
+
+    // or param set 2
+    public ArrayList<Integer> distance;
+    public ArrayList<Integer> degree;
+
+    // and wave params
+    public ArrayList<Integer> wave_radius1;
+    public ArrayList<Integer> wave_radius2;
     public ArrayList<Integer> wave_num;
 
     public SinWaveAnimatorVO() {
@@ -33,8 +40,12 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
         dx = NovaVO.getListInt(json, "dx");
         dy = NovaVO.getListInt(json, "dy");
-        radius1 = NovaVO.getListInt(json, "radius1");
-        radius2 = NovaVO.getListInt(json, "radius2");
+        // or
+        distance = NovaVO.getListInt(json, "distance");
+        degree = NovaVO.getListInt(json, "degree");
+
+        wave_radius1 = NovaVO.getListInt(json, "wave_radius1");
+        wave_radius2 = NovaVO.getListInt(json, "wave_radius2");
         wave_num = NovaVO.getListInt(json, "wave_num");
     }
 
@@ -47,13 +58,17 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
     public void resetAnimator(final Manipulatable target, final Animator animator) {
         super.resetAnimator(target, animator);
 
-        final SinWaveAnimator move = (SinWaveAnimator) animator;
-        if (move != null) {
-            move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setDuration(NovaConfig.getRandomInt(duration));
-            move.setWaveRadius(NovaConfig.getRandomInt(radius1, SinWaveAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(radius2, SinWaveAnimator.DEFAULT_RADIUS));
-            move.setWaveNum(NovaConfig.getRandomInt(wave_num, SinWaveAnimator.DEFAULT_WAVE_NUM));
+        final SinWaveAnimator sinWave = (SinWaveAnimator) animator;
+        // if (sinWave != null) {
+        if (distance != null) {
+            sinWave.setDistance(NovaConfig.getRandomInt(distance), NovaConfig.getRandomInt(degree));
+        } else {
+            sinWave.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
         }
+        sinWave.setWaveRadius(NovaConfig.getRandomInt(wave_radius1, SinWaveAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(wave_radius2, SinWaveAnimator.DEFAULT_RADIUS));
+        sinWave.setWaveNum(NovaConfig.getRandomInt(wave_num, SinWaveAnimator.DEFAULT_WAVE_NUM));
+        sinWave.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 
     /*
@@ -80,19 +95,19 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
             }
         }
 
-        // scale radius1
-        if (radius1 != null) {
-            final int size = radius1.size();
+        // scale wave_radius1
+        if (wave_radius1 != null) {
+            final int size = wave_radius1.size();
             for (int i = 0; i < size; i++) {
-                radius1.set(i, Math.round(radius1.get(i) * scale));
+                wave_radius1.set(i, Math.round(wave_radius1.get(i) * scale));
             }
         }
 
-        // scale radius2
-        if (radius2 != null) {
-            final int size = radius2.size();
+        // scale wave_radius2
+        if (wave_radius2 != null) {
+            final int size = wave_radius2.size();
             for (int i = 0; i < size; i++) {
-                radius2.set(i, Math.round(radius2.get(i) * scale));
+                wave_radius2.set(i, Math.round(wave_radius2.get(i) * scale));
             }
         }
     }

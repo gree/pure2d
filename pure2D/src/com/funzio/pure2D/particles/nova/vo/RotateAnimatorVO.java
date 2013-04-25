@@ -43,14 +43,14 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(target, animator);
 
         final RotateAnimator rotate = (RotateAnimator) animator;
-        if (rotate != null) {
-            if (delta != null) {
-                rotate.setDelta(NovaConfig.getRandomFloat(delta));
-            } else {
-                rotate.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));
-            }
-            rotate.setDuration(NovaConfig.getRandomInt(duration));
+        // if (rotate != null) {
+        if (delta != null) {
+            rotate.setDelta(NovaConfig.getRandomFloat(delta));
+        } else {
+            rotate.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));
         }
+        rotate.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 
 }

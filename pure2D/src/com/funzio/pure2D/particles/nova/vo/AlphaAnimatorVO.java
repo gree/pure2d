@@ -42,9 +42,9 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(target, animator);
 
         final AlphaAnimator alpha = (AlphaAnimator) animator;
-        if (alpha != null) {
-            alpha.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));
-            alpha.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        // if (alpha != null) {
+        alpha.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));
+        alpha.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 }

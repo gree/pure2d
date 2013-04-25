@@ -18,8 +18,13 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class MoveAnimatorVO extends TweenAnimatorVO {
 
+    // param set 1
     public ArrayList<Integer> dx;
     public ArrayList<Integer> dy;
+
+    // or param set 2
+    public ArrayList<Integer> distance;
+    public ArrayList<Integer> degree;
 
     public MoveAnimatorVO() {
         super();
@@ -30,6 +35,9 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
 
         dx = NovaVO.getListInt(json, "dx");
         dy = NovaVO.getListInt(json, "dy");
+        // or
+        distance = NovaVO.getListInt(json, "distance");
+        degree = NovaVO.getListInt(json, "degree");
     }
 
     @Override
@@ -42,10 +50,16 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(target, animator);
 
         final MoveAnimator move = (MoveAnimator) animator;
-        if (move != null) {
+        // if (move != null) {
+        if (distance != null) {
+            move.setDistance(NovaConfig.getRandomInt(distance), NovaConfig.getRandomInt(degree));
+        } else {
             move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setDuration(NovaConfig.getRandomInt(duration));
         }
+
+        move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
+        move.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 
     /*

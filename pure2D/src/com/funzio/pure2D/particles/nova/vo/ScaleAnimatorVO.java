@@ -46,13 +46,13 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(target, animator);
 
         final ScaleAnimator scale = (ScaleAnimator) animator;
-        if (scale != null) {
-            scale.setValues(NovaConfig.getRandomFloat(x_from, 1), //
-                    NovaConfig.getRandomFloat(y_from, 1), //
-                    NovaConfig.getRandomFloat(x_to, 1), //
-                    NovaConfig.getRandomFloat(y_to, 1));
+        // if (scale != null) {
+        scale.setValues(NovaConfig.getRandomFloat(x_from, 1), //
+                NovaConfig.getRandomFloat(y_from, 1), //
+                NovaConfig.getRandomFloat(x_to, 1), //
+                NovaConfig.getRandomFloat(y_to, 1));
 
-            scale.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        scale.setDuration(NovaConfig.getRandomInt(duration));
+        // }
     }
 }

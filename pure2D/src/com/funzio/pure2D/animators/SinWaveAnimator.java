@@ -59,6 +59,15 @@ public class SinWaveAnimator extends TweenAnimator {
         mCosAngle = (float) Math.cos(mAngle);
     }
 
+    public void setDistance(final float distance, final float radianAngle) {
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
+    public void setDistance(final float distance, final int degreeAngle) {
+        final float radianAngle = degreeAngle * (float) Math.PI / 180;
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
         setValues(srcX, srcY, dstX, dstY);
 

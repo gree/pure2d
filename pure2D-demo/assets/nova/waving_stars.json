@@ -20,11 +20,11 @@
 		{
 			"name": "wave_ani",
 			"type": "sin_wave",
-			"dx": [-400, 400],
-			"dy": [-400, 400],
+			"distance": 500,
+			"degree": [0, 360],
 			"reversed": true,
-			"radius1": 0,
-			"radius2": 80,
+			"wave_radius1": 0,
+			"wave_radius2": 80,
 			"wave_num": 2,
 			"duration": 2000,
 			"interpolation": "bounce"
