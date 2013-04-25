@@ -28,7 +28,7 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
 // @Type(value = ParallelAnimatorVO.class, name = "parallel"), //
 // })
 
-public abstract class AnimatorVO {
+public abstract class AnimatorVO extends NovaEntryVO {
     public static final String PARALLEL = "parallel";
     public static final String SEQUENCE = "sequence";
     public static final String ALPHA = "alpha";
@@ -55,11 +55,9 @@ public abstract class AnimatorVO {
 
     public abstract Animator createAnimator(Manipulatable target, Animator... animators);
 
-    public AnimatorVO() {
-        // TODO nothing
-    }
-
     public AnimatorVO(final JSONObject json) throws JSONException {
+        super(json);
+
         name = json.optString("name");
         type = json.optString("type");
 

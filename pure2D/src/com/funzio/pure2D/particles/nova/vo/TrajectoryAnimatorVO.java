@@ -22,10 +22,6 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
     public ArrayList<Float> velocity;
     public ArrayList<Float> angle;
 
-    public TrajectoryAnimatorVO() {
-        super();
-    }
-
     public TrajectoryAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

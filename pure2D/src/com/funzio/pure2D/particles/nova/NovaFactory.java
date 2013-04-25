@@ -100,7 +100,7 @@ public class NovaFactory {
         return new NovaEmitter(this, emitterVO, pos, params);
     }
 
-    protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
+    protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO, final int emitIndex) {
         // use pool
         NovaParticle particle = null;
         if (mParticlePool != null) {
@@ -108,10 +108,10 @@ public class NovaFactory {
         }
         if (particle == null) {
             // new instance
-            particle = new NovaParticle(emitter, particleVO);
+            particle = new NovaParticle(emitter, particleVO, emitIndex);
         } else {
             // reset and reuse
-            particle.reset(emitter, particleVO);
+            particle.reset(emitter, particleVO, emitIndex);
         }
 
         return particle;
@@ -170,7 +170,7 @@ public class NovaFactory {
      * @param animationName
      * @return
      */
-    public Animator createAnimator(final Manipulatable target, final AnimatorVO vo) {
+    protected Animator createAnimator(final Manipulatable target, final AnimatorVO vo, final int emitIndex) {
         // Log.v(TAG, "createAnimator(): " + animationName);
 
         // null check
@@ -198,7 +198,7 @@ public class NovaFactory {
             }
         }
 
-        return createAnimatorInstance(target, vo);
+        return createAnimatorInstance(target, vo, emitIndex);
     }
 
     /**
@@ -216,7 +216,7 @@ public class NovaFactory {
         }
     }
 
-    protected Animator createAnimatorInstance(final Manipulatable target, final AnimatorVO animatorVO) {
+    protected Animator createAnimatorInstance(final Manipulatable target, final AnimatorVO animatorVO, final int emitIndex) {
         // null check
         if (animatorVO == null) {
             return null;
@@ -226,7 +226,7 @@ public class NovaFactory {
             // group
             final GroupAnimatorVO groupVO = (GroupAnimatorVO) animatorVO;
             // create the child animators
-            return groupVO.createAnimator(target, createChildAnimators(target, groupVO.animators));
+            return groupVO.createAnimator(target, createChildAnimators(target, groupVO.animators, emitIndex));
         } else {
             return animatorVO.createAnimator(target);
         }
@@ -238,7 +238,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    protected Animator[] createChildAnimators(final Manipulatable target, final ArrayList<AnimatorVO> vos) {
+    protected Animator[] createChildAnimators(final Manipulatable target, final ArrayList<AnimatorVO> vos, final int emitIndex) {
         // null check
         if (vos == null) {
             return null;
@@ -247,13 +247,13 @@ public class NovaFactory {
         final int size = vos.size();
         Animator[] animators = new Animator[size];
         for (int i = 0; i < size; i++) {
-            animators[i] = createAnimatorInstance(target, vos.get(i));
+            animators[i] = createAnimatorInstance(target, vos.get(i), emitIndex);
         }
 
         return animators;
     }
 
-    public MotionTrail createMotionTrail(final DisplayObject target, final MotionTrailVO trailVO) {
+    protected MotionTrail createMotionTrail(final DisplayObject target, final MotionTrailVO trailVO, final int emitIndex) {
         // Log.v(TAG, "createMotionTrail(): " + trailName);
 
         // null check

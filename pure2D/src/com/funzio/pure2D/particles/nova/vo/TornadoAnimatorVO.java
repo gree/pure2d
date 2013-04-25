@@ -26,10 +26,6 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> circle_multiplier;
     public ArrayList<Float> circle_ratio;
 
-    public TornadoAnimatorVO() {
-        super();
-    }
-
     public TornadoAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

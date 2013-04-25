@@ -23,10 +23,6 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> y_from;
     public ArrayList<Float> y_to;
 
-    public ScaleAnimatorVO() {
-        super();
-    }
-
     public ScaleAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

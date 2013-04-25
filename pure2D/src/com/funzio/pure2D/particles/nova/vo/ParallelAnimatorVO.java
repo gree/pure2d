@@ -15,10 +15,6 @@ import com.funzio.pure2D.animators.ParallelAnimator;
  */
 public class ParallelAnimatorVO extends GroupAnimatorVO {
 
-    public ParallelAnimatorVO() {
-        super();
-    }
-
     public ParallelAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
     }

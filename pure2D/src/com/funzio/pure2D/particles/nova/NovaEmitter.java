@@ -95,7 +95,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         // emitting action for particles
         int size = mEmitterVO.particles.size();
         for (int i = 0; i < size; i++) {
-            mTimeline.addAction(new EmitAction(this, mEmitterVO.particles.get(i)));
+            mTimeline.addAction(new EmitAction(mEmitterVO.particles.get(i)));
         }
         // add timeline
         addManipulator(mTimeline);
@@ -104,13 +104,13 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
 
         // optional emitter animator
         if (mEmitterVO.animator != null && mEmitterVO.animator != "") {
-            mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator));
+            mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator), -1);
 
             if (mAnimator != null) {
                 // only create trail when there is an animator
                 if (mEmitterVO.motion_trail != null) {
                     // get a new trail from pool
-                    mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
+                    mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail), -1);
                 }
 
                 // add animator
@@ -259,14 +259,13 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
      * 
      * @author long
      */
-    private static class EmitAction extends Action {
-        private NovaEmitter mEmitter;
+    private class EmitAction extends Action {
         private ParticleVO mParticleVO;
+        private int mEmitIndex = 0;
 
-        public EmitAction(final NovaEmitter emitter, final ParticleVO vo) {
+        public EmitAction(final ParticleVO vo) {
             super(vo.start_delay, vo.step_delay, vo.duration);
 
-            mEmitter = emitter;
             mParticleVO = vo;
         }
 
@@ -277,14 +276,14 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
             // @Override
             // public void run() {
             // null check
-            if (mEmitter.mParent != null) {
+            if (mParent != null) {
                 // emit the particles
                 Container layer;
                 for (int n = 0; n < mParticleVO.step_quantity; n++) {
                     // find the layer
-                    layer = mParticleVO.layer > 0 ? mEmitter.mLayers.get(mParticleVO.layer) : mEmitter.mParent;
+                    layer = mParticleVO.layer > 0 ? mLayers.get(mParticleVO.layer) : mParent;
                     // add to the layer
-                    layer.addChild(mEmitter.mFactory.createParticle(mEmitter, mParticleVO));
+                    layer.addChild(mFactory.createParticle(NovaEmitter.this, mParticleVO, mEmitIndex++));
                 }
             }
             // }

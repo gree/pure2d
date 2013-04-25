@@ -21,10 +21,6 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
     public boolean reversed;
     public ArrayList<Integer> duration;
 
-    public TweenAnimatorVO() {
-        super();
-    }
-
     public TweenAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

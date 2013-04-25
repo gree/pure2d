@@ -20,10 +20,6 @@ public class RecursiveTrajectoryAnimatorVO extends TrajectoryAnimatorVO {
 
     public ArrayList<Float> deceleration_rate;
 
-    public RecursiveTrajectoryAnimatorVO() {
-        super();
-    }
-
     public RecursiveTrajectoryAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

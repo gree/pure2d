@@ -15,7 +15,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 /**
  * @author long
  */
-public class EmitterVO {
+public class EmitterVO extends NovaEntryVO {
     public String name;
     public String type = "rectangle";
     public int width = 1;
@@ -36,10 +36,9 @@ public class EmitterVO {
 
     private HashSet<String> mUsedSprites;
 
-    public EmitterVO() {
-    }
-
     public EmitterVO(final JSONObject json) throws JSONException {
+        super(json);
+
         name = json.optString("name");
 
         if (json.has("type")) {

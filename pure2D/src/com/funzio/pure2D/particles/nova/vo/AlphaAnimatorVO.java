@@ -21,10 +21,6 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> from;
     public ArrayList<Float> to;
 
-    public AlphaAnimatorVO() {
-        super();
-    }
-
     public AlphaAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

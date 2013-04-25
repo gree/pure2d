@@ -20,10 +20,6 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
     // child animators
     public ArrayList<AnimatorVO> animators;
 
-    public GroupAnimatorVO() {
-
-    }
-
     public GroupAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

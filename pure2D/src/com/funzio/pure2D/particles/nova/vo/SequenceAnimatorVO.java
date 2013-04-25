@@ -15,10 +15,6 @@ import com.funzio.pure2D.animators.SequenceAnimator;
  */
 public class SequenceAnimatorVO extends GroupAnimatorVO {
 
-    public SequenceAnimatorVO() {
-        super();
-    }
-
     public SequenceAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
     }

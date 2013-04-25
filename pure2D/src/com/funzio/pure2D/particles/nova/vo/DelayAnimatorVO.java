@@ -20,10 +20,6 @@ public class DelayAnimatorVO extends AnimatorVO {
 
     public ArrayList<Integer> duration;
 
-    public DelayAnimatorVO() {
-        super();
-    }
-
     public DelayAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

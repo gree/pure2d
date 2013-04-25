@@ -31,10 +31,6 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Integer> wave_radius2;
     public ArrayList<Integer> wave_num;
 
-    public SinWaveAnimatorVO() {
-        super();
-    }
-
     public SinWaveAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

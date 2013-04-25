@@ -22,10 +22,6 @@ public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Integer> distance;
     public ArrayList<Integer> degree;
 
-    public MoveRadiusAnimatorVO() {
-        super();
-    }
-
     public MoveRadiusAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

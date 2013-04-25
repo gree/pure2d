@@ -82,6 +82,24 @@ public class NovaConfig {
         }
     }
 
+    public static float getFloat(final ArrayList<Float> values, final int index, final float defalutValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return defalutValue;
+        }
+
+        return values.get(index % size);
+    }
+
+    public static float getFloat(final ArrayList<Float> values, final int index) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return 0;
+        }
+
+        return values.get(index % size);
+    }
+
     public static int getRandomInt(final ArrayList<Integer> values) {
         return getRandomInt(values, 0);
     }
@@ -107,6 +125,24 @@ public class NovaConfig {
         }
     }
 
+    public static int getInt(final ArrayList<Integer> values, final int index, final int defalutValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return defalutValue;
+        }
+
+        return values.get(index % size);
+    }
+
+    public static int getInt(final ArrayList<Integer> values, final int index) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return 0;
+        }
+
+        return values.get(index % size);
+    }
+
     public static String getRandomString(final ArrayList<String> values) {
         if (values == null) {
             return null;
@@ -125,6 +161,15 @@ public class NovaConfig {
         }
     }
 
+    public static String getString(final ArrayList<String> values, final int index) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return null;
+        }
+
+        return values.get(index % size);
+    }
+
     public static GLColor getRandomColor(final ArrayList<GLColor> values, final GLColor defaultValue) {
         if (values == null) {
             return defaultValue;
@@ -141,6 +186,15 @@ public class NovaConfig {
             // randomly pick one of the given values
             return values.get(RANDOM.nextInt(size));
         }
+    }
+
+    public static GLColor getColor(final ArrayList<GLColor> values, final int index, final GLColor defaultValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return defaultValue;
+        }
+
+        return values.get(index % size);
     }
 
     public static Interpolator getInterpolator(final String name) {

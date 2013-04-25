@@ -18,10 +18,10 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
     private MotionTrail mMotionTrail;
     private NovaEmitter mNovaEmitter;
 
-    public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
+    public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO, final int emitIndex) {
         super();
 
-        reset(emitter, particleVO);
+        reset(emitter, particleVO, emitIndex);
     }
 
     /*
@@ -53,6 +53,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // set properties
         setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
         mParticleVO = (ParticleVO) params[1];
+        int emitIndex = (Integer) params[2];
 
         // init the particle
         mPosition = mNovaEmitter.getNextPosition(mPosition);
@@ -67,13 +68,13 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // now, find optional animator
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
             // get a new animator from pool
-            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getRandomString(mParticleVO.animator)));
+            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getRandomString(mParticleVO.animator)), emitIndex);
 
             if (mAnimator != null) {
                 // now, find optional trail
                 if (mParticleVO.motion_trail != null && !mParticleVO.motion_trail.isEmpty()) {
                     // get a new trail from pool
-                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)));
+                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)), emitIndex);
                 }
 
                 // add it

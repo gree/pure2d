@@ -26,10 +26,6 @@ public class WhirlAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> circle_ratio;
     public ArrayList<Float> circle_multiplier;
 
-    public WhirlAnimatorVO() {
-        super();
-    }
-
     public WhirlAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

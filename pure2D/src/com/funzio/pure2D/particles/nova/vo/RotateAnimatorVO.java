@@ -21,10 +21,6 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> to;
     public ArrayList<Float> delta;
 
-    public RotateAnimatorVO() {
-        super();
-    }
-
     public RotateAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 

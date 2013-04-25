@@ -27,10 +27,6 @@ public class ColorAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Integer> a_from;
     public ArrayList<Integer> a_to;
 
-    public ColorAnimatorVO() {
-        super();
-    }
-
     public ColorAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
