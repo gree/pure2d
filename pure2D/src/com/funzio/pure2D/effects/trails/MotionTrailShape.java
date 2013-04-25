@@ -13,11 +13,14 @@ import com.funzio.pure2D.shapes.Polyline;
  * @author long
  */
 public class MotionTrailShape extends Polyline implements MotionTrail {
+    public static final int DEFAULT_NUM_POINTS = 10;
+    public static final float DEFAULT_MOTION_EASING = 0.5f;
 
-    protected int mNumPoints = 10;
+    protected int mNumPoints = DEFAULT_NUM_POINTS;
+    protected float mMotionEasingX = DEFAULT_MOTION_EASING;
+    protected float mMotionEasingY = DEFAULT_MOTION_EASING;
     protected int mMinLength = 0;
     protected int mSegmentLength = 0;
-    protected float mMotionEasing = 0.5f;
 
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
@@ -44,7 +47,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
      */
     @Override
     public void reset(final Object... params) {
-        // TODO Auto-generated method stub
+        mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
     }
 
     @Override
@@ -88,8 +91,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                     dy = p2.y - p1.y;
                     if (mSegmentLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
                         // move toward the leading point
-                        p1.x += dx * mMotionEasing;
-                        p1.y += dy * mMotionEasing;
+                        p1.x += dx * mMotionEasingX;
+                        p1.y += dy * mMotionEasingY;
                     }
                 }
             }
@@ -176,15 +179,24 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
     }
 
-    public float getMotionEasing() {
-        return mMotionEasing;
+    public float getMotionEasingX() {
+        return mMotionEasingX;
+    }
+
+    public float getMotionEasingY() {
+        return mMotionEasingY;
     }
 
     /**
      * @param easing, must be from 0 to 1
      */
     public void setMotionEasing(final float easing) {
-        mMotionEasing = easing;
+        mMotionEasingX = mMotionEasingY = easing;
+    }
+
+    public void setMotionEasing(final float easingX, final float easingY) {
+        mMotionEasingX = easingX;
+        mMotionEasingY = easingY;
     }
 
     public PointF getTargetOffset() {

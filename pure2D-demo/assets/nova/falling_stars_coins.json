@@ -34,7 +34,7 @@
 		{
 			"name": "fly_ani",
 			"type": "translate_radius",
-			"radius": [300, 700],
+			"radius": [500, 1000],
 			"degree": [0, 360],
 			"duration": 1000,
 			"interpolation": "decelerate"
@@ -46,6 +46,8 @@
 			"name": "trail1",
 			"type": "shape",
 			"stroke1": 10,
+			"easing_x": [0.25, 0.75],
+			"easing_y": [0.25, 0.75],
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF, 0xFF00FF00, 0xFF00FFFF, 0xFFFF00FF],
 			"color2": 0x00FFFFFF
 		},

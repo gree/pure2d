@@ -34,7 +34,7 @@
 			"radius2": [300, 400],
 			"degree1": [1080, 720, 1080, 720],
 			"degree2": [0, 360],
-			"duration": 10000,
+			"duration": [2000, 10000],
 			"circle_multiplier": [-1, 1, -1, 1],
 			"interpolation": "accelerate"
 		},
@@ -71,8 +71,9 @@
 			"num_points": 20,
 			"stroke1": 1,
 			"stroke2": 20,
-			"color1": 0xFFFFAA00,
-			"color2": 0x00FF0000
+			"easing_x": 0.75,
+			"color1": [0xFF99FF33, 0xFF99FFFF, 0xFF3399FF],
+			"color2": 0x00AAFFFF
 		}
 	]
 }

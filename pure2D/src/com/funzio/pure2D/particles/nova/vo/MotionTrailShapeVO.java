@@ -24,6 +24,8 @@ public class MotionTrailShapeVO extends MotionTrailVO {
     public ArrayList<GLColor> color1;
     public ArrayList<GLColor> color2;
     public ArrayList<String> stroke_interpolation;
+    public ArrayList<Float> easing_x;
+    public ArrayList<Float> easing_y;
 
     public MotionTrailShapeVO() {
         super();
@@ -40,6 +42,8 @@ public class MotionTrailShapeVO extends MotionTrailVO {
         stroke2 = NovaVO.getListInt(json, "stroke2");
         color1 = NovaVO.getListColor(json, "color1");
         color2 = NovaVO.getListColor(json, "color2");
+        easing_x = NovaVO.getListFloat(json, "easing_x");
+        easing_y = NovaVO.getListFloat(json, "easing_y");
         stroke_interpolation = NovaVO.getListString(json, "stroke_interpolation");
     }
 
@@ -89,6 +93,6 @@ public class MotionTrailShapeVO extends MotionTrailVO {
         shape.setStrokeRange(NovaConfig.getRandomInt(stroke1, 1), NovaConfig.getRandomInt(stroke2, 1));
         shape.setStrokeColorRange(NovaConfig.getRandomColor(color1, GLColor.WHITE), NovaConfig.getRandomColor(color2, GLColor.WHITE));
         shape.setStrokeInterpolator(NovaConfig.getInterpolator(NovaConfig.getRandomString(stroke_interpolation)));
+        shape.setMotionEasing(NovaConfig.getRandomFloat(easing_x, MotionTrailShape.DEFAULT_MOTION_EASING), NovaConfig.getRandomFloat(easing_y, MotionTrailShape.DEFAULT_MOTION_EASING));
     }
-
 }
