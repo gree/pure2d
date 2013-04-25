@@ -110,6 +110,7 @@ public class Polyline extends Shape {
 
     protected void allocateVertices(final int numVertices) {
         mVerticesNum = numVertices; // each point has upper and lower points
+        // NOTE: only re-allocate when the required size is bigger
         if (mVertices == null || mVerticesNum * 2 > mVertices.length) {
             mVertices = new float[mVerticesNum * 2];
 

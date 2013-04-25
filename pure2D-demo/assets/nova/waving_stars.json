@@ -7,7 +7,7 @@
 			"particles": [
 				{
 					"sprite": "atlas/star_03_60.json",
-					"step_delay": 50,
+					"step_delay": 30,
 					"animator": "wave_ani",
 					"motion_trail": "small_trail",
 					"blend_mode": "add"
@@ -22,13 +22,12 @@
 			"type": "sin_wave",
 			"dx": [-400, 400],
 			"dy": [-400, 400],
+			"reversed": true,
 			"radius1": 0,
-			"radius2": 50,
+			"radius2": 80,
 			"wave_num": 2,
 			"duration": 2000,
-			"interpolation": "accelerate_decelerate",
-			"loop_mode": "reverse",
-			"loop_count": 1
+			"interpolation": "bounce"
 		}
 	],
 
@@ -37,7 +36,7 @@
 			"name": "small_trail",
 			"type": "shape",
 			"stroke1": 1,
-			"stroke2": [10, 30],
+			"stroke2": 40,
 			"num_points": 15,
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF],
 			"color2": 0x00FF0000

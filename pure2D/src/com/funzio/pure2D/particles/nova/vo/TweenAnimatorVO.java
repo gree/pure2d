@@ -18,6 +18,7 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public abstract class TweenAnimatorVO extends AnimatorVO {
     public String interpolation;
+    public boolean reversed;
     public ArrayList<Integer> duration;
 
     public TweenAnimatorVO() {
@@ -28,6 +29,7 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
         super(json);
 
         interpolation = json.optString("interpolation");
+        reversed = json.optBoolean("reversed", false);
         duration = NovaVO.getListInt(json, "duration");
     }
 
@@ -40,6 +42,7 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
         super.resetAnimator(target, animator);
 
         // if (animator instanceof TweenAnimator) {
+        ((TweenAnimator) animator).setReversed(reversed);
         ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
 
         if (loop_count != null) {

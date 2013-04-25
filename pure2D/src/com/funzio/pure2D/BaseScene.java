@@ -395,8 +395,10 @@ public class BaseScene implements Scene {
                         child = mChildren.get(i);
                         final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
                         if (visible) {
-                            // draw frame
-                            child.draw(mGLState);
+                            // draw frame, check alpha for optimization
+                            if (child.getAlpha() > 0) {
+                                child.draw(mGLState);
+                            }
 
                             // stack the visible child
                             if (child instanceof Touchable && ((Touchable) child).isTouchable()) {
@@ -413,8 +415,7 @@ public class BaseScene implements Scene {
             } else {
                 for (int i = 0; i < mNumChildren; i++) {
                     child = mChildren.get(i);
-                    final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
-                    if (visible) {
+                    if (child.shouldRender() && ((mCamera == null) || mCamera.isViewable(child))) {
                         // draw frame
                         child.draw(mGLState);
                     }

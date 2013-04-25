@@ -50,6 +50,8 @@ public interface DisplayObject extends Manipulatable {
 
     public boolean isVisible();
 
+    public boolean shouldRender();
+
     public GLColor getColor();
 
     public void setColor(final GLColor color);

@@ -156,18 +156,27 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                 mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
             }
         }
+
+        // apply
+        setPoints(mPoints);
     }
 
     public void setPointsAt(final float x, final float y) {
         for (int i = 0; i < mNumPoints; i++) {
             mPoints[i].set(x, y);
         }
+
+        // apply
+        setPoints(mPoints);
     }
 
     public void setPointsAt(final PointF p) {
         for (int i = 0; i < mNumPoints; i++) {
             mPoints[i].set(p.x, p.y);
         }
+
+        // apply
+        setPoints(mPoints);
     }
 
     public int getMinLength() {
