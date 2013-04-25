@@ -15,8 +15,8 @@ import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
-import com.funzio.pure2D.particles.nova.vo.EmitterVO;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
+import com.funzio.pure2D.particles.nova.vo.NovaEmitterVO;
+import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 import com.funzio.pure2D.utils.Reusable;
 
 /**
@@ -27,7 +27,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected final Timeline mTimeline;
     protected final NovaFactory mFactory;
 
-    protected EmitterVO mEmitterVO;
+    protected NovaEmitterVO mEmitterVO;
     protected Object[] mParams;
     protected Animator mAnimator;
     protected MotionTrail mMotionTrail;
@@ -35,7 +35,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     // layers for particles
     protected SparseArray<DisplayGroup> mLayers;
 
-    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos, final Object... params) {
+    public NovaEmitter(final NovaFactory factory, final NovaEmitterVO vo, final PointF pos, final Object... params) {
         super();
 
         mFactory = factory;
@@ -83,7 +83,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         }
     }
 
-    public EmitterVO getEmitterVO() {
+    public NovaEmitterVO getEmitterVO() {
         return mEmitterVO;
     }
 
@@ -138,7 +138,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected void createLayers() {
         int size = mEmitterVO.particles.size();
         for (int i = 0; i < size; i++) {
-            final ParticleVO particle = mEmitterVO.particles.get(i);
+            final NovaParticleVO particle = mEmitterVO.particles.get(i);
             if (particle.layer > 0) {
                 if (mLayers == null) {
                     mLayers = new SparseArray<DisplayGroup>();
@@ -260,10 +260,10 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
      * @author long
      */
     private class EmitAction extends Action {
-        private ParticleVO mParticleVO;
+        private NovaParticleVO mParticleVO;
         private int mEmitIndex = 0;
 
-        public EmitAction(final ParticleVO vo) {
+        public EmitAction(final NovaParticleVO vo) {
             super(vo.start_delay, vo.step_delay, vo.duration);
 
             mParticleVO = vo;

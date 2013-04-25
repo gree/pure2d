@@ -7,18 +7,18 @@ import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.ClipParticle;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
+import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 
 /**
  * @author long
  */
 public class NovaParticle extends ClipParticle implements Animator.AnimatorListener {
-    private ParticleVO mParticleVO;
+    private NovaParticleVO mParticleVO;
     private Animator mAnimator;
     private MotionTrail mMotionTrail;
     private NovaEmitter mNovaEmitter;
 
-    public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO, final int emitIndex) {
+    public NovaParticle(final NovaEmitter emitter, final NovaParticleVO particleVO, final int emitIndex) {
         super();
 
         reset(emitter, particleVO, emitIndex);
@@ -52,7 +52,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
         // set properties
         setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
-        mParticleVO = (ParticleVO) params[1];
+        mParticleVO = (NovaParticleVO) params[1];
         int emitIndex = (Integer) params[2];
 
         // init the particle
@@ -117,7 +117,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
     }
 
-    public ParticleVO getParticleVO() {
+    public NovaParticleVO getParticleVO() {
         return mParticleVO;
     }
 

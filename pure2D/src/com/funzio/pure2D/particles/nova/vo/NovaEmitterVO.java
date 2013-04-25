@@ -15,7 +15,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 /**
  * @author long
  */
-public class EmitterVO extends NovaEntryVO {
+public class NovaEmitterVO extends NovaEntryVO {
     public String name;
     public String type = "rectangle";
     public int width = 1;
@@ -32,11 +32,11 @@ public class EmitterVO extends NovaEntryVO {
     public String motion_trail;
 
     // and particles this will emit
-    public ArrayList<ParticleVO> particles;
+    public ArrayList<NovaParticleVO> particles;
 
     private HashSet<String> mUsedSprites;
 
-    public EmitterVO(final JSONObject json) throws JSONException {
+    public NovaEmitterVO(final JSONObject json) throws JSONException {
         super(json);
 
         name = json.optString("name");
@@ -91,11 +91,11 @@ public class EmitterVO extends NovaEntryVO {
         }
     }
 
-    private ArrayList<ParticleVO> getParticles(final JSONArray array) throws JSONException {
-        final ArrayList<ParticleVO> list = new ArrayList<ParticleVO>();
+    private ArrayList<NovaParticleVO> getParticles(final JSONArray array) throws JSONException {
+        final ArrayList<NovaParticleVO> list = new ArrayList<NovaParticleVO>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {
-            list.add(new ParticleVO(array.getJSONObject(i)));
+            list.add(new NovaParticleVO(array.getJSONObject(i)));
         }
 
         return list;
@@ -109,7 +109,7 @@ public class EmitterVO extends NovaEntryVO {
             mUsedSprites = new HashSet<String>();
 
             // collect from the particles
-            for (ParticleVO particleVO : particles) {
+            for (NovaParticleVO particleVO : particles) {
                 if (particleVO.sprite != null) {
                     for (String sprite : particleVO.sprite) {
                         mUsedSprites.add(sprite);

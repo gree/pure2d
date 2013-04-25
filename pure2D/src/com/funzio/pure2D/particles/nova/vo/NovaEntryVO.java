@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * @author long
  */
-public class NovaEntryVO {
+public abstract class NovaEntryVO {
 
     public NovaEntryVO(final JSONObject json) throws JSONException {
     }

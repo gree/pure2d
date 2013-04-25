@@ -22,12 +22,12 @@ public class NovaVO {
     public String name;
     public int pool_size = 0;
 
-    public ArrayList<EmitterVO> emitters;
+    public ArrayList<NovaEmitterVO> emitters;
     public ArrayList<AnimatorVO> animators;
     public ArrayList<MotionTrailVO> motion_trails;
 
     // for fast look up
-    private HashMap<String, EmitterVO> mEmitterMap;
+    private HashMap<String, NovaEmitterVO> mEmitterMap;
     private HashMap<String, AnimatorVO> mAnimatorMap;
     private HashMap<String, MotionTrailVO> mMotionTrailMap;
 
@@ -65,8 +65,8 @@ public class NovaVO {
 
         // make the maps
         if (emitters != null) {
-            mEmitterMap = new HashMap<String, EmitterVO>();
-            for (final EmitterVO vo : emitters) {
+            mEmitterMap = new HashMap<String, NovaEmitterVO>();
+            for (final NovaEmitterVO vo : emitters) {
                 mEmitterMap.put(vo.name, vo);
             }
         }
@@ -103,7 +103,7 @@ public class NovaVO {
     public void applyScale(final float scale) {
         // scale emitters
         if (emitters != null) {
-            for (final EmitterVO vo : emitters) {
+            for (final NovaEmitterVO vo : emitters) {
                 if (vo != null) {
                     vo.applyScale(scale);
                 }
@@ -129,7 +129,7 @@ public class NovaVO {
         }
     }
 
-    public EmitterVO getEmitterVO(final String name) {
+    public NovaEmitterVO getEmitterVO(final String name) {
         return mEmitterMap != null ? mEmitterMap.get(name) : null;
     }
 
@@ -141,15 +141,15 @@ public class NovaVO {
         return mMotionTrailMap != null ? mMotionTrailMap.get(name) : null;
     }
 
-    protected static ArrayList<EmitterVO> getEmitters(final JSONArray array) throws JSONException {
+    protected static ArrayList<NovaEmitterVO> getEmitters(final JSONArray array) throws JSONException {
         if (array == null) {
             return null;
         }
 
-        final ArrayList<EmitterVO> result = new ArrayList<EmitterVO>();
+        final ArrayList<NovaEmitterVO> result = new ArrayList<NovaEmitterVO>();
         final int size = array.length();
         for (int i = 0; i < size; i++) {
-            result.add(new EmitterVO(array.getJSONObject(i)));
+            result.add(new NovaEmitterVO(array.getJSONObject(i)));
         }
 
         return result;
@@ -283,7 +283,7 @@ public class NovaVO {
             mUsedSprites = new HashSet<String>();
 
             // collect from the emitters
-            for (EmitterVO emitterVO : emitters) {
+            for (NovaEmitterVO emitterVO : emitters) {
                 mUsedSprites.addAll(emitterVO.getUsedSprites());
             }
         }

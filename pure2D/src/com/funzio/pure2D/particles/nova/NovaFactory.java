@@ -15,11 +15,11 @@ import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
-import com.funzio.pure2D.particles.nova.vo.EmitterVO;
+import com.funzio.pure2D.particles.nova.vo.NovaEmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.MotionTrailVO;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
+import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 import com.funzio.pure2D.utils.ObjectPool;
 
 /**
@@ -70,7 +70,7 @@ public class NovaFactory {
 
         final int size = mNovaVO.emitters.size();
         final ArrayList<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
-        EmitterVO vo;
+        NovaEmitterVO vo;
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
@@ -91,16 +91,16 @@ public class NovaFactory {
     public NovaEmitter createEmitter(final String name, final PointF position, final Object... params) {
         Log.v(TAG, "createEmitters(): " + name + ", " + params);
 
-        final EmitterVO vo = mNovaVO.getEmitterVO(name);
+        final NovaEmitterVO vo = mNovaVO.getEmitterVO(name);
         return vo == null ? null : createEmitter(vo, position, params);
     }
 
-    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Object... params) {
+    protected NovaEmitter createEmitter(final NovaEmitterVO emitterVO, final PointF pos, final Object... params) {
         // TODO use pool
         return new NovaEmitter(this, emitterVO, pos, params);
     }
 
-    protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO, final int emitIndex) {
+    protected NovaParticle createParticle(final NovaEmitter emitter, final NovaParticleVO particleVO, final int emitIndex) {
         // use pool
         NovaParticle particle = null;
         if (mParticlePool != null) {
