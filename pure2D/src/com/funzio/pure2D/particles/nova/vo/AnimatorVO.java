@@ -33,9 +33,7 @@ public abstract class AnimatorVO {
     public static final String SEQUENCE = "sequence";
     public static final String ALPHA = "alpha";
     public static final String TRANSLATE = "translate";
-    public static final String TRANSLATE_RADIUS = "translate_radius";
     public static final String MOVE = "move";
-    public static final String MOVE_RADIUS = "move_radius";
     public static final String ROTATE = "rotate";
     public static final String SCALE = "scale";
     public static final String TRAJECTORY = "trajectory";
@@ -123,8 +121,6 @@ public abstract class AnimatorVO {
             return new ParallelAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TRANSLATE) || type.equalsIgnoreCase(MOVE)) {
             return new MoveAnimatorVO(json);
-        } else if (type.equalsIgnoreCase(TRANSLATE_RADIUS) || type.equalsIgnoreCase(MOVE_RADIUS)) {
-            return new MoveRadiusAnimatorVO(json);
         } else if (type.equalsIgnoreCase(ROTATE)) {
             return new RotateAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SCALE)) {

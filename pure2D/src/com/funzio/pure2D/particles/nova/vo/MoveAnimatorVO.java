@@ -56,8 +56,6 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
         } else {
             move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
         }
-
-        move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
         move.setDuration(NovaConfig.getRandomInt(duration));
         // }
     }

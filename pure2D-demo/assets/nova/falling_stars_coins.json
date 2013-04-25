@@ -33,7 +33,7 @@
 
 		{
 			"name": "fly_ani",
-			"type": "translate_radius",
+			"type": "translate",
 			"distance": [500, 1000],
 			"degree": [0, 360],
 			"duration": 1000,
