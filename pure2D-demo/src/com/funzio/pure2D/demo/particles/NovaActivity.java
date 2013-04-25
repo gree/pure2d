@@ -17,6 +17,7 @@ import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.R;
+import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
@@ -106,7 +107,7 @@ public class NovaActivity extends StageActivity {
                 // load asynchronously the json file, some old Android requires this to run on UI Thread
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
+                        loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString(MenuActivity.EXTRA_TAG));
                     }
                 });
 

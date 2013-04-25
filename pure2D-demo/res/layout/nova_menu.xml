@@ -3,8 +3,25 @@
     android:id="@+id/nova_menu_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
+
+    <LinearLayout
+        android:id="@+id/col1"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/col2"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5"
+        android:orientation="vertical" >
+    </LinearLayout>
 
 </LinearLayout>
