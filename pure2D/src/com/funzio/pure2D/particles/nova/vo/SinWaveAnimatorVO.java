@@ -20,7 +20,8 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
     public ArrayList<Integer> dx;
     public ArrayList<Integer> dy;
-    public ArrayList<Integer> wave_radius;
+    public ArrayList<Integer> radius1;
+    public ArrayList<Integer> radius2;
     public ArrayList<Integer> wave_num;
 
     public SinWaveAnimatorVO() {
@@ -32,7 +33,8 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
         dx = NovaVO.getListInt(json, "dx");
         dy = NovaVO.getListInt(json, "dy");
-        wave_radius = NovaVO.getListInt(json, "wave_radius");
+        radius1 = NovaVO.getListInt(json, "radius1");
+        radius2 = NovaVO.getListInt(json, "radius2");
         wave_num = NovaVO.getListInt(json, "wave_num");
     }
 
@@ -49,14 +51,8 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
         if (move != null) {
             move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
             move.setDuration(NovaConfig.getRandomInt(duration));
-
-            if (wave_radius != null) {
-                move.setWaveRadius(NovaConfig.getRandomInt(wave_radius));
-            }
-
-            if (wave_num != null) {
-                move.setWaveNum(NovaConfig.getRandomInt(wave_num));
-            }
+            move.setWaveRadius(NovaConfig.getRandomInt(radius1, SinWaveAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(radius2, SinWaveAnimator.DEFAULT_RADIUS));
+            move.setWaveNum(NovaConfig.getRandomInt(wave_num, SinWaveAnimator.DEFAULT_WAVE_NUM));
         }
     }
 
@@ -84,11 +80,19 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
             }
         }
 
-        // scale radius
-        if (wave_radius != null) {
-            final int size = wave_radius.size();
+        // scale radius1
+        if (radius1 != null) {
+            final int size = radius1.size();
             for (int i = 0; i < size; i++) {
-                wave_radius.set(i, Math.round(wave_radius.get(i) * scale));
+                radius1.set(i, Math.round(radius1.get(i) * scale));
+            }
+        }
+
+        // scale radius2
+        if (radius2 != null) {
+            final int size = radius2.size();
+            for (int i = 0; i < size; i++) {
+                radius2.set(i, Math.round(radius2.get(i) * scale));
             }
         }
     }
