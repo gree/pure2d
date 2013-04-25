@@ -50,7 +50,7 @@ public interface DisplayObject extends Manipulatable {
 
     public boolean isVisible();
 
-    public boolean shouldRender();
+    public boolean shouldDraw();
 
     public GLColor getColor();
 

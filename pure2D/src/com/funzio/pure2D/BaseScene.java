@@ -415,7 +415,7 @@ public class BaseScene implements Scene {
             } else {
                 for (int i = 0; i < mNumChildren; i++) {
                     child = mChildren.get(i);
-                    if (child.shouldRender() && ((mCamera == null) || mCamera.isViewable(child))) {
+                    if (child.shouldDraw() && ((mCamera == null) || mCamera.isViewable(child))) {
                         // draw frame
                         child.draw(mGLState);
                     }
