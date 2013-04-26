@@ -21,8 +21,7 @@ public class Polyline extends Shape {
     protected float mStroke1 = 1;
     protected float mStroke2 = 1;
 
-    protected GLColor mStrokeColor1;
-    protected GLColor mStrokeColor2;
+    protected GLColor[] mStrokeColors;
     protected float[] mColorValues;
 
     protected float[] mVertices;
@@ -115,62 +114,114 @@ public class Polyline extends Shape {
             mVertices = new float[mVerticesNum * 2];
 
             // only set colors ONCE!
-            setStrokeColorRange(mStrokeColor1, mStrokeColor2);
+            setStrokeColors(mStrokeColors);
         }
     }
 
     public void setStrokeRange(final float stroke1, final float stroke2) {
         mStroke1 = stroke1;
         mStroke2 = stroke2;
+
+        if (mPoints != null && mPoints.length > 0) {
+            setPoints(mPoints);
+        }
     }
 
+    @Deprecated
+    /**
+     * @param color1
+     * @param color2
+     * @see #setStrokeColors
+     */
     public void setStrokeColorRange(final GLColor color1, final GLColor color2) {
-        mStrokeColor1 = color1;
-        mStrokeColor2 = color2;
+        setStrokeColors(color1, color2);
+    }
 
-        // null check
-        if (mPoints != null && color1 != null && color2 != null) {
-            if (mColorValues == null || (mVerticesNum * 4) > mColorValues.length) {
-                mColorValues = new float[mVerticesNum * 4]; // each vertex has 4 floats
-            }
+    /**
+     * Set colors for up to 4 corners, in N-shape order
+     */
+    public void setStrokeColors(final GLColor... colors) {
+        mStrokeColors = colors;
 
-            float dr = (color2.r - color1.r) / (mPoints.length - 1);
-            float dg = (color2.g - color1.g) / (mPoints.length - 1);
-            float db = (color2.b - color1.b) / (mPoints.length - 1);
-            float da = (color2.a - color1.a) / (mPoints.length - 1);
-            int index = 0;
-            float r = color1.r;
-            float g = color1.g;
-            float b = color1.b;
-            float a = color1.a;
-            for (int i = 0; i < mPoints.length; i++) {
-                // upper point
-                mColorValues[index++] = r;
-                mColorValues[index++] = g;
-                mColorValues[index++] = b;
-                mColorValues[index++] = a;
-
-                // lower point
-                mColorValues[index++] = r;
-                mColorValues[index++] = g;
-                mColorValues[index++] = b;
-                mColorValues[index++] = a;
-
-                r += dr;
-                g += dg;
-                b += db;
-                a += da;
-            }
-
-            if (mColorBuffer == null) {
-                mColorBuffer = new ColorBuffer(mColorValues);
-            } else {
-                mColorBuffer.setValues(mColorValues);
-            }
-        } else {
+        if (mPoints == null || mPoints.length == 0 || colors == null || colors.length == 0) {
             mColorValues = null;
             mColorBuffer = null;
+            return;
         }
+
+        GLColor color1, color2, color3, color4;
+
+        color1 = colors[0];
+        if (colors.length >= 2 && colors[1] != null) {
+            color2 = colors[1];
+
+            if (colors.length >= 3 && colors[2] != null) {
+                color3 = colors[2];
+                if (colors.length >= 4 && colors[3] != null) {
+                    color4 = colors[3];
+                } else {
+                    color4 = color2;
+                }
+            } else {
+                color3 = color1;
+                color4 = color2;
+            }
+        } else {
+            color4 = color3 = color2 = color1;
+        }
+
+        if (mColorValues == null || (mVerticesNum * 4) > mColorValues.length) {
+            mColorValues = new float[mVerticesNum * 4]; // each vertex has 4 floats
+        }
+
+        final int range = mPoints.length - 1;
+        float udr = (color2.r - color1.r) / range;
+        float udg = (color2.g - color1.g) / range;
+        float udb = (color2.b - color1.b) / range;
+        float uda = (color2.a - color1.a) / range;
+        float ur = color1.r;
+        float ug = color1.g;
+        float ub = color1.b;
+        float ua = color1.a;
+        float ldr = (color4.r - color3.r) / range;
+        float ldg = (color4.g - color3.g) / range;
+        float ldb = (color4.b - color3.b) / range;
+        float lda = (color4.a - color3.a) / range;
+        float lr = color3.r;
+        float lg = color3.g;
+        float lb = color3.b;
+        float la = color3.a;
+        int index = 0;
+        for (int i = 0; i <= range; i++) {
+            // upper point
+            mColorValues[index++] = ur;
+            mColorValues[index++] = ug;
+            mColorValues[index++] = ub;
+            mColorValues[index++] = ua;
+
+            // lower point
+            mColorValues[index++] = lr;
+            mColorValues[index++] = lg;
+            mColorValues[index++] = lb;
+            mColorValues[index++] = la;
+
+            ur += udr;
+            ug += udg;
+            ub += udb;
+            ua += uda;
+
+            lr += ldr;
+            lg += ldg;
+            lb += ldb;
+            la += lda;
+        }
+
+        if (mColorBuffer == null) {
+            mColorBuffer = new ColorBuffer(mColorValues);
+        } else {
+            mColorBuffer.setValues(mColorValues);
+        }
+
     }
 
     public Interpolator getStrokeInterpolator() {
