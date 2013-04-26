@@ -2,7 +2,8 @@
 	"version": 1,
 	"emitters": [
 		{
-			"name": "power",
+			"name": "energy",
+			"lifespan": 20000,
 			"particles": [
 				{
 					"step_delay": 50,
@@ -14,7 +15,7 @@
 		},
 
 		{
-			"name": "eletric",
+			"name": "electric",
 			"lifespan": 1000,
 			"particles": [
 				{
@@ -47,6 +48,7 @@
 			"degree1": [360, 720],
 			"degree2": [0, 360],
 			"duration": [3000, 5000],
+			"lifespan": 28000,
 			"circle_multiplier": [-1, 1, -1.5, 1.5],
 			"interpolation": "accelerate",
 			"loop_mode": "repeat"
@@ -60,7 +62,7 @@
 			"num_points": 20,
 			"stroke1": 1,
 			"stroke2": [50, 200],
-			"color1": [0x99FF0000, 0x99FFFF00],
+			"color1": [0xAAFF0000, 0x99FFFF00],
 			"color2": [0x00FF0000, 0x00FFFF00],
 			"stroke_interpolation": "bounce"
 		},

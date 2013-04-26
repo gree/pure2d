@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import android.graphics.Color;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -267,12 +269,20 @@ public class NovaVO {
             if (array != null) {
                 final int size = array.length();
                 for (int i = 0; i < size; i++) {
-                    result.add(new GLColor(array.getInt(i)));
+                    if (array.get(i) instanceof String) {
+                        result.add(new GLColor(Color.parseColor(array.getString(i))));
+                    } else {
+                        result.add(new GLColor(array.getInt(i)));
+                    }
                 }
             }
         } catch (JSONException e) {
             // single value
-            result.add(new GLColor(json.getInt(field)));
+            if (json.get(field) instanceof String) {
+                result.add(new GLColor(Color.parseColor(json.getString(field))));
+            } else {
+                result.add(new GLColor(json.getInt(field)));
+            }
         }
 
         return result;

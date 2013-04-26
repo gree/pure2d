@@ -3,6 +3,7 @@
 	"emitters": [
 		{
 			"name": "falling_stars",
+			"lifespan": 20000,
 			"particles": [
 				{
 					"step_delay": 25,

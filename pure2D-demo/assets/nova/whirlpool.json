@@ -3,6 +3,7 @@
 	"emitters": [
 		{
 			"name": "falling_stars",
+			"lifespan": 20000,
 			"particles": [
 				{
 					"step_delay": 100,
@@ -36,7 +37,8 @@
 			"stroke1": 1,
 			"stroke2": [100, 150],
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF],
-			"color2": 0x00FFFF00
+			"color2": 0x00FFFF00,
+			"stroke_interpolation": "accelerate"
 		}
 	]
 }

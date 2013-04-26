@@ -212,7 +212,10 @@ public class NovaActivity extends StageActivity {
                 public void run() {
                     final int pointerCount = event.getPointerCount();
                     for (int i = 0; i < pointerCount; i++) {
-                        addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                        // for demo, limit the number of emitters
+                        if (mScene.getNumGrandChildren() < mNovaFactory.getPoolSize()) {
+                            addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                        }
                     }
                 }
             });

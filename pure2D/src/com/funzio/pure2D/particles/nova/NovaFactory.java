@@ -142,6 +142,10 @@ public class NovaFactory {
         }
     }
 
+    public int getPoolSize() {
+        return mPoolSize;
+    }
+
     /**
      * Clear everything! Call when this object is no longer being used.
      */
