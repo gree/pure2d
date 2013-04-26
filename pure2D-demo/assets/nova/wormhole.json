@@ -2,7 +2,7 @@
 	"version": 1,
 	"emitters": [
 		{
-			"name": "emitter1",
+			"name": "power",
 			"particles": [
 				{
 					"step_delay": 50,
@@ -14,7 +14,7 @@
 		},
 
 		{
-			"name": "emitter2",
+			"name": "eletric",
 			"lifespan": 1000,
 			"particles": [
 				{
@@ -30,7 +30,7 @@
 		{
 			"name": "whirl1",
 			"type": "whirl",
-			"radius1": [1000, 1100],
+			"radius1": [900, 1000, 1100, 1200],
 			"radius2": [300, 400],
 			"degree1": [1080, 720, 1080, 720],
 			"degree2": [0, 360],
@@ -59,7 +59,7 @@
 			"type": "shape",
 			"num_points": 20,
 			"stroke1": 1,
-			"stroke2": [50, 150],
+			"stroke2": [50, 200],
 			"color1": [0x99FF0000, 0x99FFFF00],
 			"color2": [0x00FF0000, 0x00FFFF00],
 			"stroke_interpolation": "bounce"
