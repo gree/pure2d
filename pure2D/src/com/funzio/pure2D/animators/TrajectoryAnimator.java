@@ -5,6 +5,8 @@ package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
 
+import com.funzio.pure2D.utils.Pure2DUtils;
+
 /**
  * @author long
  */
@@ -143,7 +145,7 @@ public class TrajectoryAnimator extends BaseAnimator {
 
                 // rotation
                 if (!mTargetAngleFixed) {
-                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(mCurrentVelocity.y, mCurrentVelocity.x) * 180 / Math.PI));
+                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(mCurrentVelocity.y, mCurrentVelocity.x) * Pure2DUtils.RADIAN_TO_DEGREE));
                 }
 
                 // position

@@ -91,6 +91,14 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
             }
         }
 
+        // scale distance
+        if (distance != null) {
+            final int size = distance.size();
+            for (int i = 0; i < size; i++) {
+                distance.set(i, Math.round(distance.get(i) * scale));
+            }
+        }
+
         // scale wave_radius1
         if (wave_radius1 != null) {
             final int size = wave_radius1.size();

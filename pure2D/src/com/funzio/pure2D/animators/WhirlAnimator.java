@@ -6,6 +6,8 @@ package com.funzio.pure2D.animators;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.utils.Pure2DUtils;
+
 /**
  * @author long
  */
@@ -98,7 +100,7 @@ public class WhirlAnimator extends TweenAnimator {
     }
 
     public void setValues(final float srcX, final float srcY, final float radius1, final float radius2, final int degreeAngle1, final int degreeAngle2) {
-        setValues(srcX, srcY, radius1, radius2, degreeAngle1 * (float) Math.PI / 180, degreeAngle2 * (float) Math.PI / 180);
+        setValues(srcX, srcY, radius1, radius2, degreeAngle1 * Pure2DUtils.DEGREE_TO_RADIAN, degreeAngle2 * Pure2DUtils.DEGREE_TO_RADIAN);
     }
 
     public void setValues(final float radius1, final float radius2, final float radianAngle1, final float radianAngle2) {

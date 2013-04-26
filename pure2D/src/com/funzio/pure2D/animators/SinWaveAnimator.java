@@ -6,6 +6,8 @@ package com.funzio.pure2D.animators;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.utils.Pure2DUtils;
+
 /**
  * @author long
  */
@@ -64,7 +66,7 @@ public class SinWaveAnimator extends TweenAnimator {
     }
 
     public void setDistance(final float distance, final int degreeAngle) {
-        final float radianAngle = degreeAngle * (float) Math.PI / 180;
+        final float radianAngle = degreeAngle * Pure2DUtils.DEGREE_TO_RADIAN;
         setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
     }
 

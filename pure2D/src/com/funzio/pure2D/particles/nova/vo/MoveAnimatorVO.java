@@ -79,6 +79,14 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
                 dy.set(i, Math.round(dy.get(i) * scale));
             }
         }
+
+        // scale distance
+        if (distance != null) {
+            final int size = distance.size();
+            for (int i = 0; i < size; i++) {
+                distance.set(i, Math.round(distance.get(i) * scale));
+            }
+        }
     }
 
 }
