@@ -148,5 +148,8 @@
     <string name="test">Test</string>
     <string name="tornado_animation">Tornado Animation</string>
     <string name="whirl_animation">Whirl Animation</string>
+    <string name="code">Code</string>
+    <string name="code_off">Code\nOff</string>
+    <string name="code_on">Code\nOn</string>
 
 </resources>

@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import org.json.JSONException;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
@@ -52,6 +56,8 @@ public class NovaActivity extends StageActivity {
     private HashMap<String, AtlasFrameSet> mFileToFrameMap = new HashMap<String, AtlasFrameSet>();
 
     private NovaFactory mNovaFactory;
+    private ScrollView mScrollView;
+    private TextView mTextView;
 
     @Override
     protected int getNumObjects() {
@@ -64,12 +70,15 @@ public class NovaActivity extends StageActivity {
      */
     @Override
     protected int getLayout() {
-        return R.layout.stage_bg_colors;
+        return R.layout.stage_nova;
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mScrollView = (ScrollView) findViewById(R.id.sv_code);
+        mTextView = (TextView) mScrollView.findViewById(R.id.tv_code);
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -83,6 +92,17 @@ public class NovaActivity extends StageActivity {
                     public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
                         mNovaFactory = new NovaFactory(vo, mNovaDelegator, 500);
+
+                        // display the code
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    mTextView.setText(vo.getSource().toString(3));
+                                } catch (JSONException e) {
+                                }
+                            }
+                        });
 
                         // load textures on GL thread
                         mScene.queueEvent(new Runnable() {
@@ -199,6 +219,11 @@ public class NovaActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickCode(final View view) {
+        final int visibility = mScrollView.getVisibility();
+        mScrollView.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
     public void onClickRadio(final View view) {

@@ -32,6 +32,7 @@ public class NovaVO {
     private HashMap<String, MotionTrailVO> mMotionTrailMap;
 
     private HashSet<String> mUsedSprites;
+    private JSONObject mSource;
 
     // @JsonCreator
     // public NovaVO( //
@@ -56,6 +57,8 @@ public class NovaVO {
     // }
 
     public NovaVO(final JSONObject json) throws JSONException {
+        mSource = json;
+
         version = json.optInt("version");
         name = json.optString("name");
         pool_size = json.optInt("pool_size");
@@ -303,6 +306,10 @@ public class NovaVO {
                 + "Emitters: " + (emitters == null ? 0 : emitters.size()) + ", " //
                 + "Animators: " + (animators == null ? 0 : animators.size()) + ", " //
                 + "Trails: " + (motion_trails == null ? 0 : motion_trails.size());
+    }
+
+    public JSONObject getSource() {
+        return mSource;
     }
 
 }
