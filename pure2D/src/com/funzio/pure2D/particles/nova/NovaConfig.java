@@ -117,6 +117,9 @@ public class NovaConfig {
         if (size == 1) {
             // fixed value
             return values.get(0);
+            // } else if (size == 2) {
+            // // random value within a range. Slow!!! lots of GC!
+            // return GLColor.createInterpolatedColor(values.get(0), values.get(1), RANDOM.nextFloat());
         } else {
             // randomly pick one of the given values
             return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
