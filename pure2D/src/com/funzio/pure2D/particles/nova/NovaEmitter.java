@@ -78,7 +78,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
             mAnimator.stop();
             // reset the animator
             if (mAnimator.getData() instanceof AnimatorVO) {
-                ((AnimatorVO) mAnimator.getData()).resetAnimator(this, mAnimator);
+                ((AnimatorVO) mAnimator.getData()).resetAnimator(-1, this, mAnimator);
             }
         }
     }
@@ -110,7 +110,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
                 // only create trail when there is an animator
                 if (mEmitterVO.motion_trail != null) {
                     // get a new trail from pool
-                    mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail), -1);
+                    mMotionTrail = mFactory.createMotionTrail(-1, this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
                 }
 
                 // add animator

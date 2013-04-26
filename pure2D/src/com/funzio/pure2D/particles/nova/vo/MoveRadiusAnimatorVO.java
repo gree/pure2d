@@ -30,18 +30,18 @@ public class MoveRadiusAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new MoveRadiusAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new MoveRadiusAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final MoveRadiusAnimator move = (MoveRadiusAnimator) animator;
         // if (move != null) {
-        move.setValues(NovaConfig.getRandomInt(distance), NovaConfig.getRandomInt(degree));
-        move.setDuration(NovaConfig.getRandomInt(duration));
+        move.setValues(NovaConfig.getInt(distance, emitIndex, 0), NovaConfig.getInt(degree, emitIndex, 0));
+        move.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
         // }
     }
 

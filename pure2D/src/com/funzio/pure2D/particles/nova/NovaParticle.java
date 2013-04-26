@@ -58,9 +58,9 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // init the particle
         mPosition = mNovaEmitter.getNextPosition(mPosition);
         // add offsets
-        mPosition.x += NovaConfig.getRandomInt(mParticleVO.x);
-        mPosition.y += NovaConfig.getRandomInt(mParticleVO.y);
-        mAlpha = NovaConfig.getRandomFloat(mParticleVO.alpha, 1);
+        mPosition.x += NovaConfig.getInt(mParticleVO.x, emitIndex, 0);
+        mPosition.y += NovaConfig.getInt(mParticleVO.y, emitIndex, 0);
+        mAlpha = NovaConfig.getFloat(mParticleVO.alpha, emitIndex, 1);
         mScale.x = mScale.y = 1;
         mRotation = 0;
         mColor = null;
@@ -68,13 +68,13 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // now, find optional animator
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
             // get a new animator from pool
-            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getRandomString(mParticleVO.animator)), emitIndex);
+            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getString(mParticleVO.animator, emitIndex)), emitIndex);
 
             if (mAnimator != null) {
                 // now, find optional trail
                 if (mParticleVO.motion_trail != null && !mParticleVO.motion_trail.isEmpty()) {
                     // get a new trail from pool
-                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)), emitIndex);
+                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(emitIndex, this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getString(mParticleVO.motion_trail, emitIndex)));
                 }
 
                 // add it
@@ -83,9 +83,9 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         }
 
         // and others attributes
-        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
+        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getString(mParticleVO.blend_mode, emitIndex)));
         // z depth
-        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
+        setZ(NovaConfig.getFloat(mParticleVO.z, emitIndex, 0));
         setAlphaTestEnabled(getZ() > 0);
 
         // delegate something to this particle, such as AtlasFrameSet
@@ -94,7 +94,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         }
 
         if (getAtlasFrameSet() != null) {
-            playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
+            playAt(Math.min(NovaConfig.getInt(mParticleVO.start_frame, emitIndex, 0), getNumFrames() - 1));
         } else if (mTexture == null) {
             // just a dummy box
             setSize(50, 50);

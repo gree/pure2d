@@ -20,7 +20,7 @@ public class SequenceAnimatorVO extends GroupAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new SequenceAnimator(animators));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new SequenceAnimator(animators));
     }
 }

@@ -41,7 +41,7 @@ public class NovaActivity extends StageActivity {
 
         @Override
         public void delegateParticle(final NovaParticle particle, final Object... params) {
-            final String sprite = NovaConfig.getRandomString(particle.getParticleVO().sprite);
+            final String sprite = NovaConfig.getString(particle.getParticleVO().sprite, -1);
 
             // apply the frameset
             particle.setAtlasFrameSet(sprite == null ? null : mFileToFrameMap.get(sprite));

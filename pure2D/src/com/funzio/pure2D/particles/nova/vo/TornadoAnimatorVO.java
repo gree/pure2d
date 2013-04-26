@@ -39,21 +39,21 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new TornadoAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new TornadoAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final TornadoAnimator tornado = (TornadoAnimator) animator;
         // if (tornado != null) {
-        tornado.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-        tornado.setCircles(NovaConfig.getRandomInt(circle_radius), NovaConfig.getRandomInt(circle_num), NovaConfig.getRandomFloat(circle_ratio, TornadoAnimator.DEFAULT_CIRCLE_RATIO),
-                NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
-        tornado.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
-        tornado.setDuration(NovaConfig.getRandomInt(duration));
+        tornado.setDelta(NovaConfig.getInt(dx, emitIndex, 0), NovaConfig.getInt(dy, emitIndex, 0));
+        tornado.setCircles(NovaConfig.getInt(circle_radius, emitIndex, 0), NovaConfig.getInt(circle_num, emitIndex, 0),
+                NovaConfig.getFloat(circle_ratio, emitIndex, TornadoAnimator.DEFAULT_CIRCLE_RATIO), NovaConfig.getInterpolator(NovaConfig.getString(circle_interpolation, emitIndex)));
+        tornado.setCircleMultiplier(NovaConfig.getFloat(circle_multiplier, emitIndex, 1));
+        tornado.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
         // }
     }
 

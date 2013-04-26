@@ -31,18 +31,18 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new TrajectoryAnimator());
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new TrajectoryAnimator());
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final TrajectoryAnimator move = (TrajectoryAnimator) animator;
         // if (move != null) {
-        move.setGround(NovaConfig.getRandomFloat(ground));
-        move.setValues(target.getPosition().x, target.getPosition().y, NovaConfig.getRandomFloat(velocity), NovaConfig.getRandomFloat(angle));
+        move.setGround(NovaConfig.getFloat(ground, emitIndex, 0));
+        move.setValues(target.getPosition().x, target.getPosition().y, NovaConfig.getFloat(velocity, emitIndex, 0), NovaConfig.getFloat(angle, emitIndex, 0));
         // }
     }
 

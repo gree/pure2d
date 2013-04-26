@@ -39,22 +39,22 @@ public class WhirlAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new WhirlAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new WhirlAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final WhirlAnimator whirl = (WhirlAnimator) animator;
         // if (whirl != null) {
-        whirl.setValues(NovaConfig.getRandomInt(radius1), NovaConfig.getRandomInt(radius2, WhirlAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(degree1),
-                NovaConfig.getRandomInt(degree2, (int) WhirlAnimator.DEFAULT_ANGLE * 180));
-        whirl.setCircleInterpolator(NovaConfig.getInterpolator(NovaConfig.getRandomString(circle_interpolation)));
-        whirl.setCircleRatio(NovaConfig.getRandomFloat(circle_ratio, WhirlAnimator.DEFAULT_CIRCLE_RATIO));
-        whirl.setCircleMultiplier(NovaConfig.getRandomFloat(circle_multiplier, 1));
-        whirl.setDuration(NovaConfig.getRandomInt(duration));
+        whirl.setValues(NovaConfig.getInt(radius1, emitIndex, 0), NovaConfig.getInt(radius2, emitIndex, WhirlAnimator.DEFAULT_RADIUS), NovaConfig.getInt(degree1, emitIndex, 0),
+                NovaConfig.getInt(degree2, emitIndex, (int) WhirlAnimator.DEFAULT_ANGLE * 180));
+        whirl.setCircleInterpolator(NovaConfig.getInterpolator(NovaConfig.getString(circle_interpolation, emitIndex)));
+        whirl.setCircleRatio(NovaConfig.getFloat(circle_ratio, emitIndex, WhirlAnimator.DEFAULT_CIRCLE_RATIO));
+        whirl.setCircleMultiplier(NovaConfig.getFloat(circle_multiplier, emitIndex, 1));
+        whirl.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
         // }
     }
 

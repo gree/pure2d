@@ -15,11 +15,11 @@ import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
-import com.funzio.pure2D.particles.nova.vo.NovaEmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.MotionTrailVO;
-import com.funzio.pure2D.particles.nova.vo.NovaVO;
+import com.funzio.pure2D.particles.nova.vo.NovaEmitterVO;
 import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
+import com.funzio.pure2D.particles.nova.vo.NovaVO;
 import com.funzio.pure2D.utils.ObjectPool;
 
 /**
@@ -191,7 +191,7 @@ public class NovaFactory {
                 final Animator animator = pool.acquire();
                 if (animator != null) {
                     // awesome, there is something, reset it!
-                    vo.resetAnimator(target, animator);
+                    vo.resetAnimator(emitIndex, target, animator);
                     // and return
                     return animator;
                 }
@@ -226,9 +226,9 @@ public class NovaFactory {
             // group
             final GroupAnimatorVO groupVO = (GroupAnimatorVO) animatorVO;
             // create the child animators
-            return groupVO.createAnimator(target, createChildAnimators(target, groupVO.animators, emitIndex));
+            return groupVO.createAnimator(emitIndex, target, createChildAnimators(emitIndex, target, groupVO.animators));
         } else {
-            return animatorVO.createAnimator(target);
+            return animatorVO.createAnimator(emitIndex, target);
         }
     }
 
@@ -238,7 +238,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    protected Animator[] createChildAnimators(final Manipulatable target, final ArrayList<AnimatorVO> vos, final int emitIndex) {
+    protected Animator[] createChildAnimators(final int emitIndex, final Manipulatable target, final ArrayList<AnimatorVO> vos) {
         // null check
         if (vos == null) {
             return null;
@@ -253,7 +253,7 @@ public class NovaFactory {
         return animators;
     }
 
-    protected MotionTrail createMotionTrail(final DisplayObject target, final MotionTrailVO trailVO, final int emitIndex) {
+    protected MotionTrail createMotionTrail(final int emitIndex, final DisplayObject target, final MotionTrailVO trailVO) {
         // Log.v(TAG, "createMotionTrail(): " + trailName);
 
         // null check
@@ -274,14 +274,14 @@ public class NovaFactory {
                 final MotionTrail trail = pool.acquire();
                 if (trail != null) {
                     // awesome, there is something, reset it!
-                    trailVO.resetTrail(target, trail);
+                    trailVO.resetTrail(emitIndex, target, trail);
                     // and return
                     return trail;
                 }
             }
         }
 
-        return trailVO.createTrail(target);
+        return trailVO.createTrail(emitIndex, target);
     }
 
     /**

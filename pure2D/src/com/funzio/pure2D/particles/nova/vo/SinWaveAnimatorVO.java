@@ -46,24 +46,24 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new SinWaveAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new SinWaveAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final SinWaveAnimator sinWave = (SinWaveAnimator) animator;
         // if (sinWave != null) {
         if (distance != null) {
-            sinWave.setDistance(NovaConfig.getRandomInt(distance), NovaConfig.getRandomInt(degree));
+            sinWave.setDistance(NovaConfig.getInt(distance, emitIndex, 0), NovaConfig.getInt(degree, emitIndex, 0));
         } else {
-            sinWave.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
+            sinWave.setDelta(NovaConfig.getInt(dx, emitIndex, 0), NovaConfig.getInt(dy, emitIndex, 0));
         }
-        sinWave.setWaveRadius(NovaConfig.getRandomInt(wave_radius1, SinWaveAnimator.DEFAULT_RADIUS), NovaConfig.getRandomInt(wave_radius2, SinWaveAnimator.DEFAULT_RADIUS));
-        sinWave.setWaveNum(NovaConfig.getRandomInt(wave_num, SinWaveAnimator.DEFAULT_WAVE_NUM));
-        sinWave.setDuration(NovaConfig.getRandomInt(duration));
+        sinWave.setWaveRadius(NovaConfig.getInt(wave_radius1, emitIndex, SinWaveAnimator.DEFAULT_RADIUS), NovaConfig.getInt(wave_radius2, emitIndex, SinWaveAnimator.DEFAULT_RADIUS));
+        sinWave.setWaveNum(NovaConfig.getInt(wave_num, emitIndex, SinWaveAnimator.DEFAULT_WAVE_NUM));
+        sinWave.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
         // }
     }
 

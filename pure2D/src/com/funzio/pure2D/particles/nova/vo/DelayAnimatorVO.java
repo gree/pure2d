@@ -27,15 +27,15 @@ public class DelayAnimatorVO extends AnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new DelayAnimator());
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new DelayAnimator());
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
-        animator.setLifespan(NovaConfig.getRandomInt(duration));
+        animator.setLifespan(NovaConfig.getInt(duration, emitIndex, 0));
     }
 
 }

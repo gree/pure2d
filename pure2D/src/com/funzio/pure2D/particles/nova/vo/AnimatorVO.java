@@ -53,7 +53,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
     public ArrayList<Integer> loop_count;
     public ArrayList<Integer> lifespan;
 
-    public abstract Animator createAnimator(Manipulatable target, Animator... animators);
+    public abstract Animator createAnimator(int emitIndex, Manipulatable target, Animator... animators);
 
     public AnimatorVO(final JSONObject json) throws JSONException {
         super(json);
@@ -76,12 +76,12 @@ public abstract class AnimatorVO extends NovaEntryVO {
      * @param animator
      * @return
      */
-    final protected Animator init(final Manipulatable target, final Animator animator) {
+    final protected Animator init(final int emitIndex, final Manipulatable target, final Animator animator) {
         // MUST: couple with this VO
         animator.setData(this);
         animator.setAccumulating(accumulating);
         // init and reset
-        resetAnimator(target, animator);
+        resetAnimator(emitIndex, target, animator);
 
         return animator;
     }
@@ -91,10 +91,10 @@ public abstract class AnimatorVO extends NovaEntryVO {
      * 
      * @param animator
      */
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
         // if (animator != null) {
         animator.reset();
-        animator.setLifespan(NovaConfig.getRandomInt(lifespan));
+        animator.setLifespan(NovaConfig.getInt(lifespan, emitIndex, 0));
         // }
     }
 

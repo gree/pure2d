@@ -57,20 +57,13 @@ public class NovaConfig {
     public static final String LOOP_REPEAT = "repeat";
     public static final String LOOP_REVERSE = "reverse";
 
-    public static float getRandomFloat(final ArrayList<Float> values) {
-        return getRandomFloat(values, 0);
-    }
-
-    public static float getRandomFloat(final ArrayList<Float> values, final float defalutValue) {
-        if (values == null) {
-            return defalutValue;
+    public static float getFloat(final ArrayList<Float> values, final int index, final float defaultValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return defaultValue;
         }
 
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return defalutValue;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
         } else if (size == 2) {
@@ -78,42 +71,17 @@ public class NovaConfig {
             return values.get(0) + RANDOM.nextFloat() * (values.get(1) - values.get(0));
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 
-    public static float getFloat(final ArrayList<Float> values, final int index, final float defalutValue) {
+    public static int getInt(final ArrayList<Integer> values, final int index, final int defaultValue) {
         final int size;
         if (values == null || (size = values.size()) == 0) {
-            return defalutValue;
-        }
-
-        return values.get(index % size);
-    }
-
-    public static float getFloat(final ArrayList<Float> values, final int index) {
-        final int size;
-        if (values == null || (size = values.size()) == 0) {
-            return 0;
-        }
-
-        return values.get(index % size);
-    }
-
-    public static int getRandomInt(final ArrayList<Integer> values) {
-        return getRandomInt(values, 0);
-    }
-
-    public static int getRandomInt(final ArrayList<Integer> values, final int defaultValue) {
-        if (values == null) {
             return defaultValue;
         }
 
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return defaultValue;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
         } else if (size == 2) {
@@ -121,43 +89,7 @@ public class NovaConfig {
             return values.get(0) + (int) (RANDOM.nextFloat() * (values.get(1) - values.get(0)));
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
-        }
-    }
-
-    public static int getInt(final ArrayList<Integer> values, final int index, final int defalutValue) {
-        final int size;
-        if (values == null || (size = values.size()) == 0) {
-            return defalutValue;
-        }
-
-        return values.get(index % size);
-    }
-
-    public static int getInt(final ArrayList<Integer> values, final int index) {
-        final int size;
-        if (values == null || (size = values.size()) == 0) {
-            return 0;
-        }
-
-        return values.get(index % size);
-    }
-
-    public static String getRandomString(final ArrayList<String> values) {
-        if (values == null) {
-            return null;
-        }
-
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return null;
-        } else if (size == 1) {
-            // fixed value
-            return values.get(0);
-        } else {
-            // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 
@@ -167,24 +99,12 @@ public class NovaConfig {
             return null;
         }
 
-        return values.get(index % size);
-    }
-
-    public static GLColor getRandomColor(final ArrayList<GLColor> values, final GLColor defaultValue) {
-        if (values == null) {
-            return defaultValue;
-        }
-
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return defaultValue;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 
@@ -194,7 +114,13 @@ public class NovaConfig {
             return defaultValue;
         }
 
-        return values.get(index % size);
+        if (size == 1) {
+            // fixed value
+            return values.get(0);
+        } else {
+            // randomly pick one of the given values
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
+        }
     }
 
     public static Interpolator getInterpolator(final String name) {

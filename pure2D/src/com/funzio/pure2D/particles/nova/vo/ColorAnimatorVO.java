@@ -41,26 +41,26 @@ public class ColorAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new ColorAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new ColorAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final ColorAnimator color = (ColorAnimator) animator;
         // if (color != null) {
-        color.setValues(NovaConfig.getRandomInt(r_from, 255), //
-                NovaConfig.getRandomInt(g_from, 255), //
-                NovaConfig.getRandomInt(b_from, 255), //
-                NovaConfig.getRandomInt(a_from, 255), //
-                NovaConfig.getRandomInt(r_to, 255), //
-                NovaConfig.getRandomInt(g_to, 255), //
-                NovaConfig.getRandomInt(b_to, 255), //
-                NovaConfig.getRandomInt(a_to, 255));
+        color.setValues(NovaConfig.getInt(r_from, emitIndex, 255), //
+                NovaConfig.getInt(g_from, emitIndex, 255), //
+                NovaConfig.getInt(b_from, emitIndex, 255), //
+                NovaConfig.getInt(a_from, emitIndex, 255), //
+                NovaConfig.getInt(r_to, emitIndex, 255), //
+                NovaConfig.getInt(g_to, emitIndex, 255), //
+                NovaConfig.getInt(b_to, emitIndex, 255), //
+                NovaConfig.getInt(a_to, emitIndex, 255));
 
-        color.setDuration(NovaConfig.getRandomInt(duration));
+        color.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
         // }
     }
 }

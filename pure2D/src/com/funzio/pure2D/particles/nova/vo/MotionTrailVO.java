@@ -21,7 +21,7 @@ public abstract class MotionTrailVO {
     public String type;
     public int num_points;
 
-    public abstract MotionTrail createTrail(DisplayObject target);
+    public abstract MotionTrail createTrail(int emitIndex, DisplayObject target);
 
     public MotionTrailVO() {
         // TODO nothing
@@ -38,11 +38,11 @@ public abstract class MotionTrailVO {
      * @param trail
      * @return
      */
-    final protected MotionTrail init(final DisplayObject target, final MotionTrail trail) {
+    final protected MotionTrail init(final int emitIndex, final DisplayObject target, final MotionTrail trail) {
         // MUST: couple with this VO
         trail.setData(this);
         // init and reset
-        resetTrail(target, trail);
+        resetTrail(emitIndex, target, trail);
 
         return trail;
     }
@@ -52,7 +52,7 @@ public abstract class MotionTrailVO {
      * @param trail
      * @see NovaEmitter#onAnimationUpdate(com.funzio.pure2D.animators.Animator, float), NovaParticle#onAnimationUpdate(com.funzio.pure2D.animators.Animator, float)
      */
-    public void resetTrail(final DisplayObject target, final MotionTrail trail) {
+    public void resetTrail(final int emitIndex, final DisplayObject target, final MotionTrail trail) {
         trail.reset();
         trail.setNumPoints(num_points);
         trail.setTarget(null); // maybe wait until animation start to set the real target
