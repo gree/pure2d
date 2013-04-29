@@ -23,6 +23,10 @@ public class RotateAnimator extends TweenAnimator {
         mDelta = mDst - mSrc;
     }
 
+    public void setDelta(final float delta) {
+        mDelta = delta;
+    }
+
     public void start(final float src, final float dst) {
         mSrc = src;
         mDst = dst;
@@ -40,7 +44,11 @@ public class RotateAnimator extends TweenAnimator {
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
-            mTarget.setRotation(mSrc + value * mDelta);
+            if (mAccumulating) {
+                mTarget.rotateBy((value - mLastValue) * mDelta);
+            } else {
+                mTarget.setRotation(mSrc + value * mDelta);
+            }
         }
 
         super.onUpdate(value);

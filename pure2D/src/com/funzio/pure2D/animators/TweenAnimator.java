@@ -14,7 +14,10 @@ public class TweenAnimator extends BaseAnimator {
     protected int mDuration;
     protected Interpolator mInterpolator;
 
+    protected float mLastValue = 0;
     protected float mCurrentValue = 0;
+    protected boolean mReversed = false;
+
     protected int mLoopMode = Playable.LOOP_NONE;
     protected int mLoopCount = -1; // forever
 
@@ -30,32 +33,47 @@ public class TweenAnimator extends BaseAnimator {
 
     /*
      * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
+     */
+    @Override
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
+
+        // clear the values
+        mLastValue = mCurrentValue = (mReversed ? 1 : 0);
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.funzio.pure2D.animators.BaseAnimator#update(int)
      */
     @Override
     public boolean update(final int deltaTime) {
         if (mDuration > 0 && super.update(deltaTime)) {
-            final int trips = mElapsedTime / mDuration;
+            float timeline = (float) mElapsedTime / (float) mDuration;
+            final int trips = (int) Math.floor(timeline);
             if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration)) {
                 // end it
                 end();
             } else {
 
-                float timeLine;
                 if (mLoopMode == Playable.LOOP_REPEAT) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
+                    timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                 } else if (mLoopMode == Playable.LOOP_REVERSE) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
+                    timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                     if (trips % 2 == 1) {
                         // reverse
-                        timeLine = 1 - timeLine;
+                        timeline = 1 - timeline;
                     }
-                } else {
-                    timeLine = (float) mElapsedTime / (float) mDuration;
                 }
 
                 // interpolate the value
-                mCurrentValue = (mInterpolator == null) ? timeLine : mInterpolator.getInterpolation(timeLine);
+                mLastValue = mCurrentValue;
+                mCurrentValue = (mInterpolator == null) ? timeline : mInterpolator.getInterpolation(timeline);
+                // explicit reversed
+                if (mReversed) {
+                    mCurrentValue = 1 - mCurrentValue;
+                }
                 // and update
                 onUpdate(mCurrentValue);
             }
@@ -78,6 +96,13 @@ public class TweenAnimator extends BaseAnimator {
         } else {
             mCurrentValue = 1;
         }
+
+        // explicit reversed
+        if (mReversed) {
+            mCurrentValue = 1 - mCurrentValue;
+        }
+
+        // update
         onUpdate(mCurrentValue);
 
         super.end();
@@ -95,6 +120,19 @@ public class TweenAnimator extends BaseAnimator {
      */
     public void setDuration(final int duration) {
         mDuration = duration;
+    }
+
+    public boolean isReversed() {
+        return mReversed;
+    }
+
+    /**
+     * To explicitly play in reversed direction
+     * 
+     * @param reversed
+     */
+    public void setReversed(final boolean reversed) {
+        mReversed = reversed;
     }
 
     /**

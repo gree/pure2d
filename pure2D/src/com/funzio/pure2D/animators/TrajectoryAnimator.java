@@ -5,6 +5,8 @@ package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
 
+import com.funzio.pure2D.utils.Pure2DUtils;
+
 /**
  * @author long
  */
@@ -28,6 +30,10 @@ public class TrajectoryAnimator extends BaseAnimator {
     protected boolean mTargetAngleFixed = true;
     protected float mTargetAngleOffset = 0;
 
+    public TrajectoryAnimator() {
+        super();
+    }
+
     public TrajectoryAnimator(final float ground) {
         super();
 
@@ -50,7 +56,7 @@ public class TrajectoryAnimator extends BaseAnimator {
         mTargetAngleOffset = offsetDegree;
     }
 
-    public void start(final float srcX, final float srcY, final float velocity, final float angle) {
+    public void setValues(final float srcX, final float srcY, final float velocity, final float angle) {
         mSrcX = srcX;
         mSrcY = srcY;
 
@@ -68,6 +74,14 @@ public class TrajectoryAnimator extends BaseAnimator {
         mDistance = (vcos / absGravity) * (vsin + (float) Math.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
         // mDistance = (vcos / mGravity) * (vsin + (float)Math.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
         mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
+    }
+
+    public void setValues(final float velocity, final float angle) {
+        setValues(0, 0, velocity, angle);
+    }
+
+    public void start(final float srcX, final float srcY, final float velocity, final float angle) {
+        setValues(srcX, srcY, velocity, angle);
 
         start();
     }
@@ -75,8 +89,12 @@ public class TrajectoryAnimator extends BaseAnimator {
     public void start(final float velocity, final float angle) {
         if (mTarget != null) {
             final PointF position = mTarget.getPosition();
-            start(position.x, position.y, velocity, angle);
+            setValues(position.x, position.y, velocity, angle);
+        } else {
+            setValues(0, 0, velocity, angle);
         }
+
+        start();
     }
 
     public void start(final float srcX, final float srcY, final float velocity, final float dstX, final float dstY) {
@@ -96,7 +114,7 @@ public class TrajectoryAnimator extends BaseAnimator {
         final float vcos = mVelocity * mCos;
         // final float vsin = mVelocity * mSin;
         mDistance = deltaX;// (vcos / GRAVITY) * (vsin + (float)Math.sqrt(vsin * vsin + 2 * GRAVITY * mSrcY));
-        mDuration = TIME_FACTOR * mDistance / vcos;
+        mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
 
         start();
     }
@@ -119,16 +137,23 @@ public class TrajectoryAnimator extends BaseAnimator {
             if (mTarget != null) {
 
                 final PointF currentPos = mTarget.getPosition();
-                mCurrentVelocity.x = (x - currentPos.x) / (deltaTime);
-                mCurrentVelocity.y = (y - currentPos.y) / (deltaTime);
+                final float deltaX = x - currentPos.x;
+                final float deltaY = y - currentPos.y;
+
+                mCurrentVelocity.x = deltaX / deltaTime;
+                mCurrentVelocity.y = deltaY / deltaTime;
 
                 // rotation
                 if (!mTargetAngleFixed) {
-                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(mCurrentVelocity.y, mCurrentVelocity.x) * 180 / Math.PI));
+                    mTarget.setRotation(mTargetAngleOffset + (float) (Math.atan2(mCurrentVelocity.y, mCurrentVelocity.x) * Pure2DUtils.RADIAN_TO_DEGREE));
                 }
 
                 // position
-                mTarget.setPosition(x, y);
+                if (mAccumulating) {
+                    mTarget.moveBy(deltaX, deltaY);
+                } else {
+                    mTarget.setPosition(x, y);
+                }
             }
 
             // callback

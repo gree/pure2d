@@ -14,4 +14,12 @@ public interface ParticleEmitter extends Particle.Listener {
     public PointF getSize();
 
     public int getNumParticles();
+
+    public void setListener(Listener listener);
+
+    public Listener getListener();
+
+    public interface Listener {
+        public void onEmitterFinish(ParticleEmitter emitter);
+    }
 }

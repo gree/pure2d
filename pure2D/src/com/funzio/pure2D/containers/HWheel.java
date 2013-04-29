@@ -1,16 +1,24 @@
 package com.funzio.pure2D.containers;
 
+import android.view.MotionEvent;
+
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.VelocityAnimator;
 
 /**
+ * Wheel is an extended Group that allows you to spin!
+ * 
  * @author long
  */
 public class HWheel extends HGroup implements Wheel, AnimatorListener {
-
     // spinning
     protected VelocityAnimator mAnimator;
+
+    protected float mSwipeDelta = 0;
+    protected float mSwipeVelocity = 0;
+    protected boolean mStoppable = true;
 
     public HWheel() {
         // always, because this is a wheel
@@ -20,6 +28,30 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         mAnimator = new VelocityAnimator();
         mAnimator.setListener(this);
         addManipulator(mAnimator);
+    }
+
+    @Override
+    protected void swipe(final float delta) {
+        super.swipe(delta);
+
+        // average velocity
+        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f;
+        mSwipeDelta = delta;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
+     */
+    @Override
+    protected void stopSwipe() {
+        super.stopSwipe();
+
+        spin(mSwipeVelocity, mSwipeVelocity > 0 ? -DEFAULT_SPIN_ACCELERATION : DEFAULT_SPIN_ACCELERATION);
+
+        // reset
+        mSwipeDelta = 0;
+        mSwipeVelocity = 0;
     }
 
     public void spin(final float veloc) {
@@ -42,8 +74,13 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
      * @param duration
      */
     public void spinDistance(final float distance, final float acceleration, final int duration) {
+        // range check
+        if (Math.abs(distance) < 1) {
+            return;
+        }
+
         final float accel = distance > 0 ? -acceleration : acceleration; // against veloc
-        float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
+        final float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
         mAnimator.start(-veloc, accel, duration);
     }
 
@@ -56,6 +93,49 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
      */
     public void spinToSnap(final boolean positive, final float acceleration, final int duration) {
         spinDistance(getSnapDelta(positive), acceleration, duration);
+    }
+
+    /**
+     * Spin to a specific position
+     * 
+     * @param position
+     * @param acceleration
+     * @param duration
+     */
+    public void spinTo(final float position, final float acceleration, final int duration) {
+        spinDistance(position - mScrollPosition.x, acceleration, duration);
+    }
+
+    /**
+     * Spin to the Start
+     * 
+     * @param acceleration
+     * @param duration
+     */
+    public void spinToStart(final float acceleration, final int duration) {
+        spinTo(0, acceleration, duration);
+    }
+
+    /**
+     * Spin to the End
+     * 
+     * @param acceleration
+     * @param duration
+     */
+    public void spinToEnd(final float acceleration, final int duration) {
+        spinTo(mScrollMax.x, acceleration, duration);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HGroup#startSwipe()
+     */
+    @Override
+    protected void startSwipe() {
+        // stop animation first
+        mAnimator.stop();
+
+        super.startSwipe();
     }
 
     public void stop() {
@@ -89,5 +169,19 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
     public void onAnimationUpdate(final Animator animator, final float value) {
         scrollBy(-value, 0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.containers.HGroup#onTouchDown(android.view.MotionEvent)
+     */
+    @Override
+    protected void onTouchDown(final MotionEvent event) {
+        super.onTouchDown(event);
+
+        // stop spining
+        if (mAnimator.isRunning() && mStoppable) {
+            mAnimator.stop();
+        }
     }
 }

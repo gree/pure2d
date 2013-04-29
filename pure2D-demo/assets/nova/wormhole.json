@@ -1,0 +1,81 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "energy",
+			"lifespan": 20000,
+			"particles": [
+				{
+					"step_delay": 50,
+					"animator": "whirl1",
+					"alpha": 0,
+					"motion_trail": ["trail1"]
+				}
+			]
+		},
+
+		{
+			"name": "electric",
+			"lifespan": 1000,
+			"particles": [
+				{
+					"animator": "whirl2",
+					"alpha": 0,
+					"motion_trail": ["trail2"]
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "whirl1",
+			"type": "whirl",
+			"radius1": [900, 1000, 1100, 1200],
+			"radius2": [300, 400],
+			"degree1": [1080, 720, 1080, 720],
+			"degree2": [0, 360],
+			"duration": [2000, 10000],
+			"circle_multiplier": [-1, 1, -1, 1],
+			"interpolation": "accelerate"
+		},
+
+		{
+			"name": "whirl2",
+			"type": "whirl",
+			"radius1": [500, 600],
+			"radius2": 300,
+			"degree1": [360, 720],
+			"degree2": [0, 360],
+			"duration": [3000, 5000],
+			"lifespan": 28000,
+			"circle_multiplier": [-1, 1, -1.5, 1.5],
+			"interpolation": "accelerate",
+			"loop_mode": "repeat"
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "trail1",
+			"type": "shape",
+			"num_points": 20,
+			"stroke1": 1,
+			"stroke2": [50, 200],
+			"color1": [0xAAFF0000, 0x99FFFF00],
+			"color2": [0x00FF0000, 0x00FFFF00],
+			"stroke_interpolation": "bounce"
+		},
+
+		{
+			"name": "trail2",
+			"type": "shape",
+			"num_points": 20,
+			"stroke1": 1,
+			"stroke2": 20,
+			"easing_x": 0.75,
+			"color1": [0xFF99FF33, 0xFF99FFFF, 0xFF3399FF],
+			"color2": 0x00AAFFFF
+		}
+	]
+}

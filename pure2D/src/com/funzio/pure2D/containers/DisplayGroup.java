@@ -4,7 +4,6 @@
 package com.funzio.pure2D.containers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -20,11 +19,11 @@ import com.funzio.pure2D.gl.gl10.GLState;
  */
 public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
 
-    protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected int mNumChildren = 0;
 
     // UI
-    protected List<Touchable> mVisibleTouchables;
+    protected ArrayList<Touchable> mVisibleTouchables;
     protected boolean mTouchable = true; // true by default
 
     public DisplayGroup() {
@@ -78,26 +77,26 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     @Override
     public boolean draw(final GLState glState) {
-        drawStart(glState);
+        if (mNumChildren == 0) {
+            return false;
+        }
 
-        // final GLState glState = GLState.getInstance();
-        // blend mode
-        // boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+        drawStart(glState);
 
         // draw the children
         drawChildren(glState);
-
-        // if (blendChanged) {
-        // recover the blending
-        // glState.setBlendFunc(null);
-        // }
 
         drawEnd(glState);
 
         return true;
     }
 
-    protected void drawChildren(final GLState glState) {
+    @Override
+    protected boolean drawChildren(final GLState glState) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
         if (mTouchable) {
             if (mVisibleTouchables == null) {
                 mVisibleTouchables = new ArrayList<Touchable>();
@@ -107,23 +106,29 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         // draw the children
+        DisplayObject child;
+        int numVisibles = 0;
+        final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
 
                 // stack the visible child
-                if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
-                    int j = mVisibleTouchables.size();
+                    int j = numVisibles;
                     while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
+                    numVisibles++;
                 }
             }
         }
+
+        return true;
     }
 
     /**
@@ -133,6 +138,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      * @return true if at least one of the corners of the child is in this container's rect.
      */
     protected boolean isChildInBounds(final DisplayObject child) {
+        // null check
+        if (child == null) {
+            return false;
+        }
+
         final PointF pos = child.getPosition();
         final PointF size = child.getSize();
         return ((pos.x >= 0 && pos.x < mSize.x) && (pos.y >= 0 && pos.y < mSize.y)) // TL
@@ -153,11 +163,18 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean addChild(final DisplayObject child) {
         if (mChildren.indexOf(child) < 0) {
+
+            // child callback
+            // child.onPreAdded(this);
+
             mChildren.add(child);
             mNumChildren++;
+
+            // child callback
             child.onAdded(this);
             invalidate();
 
+            // internal callback
             onAddedChild(child);
             return true;
         }
@@ -166,8 +183,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean addChild(final DisplayObject child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
+
+            // child callback
+            // child.onPreAdded(this);
+
             mChildren.add(index, child);
             mNumChildren++;
+
+            // child callback
             child.onAdded(this);
             invalidate();
 
@@ -178,8 +201,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public boolean removeChild(final DisplayObject child) {
-        if (mChildren.remove(child)) {
+        if (mChildren.indexOf(child) >= 0) {
+
+            // child callback
+            // child.onPreRemoved();
+
+            mChildren.remove(child);
             mNumChildren--;
+
+            // child callback
             child.onRemoved();
             invalidate();
 
@@ -192,8 +222,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean removeChild(final int index) {
         if (index < mNumChildren) {
-            DisplayObject child = mChildren.remove(index);
+            final DisplayObject child = mChildren.get(index);
+
+            // child callback
+            // child.onPreRemoved();
+
+            mChildren.remove(child);
             mNumChildren--;
+
+            // child callback
             child.onRemoved();
             invalidate();
 
@@ -205,9 +242,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public void removeAllChildren() {
-        // update children
+        // call children
+        // for (int i = 0; i < mNumChildren; i++) {
+        // final DisplayObject child = mChildren.get(i);
+        // // pre callback
+        // child.onPreRemoved();
+        // }
+
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            final DisplayObject child = mChildren.get(i);
+            // callback
             child.onRemoved();
             onRemovedChild(child);
         }
@@ -343,9 +387,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return n;
     }
 
+    /**
+     * Note: This is called from UI-Thread
+     */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (mVisibleTouchables != null) {
+
+        if (mNumChildren > 0 && mVisibleTouchables != null) {
             // start from front to back
             for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
                 if (mVisibleTouchables.get(i).onTouchEvent(event)) {
@@ -374,5 +422,25 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     protected void onRemovedChild(final DisplayObject child) {
         // TODO
+    }
+
+    /**
+     * for Debugging
+     * 
+     * @return a string that has all the children in Tree format
+     */
+    @Override
+    public String getTrace(final String prefix) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(super.getTrace(prefix));
+        sb.append("\n");
+
+        for (int i = 0; i < mNumChildren; i++) {
+            DisplayObject child = mChildren.get(i);
+            sb.append(child.getTrace(prefix + "   "));
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }

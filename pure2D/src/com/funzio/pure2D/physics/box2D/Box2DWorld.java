@@ -5,6 +5,7 @@ package com.funzio.pure2D.physics.box2D;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 
 import org.jbox2d.callbacks.QueryCallback;
 import org.jbox2d.collision.AABB;
@@ -81,7 +82,7 @@ public class Box2DWorld extends World implements PhysicsWorld {
     }
 
     public void start() {
-        mStartTime = System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime();
         mAccumulatedTime = 0;
         mPlaying = true;
 
@@ -107,8 +108,8 @@ public class Box2DWorld extends World implements PhysicsWorld {
      */
     protected void update() {
         // delta time
-        final long now = System.nanoTime();
-        final float delta = ((now - mStartTime) / 1000000000f); // seconds
+        final long now = SystemClock.elapsedRealtime();
+        final float delta = ((now - mStartTime) / 1000f); // seconds
         mAccumulatedTime += (delta > MAX_FRAME_TIME) ? MAX_FRAME_TIME : delta;
         mStartTime = now;
 

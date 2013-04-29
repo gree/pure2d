@@ -1,0 +1,26 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_emitter",
+			"lifespan": 1000,
+			"particles": [
+				{
+					"sprite": "sprites/some_file.png",
+					"animator": "my_ani"
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "my_ani",
+			"type": "translate",
+			"dx": [-100, 100],
+			"dy": [-100, 100],
+			"duration": 1000,
+			"interpolation": "decelerate"
+		}
+	]
+}

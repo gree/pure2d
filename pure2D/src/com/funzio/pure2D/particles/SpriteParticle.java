@@ -17,7 +17,7 @@ public class SpriteParticle extends Sprite implements Particle {
     protected ParticleEmitter mEmitter;
     protected Listener mListener = null;
     protected PointF mVelocity = new PointF(0, 0);
-    protected Random mRandom = new Random();
+    protected final Random mRandom = Particle.RANDOM;
 
     protected boolean mFinished = false;
 
@@ -25,8 +25,7 @@ public class SpriteParticle extends Sprite implements Particle {
      * (non-Javadoc)
      * @see com.funzio.pure2D.utils.Reusable#reset()
      */
-    @Override
-    public void reset() {
+    public void reset(final Object... params) {
         mEmitter = null;
         mListener = null;
         mFinished = false;
@@ -72,11 +71,11 @@ public class SpriteParticle extends Sprite implements Particle {
      * @see com.funzio.pure2D.particles.Particle#setListener(com.funzio.pure2D.particles.Particle.Listener)
      */
     @Override
-    public void setListener(final Listener listener) {
+    public void setParticleListener(final Listener listener) {
         mListener = listener;
     }
 
-    public Listener getListener() {
+    public Listener getParticleListener() {
         return mListener;
     }
 

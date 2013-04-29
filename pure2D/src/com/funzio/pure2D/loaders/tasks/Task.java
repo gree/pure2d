@@ -17,4 +17,5 @@ public interface Task {
     public static interface TaskListener {
         void onTaskComplete(final Task task);
     }
+
 }

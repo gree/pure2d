@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 /**
@@ -22,6 +23,7 @@ public abstract class ReadFileTask implements IntentTask {
 
     public static String EXTRA_FILE_PATH = "filePath";
 
+    protected final AssetManager mAssets;
     protected final String mFilePath;
 
     protected boolean mSucceeded; // whether the execution was successful or not.
@@ -29,6 +31,12 @@ public abstract class ReadFileTask implements IntentTask {
     private InputStream mInputStream;
 
     public ReadFileTask(final String filePath) {
+        mAssets = null;
+        mFilePath = filePath;
+    }
+
+    public ReadFileTask(final AssetManager assets, final String filePath) {
+        mAssets = assets;
         mFilePath = filePath;
     }
 
@@ -46,17 +54,28 @@ public abstract class ReadFileTask implements IntentTask {
 
     private boolean doWork() {
 
-        final File file = new File(mFilePath);
-        if (!file.exists()) {
-            Log.e(TAG, mFilePath + " does not exists!");
-            return false; // early success
-        }
+        if (mAssets == null) {
+            // read from file system
+            final File file = new File(mFilePath);
+            if (!file.exists()) {
+                Log.e(TAG, mFilePath + " does not exists!");
+                return false; // early success
+            }
 
-        try {
-            mInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "OPEN ERROR!", e);
-            return false;
+            try {
+                mInputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, "OPEN ERROR!", e);
+                return false;
+            }
+        } else {
+            // read from Assets
+            try {
+                mInputStream = mAssets.open(mFilePath);
+            } catch (IOException e) {
+                Log.e(TAG, "OPEN ERROR!", e);
+                return false;
+            }
         }
 
         boolean success = true;

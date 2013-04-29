@@ -4,7 +4,6 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -44,7 +43,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAlive = true;
 
     // framerate
-    protected int mFps = 0; // frames per second
+    private int mFps = 0; // frames per second
     protected float mFrameDuration = 0; // ms per frame
 
     // reference to the parent container
@@ -62,7 +61,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     private boolean mHasOrigin = false;
     private GLColor mSumColor;
 
-    protected List<Manipulator> mManipulators;
+    protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
 
     // rect and bounds
@@ -71,6 +70,36 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAutoUpdateBounds = false;
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
+
+    abstract protected boolean drawChildren(final GLState glState);
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.DisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
+     */
+    @Override
+    public boolean draw(final GLState glState) {
+        drawStart(glState);
+
+        // blend mode
+        // final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+        glState.setBlendFunc(mBlendFunc);
+        // color and alpha
+        glState.setColor(getSumColor());
+
+        // draw the content
+        drawChildren(glState);
+
+        // if (blendChanged) {
+        // // recover the blending
+        // glState.setBlendFunc(null);
+        // }
+
+        // wrap up
+        drawEnd(glState);
+
+        return true;
+    }
 
     protected void drawStart(final GLState glState) {
         // keep the matrix
@@ -227,6 +256,15 @@ public abstract class BaseDisplayObject implements DisplayObject {
     @Override
     final public boolean isVisible() {
         return mVisible;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.DisplayObject#shouldDraw()
+     */
+    @Override
+    public boolean shouldDraw() {
+        return mVisible && mAlpha > 0;
     }
 
     /**
@@ -445,20 +483,46 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof DisplayObject) {
-            DisplayObject parent = (DisplayObject) mParent;
-            GLColor color = parent.getColor();
-            if (color != null) {
-                mSumColor.r *= color.r;
-                mSumColor.g *= color.g;
-                mSumColor.b *= color.b;
-                mSumColor.a *= color.a;
+        if (mParent != null && mParent instanceof BaseDisplayObject) {
+            final BaseDisplayObject parent = (BaseDisplayObject) mParent;
+            final GLColor parentColor = parent.getSumColor();
+            if (parentColor != null) {
+                mSumColor.multiply(parentColor);
             }
-            mSumColor.a *= parent.getAlpha();
         }
 
         return mSumColor;
     }
+
+    /**
+     * This looks better in Premultiplied-alpha mode
+     * 
+     * @return
+     */
+    // final protected GLColor getSumColor() {
+    // if (mSumColor == null) {
+    // // init the mSumColor
+    // mSumColor = (mColor == null) ? new GLColor(1f, 1f, 1f, 1f) : new GLColor(mColor);
+    // mSumColor.multiply(mAlpha);
+    // } else {
+    // // recycle the mSumColor object to prevent GC
+    // if (mColor == null) {
+    // mSumColor.setValues(mAlpha, mAlpha, mAlpha, mAlpha);
+    // } else {
+    // mSumColor.setValues(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
+    // }
+    // }
+    // // multiply by parent's attributes
+    // if (mParent != null && mParent instanceof BaseDisplayObject) {
+    // final BaseDisplayObject parent = (BaseDisplayObject) mParent;
+    // final GLColor color = parent.getSumColor();
+    // if (color != null) {
+    // mSumColor.multiply(color);
+    // }
+    // }
+    //
+    // return mSumColor;
+    // }
 
     /**
      * @return the alpha
@@ -487,7 +551,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setFps(final int fps) {
         mFps = fps;
-        mFrameDuration = 1000f / mFps;
+
+        if (mFps > 0) {
+            mFrameDuration = 1000f / mFps;
+        } else {
+            mFrameDuration = Scene.DEFAULT_MSPF;
+        }
     }
 
     public boolean addManipulator(final Manipulator manipulator) {
@@ -830,16 +899,48 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.VISUAL);
     }
 
-    public void onAdded(final Container parent) {
-        mParent = parent;
+    // /**
+    // * This is called before this object is added to a Container
+    // */
+    // public void onPreAdded(final Container container) {
+    // // TODO nothing yet
+    // }
+
+    /**
+     * This is called after this object is added to a Container
+     */
+    public void onAdded(final Container container) {
+        mParent = container;
         mScene = findScene();
 
         // flag the bounds are changed now
         invalidate(InvalidateFlags.BOUNDS);
     }
 
+    // /**
+    // * This is called before this object is remove from a Container
+    // */
+    // public void onPreRemoved() {
+    // // TODO nothing yet
+    // }
+
+    /**
+     * This is called after this object is removed from a Container
+     */
     public void onRemoved() {
         mParent = null;
         mScene = null;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+    }
+
+    /**
+     * for debugging
+     */
+    public String getTrace(final String prefix) {
+        return prefix + toString();
     }
 }

@@ -45,8 +45,12 @@ public class AtlasFrame {
     public AtlasFrame(final Texture texture, final int index, final String name) {
         mIndex = index;
         mTexture = texture;
-        setRect(0, 0, (int) mTexture.getSize().x - 1, (int) mTexture.getSize().y - 1);
         mName = name;
+
+        // auto set rect to match texture size
+        if (texture != null) {
+            setRect(0, 0, (int) texture.getSize().x - 1, (int) texture.getSize().y - 1);
+        }
     }
 
     public void setRect(final float left, final float top, final float right, final float bottom) {

@@ -5,17 +5,20 @@ package com.funzio.pure2D.atlas;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import android.graphics.PointF;
+
+import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 /**
  * @author long
  */
 public class AtlasFrameSet {
     protected final String mName;
-    protected List<AtlasFrame> mFrames = new ArrayList<AtlasFrame>();
+    protected ArrayList<AtlasFrame> mFrames = new ArrayList<AtlasFrame>();
     protected PointF mFrameMaxSize = new PointF();
+    protected Texture mTexture;
+    protected int mFps = 0;
 
     public AtlasFrameSet(final String name) {
         mName = name;
@@ -23,6 +26,11 @@ public class AtlasFrameSet {
 
     public void addFrame(final AtlasFrame frame) {
         mFrames.add(frame);
+
+        // check and auto assign texture
+        if (frame.mTexture == null) {
+            frame.mTexture = mTexture;
+        }
 
         if (frame.mSize.x > mFrameMaxSize.x) {
             mFrameMaxSize.x = frame.mSize.x;
@@ -54,6 +62,20 @@ public class AtlasFrameSet {
         }
 
         return null;
+    }
+
+    public void setTexture(final Texture texture) {
+        mTexture = texture;
+
+        // apply to all frames
+        int len = mFrames.size();
+        for (int i = 0; i < len; i++) {
+            mFrames.get(i).mTexture = texture;
+        }
+    }
+
+    public Texture getTexture() {
+        return mTexture;
     }
 
     public int getNumFrames() {
@@ -117,5 +139,13 @@ public class AtlasFrameSet {
 
     public void setFrameMaxSize(final PointF frameMaxSize) {
         mFrameMaxSize = frameMaxSize;
+    }
+
+    public int getFps() {
+        return mFps;
+    }
+
+    public void setFps(final int fps) {
+        mFps = fps;
     }
 }

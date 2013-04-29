@@ -50,6 +50,8 @@ public interface DisplayObject extends Manipulatable {
 
     public boolean isVisible();
 
+    public boolean shouldDraw();
+
     public GLColor getColor();
 
     public void setColor(final GLColor color);
@@ -72,6 +74,8 @@ public interface DisplayObject extends Manipulatable {
 
     public Container getParent();
 
+    public boolean queueEvent(final Runnable r);
+
     public boolean removeFromParent();
 
     public void dispose();
@@ -92,7 +96,9 @@ public interface DisplayObject extends Manipulatable {
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
-    public void onAdded(Container parent);
+    public void onAdded(Container container);
 
     public void onRemoved();
+
+    public String getTrace(final String prefix);
 }

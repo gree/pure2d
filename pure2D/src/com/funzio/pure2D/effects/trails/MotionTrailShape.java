@@ -12,21 +12,52 @@ import com.funzio.pure2D.shapes.Polyline;
 /**
  * @author long
  */
-public class MotionTrailShape extends Polyline {
+public class MotionTrailShape extends Polyline implements MotionTrail {
+    public static final int DEFAULT_NUM_POINTS = 10;
+    public static final float DEFAULT_MOTION_EASING = 0.5f;
 
-    protected int mNumPoints = 10;
+    protected int mNumPoints = DEFAULT_NUM_POINTS;
+    protected float mMotionEasingX = DEFAULT_MOTION_EASING;
+    protected float mMotionEasingY = DEFAULT_MOTION_EASING;
     protected int mMinLength = 0;
     protected int mSegmentLength = 0;
-    protected float mMotionEasing = 0.5f;
 
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
+    protected Object mData;
 
     public MotionTrailShape() {
+        this(null);
+    }
+
+    public MotionTrailShape(final DisplayObject target) {
         super();
 
         // set default num points
         setNumPoints(mNumPoints);
+
+        if (target != null) {
+            setTarget(target);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
+     */
+    @Override
+    public void reset(final Object... params) {
+        mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
+    }
+
+    @Override
+    public Object getData() {
+        return mData;
+    }
+
+    @Override
+    public void setData(final Object data) {
+        mData = data;
     }
 
     /*
@@ -60,8 +91,8 @@ public class MotionTrailShape extends Polyline {
                     dy = p2.y - p1.y;
                     if (mSegmentLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
                         // move toward the leading point
-                        p1.x += dx * mMotionEasing;
-                        p1.y += dy * mMotionEasing;
+                        p1.x += dx * mMotionEasingX;
+                        p1.y += dy * mMotionEasingY;
                     }
                 }
             }
@@ -108,8 +139,8 @@ public class MotionTrailShape extends Polyline {
             mSegmentLength = mMinLength / (numPoints - 1);
         }
 
-        // re-count
-        mVerticesNum = numPoints * 2;
+        // re-count, each point has 2 vertices
+        allocateVertices(numPoints * 2);
     }
 
     public DisplayObject getTarget() {
@@ -125,18 +156,27 @@ public class MotionTrailShape extends Polyline {
                 mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
             }
         }
+
+        // apply
+        setPoints(mPoints);
     }
 
     public void setPointsAt(final float x, final float y) {
         for (int i = 0; i < mNumPoints; i++) {
             mPoints[i].set(x, y);
         }
+
+        // apply
+        setPoints(mPoints);
     }
 
     public void setPointsAt(final PointF p) {
         for (int i = 0; i < mNumPoints; i++) {
             mPoints[i].set(p.x, p.y);
         }
+
+        // apply
+        setPoints(mPoints);
     }
 
     public int getMinLength() {
@@ -148,15 +188,24 @@ public class MotionTrailShape extends Polyline {
         mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
     }
 
-    public float getMotionEasing() {
-        return mMotionEasing;
+    public float getMotionEasingX() {
+        return mMotionEasingX;
+    }
+
+    public float getMotionEasingY() {
+        return mMotionEasingY;
     }
 
     /**
      * @param easing, must be from 0 to 1
      */
     public void setMotionEasing(final float easing) {
-        mMotionEasing = easing;
+        mMotionEasingX = mMotionEasingY = easing;
+    }
+
+    public void setMotionEasing(final float easingX, final float easingY) {
+        mMotionEasingX = easingX;
+        mMotionEasingY = easingY;
     }
 
     public PointF getTargetOffset() {

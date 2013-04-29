@@ -7,7 +7,6 @@ public class VelocityAnimator extends BaseAnimator {
 
     protected float mAcceleration = 0;
     protected float mVelocity = 0;
-    protected int mDuration = 0; // 0: unlimited
     protected int mPendingElapse = 0;
 
     public VelocityAnimator() {
@@ -15,18 +14,18 @@ public class VelocityAnimator extends BaseAnimator {
     }
 
     public VelocityAnimator(final float veloc, final float acceleration, final int duration) {
-        super();
+        this();
 
         mVelocity = veloc;
         mAcceleration = acceleration;
-        mDuration = duration;
+        mLifespan = duration;
         mPendingElapse = 0;
     }
 
     public void start(final float veloc, final float acceleration, final int duration) {
         mVelocity = veloc;
         mAcceleration = acceleration;
-        mDuration = duration;
+        mLifespan = duration;
         mPendingElapse = 0;
 
         super.start();
@@ -74,26 +73,26 @@ public class VelocityAnimator extends BaseAnimator {
      * @return the Duration in ms
      */
     public int getDuration() {
-        return mDuration;
+        return mLifespan;
     }
 
     public int getRemainingTime() {
-        return mDuration - mElapsedTime;
+        return mLifespan - mElapsedTime;
     }
 
     @Override
     public boolean update(final int deltaTime) {
         if (mRunning) {
 
-            if (mVelocity != 0 && ((mDuration > 0 && mElapsedTime < mDuration) || mDuration <= 0)) {
+            if (mVelocity != 0 && ((mLifespan > 0 && mElapsedTime < mLifespan) || mLifespan <= 0)) {
 
                 int myDeltaTime = deltaTime + mPendingElapse;
                 mPendingElapse = 0;
                 boolean isTimeUp = false;
                 // if there is a time limit
-                if (mDuration > 0 && mElapsedTime + myDeltaTime > mDuration) {
+                if (mLifespan > 0 && mElapsedTime + myDeltaTime > mLifespan) {
                     // uh oh, time's up!
-                    myDeltaTime = mDuration - mElapsedTime;
+                    myDeltaTime = mLifespan - mElapsedTime;
                     isTimeUp = true;
                 }
                 mElapsedTime += myDeltaTime;
@@ -106,7 +105,7 @@ public class VelocityAnimator extends BaseAnimator {
                 onUpdate(delta);
 
                 // direction changed or time's up?
-                if ((mDuration <= 0 && newVeloc * mVelocity <= 0) || isTimeUp) {
+                if ((mLifespan <= 0 && newVeloc * mVelocity <= 0) || isTimeUp) {
                     mVelocity = 0;
                     // done! do callback
                     end();

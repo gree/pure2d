@@ -11,6 +11,7 @@ public abstract class AbstractSound implements Soundable {
     protected int mSoundID = 0;
     protected int mPriority = 0;
     protected int mLoop = 0;
+    protected long mLength = -1;
 
     public AbstractSound(final int key) {
         mKey = key;
@@ -38,5 +39,9 @@ public abstract class AbstractSound implements Soundable {
 
     public void setLoop(final int loop) {
         mLoop = loop;
+    }
+
+    public long getLength() {
+        return mLength;
     }
 }
