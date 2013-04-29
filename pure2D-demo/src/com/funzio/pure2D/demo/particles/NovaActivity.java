@@ -11,12 +11,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import org.json.JSONException;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.R;
+import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
@@ -40,7 +45,7 @@ public class NovaActivity extends StageActivity {
 
         @Override
         public void delegateParticle(final NovaParticle particle, final Object... params) {
-            final String sprite = NovaConfig.getRandomString(particle.getParticleVO().sprite);
+            final String sprite = NovaConfig.getString(particle.getParticleVO().sprite, -1);
 
             // apply the frameset
             particle.setAtlasFrameSet(sprite == null ? null : mFileToFrameMap.get(sprite));
@@ -51,6 +56,8 @@ public class NovaActivity extends StageActivity {
     private HashMap<String, AtlasFrameSet> mFileToFrameMap = new HashMap<String, AtlasFrameSet>();
 
     private NovaFactory mNovaFactory;
+    private ScrollView mScrollView;
+    private TextView mTextView;
 
     @Override
     protected int getNumObjects() {
@@ -63,12 +70,15 @@ public class NovaActivity extends StageActivity {
      */
     @Override
     protected int getLayout() {
-        return R.layout.stage_bg_colors;
+        return R.layout.stage_nova;
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mScrollView = (ScrollView) findViewById(R.id.sv_code);
+        mTextView = (TextView) mScrollView.findViewById(R.id.tv_code);
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -82,6 +92,17 @@ public class NovaActivity extends StageActivity {
                     public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
                         Log.d(TAG, vo.toString());
                         mNovaFactory = new NovaFactory(vo, mNovaDelegator, 500);
+
+                        // display the code
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    mTextView.setText(vo.getSource().toString(3));
+                                } catch (JSONException e) {
+                                }
+                            }
+                        });
 
                         // load textures on GL thread
                         mScene.queueEvent(new Runnable() {
@@ -106,7 +127,7 @@ public class NovaActivity extends StageActivity {
                 // load asynchronously the json file, some old Android requires this to run on UI Thread
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
+                        loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString(MenuActivity.EXTRA_TAG));
                     }
                 });
 
@@ -191,13 +212,21 @@ public class NovaActivity extends StageActivity {
                 public void run() {
                     final int pointerCount = event.getPointerCount();
                     for (int i = 0; i < pointerCount; i++) {
-                        addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                        // for demo, limit the number of emitters
+                        if (mScene.getNumGrandChildren() < mNovaFactory.getPoolSize()) {
+                            addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                        }
                     }
                 }
             });
         }
 
         return true;
+    }
+
+    public void onClickCode(final View view) {
+        final int visibility = mScrollView.getVisibility();
+        mScrollView.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
     public void onClickRadio(final View view) {

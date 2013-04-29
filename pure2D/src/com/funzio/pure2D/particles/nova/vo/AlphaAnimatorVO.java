@@ -21,10 +21,6 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> from;
     public ArrayList<Float> to;
 
-    public AlphaAnimatorVO() {
-        super();
-    }
-
     public AlphaAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
@@ -33,18 +29,18 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new AlphaAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new AlphaAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final AlphaAnimator alpha = (AlphaAnimator) animator;
-        if (alpha != null) {
-            alpha.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));
-            alpha.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        // if (alpha != null) {
+        alpha.setValues(NovaConfig.getFloat(from, emitIndex, 0), NovaConfig.getFloat(to, emitIndex, 0));
+        alpha.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+        // }
     }
 }

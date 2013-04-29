@@ -15,11 +15,11 @@ import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
-import com.funzio.pure2D.particles.nova.vo.EmitterVO;
 import com.funzio.pure2D.particles.nova.vo.GroupAnimatorVO;
 import com.funzio.pure2D.particles.nova.vo.MotionTrailVO;
+import com.funzio.pure2D.particles.nova.vo.NovaEmitterVO;
+import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
 import com.funzio.pure2D.utils.ObjectPool;
 
 /**
@@ -70,7 +70,7 @@ public class NovaFactory {
 
         final int size = mNovaVO.emitters.size();
         final ArrayList<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
-        EmitterVO vo;
+        NovaEmitterVO vo;
         for (int i = 0; i < size; i++) {
             vo = mNovaVO.emitters.get(i);
             for (int n = 0; n < vo.quantity; n++) {
@@ -91,16 +91,16 @@ public class NovaFactory {
     public NovaEmitter createEmitter(final String name, final PointF position, final Object... params) {
         Log.v(TAG, "createEmitters(): " + name + ", " + params);
 
-        final EmitterVO vo = mNovaVO.getEmitterVO(name);
+        final NovaEmitterVO vo = mNovaVO.getEmitterVO(name);
         return vo == null ? null : createEmitter(vo, position, params);
     }
 
-    protected NovaEmitter createEmitter(final EmitterVO emitterVO, final PointF pos, final Object... params) {
+    protected NovaEmitter createEmitter(final NovaEmitterVO emitterVO, final PointF pos, final Object... params) {
         // TODO use pool
         return new NovaEmitter(this, emitterVO, pos, params);
     }
 
-    protected NovaParticle createParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
+    protected NovaParticle createParticle(final NovaEmitter emitter, final NovaParticleVO particleVO, final int emitIndex) {
         // use pool
         NovaParticle particle = null;
         if (mParticlePool != null) {
@@ -108,10 +108,10 @@ public class NovaFactory {
         }
         if (particle == null) {
             // new instance
-            particle = new NovaParticle(emitter, particleVO);
+            particle = new NovaParticle(emitter, particleVO, emitIndex);
         } else {
             // reset and reuse
-            particle.reset(emitter, particleVO);
+            particle.reset(emitter, particleVO, emitIndex);
         }
 
         return particle;
@@ -142,6 +142,10 @@ public class NovaFactory {
         }
     }
 
+    public int getPoolSize() {
+        return mPoolSize;
+    }
+
     /**
      * Clear everything! Call when this object is no longer being used.
      */
@@ -170,7 +174,7 @@ public class NovaFactory {
      * @param animationName
      * @return
      */
-    public Animator createAnimator(final Manipulatable target, final AnimatorVO vo) {
+    protected Animator createAnimator(final Manipulatable target, final AnimatorVO vo, final int emitIndex) {
         // Log.v(TAG, "createAnimator(): " + animationName);
 
         // null check
@@ -191,27 +195,32 @@ public class NovaFactory {
                 final Animator animator = pool.acquire();
                 if (animator != null) {
                     // awesome, there is something, reset it!
-                    vo.resetAnimator(target, animator);
+                    vo.resetAnimator(emitIndex, target, animator);
                     // and return
                     return animator;
                 }
             }
         }
 
-        return createAnimatorInstance(target, vo);
+        return createAnimatorInstance(target, vo, emitIndex);
     }
 
+    /**
+     * Called when the animator is done and ready for recycle
+     * 
+     * @param animator
+     */
     protected void releaseAnimator(final Animator animator) {
         if (mAnimatorPools != null && animator.getData() instanceof AnimatorVO) {
             final AnimatorVO vo = (AnimatorVO) animator.getData();
-            ObjectPool<Animator> pool = mAnimatorPools.get(vo.name); // use name as key
+            final ObjectPool<Animator> pool = mAnimatorPools.get(vo.name); // use name as key
             if (pool != null) {
                 pool.release(animator);
             }
         }
     }
 
-    protected Animator createAnimatorInstance(final Manipulatable target, final AnimatorVO animatorVO) {
+    protected Animator createAnimatorInstance(final Manipulatable target, final AnimatorVO animatorVO, final int emitIndex) {
         // null check
         if (animatorVO == null) {
             return null;
@@ -221,9 +230,9 @@ public class NovaFactory {
             // group
             final GroupAnimatorVO groupVO = (GroupAnimatorVO) animatorVO;
             // create the child animators
-            return groupVO.createAnimator(target, createChildAnimators(target, groupVO.animators));
+            return groupVO.createAnimator(emitIndex, target, createChildAnimators(emitIndex, target, groupVO.animators));
         } else {
-            return animatorVO.createAnimator(target);
+            return animatorVO.createAnimator(emitIndex, target);
         }
     }
 
@@ -233,7 +242,7 @@ public class NovaFactory {
      * @param vos
      * @return
      */
-    protected Animator[] createChildAnimators(final Manipulatable target, final ArrayList<AnimatorVO> vos) {
+    protected Animator[] createChildAnimators(final int emitIndex, final Manipulatable target, final ArrayList<AnimatorVO> vos) {
         // null check
         if (vos == null) {
             return null;
@@ -242,13 +251,13 @@ public class NovaFactory {
         final int size = vos.size();
         Animator[] animators = new Animator[size];
         for (int i = 0; i < size; i++) {
-            animators[i] = createAnimatorInstance(target, vos.get(i));
+            animators[i] = createAnimatorInstance(target, vos.get(i), emitIndex);
         }
 
         return animators;
     }
 
-    public MotionTrail createMotionTrail(final DisplayObject target, final MotionTrailVO trailVO) {
+    protected MotionTrail createMotionTrail(final int emitIndex, final DisplayObject target, final MotionTrailVO trailVO) {
         // Log.v(TAG, "createMotionTrail(): " + trailName);
 
         // null check
@@ -269,20 +278,25 @@ public class NovaFactory {
                 final MotionTrail trail = pool.acquire();
                 if (trail != null) {
                     // awesome, there is something, reset it!
-                    trailVO.resetTrail(target, trail);
+                    trailVO.resetTrail(emitIndex, target, trail);
                     // and return
                     return trail;
                 }
             }
         }
 
-        return trailVO.createTrail(target);
+        return trailVO.createTrail(emitIndex, target);
     }
 
+    /**
+     * Called when the trail is done and ready for recycle
+     * 
+     * @param trail
+     */
     protected void releaseMotionTrail(final MotionTrail trail) {
         if (mMotionTrailPools != null && trail.getData() instanceof MotionTrailVO) {
             final MotionTrailVO vo = (MotionTrailVO) trail.getData();
-            ObjectPool<MotionTrail> pool = mMotionTrailPools.get(vo.type); // use type as key
+            final ObjectPool<MotionTrail> pool = mMotionTrailPools.get(vo.type); // use type as key
             if (pool != null) {
                 pool.release(trail);
             }

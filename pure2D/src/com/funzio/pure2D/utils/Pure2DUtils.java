@@ -26,6 +26,10 @@ import com.funzio.pure2D.text.TextOptions;
  */
 
 public class Pure2DUtils {
+    public static final float PI_D2 = (float) Math.PI / 2f;
+    public static final float DEGREE_TO_RADIAN = (float) Math.PI / 180;
+    public static final float RADIAN_TO_DEGREE = 180 / (float) Math.PI;
+
     /**
      * Create a texture from an asset file
      * 

@@ -6,23 +6,31 @@ package com.funzio.pure2D.animators;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.utils.Pure2DUtils;
+
 /**
  * @author long
  */
 public class SinWaveAnimator extends TweenAnimator {
+    public static final int DEFAULT_RADIUS = 10;
+    public static final int DEFAULT_WAVE_NUM = 2;
+
     protected float mSrcX = 0;
     protected float mSrcY = 0;
     protected PointF mDelta = new PointF();
     protected float mDeltaLength = 0;
 
-    protected int mWaveNum = 2;
-    protected float mWaveRadius = 10;
+    protected int mWaveNum = DEFAULT_WAVE_NUM;
+    protected float mWaveRadius1 = DEFAULT_RADIUS;
+    protected float mWaveRadius2 = DEFAULT_RADIUS;
+    protected Interpolator mRadiusInterpolator;
     protected float mAngle;
     protected float mSinAngle;
     protected float mCosAngle;
 
     private float mLastX;
     private float mLastY;
+    private float mRadiusLength;
 
     public SinWaveAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -53,6 +61,15 @@ public class SinWaveAnimator extends TweenAnimator {
         mCosAngle = (float) Math.cos(mAngle);
     }
 
+    public void setDistance(final float distance, final float radianAngle) {
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
+    public void setDistance(final float distance, final int degreeAngle) {
+        final float radianAngle = degreeAngle * Pure2DUtils.DEGREE_TO_RADIAN;
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {
         setValues(srcX, srcY, dstX, dstY);
 
@@ -81,8 +98,9 @@ public class SinWaveAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget != null) {
             final float currentAngle = value * mWaveNum * (float) Math.PI;
+            final float radius = mWaveRadius1 + mRadiusLength * (mRadiusInterpolator != null ? mRadiusInterpolator.getInterpolation(value) : value);
             final float dx = value * mDeltaLength;
-            final float dy = (float) Math.sin(currentAngle) * mWaveRadius;
+            final float dy = (float) Math.sin(currentAngle) * radius;
             final float newX = dx * mCosAngle - dy * mSinAngle;
             final float newY = dx * mSinAngle + dy * mCosAngle;
 
@@ -111,11 +129,30 @@ public class SinWaveAnimator extends TweenAnimator {
         mWaveNum = waveNum;
     }
 
-    public float getWaveRadius() {
-        return mWaveRadius;
+    public float getWaveRadius1() {
+        return mWaveRadius1;
+    }
+
+    public float getWaveRadius2() {
+        return mWaveRadius2;
     }
 
     public void setWaveRadius(final float waveRadius) {
-        mWaveRadius = waveRadius;
+        mWaveRadius1 = mWaveRadius2 = waveRadius;
+        mRadiusLength = 0;
+    }
+
+    public void setWaveRadius(final float waveRadius1, final float waveRadius2) {
+        mWaveRadius1 = waveRadius1;
+        mWaveRadius2 = waveRadius2;
+        mRadiusLength = waveRadius2 - waveRadius1;
+    }
+
+    public Interpolator getRadiusInterpolator() {
+        return mRadiusInterpolator;
+    }
+
+    public void setRadiusInterpolator(final Interpolator radiusInterpolator) {
+        mRadiusInterpolator = radiusInterpolator;
     }
 }

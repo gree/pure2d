@@ -16,6 +16,7 @@ public class TweenAnimator extends BaseAnimator {
 
     protected float mLastValue = 0;
     protected float mCurrentValue = 0;
+    protected boolean mReversed = false;
 
     protected int mLoopMode = Playable.LOOP_NONE;
     protected int mLoopCount = -1; // forever
@@ -39,7 +40,7 @@ public class TweenAnimator extends BaseAnimator {
         super.startElapse(elapsedTime);
 
         // clear the values
-        mLastValue = mCurrentValue = 0;
+        mLastValue = mCurrentValue = (mReversed ? 1 : 0);
     }
 
     /*
@@ -49,13 +50,13 @@ public class TweenAnimator extends BaseAnimator {
     @Override
     public boolean update(final int deltaTime) {
         if (mDuration > 0 && super.update(deltaTime)) {
-            final int trips = mElapsedTime / mDuration;
+            float timeline = (float) mElapsedTime / (float) mDuration;
+            final int trips = (int) Math.floor(timeline);
             if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration)) {
                 // end it
                 end();
             } else {
 
-                float timeline;
                 if (mLoopMode == Playable.LOOP_REPEAT) {
                     timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                 } else if (mLoopMode == Playable.LOOP_REVERSE) {
@@ -64,13 +65,15 @@ public class TweenAnimator extends BaseAnimator {
                         // reverse
                         timeline = 1 - timeline;
                     }
-                } else {
-                    timeline = (float) mElapsedTime / (float) mDuration;
                 }
 
                 // interpolate the value
                 mLastValue = mCurrentValue;
                 mCurrentValue = (mInterpolator == null) ? timeline : mInterpolator.getInterpolation(timeline);
+                // explicit reversed
+                if (mReversed) {
+                    mCurrentValue = 1 - mCurrentValue;
+                }
                 // and update
                 onUpdate(mCurrentValue);
             }
@@ -93,6 +96,13 @@ public class TweenAnimator extends BaseAnimator {
         } else {
             mCurrentValue = 1;
         }
+
+        // explicit reversed
+        if (mReversed) {
+            mCurrentValue = 1 - mCurrentValue;
+        }
+
+        // update
         onUpdate(mCurrentValue);
 
         super.end();
@@ -110,6 +120,19 @@ public class TweenAnimator extends BaseAnimator {
      */
     public void setDuration(final int duration) {
         mDuration = duration;
+    }
+
+    public boolean isReversed() {
+        return mReversed;
+    }
+
+    /**
+     * To explicitly play in reversed direction
+     * 
+     * @param reversed
+     */
+    public void setReversed(final boolean reversed) {
+        mReversed = reversed;
     }
 
     /**

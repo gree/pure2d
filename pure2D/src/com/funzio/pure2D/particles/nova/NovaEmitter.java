@@ -15,8 +15,8 @@ import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.Particle;
 import com.funzio.pure2D.particles.RectangularEmitter;
 import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
-import com.funzio.pure2D.particles.nova.vo.EmitterVO;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
+import com.funzio.pure2D.particles.nova.vo.NovaEmitterVO;
+import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 import com.funzio.pure2D.utils.Reusable;
 
 /**
@@ -27,7 +27,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected final Timeline mTimeline;
     protected final NovaFactory mFactory;
 
-    protected EmitterVO mEmitterVO;
+    protected NovaEmitterVO mEmitterVO;
     protected Object[] mParams;
     protected Animator mAnimator;
     protected MotionTrail mMotionTrail;
@@ -35,7 +35,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     // layers for particles
     protected SparseArray<DisplayGroup> mLayers;
 
-    public NovaEmitter(final NovaFactory factory, final EmitterVO vo, final PointF pos, final Object... params) {
+    public NovaEmitter(final NovaFactory factory, final NovaEmitterVO vo, final PointF pos, final Object... params) {
         super();
 
         mFactory = factory;
@@ -78,12 +78,12 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
             mAnimator.stop();
             // reset the animator
             if (mAnimator.getData() instanceof AnimatorVO) {
-                ((AnimatorVO) mAnimator.getData()).resetAnimator(this, mAnimator);
+                ((AnimatorVO) mAnimator.getData()).resetAnimator(-1, this, mAnimator);
             }
         }
     }
 
-    public EmitterVO getEmitterVO() {
+    public NovaEmitterVO getEmitterVO() {
         return mEmitterVO;
     }
 
@@ -95,7 +95,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         // emitting action for particles
         int size = mEmitterVO.particles.size();
         for (int i = 0; i < size; i++) {
-            mTimeline.addAction(new EmitAction(this, mEmitterVO.particles.get(i)));
+            mTimeline.addAction(new EmitAction(mEmitterVO.particles.get(i)));
         }
         // add timeline
         addManipulator(mTimeline);
@@ -104,13 +104,13 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
 
         // optional emitter animator
         if (mEmitterVO.animator != null && mEmitterVO.animator != "") {
-            mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator));
+            mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator), -1);
 
             if (mAnimator != null) {
                 // only create trail when there is an animator
                 if (mEmitterVO.motion_trail != null) {
                     // get a new trail from pool
-                    mMotionTrail = mFactory.createMotionTrail(this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
+                    mMotionTrail = mFactory.createMotionTrail(-1, this, mFactory.mNovaVO.getMotionTrailVO(mEmitterVO.motion_trail));
                 }
 
                 // add animator
@@ -138,7 +138,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     protected void createLayers() {
         int size = mEmitterVO.particles.size();
         for (int i = 0; i < size; i++) {
-            final ParticleVO particle = mEmitterVO.particles.get(i);
+            final NovaParticleVO particle = mEmitterVO.particles.get(i);
             if (particle.layer > 0) {
                 if (mLayers == null) {
                     mLayers = new SparseArray<DisplayGroup>();
@@ -175,9 +175,9 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
     private void removeMotionTrail() {
         if (mMotionTrail != null) {
             mMotionTrail.removeFromParent();
-
             // release it
             mFactory.releaseMotionTrail(mMotionTrail);
+            // flag
             mMotionTrail = null;
         }
     }
@@ -214,7 +214,6 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         // remove animator
         if (mAnimator != null) {
             removeManipulator(mAnimator);
-
             // release it
             mFactory.releaseAnimator(mAnimator);
             mAnimator = null;
@@ -243,6 +242,10 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
 
     @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
+        if (mMotionTrail != null && mMotionTrail.getTarget() == null) {
+            // initial position for trail
+            mMotionTrail.setTarget(this);
+        }
     }
 
     @Override
@@ -256,14 +259,13 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
      * 
      * @author long
      */
-    private static class EmitAction extends Action {
-        private NovaEmitter mEmitter;
-        private ParticleVO mParticleVO;
+    private class EmitAction extends Action {
+        private NovaParticleVO mParticleVO;
+        private int mEmitIndex = 0;
 
-        public EmitAction(final NovaEmitter emitter, final ParticleVO vo) {
+        public EmitAction(final NovaParticleVO vo) {
             super(vo.start_delay, vo.step_delay, vo.duration);
 
-            mEmitter = emitter;
             mParticleVO = vo;
         }
 
@@ -274,14 +276,14 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
             // @Override
             // public void run() {
             // null check
-            if (mEmitter.mParent != null) {
+            if (mParent != null) {
                 // emit the particles
                 Container layer;
                 for (int n = 0; n < mParticleVO.step_quantity; n++) {
                     // find the layer
-                    layer = mParticleVO.layer > 0 ? mEmitter.mLayers.get(mParticleVO.layer) : mEmitter.mParent;
+                    layer = mParticleVO.layer > 0 ? mLayers.get(mParticleVO.layer) : mParent;
                     // add to the layer
-                    layer.addChild(mEmitter.mFactory.createParticle(mEmitter, mParticleVO));
+                    layer.addChild(mFactory.createParticle(NovaEmitter.this, mParticleVO, mEmitIndex++));
                 }
             }
             // }

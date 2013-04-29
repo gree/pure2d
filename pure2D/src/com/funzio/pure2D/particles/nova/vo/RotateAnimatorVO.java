@@ -21,10 +21,6 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> to;
     public ArrayList<Float> delta;
 
-    public RotateAnimatorVO() {
-        super();
-    }
-
     public RotateAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
@@ -34,23 +30,23 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new RotateAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new RotateAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final RotateAnimator rotate = (RotateAnimator) animator;
-        if (rotate != null) {
-            if (delta != null) {
-                rotate.setDelta(NovaConfig.getRandomFloat(delta));
-            } else {
-                rotate.setValues(NovaConfig.getRandomFloat(from), NovaConfig.getRandomFloat(to));
-            }
-            rotate.setDuration(NovaConfig.getRandomInt(duration));
+        // if (rotate != null) {
+        if (delta != null) {
+            rotate.setDelta(NovaConfig.getFloat(delta, emitIndex, 0));
+        } else {
+            rotate.setValues(NovaConfig.getFloat(from, emitIndex, 0), NovaConfig.getFloat(to, emitIndex, 0));
         }
+        rotate.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+        // }
     }
 
 }

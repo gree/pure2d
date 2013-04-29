@@ -57,20 +57,13 @@ public class NovaConfig {
     public static final String LOOP_REPEAT = "repeat";
     public static final String LOOP_REVERSE = "reverse";
 
-    public static float getRandomFloat(final ArrayList<Float> values) {
-        return getRandomFloat(values, 0);
-    }
-
-    public static float getRandomFloat(final ArrayList<Float> values, final float defalutValue) {
-        if (values == null) {
-            return defalutValue;
+    public static float getFloat(final ArrayList<Float> values, final int index, final float defaultValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
+            return defaultValue;
         }
 
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return defalutValue;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
         } else if (size == 2) {
@@ -78,24 +71,17 @@ public class NovaConfig {
             return values.get(0) + RANDOM.nextFloat() * (values.get(1) - values.get(0));
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 
-    public static int getRandomInt(final ArrayList<Integer> values) {
-        return getRandomInt(values, 0);
-    }
-
-    public static int getRandomInt(final ArrayList<Integer> values, final int defaultValue) {
-        if (values == null) {
+    public static int getInt(final ArrayList<Integer> values, final int index, final int defaultValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
             return defaultValue;
         }
 
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return defaultValue;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
         } else if (size == 2) {
@@ -103,43 +89,40 @@ public class NovaConfig {
             return values.get(0) + (int) (RANDOM.nextFloat() * (values.get(1) - values.get(0)));
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 
-    public static String getRandomString(final ArrayList<String> values) {
-        if (values == null) {
+    public static String getString(final ArrayList<String> values, final int index) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
             return null;
         }
 
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return null;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 
-    public static GLColor getRandomColor(final ArrayList<GLColor> values, final GLColor defaultValue) {
-        if (values == null) {
+    public static GLColor getColor(final ArrayList<GLColor> values, final int index, final GLColor defaultValue) {
+        final int size;
+        if (values == null || (size = values.size()) == 0) {
             return defaultValue;
         }
 
-        final int size = values.size();
-        if (size == 0) {
-            // default value
-            return defaultValue;
-        } else if (size == 1) {
+        if (size == 1) {
             // fixed value
             return values.get(0);
+            // } else if (size == 2) {
+            // // random value within a range. Slow!!! lots of GC!
+            // return GLColor.createInterpolatedColor(values.get(0), values.get(1), RANDOM.nextFloat());
         } else {
             // randomly pick one of the given values
-            return values.get(RANDOM.nextInt(size));
+            return index < 0 ? values.get(RANDOM.nextInt(size)) : values.get(index % size);
         }
     }
 

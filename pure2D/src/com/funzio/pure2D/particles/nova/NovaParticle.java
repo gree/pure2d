@@ -7,21 +7,21 @@ import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.effects.trails.MotionTrail;
 import com.funzio.pure2D.particles.ClipParticle;
-import com.funzio.pure2D.particles.nova.vo.ParticleVO;
+import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 
 /**
  * @author long
  */
 public class NovaParticle extends ClipParticle implements Animator.AnimatorListener {
-    private ParticleVO mParticleVO;
+    private NovaParticleVO mParticleVO;
     private Animator mAnimator;
     private MotionTrail mMotionTrail;
     private NovaEmitter mNovaEmitter;
 
-    public NovaParticle(final NovaEmitter emitter, final ParticleVO particleVO) {
+    public NovaParticle(final NovaEmitter emitter, final NovaParticleVO particleVO, final int emitIndex) {
         super();
 
-        reset(emitter, particleVO);
+        reset(emitter, particleVO, emitIndex);
     }
 
     /*
@@ -33,48 +33,48 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         super.reset(params);
 
         // clean up animator
-        if (mAnimator != null) {
-            // stop it
-            mAnimator.stop();
-            removeManipulator(mAnimator);
-
-            // release to pool
-            mNovaEmitter.mFactory.releaseAnimator(mAnimator);
-
-            // flag
-            mAnimator = null;
-        }
+        // if (mAnimator != null) {
+        // // stop it
+        // mAnimator.stop();
+        // removeManipulator(mAnimator);
+        //
+        // // release to pool
+        // mNovaEmitter.mFactory.releaseAnimator(mAnimator);
+        // // flag
+        // mAnimator = null;
+        // }
 
         // clean up trail
-        if (mMotionTrail != null) {
-            mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
-            mMotionTrail = null;
-        }
+        // if (mMotionTrail != null) {
+        // mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
+        // mMotionTrail = null;
+        // }
 
         // set properties
         setEmitter(mNovaEmitter = (NovaEmitter) params[0]);
-        mParticleVO = (ParticleVO) params[1];
+        mParticleVO = (NovaParticleVO) params[1];
+        int emitIndex = (Integer) params[2];
 
         // init the particle
         mPosition = mNovaEmitter.getNextPosition(mPosition);
         // add offsets
-        mPosition.x += NovaConfig.getRandomInt(mParticleVO.x);
-        mPosition.y += NovaConfig.getRandomInt(mParticleVO.y);
+        mPosition.x += NovaConfig.getInt(mParticleVO.x, emitIndex, 0);
+        mPosition.y += NovaConfig.getInt(mParticleVO.y, emitIndex, 0);
+        mAlpha = NovaConfig.getFloat(mParticleVO.alpha, emitIndex, 1);
         mScale.x = mScale.y = 1;
         mRotation = 0;
-        mAlpha = 1;
         mColor = null;
 
         // now, find optional animator
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
             // get a new animator from pool
-            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getRandomString(mParticleVO.animator)));
+            mAnimator = mNovaEmitter.mFactory.createAnimator(this, mNovaEmitter.mFactory.mNovaVO.getAnimatorVO(NovaConfig.getString(mParticleVO.animator, emitIndex)), emitIndex);
 
             if (mAnimator != null) {
                 // now, find optional trail
                 if (mParticleVO.motion_trail != null && !mParticleVO.motion_trail.isEmpty()) {
                     // get a new trail from pool
-                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getRandomString(mParticleVO.motion_trail)));
+                    mMotionTrail = mNovaEmitter.mFactory.createMotionTrail(emitIndex, this, mNovaEmitter.mFactory.mNovaVO.getMotionTrailVO(NovaConfig.getString(mParticleVO.motion_trail, emitIndex)));
                 }
 
                 // add it
@@ -83,9 +83,9 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         }
 
         // and others attributes
-        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getRandomString(mParticleVO.blend_mode)));
+        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getString(mParticleVO.blend_mode, emitIndex)));
         // z depth
-        setZ(NovaConfig.getRandomFloat(mParticleVO.z));
+        setZ(NovaConfig.getFloat(mParticleVO.z, emitIndex, 0));
         setAlphaTestEnabled(getZ() > 0);
 
         // delegate something to this particle, such as AtlasFrameSet
@@ -94,7 +94,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         }
 
         if (getAtlasFrameSet() != null) {
-            playAt(Math.min(NovaConfig.getRandomInt(mParticleVO.start_frame), getNumFrames() - 1));
+            playAt(Math.min(NovaConfig.getInt(mParticleVO.start_frame, emitIndex, 0), getNumFrames() - 1));
         } else if (mTexture == null) {
             // just a dummy box
             setSize(50, 50);
@@ -117,7 +117,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
     }
 
-    public ParticleVO getParticleVO() {
+    public NovaParticleVO getParticleVO() {
         return mParticleVO;
     }
 
@@ -146,12 +146,25 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
      */
     @Override
     public void onRemoved() {
-        super.onRemoved();
+        // clean up animator
+        if (mAnimator != null) {
+            removeManipulator(mAnimator);
+            // release to pool
+            mNovaEmitter.mFactory.releaseAnimator(mAnimator);
+            // flag
+            mAnimator = null;
+        }
 
         // also remove trail if there is any
         if (mMotionTrail != null) {
             mMotionTrail.removeFromParent();
+            // release
+            mNovaEmitter.mFactory.releaseMotionTrail(mMotionTrail);
+            // flag
+            mMotionTrail = null;
         }
+
+        super.onRemoved();
     }
 
     @Override
@@ -162,8 +175,10 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
     @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
-        // TODO Auto-generated method stub
-
+        if (mMotionTrail != null && mMotionTrail.getTarget() == null) {
+            // initial position for trail
+            mMotionTrail.setTarget(this);
+        }
     }
 
 }

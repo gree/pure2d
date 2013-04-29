@@ -6,6 +6,8 @@ package com.funzio.pure2D.animators;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.utils.Pure2DUtils;
+
 /**
  * @author long
  */
@@ -29,6 +31,15 @@ public class MoveAnimator extends TweenAnimator {
     public void setDelta(final float dx, final float dy) {
         mDelta.x = dx;
         mDelta.y = dy;
+    }
+
+    public void setDistance(final float distance, final float radianAngle) {
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
+    }
+
+    public void setDistance(final float distance, final int degreeAngle) {
+        final float radianAngle = degreeAngle * Pure2DUtils.DEGREE_TO_RADIAN;
+        setDelta(distance * (float) Math.cos(radianAngle), distance * (float) Math.sin(radianAngle));
     }
 
     public void start(final float srcX, final float srcY, final float dstX, final float dstY) {

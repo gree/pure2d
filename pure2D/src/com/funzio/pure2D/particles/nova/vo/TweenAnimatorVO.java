@@ -18,16 +18,14 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public abstract class TweenAnimatorVO extends AnimatorVO {
     public String interpolation;
+    public boolean reversed;
     public ArrayList<Integer> duration;
-
-    public TweenAnimatorVO() {
-        super();
-    }
 
     public TweenAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
         interpolation = json.optString("interpolation");
+        reversed = json.optBoolean("reversed", false);
         duration = NovaVO.getListInt(json, "duration");
     }
 
@@ -36,15 +34,16 @@ public abstract class TweenAnimatorVO extends AnimatorVO {
      * @see com.funzio.pure2D.particles.nova.vo.AnimatorVO#resetAnimator(com.funzio.pure2D.Manipulatable, com.funzio.pure2D.animators.Animator)
      */
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
-        if (animator instanceof TweenAnimator) {
-            ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
+        // if (animator instanceof TweenAnimator) {
+        ((TweenAnimator) animator).setReversed(reversed);
+        ((TweenAnimator) animator).setLoop(NovaConfig.getLoopMode(loop_mode));
 
-            if (loop_count != null) {
-                ((TweenAnimator) animator).setLoopCount(NovaConfig.getRandomInt(loop_count));
-            }
+        if (loop_count != null) {
+            ((TweenAnimator) animator).setLoopCount(NovaConfig.getInt(loop_count, emitIndex, 0));
         }
+        // }
     }
 }

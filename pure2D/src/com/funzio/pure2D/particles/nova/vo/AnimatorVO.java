@@ -28,20 +28,19 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
 // @Type(value = ParallelAnimatorVO.class, name = "parallel"), //
 // })
 
-public abstract class AnimatorVO {
+public abstract class AnimatorVO extends NovaEntryVO {
     public static final String PARALLEL = "parallel";
     public static final String SEQUENCE = "sequence";
     public static final String ALPHA = "alpha";
     public static final String TRANSLATE = "translate";
-    public static final String TRANSLATE_RADIUS = "translate_radius";
     public static final String MOVE = "move";
-    public static final String MOVE_RADIUS = "move_radius";
     public static final String ROTATE = "rotate";
     public static final String SCALE = "scale";
     public static final String TRAJECTORY = "trajectory";
     public static final String RECURSIVE_TRAJECTORY = "recursive_trajectory";
     public static final String SIN_WAVE = "sin_wave";
     public static final String TORNADO = "tornado";
+    public static final String WHIRL = "whirl";
     public static final String COLOR = "color";
     public static final String DELAY = "delay";
 
@@ -54,13 +53,11 @@ public abstract class AnimatorVO {
     public ArrayList<Integer> loop_count;
     public ArrayList<Integer> lifespan;
 
-    public abstract Animator createAnimator(Manipulatable target, Animator... animators);
-
-    public AnimatorVO() {
-        // TODO nothing
-    }
+    public abstract Animator createAnimator(int emitIndex, Manipulatable target, Animator... animators);
 
     public AnimatorVO(final JSONObject json) throws JSONException {
+        super(json);
+
         name = json.optString("name");
         type = json.optString("type");
 
@@ -79,12 +76,12 @@ public abstract class AnimatorVO {
      * @param animator
      * @return
      */
-    final protected Animator init(final Manipulatable target, final Animator animator) {
+    final protected Animator init(final int emitIndex, final Manipulatable target, final Animator animator) {
         // MUST: couple with this VO
         animator.setData(this);
         animator.setAccumulating(accumulating);
         // init and reset
-        resetAnimator(target, animator);
+        resetAnimator(emitIndex, target, animator);
 
         return animator;
     }
@@ -94,11 +91,11 @@ public abstract class AnimatorVO {
      * 
      * @param animator
      */
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        if (animator != null) {
-            animator.reset();
-            animator.setLifespan(NovaConfig.getRandomInt(lifespan));
-        }
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        // if (animator != null) {
+        animator.reset();
+        animator.setLifespan(NovaConfig.getInt(lifespan, emitIndex, 0));
+        // }
     }
 
     /**
@@ -122,8 +119,6 @@ public abstract class AnimatorVO {
             return new ParallelAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TRANSLATE) || type.equalsIgnoreCase(MOVE)) {
             return new MoveAnimatorVO(json);
-        } else if (type.equalsIgnoreCase(TRANSLATE_RADIUS) || type.equalsIgnoreCase(MOVE_RADIUS)) {
-            return new MoveRadiusAnimatorVO(json);
         } else if (type.equalsIgnoreCase(ROTATE)) {
             return new RotateAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SCALE)) {
@@ -138,6 +133,8 @@ public abstract class AnimatorVO {
             return new SinWaveAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TORNADO)) {
             return new TornadoAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(WHIRL)) {
+            return new WhirlAnimatorVO(json);
         } else if (type.equalsIgnoreCase(COLOR)) {
             return new ColorAnimatorVO(json);
         } else if (type.equalsIgnoreCase(DELAY)) {

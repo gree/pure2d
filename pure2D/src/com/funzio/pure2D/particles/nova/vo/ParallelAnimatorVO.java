@@ -15,16 +15,12 @@ import com.funzio.pure2D.animators.ParallelAnimator;
  */
 public class ParallelAnimatorVO extends GroupAnimatorVO {
 
-    public ParallelAnimatorVO() {
-        super();
-    }
-
     public ParallelAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new ParallelAnimator(animators));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new ParallelAnimator(animators));
     }
 }

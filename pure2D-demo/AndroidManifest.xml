@@ -129,7 +129,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.TextureMaskingActivity"
+            android:name="com.funzio.pure2D.demo.textures.TextureBlendingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
@@ -335,6 +335,11 @@
         </activity>
         <activity
             android:name=".animations.TornadoAnimationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".animations.WhirlAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>

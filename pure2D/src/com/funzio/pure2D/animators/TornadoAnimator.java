@@ -59,11 +59,11 @@ public class TornadoAnimator extends TweenAnimator {
         return mCircleInterpolator;
     }
 
-    public void setCircleInterpolator(final Interpolator CircleInterpolator) {
-        mCircleInterpolator = CircleInterpolator;
+    public void setCircleInterpolator(final Interpolator circleInterpolator) {
+        mCircleInterpolator = circleInterpolator;
     }
 
-    public float isCircleMultiplier() {
+    public float getCircleMultiplier() {
         return mCircleMultiplier;
     }
 

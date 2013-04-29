@@ -110,13 +110,14 @@
             android:onClick="onClickButton"
             android:text="@string/tornado_animation" />
 
-        <!-- <Button -->
-        <!-- android:id="@+id/btn_coin_explosion" -->
-        <!-- android:layout_width="fill_parent" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:layout_weight="0.5" -->
-        <!-- android:onClick="onClickButton" -->
-        <!-- android:text="@string/trajectory_animation" /> -->
+        <Button
+            android:id="@+id/btn_whirl_animation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/whirl_animation" />
+
     </LinearLayout>
 
     <LinearLayout

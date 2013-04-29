@@ -23,6 +23,7 @@ public class AnimationMenuActivity extends MenuActivity {
         addMenu(R.id.btn_bezier_animation, BezierAnimationActivity.class);
         addMenu(R.id.btn_wave_animation, WaveAnimationActivity.class);
         addMenu(R.id.btn_tornado_animation, TornadoAnimationActivity.class);
+        addMenu(R.id.btn_whirl_animation, WhirlAnimationActivity.class);
         addMenu(R.id.btn_parallel_animation, ParallelAnimationActivity.class);
 
         addMenu(R.id.btn_skeleton_animation, SkeletonActivity.class);

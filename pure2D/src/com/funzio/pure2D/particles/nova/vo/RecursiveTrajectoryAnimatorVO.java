@@ -20,10 +20,6 @@ public class RecursiveTrajectoryAnimatorVO extends TrajectoryAnimatorVO {
 
     public ArrayList<Float> deceleration_rate;
 
-    public RecursiveTrajectoryAnimatorVO() {
-        super();
-    }
-
     public RecursiveTrajectoryAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
@@ -31,18 +27,18 @@ public class RecursiveTrajectoryAnimatorVO extends TrajectoryAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new RecursiveTrajectoryAnimator());
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new RecursiveTrajectoryAnimator());
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final RecursiveTrajectoryAnimator move = (RecursiveTrajectoryAnimator) animator;
         if (move != null) {
             if (deceleration_rate != null) {
-                move.setDecelerationRate(NovaConfig.getRandomFloat(deceleration_rate));
+                move.setDecelerationRate(NovaConfig.getFloat(deceleration_rate, emitIndex, 0));
             }
         }
     }

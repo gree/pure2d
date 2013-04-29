@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.funzio.pure2D.demo.R;
 
 public abstract class MenuActivity extends Activity implements View.OnClickListener {
+    public static final String EXTRA_TAG = "tag";
 
     protected SparseArray<Class<? extends Activity>> mMenuMap;
     protected LinearLayout mLayout;
@@ -38,7 +39,7 @@ public abstract class MenuActivity extends Activity implements View.OnClickListe
         Class<? extends Activity> activityClass = mMenuMap.get(view.getId());
         if (activityClass != null) {
             Intent intent = new Intent(this, activityClass);
-            intent.putExtra("text", ((Button) view).getText());
+            intent.putExtra(EXTRA_TAG, (String) ((Button) view).getTag());
             startActivity(intent);
         }
     }
@@ -50,6 +51,13 @@ public abstract class MenuActivity extends Activity implements View.OnClickListe
     protected void addMenu(final View button, final Class<? extends Activity> activityClass) {
         button.setOnClickListener(this);
         mLayout.addView(button);
+
+        mMenuMap.put(button.getId(), activityClass);
+    }
+
+    protected void addMenu(final LinearLayout container, final View button, final Class<? extends Activity> activityClass) {
+        button.setOnClickListener(this);
+        container.addView(button);
 
         mMenuMap.put(button.getId(), activityClass);
     }

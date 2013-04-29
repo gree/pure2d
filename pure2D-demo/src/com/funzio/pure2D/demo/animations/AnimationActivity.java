@@ -101,7 +101,7 @@ public abstract class AnimationActivity extends StageActivity {
         mMotionTrail = new MotionTrailShape();
         mMotionTrail.setNumPoints(15);
         mMotionTrail.setStrokeRange(10, 1);
-        mMotionTrail.setStrokeColorRange(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
+        mMotionTrail.setStrokeColors(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
         mMotionTrail.setTarget(obj);
         mScene.addChild(mMotionTrail);
 

@@ -20,10 +20,6 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
     // child animators
     public ArrayList<AnimatorVO> animators;
 
-    public GroupAnimatorVO() {
-
-    }
-
     public GroupAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
@@ -35,28 +31,28 @@ public abstract class GroupAnimatorVO extends AnimatorVO {
      * @see com.funzio.pure2D.particles.nova.vo.AnimatorVO#resetAnimator(com.funzio.pure2D.animators.Animator)
      */
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
-        if (animator != null) {
-            GroupAnimator group = (GroupAnimator) animator;
+        // if (animator != null) {
+        final GroupAnimator group = (GroupAnimator) animator;
 
-            if (loop_count != null) {
-                group.setLoopCount(NovaConfig.getRandomInt(loop_count));
-            }
+        if (loop_count != null) {
+            group.setLoopCount(NovaConfig.getInt(loop_count, emitIndex, 0));
+        }
 
-            Animator childAnimator;
-            AnimatorVO vo;
-            // reset the children
-            final int size = group.getNumAnimators();
-            for (int i = 0; i < size; i++) {
-                childAnimator = group.getAnimatorAt(i);
-                if (childAnimator != null && childAnimator.getData() instanceof AnimatorVO) {
-                    vo = (AnimatorVO) childAnimator.getData();
-                    vo.resetAnimator(target, childAnimator);
-                }
+        Animator childAnimator;
+        AnimatorVO vo;
+        // reset the children
+        final int size = group.getNumAnimators();
+        for (int i = 0; i < size; i++) {
+            childAnimator = group.getAnimatorAt(i);
+            if (childAnimator != null && childAnimator.getData() instanceof AnimatorVO) {
+                vo = (AnimatorVO) childAnimator.getData();
+                vo.resetAnimator(emitIndex, target, childAnimator);
             }
         }
+        // }
     }
 
     /*

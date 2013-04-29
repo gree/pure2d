@@ -14,7 +14,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 /**
  * @author long
  */
-public class ParticleVO {
+public class NovaParticleVO extends NovaEntryVO {
     public String name;
 
     // emitting delay and rate
@@ -41,12 +41,11 @@ public class ParticleVO {
     public ArrayList<String> animator;
     public ArrayList<String> motion_trail;
     public ArrayList<String> blend_mode;
+    public ArrayList<Float> alpha;
 
-    public ParticleVO() {
+    public NovaParticleVO(final JSONObject json) throws JSONException {
+        super(json);
 
-    }
-
-    public ParticleVO(final JSONObject json) throws JSONException {
         name = json.optString("name");
 
         if (json.has("start_delay")) {
@@ -85,6 +84,7 @@ public class ParticleVO {
         z = NovaVO.getListFloat(json, "z");
         animator = NovaVO.getListString(json, "animator");
         blend_mode = NovaVO.getListString(json, "blend_mode");
+        alpha = NovaVO.getListFloat(json, "alpha");
         motion_trail = NovaVO.getListString(json, "motion_trail");
     }
 

@@ -23,10 +23,6 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> y_from;
     public ArrayList<Float> y_to;
 
-    public ScaleAnimatorVO() {
-        super();
-    }
-
     public ScaleAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
@@ -37,22 +33,22 @@ public class ScaleAnimatorVO extends TweenAnimatorVO {
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new ScaleAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new ScaleAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final ScaleAnimator scale = (ScaleAnimator) animator;
-        if (scale != null) {
-            scale.setValues(NovaConfig.getRandomFloat(x_from, 1), //
-                    NovaConfig.getRandomFloat(y_from, 1), //
-                    NovaConfig.getRandomFloat(x_to, 1), //
-                    NovaConfig.getRandomFloat(y_to, 1));
+        // if (scale != null) {
+        scale.setValues(NovaConfig.getFloat(x_from, emitIndex, 1), //
+                NovaConfig.getFloat(y_from, emitIndex, 1), //
+                NovaConfig.getFloat(x_to, emitIndex, 1), //
+                NovaConfig.getFloat(y_to, emitIndex, 1));
 
-            scale.setDuration(NovaConfig.getRandomInt(duration));
-        }
+        scale.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+        // }
     }
 }

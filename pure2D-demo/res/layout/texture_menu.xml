@@ -35,6 +35,13 @@
         android:text="@string/_9_patch_scale" />
 
     <Button
+        android:id="@+id/btn_blending"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/blending" />
+
+    <Button
         android:id="@+id/btn_masking"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

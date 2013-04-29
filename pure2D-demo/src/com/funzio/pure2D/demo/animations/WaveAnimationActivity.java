@@ -11,7 +11,7 @@ public class WaveAnimationActivity extends AnimationActivity {
         animator.setDuration(1000);
         animator.start(0, 0, mDisplaySize.x, mDisplaySize.y);
         animator.setWaveNum(5);
-        animator.setWaveRadius(100);
+        animator.setWaveRadius(0, 200);
 
         return animator;
     };

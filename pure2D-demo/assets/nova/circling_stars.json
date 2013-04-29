@@ -8,9 +8,9 @@
 				{
 					"sprite": "atlas/star_03_60.json",
 					"step_delay": 50,
-					"step_quantity": 5,
+					"step_quantity": 3,
 					"animator": "tornado_ani",
-					"motion_trail": "small_trail",
+					"motion_trail": ["trail1"],
 					"blend_mode": "add"
 				}
 			]
@@ -23,7 +23,7 @@
 			"type": "tornado",
 			"dx": [-100, 100],
 			"dy": [-100, 100],
-			"circle_radius": 300,
+			"circle_radius": 400,
 			"circle_num": 1,
 			"circle_ratio": 1,
 			"duration": 2000,
@@ -34,13 +34,23 @@
 
 	"motion_trails": [
 		{
-			"name": "small_trail",
+			"name": "trail1",
 			"type": "shape",
 			"num_points": 15,
-			"stroke1": 20,
-			"stroke2": 50,
+			"stroke1": 1,
+			"stroke2": 80,
 			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF],
 			"color2": 0x00FF0000
+		},
+
+		{
+			"name": "trail2",
+			"type": "shape",
+			"num_points": 15,
+			"stroke1": 10,
+			"stroke2": 60,
+			"color1": [0xFF00FF00, 0xFF00FFFF, 0xFF0000FF],
+			"color2": 0x0000FF00
 		}
 	]
 }

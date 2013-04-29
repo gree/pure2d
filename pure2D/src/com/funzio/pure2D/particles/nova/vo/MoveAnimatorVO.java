@@ -18,34 +18,42 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class MoveAnimatorVO extends TweenAnimatorVO {
 
+    // param set 1
     public ArrayList<Integer> dx;
     public ArrayList<Integer> dy;
 
-    public MoveAnimatorVO() {
-        super();
-    }
+    // or param set 2
+    public ArrayList<Integer> distance;
+    public ArrayList<Integer> degree;
 
     public MoveAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
         dx = NovaVO.getListInt(json, "dx");
         dy = NovaVO.getListInt(json, "dy");
+        // or
+        distance = NovaVO.getListInt(json, "distance");
+        degree = NovaVO.getListInt(json, "degree");
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new MoveAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new MoveAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
         final MoveAnimator move = (MoveAnimator) animator;
-        if (move != null) {
-            move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setDuration(NovaConfig.getRandomInt(duration));
+        // if (move != null) {
+        if (distance != null) {
+            move.setDistance(NovaConfig.getInt(distance, emitIndex, 0), NovaConfig.getInt(degree, emitIndex, 0));
+        } else {
+            move.setDelta(NovaConfig.getInt(dx, emitIndex, 0), NovaConfig.getInt(dy, emitIndex, 0));
         }
+        move.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+        // }
     }
 
     /*
@@ -69,6 +77,14 @@ public class MoveAnimatorVO extends TweenAnimatorVO {
             final int size = dy.size();
             for (int i = 0; i < size; i++) {
                 dy.set(i, Math.round(dy.get(i) * scale));
+            }
+        }
+
+        // scale distance
+        if (distance != null) {
+            final int size = distance.size();
+            for (int i = 0; i < size; i++) {
+                distance.set(i, Math.round(distance.get(i) * scale));
             }
         }
     }

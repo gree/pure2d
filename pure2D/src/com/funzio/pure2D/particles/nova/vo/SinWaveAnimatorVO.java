@@ -18,46 +18,53 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
  */
 public class SinWaveAnimatorVO extends TweenAnimatorVO {
 
+    // param set 1
     public ArrayList<Integer> dx;
     public ArrayList<Integer> dy;
-    public ArrayList<Integer> wave_radius;
-    public ArrayList<Integer> wave_num;
 
-    public SinWaveAnimatorVO() {
-        super();
-    }
+    // or param set 2
+    public ArrayList<Integer> distance;
+    public ArrayList<Integer> degree;
+
+    // and wave params
+    public ArrayList<Integer> wave_radius1;
+    public ArrayList<Integer> wave_radius2;
+    public ArrayList<Integer> wave_num;
 
     public SinWaveAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
 
         dx = NovaVO.getListInt(json, "dx");
         dy = NovaVO.getListInt(json, "dy");
-        wave_radius = NovaVO.getListInt(json, "wave_radius");
+        // or
+        distance = NovaVO.getListInt(json, "distance");
+        degree = NovaVO.getListInt(json, "degree");
+
+        wave_radius1 = NovaVO.getListInt(json, "wave_radius1");
+        wave_radius2 = NovaVO.getListInt(json, "wave_radius2");
         wave_num = NovaVO.getListInt(json, "wave_num");
     }
 
     @Override
-    public Animator createAnimator(final Manipulatable target, final Animator... animators) {
-        return init(target, new SinWaveAnimator(NovaConfig.getInterpolator(interpolation)));
+    public Animator createAnimator(final int emitIndex, final Manipulatable target, final Animator... animators) {
+        return init(emitIndex, target, new SinWaveAnimator(NovaConfig.getInterpolator(interpolation)));
     }
 
     @Override
-    public void resetAnimator(final Manipulatable target, final Animator animator) {
-        super.resetAnimator(target, animator);
+    public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
+        super.resetAnimator(emitIndex, target, animator);
 
-        final SinWaveAnimator move = (SinWaveAnimator) animator;
-        if (move != null) {
-            move.setDelta(NovaConfig.getRandomInt(dx), NovaConfig.getRandomInt(dy));
-            move.setDuration(NovaConfig.getRandomInt(duration));
-
-            if (wave_radius != null) {
-                move.setWaveRadius(NovaConfig.getRandomInt(wave_radius));
-            }
-
-            if (wave_num != null) {
-                move.setWaveNum(NovaConfig.getRandomInt(wave_num));
-            }
+        final SinWaveAnimator sinWave = (SinWaveAnimator) animator;
+        // if (sinWave != null) {
+        if (distance != null) {
+            sinWave.setDistance(NovaConfig.getInt(distance, emitIndex, 0), NovaConfig.getInt(degree, emitIndex, 0));
+        } else {
+            sinWave.setDelta(NovaConfig.getInt(dx, emitIndex, 0), NovaConfig.getInt(dy, emitIndex, 0));
         }
+        sinWave.setWaveRadius(NovaConfig.getInt(wave_radius1, emitIndex, SinWaveAnimator.DEFAULT_RADIUS), NovaConfig.getInt(wave_radius2, emitIndex, SinWaveAnimator.DEFAULT_RADIUS));
+        sinWave.setWaveNum(NovaConfig.getInt(wave_num, emitIndex, SinWaveAnimator.DEFAULT_WAVE_NUM));
+        sinWave.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+        // }
     }
 
     /*
@@ -84,11 +91,27 @@ public class SinWaveAnimatorVO extends TweenAnimatorVO {
             }
         }
 
-        // scale radius
-        if (wave_radius != null) {
-            final int size = wave_radius.size();
+        // scale distance
+        if (distance != null) {
+            final int size = distance.size();
             for (int i = 0; i < size; i++) {
-                wave_radius.set(i, Math.round(wave_radius.get(i) * scale));
+                distance.set(i, Math.round(distance.get(i) * scale));
+            }
+        }
+
+        // scale wave_radius1
+        if (wave_radius1 != null) {
+            final int size = wave_radius1.size();
+            for (int i = 0; i < size; i++) {
+                wave_radius1.set(i, Math.round(wave_radius1.get(i) * scale));
+            }
+        }
+
+        // scale wave_radius2
+        if (wave_radius2 != null) {
+            final int size = wave_radius2.size();
+            for (int i = 0; i < size; i++) {
+                wave_radius2.set(i, Math.round(wave_radius2.get(i) * scale));
             }
         }
     }

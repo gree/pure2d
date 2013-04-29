@@ -258,6 +258,15 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mVisible;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.DisplayObject#shouldDraw()
+     */
+    @Override
+    public boolean shouldDraw() {
+        return mVisible && mAlpha > 0;
+    }
+
     /**
      * @return the position
      */
