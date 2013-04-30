@@ -79,7 +79,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
 
     // perspective projection
-    protected boolean mPerspectiveEnabled = true;
+    protected boolean mPerspectiveEnabled = false;
     protected PointF mSceneSize;
 
     abstract protected boolean drawChildren(final GLState glState);
@@ -115,6 +115,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected void drawStart(final GLState glState) {
         final GL10 gl = glState.mGL;
 
+        // keep the model matrix
+        gl.glPushMatrix();
+
         // perspective projection
         if (mPerspectiveEnabled) {
             if (mSceneSize == null && getScene() != null) {
@@ -130,19 +133,15 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 GLU.gluPerspective(gl, 53, mSceneSize.x / mSceneSize.y, 0.001f, depth);
                 GLU.gluLookAt(gl, 0, 0, depth, 0, 0, 0, 0, 1, 0);
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+                // offset the translation
+                gl.glTranslatef(-mSceneSize.x / 2, -mSceneSize.y / 2, 0);
             }
         }
 
-        // keep the model matrix
-        gl.glPushMatrix();
-
         // translating
         if (mPosition.x != 0 || mPosition.y != 0 || mZ != 0) {
-            if (mPerspectiveEnabled && mSceneSize != null) {
-                gl.glTranslatef(mPosition.x - mSceneSize.x / 2, mPosition.y - mSceneSize.y / 2, mZ);
-            } else {
-                gl.glTranslatef(mPosition.x, mPosition.y, mZ);
-            }
+            gl.glTranslatef(mPosition.x, mPosition.y, mZ);
         }
 
         // scaling
