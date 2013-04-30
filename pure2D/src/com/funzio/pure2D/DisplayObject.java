@@ -38,6 +38,18 @@ public interface DisplayObject extends Manipulatable {
 
     public void setOrigin(final PointF origin);
 
+    public void setOrigin(final float x, final float y);
+
+    public void setOriginAtCenter();
+
+    public PointF getPivot();
+
+    public void setPivot(final PointF pivot);
+
+    public void setPivot(final float x, final float y);
+
+    public void setPivotAtCenter();
+
     public void setAlive(final boolean value);
 
     public boolean isAlive();

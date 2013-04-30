@@ -35,6 +35,9 @@ public class Rotation3DActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
+                // need more depth for perspective projection
+                mScene.setDepthRange(1, 100);
+
                 // load the textures
                 loadTexture();
 
@@ -56,6 +59,7 @@ public class Rotation3DActivity extends StageActivity {
 
         // center origin
         obj.setOriginAtCenter();
+        // obj.setPivotAtCenter();
         obj.setPerspectiveEnabled(mCBPerspective.isChecked());
 
         // set positions

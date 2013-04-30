@@ -33,6 +33,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected PointF mOrigin = new PointF(0, 0);
     protected PointF mSize = new PointF(1, 1);
     protected PointF mScale = new PointF(1, 1);
+    protected PointF mPivot = new PointF(0, 0);
     // rotation
     protected float mRotation = 0;
     protected float mRotationVectorX = 0;
@@ -126,11 +127,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
             // screen size is a requirement
             if (mSceneSize != null) {
-                final float depth = Math.max(mSceneSize.x, mSceneSize.y);
+                final float depth = mSceneSize.y;
                 gl.glMatrixMode(GL10.GL_PROJECTION);
                 gl.glPushMatrix();
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, 53, mSceneSize.x / mSceneSize.y, 0.001f, depth);
+                GLU.gluPerspective(gl, 53, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
                 GLU.gluLookAt(gl, 0, 0, depth, 0, 0, 0, 0, 1, 0);
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
 
@@ -142,6 +143,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // translating
         if (mPosition.x != 0 || mPosition.y != 0 || mZ != 0) {
             gl.glTranslatef(mPosition.x, mPosition.y, mZ);
+        }
+
+        if (mPivot.x != 0 || mPivot.y != 0) {
+            gl.glTranslatef(mPivot.x, mPivot.x, 0);
         }
 
         // scaling
@@ -156,6 +161,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // extra transformation
         if (mTransformMatrix != null) {
             gl.glMultMatrixf(mTransformMatrixValues, 0);
+        }
+
+        if (mPivot.x != 0 || mPivot.y != 0) {
+            gl.glTranslatef(-mPivot.x, -mPivot.x, 0);
         }
 
         // shift off the origin
@@ -411,6 +420,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.x = origin.x;
         mOrigin.y = origin.y;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+
         invalidate(InvalidateFlags.ORIGIN);
     }
 
@@ -418,6 +428,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.x = x;
         mOrigin.y = y;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+
         invalidate(InvalidateFlags.ORIGIN);
     }
 
@@ -425,6 +436,31 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.x = mSize.x / 2;
         mOrigin.y = mSize.y / 2;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
+    public PointF getPivot() {
+        return mPivot;
+    }
+
+    public void setPivot(final PointF pivot) {
+        mPivot = pivot;
+
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
+    public void setPivot(final float x, final float y) {
+        mPivot.x = x;
+        mPivot.y = y;
+
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
+    public void setPivotAtCenter() {
+        mPivot.x = mSize.x / 2;
+        mPivot.y = mSize.y / 2;
+
         invalidate(InvalidateFlags.ORIGIN);
     }
 
