@@ -96,6 +96,10 @@ public interface DisplayObject extends Manipulatable {
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
+    public boolean isPerspectiveEnabled();
+
+    public void setPerspectiveEnabled(final boolean perspectiveEnabled);
+
     public void onAdded(Container container);
 
     public void onRemoved();

@@ -22,5 +22,7 @@ public interface InvalidateFlags {
     public static final int TEXTURE_COORDS = 1 << 10;
     public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS;
 
-    public static final int ALL = BOUNDS | VISUAL;
+    public static final int TRANSFORM_MATRIX = 1 << 11;
+
+    public static final int ALL = BOUNDS | VISUAL | TRANSFORM_MATRIX;
 }

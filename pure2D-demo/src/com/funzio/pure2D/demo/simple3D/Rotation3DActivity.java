@@ -5,35 +5,30 @@ import javax.microedition.khronos.opengles.GL10;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.RotateAnimator;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.demo.objects.Bouncer;
-import com.funzio.pure2D.geom.Matrix;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class Rotation3DActivity extends StageActivity {
     private Texture mTexture;
-    private float[] mTranformation;
+    private CheckBox mCBPerspective;
 
     @Override
     protected int getLayout() {
-        return R.layout.stage_simple;
+        return R.layout.stage_perspective;
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mTranformation = new float[16];
-        Matrix.perspectiveM(mTranformation, 0, 60, (float) mDisplaySize.x / (float) mDisplaySize.y, 0.001f, 1f);
-        // Matrix.frustumM(mTranformation, 0, 0, mDisplaySize.x, 0, mDisplaySize.y, 0.001f, 1000f);
-        Matrix.setLookAtM(mTranformation, 0, 0, 0, 1000, 0, 0, 0, 0, 1, 0);
-        // Matrix.setRotateM(mTranformation, 0, 45, 0, 0, 1);
+        mCBPerspective = (CheckBox) findViewById(R.id.cb_perspective);
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -56,12 +51,12 @@ public class Rotation3DActivity extends StageActivity {
 
     private void addObject(final float x, final float y) {
         // create object
-        Sprite obj = new Bouncer();
-        // obj.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
+        Sprite obj = new Sprite();
         obj.setTexture(mTexture);
 
         // center origin
         obj.setOriginAtCenter();
+        obj.setPerspectiveEnabled(mCBPerspective.isChecked());
 
         // set positions
         obj.setPosition(x, y);
@@ -69,11 +64,14 @@ public class Rotation3DActivity extends StageActivity {
         // add to scene
         mScene.addChild(obj);
 
+        // debug
+        // obj.setAutoUpdateBounds(true);
+        // obj.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+
         // animation
         final RotateAnimator animator = new RotateAnimator(null);
         animator.setDuration(3000);
         animator.setLoop(Playable.LOOP_REPEAT);
-        obj.setExtraTransformation(mTranformation);
         obj.setRotationVector(0, 1, 0);
         obj.addManipulator(animator);
         animator.start(360);
@@ -92,5 +90,12 @@ public class Rotation3DActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickPerspective(final View view) {
+        final int num = mScene.getNumChildren();
+        for (int i = 0; i < num; i++) {
+            mScene.getChildAt(i).setPerspectiveEnabled(mCBPerspective.isChecked());
+        }
     }
 }
