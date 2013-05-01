@@ -17,11 +17,13 @@ import android.util.Log;
  * 
  */
 public class HttpPostTask extends NetworkTask {
-
+    public static boolean LOG_ENABLED = true;
     public final String LOG_TAG = HttpPostTask.class.getSimpleName();
 
     protected String mData;
     protected Map<String, String> mHttpProperties;
+
+    private static final String POST_METHOD = "POST";
 
     /**
      * 
@@ -39,7 +41,7 @@ public class HttpPostTask extends NetworkTask {
             URL address = new URL(mUrl);
             httpConn = (HttpURLConnection) address.openConnection();
             httpConn.setDoOutput(true);
-            httpConn.setRequestMethod("POST");
+            httpConn.setRequestMethod(POST_METHOD);
 
             // add properties to the http post request
             for (String key : mHttpProperties.keySet()) {
@@ -52,8 +54,9 @@ public class HttpPostTask extends NetworkTask {
             httpConn.setFixedLengthStreamingMode(mData.getBytes().length);
 
         } catch (IOException e) {
-            Log.d(LOG_TAG, "error setting http params");
-            e.printStackTrace();
+            if (LOG_ENABLED) {
+                Log.d(LOG_TAG, "error setting http params: ", e);
+            }
             return false;
         }
 
@@ -64,7 +67,9 @@ public class HttpPostTask extends NetworkTask {
             os.close();
             int responseCode = httpConn.getResponseCode();
 
-            Log.d(LOG_TAG, "posted url with status code: " + responseCode);
+            if (LOG_ENABLED) {
+                Log.d(LOG_TAG, "posted url with status code: " + responseCode);
+            }
             if ((200 <= responseCode) && (responseCode < 300)) {
 
                 return true;
@@ -77,7 +82,7 @@ public class HttpPostTask extends NetworkTask {
         } catch (IOException e) {
 
             if (LOG_ENABLED) {
-                Log.v(LOG_TAG, "WRITE ERROR!", e);
+                Log.v(LOG_TAG, "write error!", e);
             }
         }
 

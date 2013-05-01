@@ -11,7 +11,8 @@ import android.util.Log;
  */
 public abstract class NetworkTask implements Task {
 
-    protected boolean LOG_ENABLED = true;
+    public static boolean LOG_ENABLED = true;
+
     protected static final int DEFAULT_CONNECT_TIMEOUT = 20000;
     protected static final int DEFAULT_READ_TIMEOUT = 20000;
     protected static final int DEFAULT_RETRY_COUNT = 0;
@@ -88,23 +89,34 @@ public abstract class NetworkTask implements Task {
      */
     @Override
     public final boolean run() {
-        Log.d(getLogTag(), "connecting to: " + mUrl);
+        if (LOG_ENABLED) {
+            Log.d(getLogTag(), "connecting to: " + mUrl);
+        }
         mStatus = doNetworkTask();
 
         while (!mStatus && mRetries < mMaxRetries) {
 
             if (mBackoffMillis > 0) {
-                Log.d(getLogTag(), "backing off for " + mBackoffMillis + " millis");
+
+                if (LOG_ENABLED) {
+                    Log.d(getLogTag(), "backing off for " + mBackoffMillis + " millis");
+                }
+
                 try {
                     Thread.sleep(mBackoffMillis);
                 } catch (InterruptedException e) {
 
-                    e.printStackTrace();
+                    if (LOG_ENABLED) {
+                        Log.v(getLogTag(), "Interrupted: ", e);
+                    }
                 }
             }
 
+            if (LOG_ENABLED) {
+                Log.d(getLogTag(), "Retry #: " + (mRetries + 1) + " Max Retries: " + mMaxRetries);
+            }
+
             //ping the url and get the status
-            Log.d(getLogTag(), "Retry #: " + (mRetries + 1) + " Max Retries: " + mMaxRetries);
             mStatus = doNetworkTask();
             ++mRetries;
 
