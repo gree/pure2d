@@ -22,6 +22,7 @@ public class PerspectiveCamera extends Camera {
     public PerspectiveCamera(final PointF size) {
         super(size);
 
+        // update z-far
         mZFar = size.y;
     }
 
@@ -32,6 +33,7 @@ public class PerspectiveCamera extends Camera {
     public PerspectiveCamera(final PointF center, final PointF size) {
         super(center, size);
 
+        // update z-far
         mZFar = size.y;
     }
 
@@ -41,7 +43,20 @@ public class PerspectiveCamera extends Camera {
     public PerspectiveCamera(final Scene scene) {
         super(scene);
 
+        // update z-far
         mZFar = mSize.y;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.Camera#setSize(float, float)
+     */
+    @Override
+    public void setSize(final float w, final float h) {
+        super.setSize(w, h);
+
+        // update z-far
+        mZFar = h;
     }
 
     /*
