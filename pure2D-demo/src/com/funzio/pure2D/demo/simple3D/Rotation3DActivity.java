@@ -43,6 +43,7 @@ public class Rotation3DActivity extends StageActivity {
 
                 // create first obj
                 addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                // test();
             }
         });
     }
@@ -50,6 +51,29 @@ public class Rotation3DActivity extends StageActivity {
     private void loadTexture() {
         // create texture
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_175, null);
+    }
+
+    protected void test() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                // create object
+                Sprite obj = new Sprite();
+                obj.setPosition(j * 101, i * 101);
+                obj.setPerspectiveEnabled(true);
+                obj.setSize(100, 100);
+                // center origin
+                obj.setOriginAtCenter();
+                mScene.addChild(obj);
+
+                // animation
+                final RotateAnimator animator = new RotateAnimator(null);
+                animator.setDuration(3000);
+                animator.setLoop(Playable.LOOP_REPEAT);
+                obj.setRotationVector(0, 1, 0);
+                obj.addManipulator(animator);
+                animator.start(360);
+            }
+        }
     }
 
     private void addObject(final float x, final float y) {
