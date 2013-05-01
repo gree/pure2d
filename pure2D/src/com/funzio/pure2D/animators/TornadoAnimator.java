@@ -145,7 +145,7 @@ public class TornadoAnimator extends TweenAnimator {
             final float centerX = value * mLengthX;
             final float centerY = value * mLengthY;
             final float angle = value * mRadianLength;
-            final float radius = mCircleRadius * (mCircleInterpolator == null ? mCurrentUninterpolatedValue : mCircleInterpolator.getInterpolation(mCurrentUninterpolatedValue));
+            final float radius = mCircleRadius * (mCircleInterpolator == null ? value : mCircleInterpolator.getInterpolation(mCurrentUninterpolatedValue));
 
             final float dx = radius * mCircleRatio * (float) Math.cos(angle);
             final float dy = radius * (float) Math.sin(angle);
