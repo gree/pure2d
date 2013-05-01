@@ -55,7 +55,7 @@ public class HttpPostTask extends NetworkTask {
 
         } catch (IOException e) {
             if (LOG_ENABLED) {
-                Log.d(LOG_TAG, "error setting http params - " + e);
+                Log.d(LOG_TAG, "error setting http params: ", e);
             }
             return false;
         }
@@ -82,7 +82,7 @@ public class HttpPostTask extends NetworkTask {
         } catch (IOException e) {
 
             if (LOG_ENABLED) {
-                Log.v(LOG_TAG, "WRITE ERROR!", e);
+                Log.v(LOG_TAG, "write error!", e);
             }
         }
 

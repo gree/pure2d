@@ -107,7 +107,7 @@ public abstract class NetworkTask implements Task {
                 } catch (InterruptedException e) {
 
                     if (LOG_ENABLED) {
-                        Log.v(getLogTag(), "trace: " + e);
+                        Log.v(getLogTag(), "Interrupted: ", e);
                     }
                 }
             }

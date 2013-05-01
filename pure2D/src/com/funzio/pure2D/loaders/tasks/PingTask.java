@@ -64,11 +64,11 @@ public class PingTask extends NetworkTask implements Retriable {
 
         } catch (MalformedURLException e) {
             if (LOG_ENABLED) {
-                Log.e(LOG_TAG, "" + e);
+                Log.e(LOG_TAG, "ping error: ", e);
             }
         } catch (IOException e) {
             if (LOG_ENABLED) {
-                Log.e(LOG_TAG, "" + e);
+                Log.e(LOG_TAG, "ping error: ", e);
             }
         }
 
