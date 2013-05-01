@@ -1030,6 +1030,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mPerspectiveEnabled;
     }
 
+    /**
+     * @see {@link Scene#setDepthRange(float, float)}
+     */
     public void setPerspectiveEnabled(final boolean perspectiveEnabled) {
         mPerspectiveEnabled = perspectiveEnabled;
 
