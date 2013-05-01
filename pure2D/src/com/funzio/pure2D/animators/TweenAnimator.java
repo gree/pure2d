@@ -16,6 +16,7 @@ public class TweenAnimator extends BaseAnimator {
 
     protected float mLastValue = 0;
     protected float mCurrentValue = 0;
+    protected float mCurrentUninterpolatedValue = 0;
     protected boolean mReversed = false;
 
     protected int mLoopMode = Playable.LOOP_NONE;
@@ -40,7 +41,7 @@ public class TweenAnimator extends BaseAnimator {
         super.startElapse(elapsedTime);
 
         // clear the values
-        mLastValue = mCurrentValue = (mReversed ? 1 : 0);
+        mLastValue = mCurrentValue = mCurrentUninterpolatedValue = (mReversed ? 1 : 0);
     }
 
     /*
@@ -69,9 +70,11 @@ public class TweenAnimator extends BaseAnimator {
 
                 // interpolate the value
                 mLastValue = mCurrentValue;
+                mCurrentUninterpolatedValue = timeline;
                 mCurrentValue = (mInterpolator == null) ? timeline : mInterpolator.getInterpolation(timeline);
                 // explicit reversed
                 if (mReversed) {
+                    mCurrentUninterpolatedValue = 1 - mCurrentUninterpolatedValue;
                     mCurrentValue = 1 - mCurrentValue;
                 }
                 // and update
@@ -92,13 +95,14 @@ public class TweenAnimator extends BaseAnimator {
     public void end() {
         // force end
         if (mLoopMode == Playable.LOOP_REVERSE && mLoopCount > 0) {
-            mCurrentValue = mLoopCount % 2 == 0 ? 1 : 0;
+            mCurrentValue = mCurrentUninterpolatedValue = mLoopCount % 2 == 0 ? 1 : 0;
         } else {
-            mCurrentValue = 1;
+            mCurrentValue = mCurrentUninterpolatedValue = 1;
         }
 
         // explicit reversed
         if (mReversed) {
+            mCurrentUninterpolatedValue = 1 - mCurrentUninterpolatedValue;
             mCurrentValue = 1 - mCurrentValue;
         }
 

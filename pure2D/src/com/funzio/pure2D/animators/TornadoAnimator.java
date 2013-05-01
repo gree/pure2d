@@ -82,11 +82,11 @@ public class TornadoAnimator extends TweenAnimator {
         setDelta(dstX - srcX, dstY - srcY);
     }
 
-    public void setCircles(final float circleRadius, final float circleNum, final float circleRatio, final Interpolator CircleInterpolator) {
+    public void setCircles(final float circleRadius, final float circleNum, final float circleRatio, final Interpolator circleInterpolator) {
         mCircleRadius = circleRadius != 0 ? circleRadius : DEFAULT_CIRCLE_RADIUS;
         mCircleNum = circleNum != 0 ? circleNum : DEFAULT_CIRLCLE_NUM;
         mCircleRatio = circleRatio != 0 ? circleRatio : DEFAULT_CIRCLE_RATIO;
-        mCircleInterpolator = CircleInterpolator;
+        mCircleInterpolator = circleInterpolator;
 
         // find implicit radian length
         mRadianLength = ((float) Math.PI * (mCircleNum * 2)) * mCircleMultiplier;
@@ -145,7 +145,7 @@ public class TornadoAnimator extends TweenAnimator {
             final float centerX = value * mLengthX;
             final float centerY = value * mLengthY;
             final float angle = value * mRadianLength;
-            final float radius = mCircleRadius * (mCircleInterpolator == null ? value : mCircleInterpolator.getInterpolation(value));
+            final float radius = mCircleRadius * (mCircleInterpolator == null ? value : mCircleInterpolator.getInterpolation(mCurrentUninterpolatedValue));
 
             final float dx = radius * mCircleRatio * (float) Math.cos(angle);
             final float dy = radius * (float) Math.sin(angle);

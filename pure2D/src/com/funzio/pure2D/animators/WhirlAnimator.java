@@ -141,7 +141,7 @@ public class WhirlAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget != null) {
 
-            final float angle = mRadianAngle1 + mRadianLength * (mCircleInterpolator == null ? value : mCircleInterpolator.getInterpolation(value));
+            final float angle = mRadianAngle1 + mRadianLength * (mCircleInterpolator == null ? value : mCircleInterpolator.getInterpolation(mCurrentUninterpolatedValue));
             final float radius = mRadius1 + mRadiusLength * value;
 
             final float dx = radius * mCircleRatio * (float) Math.cos(angle);

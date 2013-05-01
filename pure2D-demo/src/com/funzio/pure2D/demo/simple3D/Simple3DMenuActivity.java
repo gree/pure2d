@@ -13,6 +13,6 @@ public class Simple3DMenuActivity extends MenuActivity {
     @Override
     protected void createMenus() {
         addMenu(R.id.btn_perspective_camera, PerspectiveCameraActivity.class);
-        // addMenu(R.id.btn_3d_rotation, Rotation3DActivity.class);
+        addMenu(R.id.btn_3d_rotation, Rotation3DActivity.class);
     }
 }
