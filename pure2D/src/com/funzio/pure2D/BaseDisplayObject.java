@@ -927,9 +927,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // rotation first
         if (mRotation != 0 && mRotationVectorX == 0 && mRotationVectorY == 0 && mRotationVectorZ == 1) {
             if (changed) {
-                mMatrix.postRotate(mRotation, mOrigin.x, mOrigin.y);
+                mMatrix.postRotate(mRotation, mOrigin.x + mPivot.x, mOrigin.y + mPivot.y);
             } else {
-                mMatrix.setRotate(mRotation, mOrigin.x, mOrigin.y);
+                mMatrix.setRotate(mRotation, mOrigin.x + mPivot.x, mOrigin.y + mPivot.y);
             }
             // flag
             changed = true;
@@ -938,9 +938,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // scale next
         if (mScale.x != 1 || mScale.y != 1) {
             if (changed) {
-                mMatrix.postScale(mScale.x, mScale.y, mOrigin.x, mOrigin.y);
+                mMatrix.postScale(mScale.x, mScale.y, mOrigin.x + mPivot.x, mOrigin.y + mPivot.y);
             } else {
-                mMatrix.setScale(mScale.x, mScale.y, mOrigin.x, mOrigin.y);
+                mMatrix.setScale(mScale.x, mScale.y, mOrigin.x + mPivot.x, mOrigin.y + mPivot.y);
                 // flag
                 changed = true;
             }
