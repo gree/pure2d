@@ -42,7 +42,7 @@ public class Rotation3DActivity extends StageActivity {
                 mCamera = new PerspectiveCamera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
                 mScene.setCamera(mCamera);
                 // need more depth for better z-sorting
-                mScene.setDepthRange(1, 100);
+                mScene.setDepthRange(1, mCamera.getZFar());
 
                 // load the textures
                 loadTexture();

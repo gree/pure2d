@@ -129,6 +129,11 @@ public class BaseScene implements Scene {
         }
     }
 
+    /**
+     * @see {@link DisplayObject#setPerspectiveEnabled(boolean)}, {@link PerspectiveCamera}
+     * @param zNear
+     * @param zFar
+     */
     public void setDepthRange(final float zNear, final float zFar) {
         if (mGLState != null) {
             mGLState.mGL.glDepthRangef(zNear, zFar);
@@ -146,6 +151,7 @@ public class BaseScene implements Scene {
     /**
      * @return the target fps
      */
+    @Deprecated
     final public int getTargetFps() {
         return mTargetFps;
     }
@@ -153,6 +159,7 @@ public class BaseScene implements Scene {
     /**
      * @param fps the fps to set
      */
+    @Deprecated
     public void setTargetFps(final int fps) {
         mTargetFps = fps;
 

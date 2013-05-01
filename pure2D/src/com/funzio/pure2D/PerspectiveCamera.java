@@ -12,7 +12,9 @@ import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
  * @author long
+ * @see {@link Scene#setDepthRange(float, float)}
  */
+
 public class PerspectiveCamera extends Camera {
     private float mZFar = 1000f;
 
