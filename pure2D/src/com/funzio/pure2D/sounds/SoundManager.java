@@ -219,6 +219,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     }
 
     public boolean unload(final int soundID) {
+        mSoundMap.remove(soundID);
         return mSoundPool.unload(soundID);
     }
 
