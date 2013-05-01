@@ -43,18 +43,16 @@ public class HelloTextureActivity extends StageActivity {
 
     private void loadTexture() {
         // create texture
-        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_128, null);
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_175, null);
     }
 
     private void addObject(final float x, final float y) {
         // create object
         Sprite obj = new Sprite();
-        // obj.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
         if (mUseTexture) {
             obj.setTexture(mTexture);
         } else {
-            int size = 128;
-            obj.setSize(size, size);
+            obj.setSize(mTexture.getSize());
         }
 
         // center origin

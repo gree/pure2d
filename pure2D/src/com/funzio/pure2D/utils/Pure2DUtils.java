@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -348,5 +349,36 @@ public class Pure2DUtils {
         }
 
         return new Point(minWidth, minHeight);
+    }
+
+    public static void getMatrix3DValues(final Matrix matrix2D, final float[] matrix3D) {
+        matrix2D.getValues(matrix3D);
+        // Log.e("long", matrix2D.toShortString());
+        final float v0 = matrix3D[0];
+        final float v1 = matrix3D[1];
+        final float v2 = matrix3D[2];
+        final float v3 = matrix3D[3];
+        final float v4 = matrix3D[4];
+        final float v5 = matrix3D[5];
+        final float v6 = matrix3D[6];
+        final float v7 = matrix3D[7];
+        final float v8 = matrix3D[8];
+
+        matrix3D[0] = v0;
+        matrix3D[4] = v1;
+        matrix3D[8] = v2;
+
+        matrix3D[1] = v3;
+        matrix3D[5] = v4;
+        matrix3D[9] = v5;
+
+        matrix3D[2] = v6;
+        matrix3D[6] = v7;
+        matrix3D[10] = v8;
+
+        matrix3D[3] = matrix3D[7] = matrix3D[11] = 0;
+
+        matrix3D[12] = matrix3D[13] = matrix3D[14] = 0;
+        matrix3D[15] = 1;
     }
 }

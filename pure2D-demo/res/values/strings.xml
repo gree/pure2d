@@ -151,5 +151,6 @@
     <string name="code">Code</string>
     <string name="code_off">Code\nOff</string>
     <string name="code_on">Code\nOn</string>
+    <string name="perspective_projection">Perspective Projection</string>
 
 </resources>

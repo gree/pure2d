@@ -5,15 +5,19 @@ package com.funzio.pure2D;
 
 import java.util.ArrayList;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.opengl.GLU;
 
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
@@ -29,14 +33,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected PointF mOrigin = new PointF(0, 0);
     protected PointF mSize = new PointF(1, 1);
     protected PointF mScale = new PointF(1, 1);
+    protected PointF mPivot = new PointF(0, 0);
     // rotation
     protected float mRotation = 0;
     protected float mRotationVectorX = 0;
-    protected float mRotationVectorY = 0;
-    protected float mRotationVectorZ = 1;
-    protected float mZ = 0;// z-order
+    protected float mRotationVectorY = 1;
+    protected float mRotationVectorZ = 0;
+    protected float mZ = 0;// z-depth
+
     // extra transformation
-    protected float[] mExtraTransformation;
+    protected Matrix mTransformMatrix;
+    // some scratch
+    protected float[] mTransformMatrixValues;
 
     // life
     protected boolean mVisible = true;
@@ -53,7 +61,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected Maskable mMask;
 
     // extra
-    protected GLColor mColor = null;// new GLColor(1f, 0f, 0f, 1f);
+    protected GLColor mColor = null;
     protected float mAlpha = 1;
     protected BlendFunc mBlendFunc;
     private boolean mAlphaTestEnabled = false;
@@ -70,6 +78,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAutoUpdateBounds = false;
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
+
+    // perspective projection
+    protected boolean mPerspectiveEnabled = false;
+    protected PointF mSceneSize;
 
     abstract protected boolean drawChildren(final GLState glState);
 
@@ -102,32 +114,75 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     protected void drawStart(final GLState glState) {
-        // keep the matrix
-        glState.mGL.glPushMatrix();
+        final GL10 gl = glState.mGL;
+
+        // keep the model matrix
+        gl.glPushMatrix();
+
+        // perspective projection
+        if (mPerspectiveEnabled) {
+            if (mSceneSize == null && getScene() != null) {
+                mSceneSize = getScene().getSize();
+            }
+
+            // screen size is a requirement
+            if (mSceneSize != null) {
+                final float depth = mSceneSize.y;
+                gl.glMatrixMode(GL10.GL_PROJECTION);
+                gl.glPushMatrix();
+                gl.glLoadIdentity();
+                GLU.gluPerspective(gl, 53, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
+                GLU.gluLookAt(gl, 0, 0, depth, 0, 0, 0, 0, 1, 0);
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+                // offset the translation
+                gl.glTranslatef(-mSceneSize.x / 2, -mSceneSize.y / 2, 0);
+            }
+        }
 
         // translating
         if (mPosition.x != 0 || mPosition.y != 0 || mZ != 0) {
-            glState.mGL.glTranslatef(mPosition.x, mPosition.y, mZ);
+            gl.glTranslatef(mPosition.x, mPosition.y, mZ);
+        }
+
+        if (mPivot.x != 0 || mPivot.y != 0) {
+            gl.glTranslatef(mPivot.x, mPivot.x, 0);
         }
 
         // scaling
         if (mScale.x != 1 || mScale.y != 1) {
-            glState.mGL.glScalef(mScale.x, mScale.y, 0);
+            gl.glScalef(mScale.x, mScale.y, 0);
         }
         // rotating
         if (mRotation != 0) {
-            glState.mGL.glRotatef(mRotation, mRotationVectorX, mRotationVectorY, mRotationVectorZ);
+            gl.glRotatef(mRotation, mRotationVectorX, mRotationVectorY, mRotationVectorZ);
         }
 
         // extra transformation
-        if (mExtraTransformation != null) {
-            glState.mGL.glMultMatrixf(mExtraTransformation, 0);
+        if (mTransformMatrix != null) {
+            gl.glMultMatrixf(mTransformMatrixValues, 0);
+        }
+
+        if (mPivot.x != 0 || mPivot.y != 0) {
+            gl.glTranslatef(-mPivot.x, -mPivot.x, 0);
         }
 
         // shift off the origin
         if (mHasOrigin) {
-            glState.mGL.glTranslatef(-mOrigin.x, -mOrigin.y, 0);
+            gl.glTranslatef(-mOrigin.x, -mOrigin.y, 0);
         }
+
+        // test projection values
+        // float[] model = new float[16];
+        // ((GL11) gl).glGetFloatv(GL11.GL_MODELVIEW_MATRIX, model, 0);
+        // float[] project = new float[16];
+        // ((GL11) gl).glGetFloatv(GL11.GL_PROJECTION_MATRIX, project, 0);
+        // int[] view = {
+        // 0, 0, (int) mSceneSize.x, (int) mSceneSize.y
+        // };
+        // float[] win = new float[3];
+        // GLU.gluProject(0, 0, 0, model, 0, project, 0, view, 0, win, 0);
+        // Log.e("long", " " + win[0] + " " + win[1] + " " + win[2]);
 
         // check and turn on alpha test
         glState.setAlphaTestEnabled(mAlphaTestEnabled);
@@ -139,11 +194,21 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     protected void drawEnd(final GLState glState) {
+        final GL10 gl = glState.mGL;
 
         // check mask
         if (mMask != null) {
             mMask.disableMask();
         }
+
+        // restore the matrix
+        if (mPerspectiveEnabled && mSceneSize != null) {
+            gl.glMatrixMode(GL10.GL_PROJECTION);
+            gl.glPopMatrix();
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+        }
+        // restore the model matrix
+        gl.glPopMatrix();
 
         // for debugging
         final int debugFlags = Pure2D.DEBUG_FLAGS | mDebugFlags;
@@ -156,15 +221,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
             // global bounds
             if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
-                glState.mGL.glPushMatrix();
-                glState.mGL.glLoadIdentity();
+                gl.glPushMatrix();
+                gl.glLoadIdentity();
                 Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
-                glState.mGL.glPopMatrix();
+                gl.glPopMatrix();
             }
         }
-
-        // restore the matrix
-        glState.mGL.glPopMatrix();
 
         // clear all visual flags
         validate(InvalidateFlags.VISUAL);
@@ -176,6 +238,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     @Override
     public boolean update(final int deltaTime) {
+        if ((mInvalidateFlags & InvalidateFlags.TRANSFORM_MATRIX) != 0) {
+            if (mTransformMatrix != null) {
+                if (mTransformMatrixValues == null) {
+                    mTransformMatrixValues = new float[16];
+                }
+                // get values
+                Pure2DUtils.getMatrix3DValues(mTransformMatrix, mTransformMatrixValues);
+            }
+        }
+
         if (mAutoUpdateBounds && (mInvalidateFlags & InvalidateFlags.BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
@@ -348,6 +420,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.x = origin.x;
         mOrigin.y = origin.y;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+
         invalidate(InvalidateFlags.ORIGIN);
     }
 
@@ -355,6 +428,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.x = x;
         mOrigin.y = y;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+
         invalidate(InvalidateFlags.ORIGIN);
     }
 
@@ -362,6 +436,31 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.x = mSize.x / 2;
         mOrigin.y = mSize.y / 2;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
+
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
+    public PointF getPivot() {
+        return mPivot;
+    }
+
+    public void setPivot(final PointF pivot) {
+        mPivot = pivot;
+
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
+    public void setPivot(final float x, final float y) {
+        mPivot.x = x;
+        mPivot.y = y;
+
+        invalidate(InvalidateFlags.ORIGIN);
+    }
+
+    public void setPivotAtCenter() {
+        mPivot.x = mSize.x / 2;
+        mPivot.y = mSize.y / 2;
+
         invalidate(InvalidateFlags.ORIGIN);
     }
 
@@ -422,7 +521,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.ROTATION);
     }
 
+    @Deprecated
     public void rotateBy(final float degreeDelta) {
+        mRotation += degreeDelta;
+        invalidate(InvalidateFlags.ROTATION);
+    }
+
+    public void rotate(final float degreeDelta) {
         mRotation += degreeDelta;
         invalidate(InvalidateFlags.ROTATION);
     }
@@ -431,25 +536,50 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mRotation;
     }
 
+    // public void setRotationX(final float degree) {
+    // mRotationX = degree;
+    // invalidate(InvalidateFlags.ROTATION);
+    // }
+    //
+    // public void rotateX(final float degreeDelta) {
+    // mRotationX += degreeDelta;
+    // invalidate(InvalidateFlags.ROTATION);
+    // }
+    //
+    // final public float getRotationX() {
+    // return mRotationX;
+    // }
+    //
+    // public void setRotationY(final float degree) {
+    // mRotationY = degree;
+    // invalidate(InvalidateFlags.ROTATION);
+    // }
+    //
+    // public void rotateY(final float degreeDelta) {
+    // mRotationY += degreeDelta;
+    // invalidate(InvalidateFlags.ROTATION);
+    // }
+    //
+    // final public float getRotationY() {
+    // return mRotationY;
+    // }
+
     public void setRotationVector(final float x, final float y, final float z) {
         mRotationVectorX = x;
         mRotationVectorY = y;
         mRotationVectorZ = z;
+
+        invalidate(InvalidateFlags.ROTATION);
     }
 
-    public float[] getExtraTransformation() {
-        return mExtraTransformation;
+    public void setTransformationMatrix(final Matrix matrix) {
+        mTransformMatrix = matrix;
+
+        invalidate(InvalidateFlags.TRANSFORM_MATRIX | InvalidateFlags.BOUNDS);
     }
 
-    /**
-     * Apply extra transformation
-     * 
-     * @param transformation
-     * @see com.funzio.pure2D.geom.Matrix, Matrix
-     */
-    public void setExtraTransformation(final float[] transformation) {
-        mExtraTransformation = transformation;
-        invalidate();
+    public Matrix getTransformMatrix() {
+        return mTransformMatrix;
     }
 
     /**
@@ -786,9 +916,21 @@ public abstract class BaseDisplayObject implements DisplayObject {
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
         boolean changed = false;
 
+        if (mTransformMatrix != null) {
+            mMatrix.setTranslate(-mOrigin.x, -mOrigin.y);
+            mMatrix.postConcat(mTransformMatrix);
+            mMatrix.postTranslate(mOrigin.x, mOrigin.y);
+            // flag
+            changed = true;
+        }
+
         // rotation first
-        if (mRotation != 0) {
-            mMatrix.setRotate(mRotation, mOrigin.x, mOrigin.y);
+        if (mRotation != 0 && mRotationVectorX == 0 && mRotationVectorY == 0 && mRotationVectorZ == 1) {
+            if (changed) {
+                mMatrix.postRotate(mRotation, mOrigin.x, mOrigin.y);
+            } else {
+                mMatrix.setRotate(mRotation, mOrigin.x, mOrigin.y);
+            }
             // flag
             changed = true;
         }
@@ -882,6 +1024,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mAutoUpdateBounds = autoUpdateBounds;
     }
 
+    public boolean isPerspectiveEnabled() {
+        return mPerspectiveEnabled;
+    }
+
+    public void setPerspectiveEnabled(final boolean perspectiveEnabled) {
+        mPerspectiveEnabled = perspectiveEnabled;
+
+        invalidate();
+    }
+
     /**
      * @return
      * @see Pure2D.DEBUG_FLAG_LOCAL_SHAPE, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS
@@ -899,13 +1051,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.VISUAL);
     }
 
-    // /**
-    // * This is called before this object is added to a Container
-    // */
-    // public void onPreAdded(final Container container) {
-    // // TODO nothing yet
-    // }
-
     /**
      * This is called after this object is added to a Container
      */
@@ -916,13 +1061,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // flag the bounds are changed now
         invalidate(InvalidateFlags.BOUNDS);
     }
-
-    // /**
-    // * This is called before this object is remove from a Container
-    // */
-    // public void onPreRemoved() {
-    // // TODO nothing yet
-    // }
 
     /**
      * This is called after this object is removed from a Container
