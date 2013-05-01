@@ -17,6 +17,8 @@ import android.util.Log;
  *
  */
 public class PingTask extends NetworkTask implements Retriable {
+
+    public static boolean LOG_ENABLED = true;
     private static final String LOG_TAG = PingTask.class.getSimpleName();
 
     public PingTask() {
@@ -47,7 +49,11 @@ public class PingTask extends NetworkTask implements Retriable {
 
             //check the status code
             int responseCode = httpConn.getResponseCode();
-            Log.d(LOG_TAG, "pinged " + mUrl + " with status code: " + responseCode);
+
+            if (LOG_ENABLED) {
+                Log.d(LOG_TAG, "pinged " + mUrl + " with status code: " + responseCode);
+            }
+
             if ((200 <= responseCode) && (responseCode < 300)) {
 
                 status = true;
@@ -57,9 +63,13 @@ public class PingTask extends NetworkTask implements Retriable {
             httpConn.disconnect();
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            if (LOG_ENABLED) {
+                Log.e(LOG_TAG, "" + e);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            if (LOG_ENABLED) {
+                Log.e(LOG_TAG, "" + e);
+            }
         }
 
         return status;
