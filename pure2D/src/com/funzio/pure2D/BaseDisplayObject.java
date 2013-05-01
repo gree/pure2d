@@ -25,6 +25,8 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 public abstract class BaseDisplayObject implements DisplayObject {
     public static final String TAG = BaseDisplayObject.class.getSimpleName();
 
+    public static final float PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection
+
     // for debugging
     protected int mDebugFlags = 0;
 
@@ -82,6 +84,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // perspective projection
     protected boolean mPerspectiveEnabled = false;
     protected PointF mSceneSize;
+    private boolean mPerspectiveProjecting = false; // flag to prevent matrix out of sync caused by Threads
 
     abstract protected boolean drawChildren(final GLState glState);
 
@@ -127,12 +130,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
             // screen size is a requirement
             if (mSceneSize != null) {
-                final float depth = mSceneSize.y;
+                mPerspectiveProjecting = true; // flag
                 gl.glMatrixMode(GL10.GL_PROJECTION);
                 gl.glPushMatrix();
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, 53, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
-                GLU.gluLookAt(gl, 0, 0, depth, 0, 0, 0, 0, 1, 0);
+                GLU.gluPerspective(gl, PERSPECTIVE_FOVY, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
+                GLU.gluLookAt(gl, 0, 0, mSceneSize.y, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
 
                 // offset the translation
@@ -202,10 +205,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // restore the matrix
-        if (mPerspectiveEnabled && mSceneSize != null) {
+        if (mPerspectiveProjecting) {
             gl.glMatrixMode(GL10.GL_PROJECTION);
             gl.glPopMatrix();
             gl.glMatrixMode(GL10.GL_MODELVIEW);
+            mPerspectiveProjecting = false; // unflag
         }
         // restore the model matrix
         gl.glPopMatrix();
