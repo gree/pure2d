@@ -2,12 +2,15 @@ package com.funzio.pure2D.demo.simple3D;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.funzio.pure2D.PerspectiveCamera;
 import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.demo.R;
@@ -18,6 +21,7 @@ import com.funzio.pure2D.shapes.Sprite;
 public class Rotation3DActivity extends StageActivity {
     private Texture mTexture;
     private CheckBox mCBPerspective;
+    private PerspectiveCamera mCamera;
 
     @Override
     protected int getLayout() {
@@ -35,7 +39,9 @@ public class Rotation3DActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
-                // need more depth for perspective projection
+                mCamera = new PerspectiveCamera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
+                mScene.setCamera(mCamera);
+                // need more depth for better z-sorting
                 mScene.setDepthRange(1, 100);
 
                 // load the textures
@@ -43,7 +49,7 @@ public class Rotation3DActivity extends StageActivity {
 
                 // create first obj
                 addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                // test();
+                // testTiles();
             }
         });
     }
@@ -53,16 +59,15 @@ public class Rotation3DActivity extends StageActivity {
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_175, null);
     }
 
-    protected void test() {
+    protected void testTiles() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 // create object
                 Sprite obj = new Sprite();
                 obj.setPosition(j * 101, i * 101);
-                obj.setPerspectiveEnabled(true);
+                // obj.setPerspectiveEnabled(mCBPerspective.isChecked());
                 obj.setSize(100, 100);
-                // center origin
-                obj.setOriginAtCenter();
+                // obj.setOriginAtCenter();
                 mScene.addChild(obj);
 
                 // animation
@@ -81,10 +86,9 @@ public class Rotation3DActivity extends StageActivity {
         Sprite obj = new Sprite();
         obj.setTexture(mTexture);
 
-        // center origin
         obj.setOriginAtCenter();
         // obj.setPivotAtCenter();
-        obj.setPerspectiveEnabled(mCBPerspective.isChecked());
+        // obj.setPerspectiveEnabled(mCBPerspective.isChecked());
 
         // set positions
         obj.setPosition(x, y);
@@ -93,8 +97,8 @@ public class Rotation3DActivity extends StageActivity {
         mScene.addChild(obj);
 
         // debug
-        // obj.setAutoUpdateBounds(true);
-        // obj.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+        obj.setAutoUpdateBounds(true);
+        obj.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
 
         // animation
         final RotateAnimator animator = new RotateAnimator(null);
@@ -121,9 +125,18 @@ public class Rotation3DActivity extends StageActivity {
     }
 
     public void onClickPerspective(final View view) {
-        final int num = mScene.getNumChildren();
-        for (int i = 0; i < num; i++) {
-            mScene.getChildAt(i).setPerspectiveEnabled(mCBPerspective.isChecked());
-        }
+        // final int num = mScene.getNumChildren();
+        // for (int i = 0; i < num; i++) {
+        // mScene.getChildAt(i).setPerspectiveEnabled(mCBPerspective.isChecked());
+        // }
+
+        // need to queue the in GL Thread!
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                mScene.setCamera(mCBPerspective.isChecked() ? mCamera : null);
+            }
+        });
     }
 }
