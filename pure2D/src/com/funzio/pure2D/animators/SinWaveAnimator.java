@@ -98,7 +98,7 @@ public class SinWaveAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget != null) {
             final float currentAngle = value * mWaveNum * (float) Math.PI;
-            final float radius = mWaveRadius1 + mRadiusLength * (mRadiusInterpolator != null ? mRadiusInterpolator.getInterpolation(value) : value);
+            final float radius = mWaveRadius1 + mRadiusLength * (mRadiusInterpolator != null ? mRadiusInterpolator.getInterpolation(mCurrentUninterpolatedValue) : mCurrentUninterpolatedValue);
             final float dx = value * mDeltaLength;
             final float dy = (float) Math.sin(currentAngle) * radius;
             final float newX = dx * mCosAngle - dy * mSinAngle;
