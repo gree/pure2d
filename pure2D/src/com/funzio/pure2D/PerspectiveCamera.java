@@ -14,7 +14,6 @@ import com.funzio.pure2D.gl.gl10.GLState;
  * @author long
  */
 public class PerspectiveCamera extends Camera {
-
     private float mZFar = 1000f;
 
     /**
@@ -22,7 +21,8 @@ public class PerspectiveCamera extends Camera {
      */
     public PerspectiveCamera(final PointF size) {
         super(size);
-        // TODO Auto-generated constructor stub
+
+        mZFar = size.y;
     }
 
     /**
@@ -31,7 +31,8 @@ public class PerspectiveCamera extends Camera {
      */
     public PerspectiveCamera(final PointF center, final PointF size) {
         super(center, size);
-        // TODO Auto-generated constructor stub
+
+        mZFar = size.y;
     }
 
     /**
@@ -39,7 +40,8 @@ public class PerspectiveCamera extends Camera {
      */
     public PerspectiveCamera(final Scene scene) {
         super(scene);
-        // TODO Auto-generated constructor stub
+
+        mZFar = mSize.y;
     }
 
     /*
@@ -55,7 +57,7 @@ public class PerspectiveCamera extends Camera {
         gl.glLoadIdentity();
 
         // perspective projection
-        GLU.gluPerspective(gl, 60 / mZoom.x, mSize.x / mSize.y, 0.001f, mZFar);
+        GLU.gluPerspective(gl, Pure2D.GL_PERSPECTIVE_FOVY / mZoom.x, mSize.x / mSize.y, 0.001f, mZFar);
 
         // camera view and axis system
         if (mAxisSystem == Scene.AXIS_TOP_LEFT) {

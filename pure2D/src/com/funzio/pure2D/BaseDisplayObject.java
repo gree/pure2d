@@ -25,8 +25,6 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 public abstract class BaseDisplayObject implements DisplayObject {
     public static final String TAG = BaseDisplayObject.class.getSimpleName();
 
-    public static final float PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection
-
     // for debugging
     protected int mDebugFlags = 0;
 
@@ -134,7 +132,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 gl.glMatrixMode(GL10.GL_PROJECTION);
                 gl.glPushMatrix();
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, PERSPECTIVE_FOVY, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
+                GLU.gluPerspective(gl, Pure2D.GL_PERSPECTIVE_FOVY, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
                 GLU.gluLookAt(gl, 0, 0, mSceneSize.y, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
 
