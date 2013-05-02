@@ -48,6 +48,10 @@ public class Polyline extends Shape {
         float rx, ry;
         float stroke = mStroke1;
         int i, vertexIndex = 0;
+        float lastRY = 0;
+        float lastRX = 0;
+        boolean flip = false;
+        PointF currentPoint;
 
         // find total segment
         mTotalLength = 0;
@@ -59,10 +63,11 @@ public class Polyline extends Shape {
         }
 
         for (i = 0; i < len; i++) {
+            currentPoint = points[i];
 
             if (i < len - 1) {
-                dx = points[i + 1].x - points[i].x;
-                dy = points[i + 1].y - points[i].y;
+                dx = points[i + 1].x - currentPoint.x;
+                dy = points[i + 1].y - currentPoint.y;
                 segment += Math.sqrt(dx * dx + dy * dy);
                 if (mStrokeInterpolator != null) {
                     // interpolating
@@ -87,12 +92,23 @@ public class Polyline extends Shape {
             ry = stroke * (float) Math.sin(angleCut) / 2f;
             // Log.e("long", "a t r x y: " + angle1 + " " + Math.round(stroke) + " " + Math.round(radius) + " " + Math.round(rx) + " " + Math.round(ry));
 
+            if (lastRY * ry < 0 && lastRX * rx < 0) {
+                // flag for flipping the upper and lower points
+                flip = !flip;
+            }
+            lastRX = rx;
+            lastRY = ry;
+            if (flip) {
+                rx = -rx;
+                ry = -ry;
+            }
+
             // upper point
-            mVertices[vertexIndex] = points[i].x + rx;
-            mVertices[vertexIndex + 1] = points[i].y + ry;
+            mVertices[vertexIndex] = currentPoint.x + rx;
+            mVertices[vertexIndex + 1] = currentPoint.y + ry;
             // lower point
-            mVertices[vertexIndex + 2] = points[i].x - rx;
-            mVertices[vertexIndex + 3] = points[i].y - ry;
+            mVertices[vertexIndex + 2] = currentPoint.x - rx;
+            mVertices[vertexIndex + 3] = currentPoint.y - ry;
             vertexIndex += 4;
 
             angle0 = angle1;
