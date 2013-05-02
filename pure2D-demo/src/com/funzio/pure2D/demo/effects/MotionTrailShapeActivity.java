@@ -73,7 +73,7 @@ public class MotionTrailShapeActivity extends StageActivity {
         trail.setColor(color1);
         trail.setStrokeRange(30, 1);
         trail.setNumPoints(20);
-        trail.setStrokeColorRange(color1, color2);
+        trail.setStrokeColors(color1, color2);
         trail.setMinLength(100);
         trail.setTarget(obj);
         mScene.addChild(trail);

@@ -27,12 +27,12 @@ public class Pure2D {
     public static Adapter ADAPTER = null;
 
     // for debugging
-    public static final int DEBUG_FLAG_LOCAL_SHAPE = 1 << 0;
+    public static final int DEBUG_FLAG_WIREFRAME = 1 << 0;
     public static final int DEBUG_FLAG_GLOBAL_BOUNDS = 1 << 1;
 
     public static int DEBUG_FLAGS = 0;
-    public static float DEBUG_LOCAL_SHAPE_WIDTH = 2;
-    public static GLColor DEBUG_LOCAL_SHAPE_COLOR = new GLColor(1f, 0f, 0f, 0.75f);
+    public static float DEBUG_WIREFRAME_WIDTH = 2;
+    public static GLColor DEBUG_WIREFRAME_COLOR = new GLColor(1f, 0f, 0f, 1f);
     public static float DEBUG_GLOBAL_BOUNDS_WIDTH = 4;
     public static GLColor DEBUG_GLOBAL_BOUNDS_COLOR = new GLColor(1f, 1f, 0f, 0.5f);
     private static final float[] DEBUG_VERTICES = {
@@ -70,8 +70,8 @@ public class Pure2D {
         final GLColor currentColor = glState.getColor();
         final boolean textureEnabled = glState.isTextureEnabled();
         final float currentLineWidth = glState.getLineWidth();
-        glState.setLineWidth((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? DEBUG_GLOBAL_BOUNDS_WIDTH : DEBUG_LOCAL_SHAPE_WIDTH);
-        glState.setColor((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? DEBUG_GLOBAL_BOUNDS_COLOR : DEBUG_LOCAL_SHAPE_COLOR);
+        glState.setLineWidth((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? DEBUG_GLOBAL_BOUNDS_WIDTH : DEBUG_WIREFRAME_WIDTH);
+        glState.setColor((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? DEBUG_GLOBAL_BOUNDS_COLOR : DEBUG_WIREFRAME_COLOR);
         glState.setTextureEnabled(false);
 
         // draw

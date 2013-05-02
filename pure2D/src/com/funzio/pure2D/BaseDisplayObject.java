@@ -37,8 +37,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // rotation
     protected float mRotation = 0;
     protected float mRotationVectorX = 0;
-    protected float mRotationVectorY = 1;
-    protected float mRotationVectorZ = 0;
+    protected float mRotationVectorY = 0;
+    protected float mRotationVectorZ = 1;
     protected float mZ = 0;// z-depth
 
     // extra transformation
@@ -197,6 +197,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected void drawEnd(final GLState glState) {
         final GL10 gl = glState.mGL;
 
+        // for debugging
+        final int debugFlags = Pure2D.DEBUG_FLAGS | mDebugFlags;
+        // local rect
+        if ((debugFlags & Pure2D.DEBUG_FLAG_WIREFRAME) != 0 && mSize.x > 0 && mSize.y > 0) {
+            drawWireframe(glState);
+        }
+
         // check mask
         if (mMask != null) {
             mMask.disableMask();
@@ -212,26 +219,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // restore the model matrix
         gl.glPopMatrix();
 
-        // for debugging
-        final int debugFlags = Pure2D.DEBUG_FLAGS | mDebugFlags;
-        if (debugFlags != 0) {
-
-            // local rect
-            if ((debugFlags & Pure2D.DEBUG_FLAG_LOCAL_SHAPE) != 0 && mSize.x > 0 && mSize.y > 0) {
-                Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_LOCAL_SHAPE);
-            }
-
-            // global bounds
-            if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
-                gl.glPushMatrix();
-                gl.glLoadIdentity();
-                Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
-                gl.glPopMatrix();
-            }
+        // debug global bounds
+        if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+            gl.glPopMatrix();
         }
 
         // clear all visual flags
         validate(InvalidateFlags.VISUAL);
+    }
+
+    protected void drawWireframe(final GLState glState) {
+        Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
     }
 
     /*

@@ -104,7 +104,7 @@ public class StageActivity extends Activity implements OnTouchListener {
                 return true;
 
             case R.id.debug:
-                Pure2D.DEBUG_FLAGS = Pure2D.DEBUG_FLAGS == 0 ? Pure2D.DEBUG_FLAG_LOCAL_SHAPE | Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS : 0;
+                Pure2D.DEBUG_FLAGS = Pure2D.DEBUG_FLAGS == 0 ? Pure2D.DEBUG_FLAG_WIREFRAME | Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS : 0;
                 return true;
         }
 
@@ -122,8 +122,25 @@ public class StageActivity extends Activity implements OnTouchListener {
     protected void startFrameRate() {
         mHandler.postDelayed(mFrameRateUpdater, 1000);
 
-        mFrameRate.setText(mScene.getCurrentFps() + " fps");
-        mObjects.setText(getNumObjects() + " objs");
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                // get object count on GL thread
+                final int numObjs = getNumObjects();
+
+                // update views on UI thread
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mFrameRate.setText(mScene.getCurrentFps() + " fps");
+                        mObjects.setText(numObjs + " objs");
+                    }
+                });
+
+            }
+        });
+
     }
 
     protected int getNumObjects() {

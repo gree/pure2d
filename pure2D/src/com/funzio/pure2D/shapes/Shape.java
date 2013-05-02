@@ -5,10 +5,14 @@ package com.funzio.pure2D.shapes;
 
 import java.util.Arrays;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
@@ -182,6 +186,33 @@ public class Shape extends BaseDisplayObject {
         mVertexBuffer.draw(glState);
 
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#drawWireframe(com.funzio.pure2D.gl.gl10.GLState)
+     */
+    @Override
+    protected void drawWireframe(final GLState glState) {
+
+        // pre-draw
+        final int primitive = mVertexBuffer.getPrimitive();
+        final GLColor currentColor = glState.getColor();
+        final boolean textureEnabled = glState.isTextureEnabled();
+        final float currentLineWidth = glState.getLineWidth();
+        glState.setLineWidth(Pure2D.DEBUG_WIREFRAME_WIDTH);
+        glState.setColor(Pure2D.DEBUG_WIREFRAME_COLOR);
+        glState.setTextureEnabled(false);
+
+        // draw
+        mVertexBuffer.setPrimitive(GL10.GL_LINE_STRIP);
+        mVertexBuffer.draw(glState);
+
+        // post-draw
+        glState.setTextureEnabled(textureEnabled);
+        glState.setColor(currentColor);
+        glState.setLineWidth(currentLineWidth);
+        mVertexBuffer.setPrimitive(primitive);
     }
 
     /*
