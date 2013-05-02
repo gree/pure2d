@@ -104,7 +104,7 @@ public class StageActivity extends Activity implements OnTouchListener {
                 return true;
 
             case R.id.debug:
-                Pure2D.DEBUG_FLAGS = Pure2D.DEBUG_FLAGS == 0 ? Pure2D.DEBUG_FLAG_LOCAL_SHAPE | Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS : 0;
+                Pure2D.DEBUG_FLAGS = Pure2D.DEBUG_FLAGS == 0 ? Pure2D.DEBUG_FLAG_WIREFRAME | Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS : 0;
                 return true;
         }
 
