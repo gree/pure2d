@@ -69,7 +69,7 @@ public class StencilBufferActivity extends StageActivity {
         rect2.setColor(new GLColor(0, 0, 0, 0.5f));
         rect2.setSize(mDisplaySize.x, mDisplaySize.x);
         rect2.setOriginAtCenter();
-        rect2.rotateBy(45);
+        rect2.rotate(45);
         mMask.addChild(rect2);
 
         // rotating

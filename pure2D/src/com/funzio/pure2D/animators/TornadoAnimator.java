@@ -154,7 +154,7 @@ public class TornadoAnimator extends TweenAnimator {
             final float newY = centerY + dx * mSinAngle + dy * mCosAngle;
 
             if (mAccumulating) {
-                mTarget.moveBy(newX - mLastX, newY - mLastY);
+                mTarget.move(newX - mLastX, newY - mLastY);
             } else {
                 mTarget.setPosition(mSrcX + newX, mSrcY + newY);
             }

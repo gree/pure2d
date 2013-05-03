@@ -148,7 +148,7 @@ public class WhirlAnimator extends TweenAnimator {
             final float dy = radius * (float) Math.sin(angle);
 
             if (mAccumulating) {
-                mTarget.moveBy(dx - mLastX, dy - mLastY);
+                mTarget.move(dx - mLastX, dy - mLastY);
             } else {
                 mTarget.setPosition(mSrcX + dx, mSrcY + dy);
             }

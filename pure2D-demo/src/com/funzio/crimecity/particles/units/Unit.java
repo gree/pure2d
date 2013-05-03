@@ -134,9 +134,9 @@ public class Unit extends DisplayGroup {
         if (mShadowOffset != null) {
             mSprite.setBlendFunc(SHADOW_BLEND_FUNC);
             mSprite.setAlpha(SHADOW_ALPHA * getAlpha());
-            mSprite.moveBy(mShadowOffset.x, mShadowOffset.y);
+            mSprite.move(mShadowOffset.x, mShadowOffset.y);
             mSprite.draw(glState);
-            mSprite.moveBy(-mShadowOffset.x, -mShadowOffset.y);
+            mSprite.move(-mShadowOffset.x, -mShadowOffset.y);
             mSprite.setAlpha(1);
             mSprite.setBlendFunc(null);
         }

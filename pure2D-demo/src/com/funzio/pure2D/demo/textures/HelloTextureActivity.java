@@ -63,6 +63,23 @@ public class HelloTextureActivity extends StageActivity {
 
         // add to scene
         mScene.addChild(obj);
+
+        // // motion trail
+        // MotionTrailShape mMotionTrail = new MotionTrailShape();
+        // mMotionTrail.setNumPoints(15);
+        // mMotionTrail.setStrokeRange(10, 1);
+        // mMotionTrail.setStrokeColors(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
+        // mMotionTrail.setTarget(obj);
+        // mScene.addChild(mMotionTrail);
+        //
+        // // animation
+        // final RotateAnimator animator = new RotateAnimator(null);
+        // animator.setDuration(3000);
+        // animator.setPivot(x - 100, y + 200);
+        // // animator.clearPivot();
+        // animator.setLoop(Playable.LOOP_REPEAT);
+        // obj.addManipulator(animator);
+        // animator.start(360);
     }
 
     @Override

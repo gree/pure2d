@@ -150,7 +150,7 @@ public class TrajectoryAnimator extends BaseAnimator {
 
                 // position
                 if (mAccumulating) {
-                    mTarget.moveBy(deltaX, deltaY);
+                    mTarget.move(deltaX, deltaY);
                 } else {
                     mTarget.setPosition(x, y);
                 }

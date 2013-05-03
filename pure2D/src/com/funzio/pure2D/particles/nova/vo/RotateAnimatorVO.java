@@ -20,6 +20,8 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> from;
     public ArrayList<Float> to;
     public ArrayList<Float> delta;
+    public ArrayList<Integer> pivot_x;
+    public ArrayList<Integer> pivot_y;
 
     public RotateAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
@@ -27,6 +29,9 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
         from = NovaVO.getListFloat(json, "from");
         to = NovaVO.getListFloat(json, "to");
         delta = NovaVO.getListFloat(json, "delta");
+
+        pivot_x = NovaVO.getListInt(json, "pivot_x");
+        pivot_y = NovaVO.getListInt(json, "pivot_y");
     }
 
     @Override
@@ -39,14 +44,13 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(emitIndex, target, animator);
 
         final RotateAnimator rotate = (RotateAnimator) animator;
-        // if (rotate != null) {
         if (delta != null) {
             rotate.setDelta(NovaConfig.getFloat(delta, emitIndex, 0));
         } else {
             rotate.setValues(NovaConfig.getFloat(from, emitIndex, 0), NovaConfig.getFloat(to, emitIndex, 0));
         }
+        rotate.setPivot(NovaConfig.getInt(pivot_x, emitIndex, RotateAnimator.PIVOT_CLEAR), NovaConfig.getInt(pivot_y, emitIndex, RotateAnimator.PIVOT_CLEAR));
         rotate.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
-        // }
     }
 
 }

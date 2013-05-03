@@ -51,7 +51,7 @@ public class Bouncer extends Sprite {
         }
 
         final float factor = (float) deltaTime / 10;
-        moveBy(mVeloc.x * factor, mVeloc.y * factor);
+        move(mVeloc.x * factor, mVeloc.y * factor);
         // rotateBy(1);
 
         return true;

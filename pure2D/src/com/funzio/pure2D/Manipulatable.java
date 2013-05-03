@@ -18,7 +18,7 @@ public interface Manipulatable {
 
     public void moveTo(final float x, final float y);
 
-    public void moveBy(final float x, final float y);
+    public void move(final float dx, final float dy);
 
     public PointF getSize();
 
@@ -30,7 +30,7 @@ public interface Manipulatable {
 
     public float getRotation();
 
-    public void rotateBy(final float degreeDelta);
+    public void rotate(final float degreeDelta);
 
     public void setScale(final float sx, final float sy);
 

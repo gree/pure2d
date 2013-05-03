@@ -49,7 +49,7 @@ public class SquareContainer extends DisplayGroup {
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
 
-        rotateBy(1);
+        rotate(1);
         // setScale(2);
 
         if (mPosition.x > mBounds.x) {
@@ -69,7 +69,7 @@ public class SquareContainer extends DisplayGroup {
         }
 
         float factor = (float) deltaTime / 10;
-        moveBy(mVeloc.x * factor, mVeloc.y * factor);
+        move(mVeloc.x * factor, mVeloc.y * factor);
 
         return true;
     }

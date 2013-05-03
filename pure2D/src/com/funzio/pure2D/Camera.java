@@ -99,7 +99,7 @@ public class Camera implements Manipulatable {
         invalidate();
     }
 
-    public void moveBy(final float x, final float y) {
+    public void move(final float x, final float y) {
         mCenter.x += x;
         mCenter.y += y;
         invalidate();
@@ -142,7 +142,7 @@ public class Camera implements Manipulatable {
         return mRotation;
     }
 
-    public void rotateBy(final float degreeDelta) {
+    public void rotate(final float degreeDelta) {
         mRotation += degreeDelta;
         invalidate();
     }

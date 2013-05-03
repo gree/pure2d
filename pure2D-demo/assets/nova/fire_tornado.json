@@ -32,7 +32,6 @@
 					"dy": 600,
 					"circle_radius": 300,
 					"circle_num": 20,
-					"circle_interpolation": "accelerate",
 					"interpolation": "decelerate"
 				},
 				{
