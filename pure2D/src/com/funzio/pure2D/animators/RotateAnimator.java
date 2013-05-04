@@ -3,7 +3,6 @@
  */
 package com.funzio.pure2D.animators;
 
-import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.utils.Pure2DUtils;
@@ -20,7 +19,9 @@ public class RotateAnimator extends TweenAnimator {
 
     protected float mPivotX = PIVOT_CLEAR;
     protected float mPivotY = PIVOT_CLEAR;
-    private float mRadius = 0;
+    protected float mLastX = 0;
+    protected float mLastY = 0;
+    protected float mRadius = 0;
 
     public RotateAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -54,17 +55,18 @@ public class RotateAnimator extends TweenAnimator {
      * @param y
      * @see #clearPivot()
      */
-    public void setPivot(final float x, final float y) {
+    public void setPivot(final float x, final float y, final float radius) {
         mPivotX = x;
         mPivotY = y;
+        mRadius = radius;
 
-        // find the radius
-        if (hasPivot() && mTarget != null) {
-            final PointF pt = mTarget.getPosition();
-            mRadius = (float) Math.sqrt((pt.x - mPivotX) * (pt.x - mPivotX) + (pt.y - mPivotY) + (pt.y - mPivotY));
-        } else {
-            mRadius = 0;
-        }
+        // // find the radius
+        // if (hasPivot() && mTarget != null) {
+        // updateRadiusToTarget();
+        // } else {
+        // mRadius = 0;
+        // mLastX = mLastY = 0;
+        // }
     }
 
     /**
@@ -79,6 +81,36 @@ public class RotateAnimator extends TweenAnimator {
         return mPivotX != PIVOT_CLEAR && mPivotY != PIVOT_CLEAR;
     }
 
+    // /*
+    // * (non-Javadoc)
+    // * @see com.funzio.pure2D.animators.BaseAnimator#setTarget(com.funzio.pure2D.Manipulatable)
+    // */
+    // @Override
+    // public void setTarget(final Manipulatable target) {
+    // super.setTarget(target);
+    //
+    // // find the radius
+    // if (hasPivot() && mTarget != null) {
+    // updateRadiusToTarget();
+    // }
+    // }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.TweenAnimator#startElapse(int)
+     */
+    @Override
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
+
+        // if (mTarget != null) {
+        // final PointF pt = mTarget.getPosition();
+        // mLastX = pt.x;
+        // mLastY = pt.y;
+        // }
+        mLastX = mLastY = 0;
+    }
+
     public void start(final float src, final float dst) {
         mSrc = src;
         mDst = dst;
@@ -91,13 +123,19 @@ public class RotateAnimator extends TweenAnimator {
         if (mTarget != null) {
             start(mTarget.getRotation(), dest);
 
-            // find the radius
-            if (hasPivot()) {
-                final PointF pt = mTarget.getPosition();
-                mRadius = (float) Math.sqrt((pt.x - mPivotX) * (pt.x - mPivotX) + (pt.y - mPivotY) + (pt.y - mPivotY));
-            }
+            // // find the radius
+            // if (hasPivot()) {
+            // updateRadiusToTarget();
+            // }
         }
     }
+
+    // private void updateRadiusToTarget() {
+    // final PointF pt = mTarget.getPosition();
+    // mRadius = (float) Math.sqrt((pt.x - mPivotX) * (pt.x - mPivotX) + (pt.y - mPivotY) + (pt.y - mPivotY));
+    // mLastX = pt.x;
+    // mLastY = pt.y;
+    // }
 
     @Override
     protected void onUpdate(final float value) {
@@ -108,11 +146,20 @@ public class RotateAnimator extends TweenAnimator {
                 mTarget.setRotation(mSrc + value * mDelta);
             }
 
+            // also move the target when pivot is set
             if (mRadius != 0) {
                 final float radian = (mSrc + value * mDelta) * Pure2DUtils.DEGREE_TO_RADIAN;
-                final float dx = mRadius * (float) Math.cos(radian);
-                final float dy = mRadius * (float) Math.sin(radian);
-                mTarget.setPosition(mPivotX + dx, mPivotY + dy);
+                final float newX = mPivotX + mRadius * (float) Math.cos(radian);
+                final float newY = mPivotY + mRadius * (float) Math.sin(radian);
+
+                if (mAccumulating) {
+                    mTarget.move(newX - mLastX, newY - mLastY);
+                    // keep the values
+                    mLastX = newX;
+                    mLastY = newY;
+                } else {
+                    mTarget.setPosition(newX, newY);
+                }
             }
         }
 

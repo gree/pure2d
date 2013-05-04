@@ -12,8 +12,9 @@ import com.funzio.pure2D.utils.Pure2DUtils;
  */
 public class TrajectoryAnimator extends BaseAnimator {
     public static float TIME_FACTOR = 50;
+    public static float DEFAULT_GRAVITY = 10;
 
-    protected float mGravity = 10f;
+    protected float mGravity = DEFAULT_GRAVITY;
     protected float mSrcX = 0;
     protected float mSrcY = 0;
 

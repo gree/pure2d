@@ -206,6 +206,11 @@ public class NovaActivity extends StageActivity {
     public boolean onTouch(final View v, final MotionEvent event) {
         final int action = event.getAction() & MotionEvent.ACTION_MASK;
 
+        // null check
+        if (mNovaFactory == null) {
+            return false;
+        }
+
         if (action == MotionEvent.ACTION_DOWN) {
             mStage.queueEvent(new Runnable() {
                 @Override

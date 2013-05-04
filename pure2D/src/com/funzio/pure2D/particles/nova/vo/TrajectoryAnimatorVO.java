@@ -21,6 +21,7 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
     public ArrayList<Float> ground;
     public ArrayList<Float> velocity;
     public ArrayList<Float> angle;
+    public ArrayList<Float> gravity;
 
     public TrajectoryAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
@@ -28,6 +29,7 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
         ground = NovaVO.getListFloat(json, "ground");
         velocity = NovaVO.getListFloat(json, "velocity");
         angle = NovaVO.getListFloat(json, "angle");
+        gravity = NovaVO.getListFloat(json, "gravity");
     }
 
     @Override
@@ -42,6 +44,7 @@ public class TrajectoryAnimatorVO extends AnimatorVO {
         final TrajectoryAnimator move = (TrajectoryAnimator) animator;
         // if (move != null) {
         move.setGround(NovaConfig.getFloat(ground, emitIndex, 0));
+        move.setGravity(NovaConfig.getFloat(gravity, emitIndex, TrajectoryAnimator.DEFAULT_GRAVITY));
         move.setValues(target.getPosition().x, target.getPosition().y, NovaConfig.getFloat(velocity, emitIndex, 0), NovaConfig.getFloat(angle, emitIndex, 0));
         // }
     }
