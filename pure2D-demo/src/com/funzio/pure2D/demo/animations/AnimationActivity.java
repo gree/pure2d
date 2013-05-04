@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.Playable;
@@ -26,6 +30,10 @@ public abstract class AnimationActivity extends StageActivity {
     protected static final DecelerateInterpolator DECELERATE = new DecelerateInterpolator();
     protected static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
     protected static final BounceInterpolator BOUNCE = new BounceInterpolator();
+    protected static final AnticipateInterpolator ANTICIPATE = new AnticipateInterpolator();
+    protected static final AnticipateOvershootInterpolator ANTICIPATE_OVERSHOOT = new AnticipateOvershootInterpolator();
+    protected static final OvershootInterpolator OVERSHOOT = new OvershootInterpolator();
+    protected static final CycleInterpolator CYCLE = new CycleInterpolator(1);
     protected static final int OBJ_SIZE = 128;
 
     protected Texture mTexture;
@@ -135,6 +143,22 @@ public abstract class AnimationActivity extends StageActivity {
 
                 case R.id.radio_bounce:
                     tween.setInterpolator(BOUNCE);
+                    break;
+
+                case R.id.radio_anticipate:
+                    tween.setInterpolator(ANTICIPATE);
+                    break;
+
+                case R.id.radio_anticipate_overshoot:
+                    tween.setInterpolator(ANTICIPATE_OVERSHOOT);
+                    break;
+
+                case R.id.radio_overshoot:
+                    tween.setInterpolator(OVERSHOOT);
+                    break;
+
+                case R.id.radio_cycle:
+                    tween.setInterpolator(CYCLE);
                     break;
 
                 case R.id.radio_once:

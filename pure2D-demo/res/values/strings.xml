@@ -152,5 +152,9 @@
     <string name="code_off">Code\nOff</string>
     <string name="code_on">Code\nOn</string>
     <string name="perspective_projection">Perspective Projection</string>
+    <string name="cycle">Cycle</string>
+    <string name="overshoot">Overshoot</string>
+    <string name="anticipate_overshoot">Anticipate Overshoot</string>
+    <string name="anticipate">Anticipate</string>
 
 </resources>

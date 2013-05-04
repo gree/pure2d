@@ -9,9 +9,13 @@ import java.util.Random;
 import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 
 import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.gl.GLColor;
@@ -27,14 +31,22 @@ public class NovaConfig {
 
     // interpolators
     private static final String INTER_ST_ACCELERATE = "accelerate";
-    private static final String INTER_ST_DECELERATE = "decelerate";
     private static final String INTER_ST_ACCELERATE_DECELERATE = "accelerate_decelerate";
+    private static final String INTER_ST_ANTICIPATE = "anticipate";
+    private static final String INTER_ST_ANTICIPATE_OVERSHOOT = "anticipate_overshoot";
     private static final String INTER_ST_BOUNCE = "bounce";
+    private static final String INTER_ST_CYCLE = "cycle";
+    private static final String INTER_ST_DECELERATE = "decelerate";
+    private static final String INTER_ST_OVERSHOOT = "overshoot";
 
-    public static final DecelerateInterpolator INTER_DECELERATE = new DecelerateInterpolator();
     public static final AccelerateInterpolator INTER_ACCELARATE = new AccelerateInterpolator();
     public static final AccelerateDecelerateInterpolator INTER_ACCELARATE_DECELERATE = new AccelerateDecelerateInterpolator();
+    public static final AnticipateInterpolator INTER_ANTICIPATE = new AnticipateInterpolator();
+    public static final AnticipateOvershootInterpolator INTER_ANTICIPATE_OVERSHOOT = new AnticipateOvershootInterpolator();
     public static final BounceInterpolator INTER_BOUNCE = new BounceInterpolator();
+    public static final CycleInterpolator INTER_CYCLE = new CycleInterpolator(1);
+    public static final DecelerateInterpolator INTER_DECELERATE = new DecelerateInterpolator();
+    public static final OvershootInterpolator INTER_OVERSHOOT = new OvershootInterpolator();
 
     // blend modes and functions
     public static final String BF_ST_ADD = "add";
@@ -129,8 +141,16 @@ public class NovaConfig {
     public static Interpolator getInterpolator(final String name) {
         if (INTER_ST_ACCELERATE.equalsIgnoreCase(name)) {
             return INTER_ACCELARATE;
+        } else if (INTER_ST_ANTICIPATE.equalsIgnoreCase(name)) {
+            return INTER_ANTICIPATE;
+        } else if (INTER_ST_ANTICIPATE_OVERSHOOT.equalsIgnoreCase(name)) {
+            return INTER_ANTICIPATE_OVERSHOOT;
+        } else if (INTER_ST_OVERSHOOT.equalsIgnoreCase(name)) {
+            return INTER_OVERSHOOT;
         } else if (INTER_ST_DECELERATE.equalsIgnoreCase(name)) {
             return INTER_DECELERATE;
+        } else if (INTER_ST_CYCLE.equalsIgnoreCase(name)) {
+            return INTER_CYCLE;
         } else if (INTER_ST_ACCELERATE_DECELERATE.equalsIgnoreCase(name)) {
             return INTER_ACCELARATE_DECELERATE;
         } else if (INTER_ST_BOUNCE.equalsIgnoreCase(name)) {

@@ -63,10 +63,10 @@ public final class R {
         public static final int btn_air_attackers=0x7f080035;
         public static final int btn_animations=0x7f08002d;
         public static final int btn_bezier_animation=0x7f080006;
-        public static final int btn_blending=0x7f08007c;
+        public static final int btn_blending=0x7f080080;
         public static final int btn_bouncing_objects=0x7f08003d;
         public static final int btn_buffers=0x7f080027;
-        public static final int btn_button=0x7f08007f;
+        public static final int btn_button=0x7f080083;
         public static final int btn_camera=0x7f080029;
         public static final int btn_casino=0x7f080032;
         public static final int btn_code=0x7f08005a;
@@ -82,24 +82,24 @@ public final class R {
         public static final int btn_hello_camera=0x7f080016;
         public static final int btn_hello_display_object=0x7f08003a;
         public static final int btn_hello_physic=0x7f080041;
-        public static final int btn_hello_text=0x7f08007e;
-        public static final int btn_hello_texture=0x7f080078;
+        public static final int btn_hello_text=0x7f080082;
+        public static final int btn_hello_texture=0x7f08007c;
         public static final int btn_hgroup=0x7f08001b;
         public static final int btn_hwheel=0x7f08001d;
         public static final int btn_hwheel_3d=0x7f08001f;
         public static final int btn_image_sequence=0x7f080002;
         public static final int btn_json_atlas=0x7f080001;
         public static final int btn_jumping_objects=0x7f08003c;
-        public static final int btn_lists=0x7f080080;
+        public static final int btn_lists=0x7f080084;
         public static final int btn_load=0x7f080044;
         public static final int btn_loader_async=0x7f080023;
         public static final int btn_loader_service=0x7f080022;
         public static final int btn_loaders=0x7f080030;
-        public static final int btn_masking=0x7f08007d;
+        public static final int btn_masking=0x7f080081;
         public static final int btn_motion_trail_shape=0x7f080021;
         public static final int btn_motion_trails=0x7f08003f;
         public static final int btn_multiple_objects=0x7f08003b;
-        public static final int btn_multiple_texture=0x7f08007a;
+        public static final int btn_multiple_texture=0x7f08007e;
         public static final int btn_mw=0x7f080031;
         public static final int btn_mw_explosion=0x7f080033;
         public static final int btn_nova_system=0x7f08002a;
@@ -108,14 +108,14 @@ public final class R {
         public static final int btn_path_animation=0x7f080005;
         public static final int btn_perspective_camera=0x7f080017;
         public static final int btn_physics=0x7f08002e;
-        public static final int btn_repeating_texture=0x7f080079;
+        public static final int btn_repeating_texture=0x7f08007d;
         public static final int btn_sea_attackers=0x7f080036;
         public static final int btn_simple_smoke=0x7f08003e;
         public static final int btn_skeleton_animation=0x7f08000b;
         public static final int btn_skeleton_animation_cache=0x7f08000c;
         public static final int btn_slot_machine=0x7f080018;
         public static final int btn_sparks=0x7f080020;
-        public static final int btn_sprite_9=0x7f08007b;
+        public static final int btn_sprite_9=0x7f08007f;
         public static final int btn_stencil_buffer=0x7f080015;
         public static final int btn_test=0x7f080069;
         public static final int btn_textures=0x7f080026;
@@ -140,9 +140,9 @@ public final class R {
         public static final int cb_textures=0x7f080070;
         public static final int col1=0x7f080038;
         public static final int col2=0x7f080039;
-        public static final int debug=0x7f080082;
+        public static final int debug=0x7f080086;
         public static final int nova_menu_layout=0x7f080037;
-        public static final int pause=0x7f080081;
+        public static final int pause=0x7f080085;
         public static final int radio_1=0x7f080061;
         public static final int radio_2=0x7f080062;
         public static final int radio_3=0x7f080063;
@@ -150,11 +150,14 @@ public final class R {
         public static final int radio_accelarate=0x7f080073;
         public static final int radio_accelerate_decelarate=0x7f080075;
         public static final int radio_aircraft_carrier=0x7f080057;
+        public static final int radio_anticipate=0x7f080077;
+        public static final int radio_anticipate_overshoot=0x7f080078;
         public static final int radio_b52=0x7f080046;
         public static final int radio_black=0x7f08000e;
         public static final int radio_black_explosion=0x7f08004c;
         public static final int radio_blue=0x7f080013;
         public static final int radio_bounce=0x7f080076;
+        public static final int radio_cycle=0x7f08007a;
         public static final int radio_decelarate=0x7f080074;
         public static final int radio_explosion=0x7f08004b;
         public static final int radio_explosion_combo=0x7f080050;
@@ -172,11 +175,12 @@ public final class R {
         public static final int radio_linear=0x7f080072;
         public static final int radio_m2bradley=0x7f080053;
         public static final int radio_once=0x7f08005e;
+        public static final int radio_overshoot=0x7f080079;
         public static final int radio_parallel=0x7f08005b;
         public static final int radio_rah=0x7f080048;
         public static final int radio_red=0x7f080011;
         public static final int radio_repeat=0x7f08005f;
-        public static final int radio_reverse=0x7f080077;
+        public static final int radio_reverse=0x7f08007b;
         public static final int radio_sequence=0x7f08005c;
         public static final int radio_smoke_puff=0x7f08004f;
         public static final int radio_stealth_bomber=0x7f080047;
@@ -244,6 +248,8 @@ public final class R {
         /**  textures 
          */
         public static final int animations=0x7f05003c;
+        public static final int anticipate=0x7f050088;
+        public static final int anticipate_overshoot=0x7f050087;
         public static final int app_name=0x7f050000;
         public static final int async_loader=0x7f05006e;
         public static final int atlas_generator=0x7f050042;
@@ -271,6 +277,7 @@ public final class R {
         /**  display groups 
          */
         public static final int containers=0x7f05000b;
+        public static final int cycle=0x7f050085;
         public static final int debug=0x7f05006d;
         public static final int decelerate=0x7f05004a;
         public static final int display_groups=0x7f05000c;
@@ -325,6 +332,7 @@ public final class R {
         public static final int none=0x7f05004c;
         public static final int nova_particle_system=0x7f050072;
         public static final int once=0x7f050063;
+        public static final int overshoot=0x7f050086;
         public static final int parallel=0x7f05006f;
         public static final int parallel_animations=0x7f050071;
         public static final int path_animation=0x7f050068;
