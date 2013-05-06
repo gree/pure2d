@@ -81,10 +81,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     // perspective projection
     protected boolean mPerspectiveEnabled = false;
-    protected PointF mSceneSize;
     private boolean mPerspectiveProjecting = false; // flag to prevent matrix out of sync caused by Threads
+    protected PointF mSceneSize;
 
     abstract protected boolean drawChildren(final GLState glState);
+
+    /**
+     * This is used for 3D projection
+     * 
+     * @return
+     */
+    protected PointF getSceneSize() {
+        final Scene scene = getScene();
+        return (scene != null) ? scene.getSize() : null;
+    }
 
     /*
      * (non-Javadoc)
@@ -122,8 +132,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // perspective projection
         if (mPerspectiveEnabled) {
-            if (mSceneSize == null && getScene() != null) {
-                mSceneSize = getScene().getSize();
+            if (mSceneSize == null) {
+                mSceneSize = getSceneSize();
             }
 
             // screen size is a requirement
