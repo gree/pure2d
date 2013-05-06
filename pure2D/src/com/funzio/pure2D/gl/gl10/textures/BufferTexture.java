@@ -28,12 +28,18 @@ public class BufferTexture extends Texture {
     public BufferTexture(final GLState glState, final int width, final int height, final boolean checkPo2) {
         super(glState);
 
-        // create an blank texture
-        load(null, Math.round(width), Math.round(height), 0);
+        int bitmapWidth = width;
+        int bitmapHeight = height;
 
+        // check for power of 2
         if (checkPo2 && !Pure2D.GL_NPOT_TEXTURE_SUPPORTED) {
-            setBitmapSize(Pure2DUtils.getNextPO2(width), Pure2DUtils.getNextPO2(height), width, height);
+            bitmapWidth = Pure2DUtils.getNextPO2(width);
+            bitmapHeight = Pure2DUtils.getNextPO2(height);
         }
+
+        // create an blank texture
+        load(null, bitmapWidth, bitmapHeight, 0);
+        setBitmapSize(bitmapWidth, bitmapHeight, width, height);
     }
 
     /*
