@@ -6,12 +6,6 @@
 			"lifespan": 10000,
 			"particles": [
 				{
-					"layer": 1,
-
-					"sprite": "sprites/smoke.png",
-					"animator": "smoke_ani"
-				},
-				{
 					"sprite": ["sprites/fire.png", "sprites/fire.png", "sprites/fire.png", "sprites/smoke.png"],
 					"animator": "fire_ani",
 					"blend_mode": "add"

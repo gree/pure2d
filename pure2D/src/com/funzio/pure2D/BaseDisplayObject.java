@@ -192,6 +192,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mMask != null) {
             mMask.enableMask();
         }
+        // glState.setMask(mMask); // why this doesn't work?
     }
 
     protected void drawEnd(final GLState glState) {
@@ -775,6 +776,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     public void setMask(final Maskable mask) {
         mMask = mask;
+
+        invalidate(InvalidateFlags.VISIBILITY);
     }
 
     private Scene findScene() {

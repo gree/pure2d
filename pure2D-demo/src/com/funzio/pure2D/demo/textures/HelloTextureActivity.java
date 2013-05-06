@@ -11,6 +11,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.shapes.Shape;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class HelloTextureActivity extends StageActivity {
@@ -75,8 +76,8 @@ public class HelloTextureActivity extends StageActivity {
         // // animation
         // final RotateAnimator animator = new RotateAnimator(null);
         // animator.setDuration(3000);
-        // animator.setPivot(x - 100, y + 200);
-        // // animator.clearPivot();
+        // animator.setPivot(x, y, 100);
+        // animator.clearPivot();
         // animator.setLoop(Playable.LOOP_REPEAT);
         // obj.addManipulator(animator);
         // animator.start(360);
@@ -106,7 +107,7 @@ public class HelloTextureActivity extends StageActivity {
                 public void run() {
                     final int num = mScene.getNumChildren();
                     for (int n = 0; n < num; n++) {
-                        Sprite obj = (Sprite) mScene.getChildAt(n);
+                        Shape obj = (Shape) mScene.getChildAt(n);
                         obj.setTexture(mUseTexture ? mTexture : null);
                     }
                 }

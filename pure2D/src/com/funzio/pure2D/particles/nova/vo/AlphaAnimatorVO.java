@@ -39,7 +39,7 @@ public class AlphaAnimatorVO extends TweenAnimatorVO {
 
         final AlphaAnimator alpha = (AlphaAnimator) animator;
         // if (alpha != null) {
-        alpha.setValues(NovaConfig.getFloat(from, emitIndex, 0), NovaConfig.getFloat(to, emitIndex, 0));
+        alpha.setValues(NovaConfig.getFloat(from, emitIndex, 1), NovaConfig.getFloat(to, emitIndex, 0));
         alpha.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
         // }
     }
