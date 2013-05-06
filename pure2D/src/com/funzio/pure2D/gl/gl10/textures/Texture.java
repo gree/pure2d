@@ -63,11 +63,7 @@ public abstract class Texture {
      * @param mipmaps
      */
     public void load(final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
-        mSize.x = actualWidth == 0 && bitmap != null ? bitmap.getWidth() : actualWidth;
-        mSize.y = actualHeight == 0 && bitmap != null ? bitmap.getHeight() : actualHeight;
-        // find the coordinates' scales
-        mCoordScaleX = bitmap == null ? 1 : mSize.x / bitmap.getWidth();
-        mCoordScaleY = bitmap == null ? 1 : mSize.y / bitmap.getHeight();
+        setBitmapSize(bitmap != null ? bitmap.getWidth() : actualWidth, bitmap != null ? bitmap.getHeight() : actualHeight, actualWidth, actualHeight);
 
         final int[] ids = new int[1];
         // clear the previous error(s), to make sure
@@ -120,6 +116,14 @@ public abstract class Texture {
         if (mListener != null) {
             mListener.onTextureLoad(this);
         }
+    }
+
+    protected void setBitmapSize(final int bitmapWidth, final int bitmapHeight, final int actualWidth, final int actualHeight) {
+        mSize.x = actualWidth == 0 ? bitmapWidth : actualWidth;
+        mSize.y = actualHeight == 0 ? bitmapHeight : actualHeight;
+        // find the coordinates' scales
+        mCoordScaleX = mSize.x / bitmapWidth;
+        mCoordScaleY = mSize.y / bitmapHeight;
     }
 
     public PointF getSize() {

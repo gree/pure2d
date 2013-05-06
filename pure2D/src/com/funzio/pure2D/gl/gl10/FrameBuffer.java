@@ -31,7 +31,7 @@ public class FrameBuffer {
     private int[] mOriginalViewport = new int[4];
     private boolean mBinded = false;
 
-    public FrameBuffer(final GLState glState, final float width, final float height) {
+    public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2) {
         mGLState = glState;
         mGL = glState.mGL;
         mGL11Ex = (GL11ExtensionPack) mGL;
@@ -39,7 +39,7 @@ public class FrameBuffer {
         init();
 
         // auto create a new texture
-        attachTexture(new BufferTexture(mGLState, width, height));
+        attachTexture(new BufferTexture(mGLState, width, height, checkPo2));
     }
 
     @Deprecated

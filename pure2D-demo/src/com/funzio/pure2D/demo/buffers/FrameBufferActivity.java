@@ -48,7 +48,7 @@ public class FrameBufferActivity extends StageActivity {
         // new texture
         // mTexture = mScene.getTextureManager().createTexture(FB_WIDTH, FB_HEIGHT);
         // create a frame buffer
-        mFrameBuffer = new FrameBuffer(mScene.getGLState(), FB_WIDTH, FB_HEIGHT);
+        mFrameBuffer = new FrameBuffer(mScene.getGLState(), FB_WIDTH, FB_HEIGHT, true);
         mTexture = mFrameBuffer.getTexture();
 
         mFrameBuffer.bind();
