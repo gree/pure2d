@@ -64,8 +64,8 @@
 			"stroke1": 1,
 			"stroke2": [50, 100],
 			"stroke_interpolation": "bounce",
-			"color1": [0x66FF0000, 0x66FFFF00, 0x66FF00FF],
-			"color2": 0x00FF0000
+			"color1": ["#66FF0000", "#66FFFF00", "#66FF00FF"],
+			"color2": "#00FF0000"
 		},
 
 		{
@@ -74,8 +74,8 @@
 			"stroke1": 50,
 			"stroke2": 1,
 			"num_points": 20,
-			"color1": 0xAAFFFFFF,
-			"color2": 0x00FFFFFF
+			"color1": "#AAFFFFFF",
+			"color2": "#00FFFFFF"
 		}
 	]
 }

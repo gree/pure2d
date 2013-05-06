@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.Playable;
@@ -22,10 +23,13 @@ import com.funzio.pure2D.shapes.Sprite;
 public class StencilBufferActivity extends StageActivity {
     private Texture mTexture;
     private MaskGroup mMask;
+    private CheckBox mCBMasking;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mCBMasking = (CheckBox) findViewById(R.id.cb_masking);
 
         mScene.setColor(COLOR_GREEN);
         // need to get the GL reference first
@@ -35,9 +39,21 @@ public class StencilBufferActivity extends StageActivity {
             public void onSurfaceCreated(final GL10 gl) {
                 loadTexture();
                 createMask();
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                // addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                for (int i = 0; i < 500; i++) {
+                    addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                }
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
+     */
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_masking;
     }
 
     /*
@@ -54,7 +70,7 @@ public class StencilBufferActivity extends StageActivity {
 
     private void createMask() {
         mMask = new MaskGroup();
-        mMask.setRenderChildren(true);
+        mMask.setRenderChildren(true); // for testing only
         mMask.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
         mScene.addChild(mMask);
 
@@ -69,7 +85,7 @@ public class StencilBufferActivity extends StageActivity {
         rect2.setColor(new GLColor(0, 0, 0, 0.5f));
         rect2.setSize(mDisplaySize.x, mDisplaySize.x);
         rect2.setOriginAtCenter();
-        rect2.rotateBy(45);
+        rect2.rotate(45);
         mMask.addChild(rect2);
 
         // rotating
@@ -89,7 +105,7 @@ public class StencilBufferActivity extends StageActivity {
         // create object
         final Sprite obj = new Sprite();
         obj.setTexture(mTexture);
-        obj.setMask(mMask);
+        obj.setMask(mCBMasking.isChecked() ? mMask : null);
 
         // center origin
         obj.setOriginAtCenter();
@@ -99,6 +115,23 @@ public class StencilBufferActivity extends StageActivity {
 
         // add to scene
         mScene.addChild(obj);
+    }
+
+    public void onClickMasking(final View view) {
+        // need to queue the in GL Thread!
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                final int num = mScene.getNumChildren();
+                for (int n = 0; n < num; n++) {
+                    if (mScene.getChildAt(n) instanceof Sprite) {
+                        Sprite obj = (Sprite) mScene.getChildAt(n);
+                        obj.setMask(mCBMasking.isChecked() ? mMask : null);
+                    }
+                }
+            }
+        });
     }
 
     @Override

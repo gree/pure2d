@@ -1,0 +1,49 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_fire",
+			"lifespan": 10000,
+			"particles": [
+				{
+					"sprite": ["sprites/fire.png", "sprites/fire.png", "sprites/fire.png", "sprites/smoke.png"],
+					"animator": "fire_ani",
+					"blend_mode": "add"
+				}
+			],
+			"animator": "rotate_ani"
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "rotate_ani",
+			"type": "rotate",
+			"duration": 1000,
+			"pivot_x": 0,
+			"pivot_y": 0,
+			"radius": 100,
+			"to": 360,
+			"loop_mode": "repeat",
+			"loop_count": -1
+		},
+
+		{
+			"name":"smoke_ani",
+			"type": "parallel",
+			"animators": [
+				{"type": "translate", "dx": [-20, 20], "dy": [-30, 30], "duration": [1000, 5000], "interpolation": "accelerate_decelerate"},
+				{"type": "alpha", "from": 1, "to": 0, "duration": 5000, "interpolation": "decelerate"},
+				{"type": "scale", "x_from": 1.5, "y_from": 1.5, "x_to": 0.5, "y_to": 0.5, "duration": 1000, "interpolation": "decelerate"}
+			]
+		},
+		{
+			"name":"fire_ani",
+			"type": "parallel",
+			"animators": [
+				{"type": "translate", "dx": [-20, 20], "dy": [-30, 30], "duration": [500, 1500], "interpolation": "accelerate_decelerate"},
+				{"type": "scale", "x_from": 1, "y_from": 1, "x_to": 0.25, "y_to": 0.25, "duration": 1500}
+			]
+		}
+	]
+}

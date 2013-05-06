@@ -6,6 +6,7 @@ package com.funzio.pure2D.gl.gl10;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.Maskable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Stage;
 import com.funzio.pure2D.gl.GLColor;
@@ -36,6 +37,8 @@ public class GLState {
     // blending
     private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
     private BlendFunc mBlendFunc = new BlendFunc(0, 0);
+    // masking
+    private Maskable mMask;
 
     // viewport and camera
     private int[] mViewport = new int[4];
@@ -415,5 +418,32 @@ public class GLState {
      */
     public void setCamera(final Camera camera) {
         mCamera = camera;
+    }
+
+    public Maskable getMask() {
+        return mMask;
+    }
+
+    /**
+     * This does not work like it's supposed to yet :(
+     * 
+     * @param mask
+     */
+    @Deprecated
+    public void setMask(final Maskable mask) {
+        // diff check
+        if (mMask != mask) {
+            if (mMask != null) {
+                // disable the previous mask
+                mMask.disableMask();
+            }
+
+            if (mask != null) {
+                // enable the new one
+                mask.enableMask();
+            }
+
+            mMask = mask;
+        }
     }
 }

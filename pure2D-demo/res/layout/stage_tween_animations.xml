@@ -56,6 +56,38 @@
             android:checked="false"
             android:onClick="onClickRadio"
             android:text="@string/bounce" />
+
+        <RadioButton
+            android:id="@+id/radio_anticipate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/anticipate" />
+
+        <RadioButton
+            android:id="@+id/radio_anticipate_overshoot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/anticipate_overshoot" />
+
+        <RadioButton
+            android:id="@+id/radio_overshoot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/overshoot" />
+
+        <RadioButton
+            android:id="@+id/radio_cycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/cycle" />
     </RadioGroup>
 
     <RadioGroup

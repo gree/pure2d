@@ -105,7 +105,7 @@ public class SinWaveAnimator extends TweenAnimator {
             final float newY = dx * mSinAngle + dy * mCosAngle;
 
             if (mAccumulating) {
-                mTarget.moveBy(newX - mLastX, newY - mLastY);
+                mTarget.move(newX - mLastX, newY - mLastY);
             } else {
                 mTarget.setPosition(mSrcX + newX, mSrcY + newY);
             }

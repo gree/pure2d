@@ -6,13 +6,7 @@
 			"lifespan": 10000,
 			"particles": [
 				{
-					"layer": 1,
-
-					"sprite": "sprites/smoke.png",
-					"animator": "smoke_ani"
-				},
-				{
-					"sprite": ["sprites/fire.png", "sprites/fire.png", "sprites/fire.png", "sprites/smoke.png"],
+					"sprite": ["sprites/fire.png", "sprites/smoke.png"],
 					"animator": "fire_ani",
 					"blend_mode": "add"
 				}
@@ -24,42 +18,25 @@
 	"animators": [
 		{
 			"name": "tornado_ani",
-			"type": "parallel",
-			"animators": [
-				{
-					"type": "tornado",
-					"duration": 10000,
-					"dy": 600,
-					"circle_radius": 300,
-					"circle_num": 20,
-					"circle_interpolation": "accelerate",
-					"interpolation": "decelerate"
-				},
-				{
-					"type": "translate",
-					"duration": 1000,
-					"dx": 50,
-					"loop_mode": "reverse",
-					"interpolation": "accelerate_decelerate"
-				}
-			]
-		},
-
-		{
-			"name":"smoke_ani",
-			"type": "parallel",
-			"animators": [
-				{"type": "translate", "dx": [-20, 20], "dy": [-30, 30], "duration": [1000, 5000], "interpolation": "accelerate_decelerate"},
-				{"type": "alpha", "from": 1, "to": 0, "duration": 5000, "interpolation": "decelerate"},
-				{"type": "scale", "x_from": 1.5, "y_from": 1.5, "x_to": 0.5, "y_to": 0.5, "duration": 1000, "interpolation": "decelerate"}
-			]
+			"type": "translate",
+			"duration": 1000,
+			"dx": 50,
+			"loop_mode": "reverse",
+			"interpolation": "accelerate_decelerate"
 		},
 		{
 			"name":"fire_ani",
 			"type": "parallel",
 			"animators": [
-				{"type": "translate", "dx": [-20, 20], "dy": [-30, 30], "duration": [500, 1500], "interpolation": "accelerate_decelerate"},
-				{"type": "scale", "x_from": 1, "y_from": 1, "x_to": 0.25, "y_to": 0.25, "duration": 1500}
+				{
+					"type": "tornado",
+					"duration": 5000,
+					"dy": 500,
+					"circle_radius": 200,
+					"circle_num": 15,
+					"interpolation": "decelerate"
+				},
+				{"type": "scale", "x_from": 0.1, "y_from": 0.1, "x_to": 1, "y_to": 1, "duration": 5000}
 			]
 		}
 	]

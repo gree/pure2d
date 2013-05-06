@@ -304,6 +304,17 @@ public class NovaVO {
         return mUsedSprites;
     }
 
+    /**
+     * To save some memory
+     */
+    public void releaseSource() {
+        mSource = null;
+    }
+
+    public JSONObject getSource() {
+        return mSource;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -316,10 +327,6 @@ public class NovaVO {
                 + "Emitters: " + (emitters == null ? 0 : emitters.size()) + ", " //
                 + "Animators: " + (animators == null ? 0 : animators.size()) + ", " //
                 + "Trails: " + (motion_trails == null ? 0 : motion_trails.size());
-    }
-
-    public JSONObject getSource() {
-        return mSource;
     }
 
 }

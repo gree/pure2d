@@ -37,7 +37,6 @@
 			"circle_num": [18, 20],
 			"circle_multiplier": [1, 1.2],
 			"duration": 10000,
-			"circle_interpolation": "accelerate",
 			"interpolation": "decelerate"
 		}
 	],

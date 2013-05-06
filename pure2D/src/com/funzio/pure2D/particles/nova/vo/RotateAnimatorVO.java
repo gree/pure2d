@@ -20,6 +20,9 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
     public ArrayList<Float> from;
     public ArrayList<Float> to;
     public ArrayList<Float> delta;
+    public ArrayList<Integer> pivot_x;
+    public ArrayList<Integer> pivot_y;
+    public ArrayList<Integer> radius;
 
     public RotateAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
@@ -27,6 +30,10 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
         from = NovaVO.getListFloat(json, "from");
         to = NovaVO.getListFloat(json, "to");
         delta = NovaVO.getListFloat(json, "delta");
+
+        pivot_x = NovaVO.getListInt(json, "pivot_x");
+        pivot_y = NovaVO.getListInt(json, "pivot_y");
+        radius = NovaVO.getListInt(json, "radius");
     }
 
     @Override
@@ -39,14 +46,29 @@ public class RotateAnimatorVO extends TweenAnimatorVO {
         super.resetAnimator(emitIndex, target, animator);
 
         final RotateAnimator rotate = (RotateAnimator) animator;
-        // if (rotate != null) {
         if (delta != null) {
             rotate.setDelta(NovaConfig.getFloat(delta, emitIndex, 0));
         } else {
             rotate.setValues(NovaConfig.getFloat(from, emitIndex, 0), NovaConfig.getFloat(to, emitIndex, 0));
         }
-        rotate.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
-        // }
-    }
 
+        // check pivot
+        if (pivot_x != null && pivot_y != null) {
+            // PointF offset;
+            // if (target instanceof NovaParticle) {
+            // // relative to the emitter's position
+            // offset = ((NovaParticle) target).getEmitter().getPosition();
+            // } else {
+            // // relative to the current target
+            // offset = target.getPosition();
+            // }
+            // rotate.setPivot(NovaConfig.getInt(pivot_x, emitIndex, 0) + offset.x, NovaConfig.getInt(pivot_y, emitIndex, 0) + offset.y, NovaConfig.getInt(radius, emitIndex, 0));
+            rotate.setPivot(NovaConfig.getInt(pivot_x, emitIndex, 0), NovaConfig.getInt(pivot_y, emitIndex, 0), NovaConfig.getInt(radius, emitIndex, 0));
+
+        } else {
+            rotate.clearPivot();
+        }
+
+        rotate.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+    }
 }

@@ -192,6 +192,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mMask != null) {
             mMask.enableMask();
         }
+        // glState.setMask(mMask); // why this doesn't work?
     }
 
     protected void drawEnd(final GLState glState) {
@@ -403,9 +404,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.POSITION);
     }
 
-    public void moveBy(final float x, final float y) {
-        mPosition.x += x;
-        mPosition.y += y;
+    public void move(final float dx, final float dy) {
+        mPosition.x += dx;
+        mPosition.y += dy;
+        invalidate(InvalidateFlags.POSITION);
+    }
+
+    @Deprecated
+    public void moveBy(final float dx, final float dy) {
+        mPosition.x += dx;
+        mPosition.y += dy;
         invalidate(InvalidateFlags.POSITION);
     }
 
@@ -768,6 +776,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     public void setMask(final Maskable mask) {
         mMask = mask;
+
+        invalidate(InvalidateFlags.VISIBILITY);
     }
 
     private Scene findScene() {

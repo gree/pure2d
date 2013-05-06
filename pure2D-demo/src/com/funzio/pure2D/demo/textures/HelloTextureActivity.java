@@ -11,6 +11,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.shapes.Shape;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class HelloTextureActivity extends StageActivity {
@@ -63,6 +64,23 @@ public class HelloTextureActivity extends StageActivity {
 
         // add to scene
         mScene.addChild(obj);
+
+        // // motion trail
+        // MotionTrailShape mMotionTrail = new MotionTrailShape();
+        // mMotionTrail.setNumPoints(15);
+        // mMotionTrail.setStrokeRange(10, 1);
+        // mMotionTrail.setStrokeColors(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
+        // mMotionTrail.setTarget(obj);
+        // mScene.addChild(mMotionTrail);
+        //
+        // // animation
+        // final RotateAnimator animator = new RotateAnimator(null);
+        // animator.setDuration(3000);
+        // animator.setPivot(x, y, 100);
+        // animator.clearPivot();
+        // animator.setLoop(Playable.LOOP_REPEAT);
+        // obj.addManipulator(animator);
+        // animator.start(360);
     }
 
     @Override
@@ -89,7 +107,7 @@ public class HelloTextureActivity extends StageActivity {
                 public void run() {
                     final int num = mScene.getNumChildren();
                     for (int n = 0; n < num; n++) {
-                        Sprite obj = (Sprite) mScene.getChildAt(n);
+                        Shape obj = (Shape) mScene.getChildAt(n);
                         obj.setTexture(mUseTexture ? mTexture : null);
                     }
                 }
