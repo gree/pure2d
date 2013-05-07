@@ -81,6 +81,10 @@ public class GLState {
         mMaxTextureSize = textureSize[0];
     }
 
+    public void clear() {
+        mGL.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+    }
+
     public void queueEvent(final Runnable r) {
         if (mStage != null) {
             mStage.queueEvent(r);
