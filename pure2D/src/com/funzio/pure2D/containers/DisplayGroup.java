@@ -90,6 +90,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         drawEnd(glState);
 
+        // validate everything
+        mInvalidateFlags = 0;
+
         return true;
     }
 
