@@ -181,6 +181,10 @@ public class FrameBuffer {
         mGL.glPopMatrix();
     }
 
+    public boolean isBinded() {
+        return mBinded;
+    }
+
     public void clear() {
         if (!mBinded) {
             return;
