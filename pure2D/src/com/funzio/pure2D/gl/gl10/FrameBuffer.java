@@ -6,6 +6,7 @@ package com.funzio.pure2D.gl.gl10;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
+import android.graphics.PointF;
 import android.opengl.GLU;
 import android.util.Log;
 
@@ -224,6 +225,18 @@ public class FrameBuffer {
 
     public Texture getTexture() {
         return mTexture;
+    }
+
+    public int getWidth() {
+        return mWidth;
+    }
+
+    public int getHeight() {
+        return mHeight;
+    }
+
+    public boolean hasSize(final PointF size) {
+        return mWidth == Math.round(size.x) && mHeight == Math.round(size.y);
     }
 
     public static boolean isSupported(final GL10 gl) {

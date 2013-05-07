@@ -221,6 +221,8 @@ public class Shape extends BaseDisplayObject {
      */
     @Override
     public void dispose() {
+        super.dispose();
+
         if (mVertexBuffer != null) {
             mVertexBuffer.dispose();
             mVertexBuffer = null;

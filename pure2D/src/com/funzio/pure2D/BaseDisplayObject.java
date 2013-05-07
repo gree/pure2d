@@ -1066,6 +1066,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.DisplayObject#dispose()
+     */
+    @Override
+    public void dispose() {
+        // TODO Auto-generated method stub
+
+    }
+
     /**
      * @return
      * @see Pure2D.DEBUG_FLAG_LOCAL_SHAPE, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS

@@ -12,7 +12,9 @@ import android.view.MotionEvent;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.shapes.Sprite;
 
 /**
  * @author long
@@ -25,6 +27,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     // UI
     protected ArrayList<Touchable> mVisibleTouchables;
     protected boolean mTouchable = true; // true by default
+
+    // cache
+    private FrameBuffer mCacheFrameBuffer;
+    private Sprite mCacheSprite;
+    private boolean mCacheEnabled = false;
 
     public DisplayGroup() {
         super();
@@ -85,8 +92,41 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         drawStart(glState);
 
-        // draw the children
-        drawChildren(glState);
+        // check cache enabled
+        if (mCacheEnabled) {
+            // check invalidate flags
+            if (mInvalidateFlags != 0) {
+
+                // init frame buffer
+                if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
+                    if (mCacheFrameBuffer != null) {
+                        mCacheFrameBuffer.unload();
+                        mCacheFrameBuffer.getTexture().unload();
+                    }
+                    mCacheFrameBuffer = new FrameBuffer(glState, Math.round(mSize.x), Math.round(mSize.y), true);
+
+                    // init sprite
+                    if (mCacheSprite == null) {
+                        mCacheSprite = new Sprite();
+                        // mCacheSprite.setDebugFlags(Pure2D.DEBUG_FLAG_WIREFRAME);
+                    }
+                    mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
+                    mCacheSprite.flipTextureCoordBuffer(DisplayObject.FLIP_Y); // because FrameBuffer is upside-down
+                }
+
+                // cache to framebuffer
+                mCacheFrameBuffer.bind();
+                mCacheFrameBuffer.clear();
+                drawChildren(glState);
+                mCacheFrameBuffer.unbind();
+            }
+
+            // now draw the cache
+            mCacheSprite.draw(glState);
+        } else {
+            // draw the children directly
+            drawChildren(glState);
+        }
 
         drawEnd(glState);
 
@@ -162,8 +202,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
+        super.dispose();
 
+        if (mCacheFrameBuffer != null) {
+            mCacheFrameBuffer.getTexture().unload();
+            mCacheFrameBuffer.unload();
+            mCacheFrameBuffer = null;
+        }
     }
 
     public boolean addChild(final DisplayObject child) {
@@ -421,6 +466,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     @Override
     public boolean isTouchable() {
         return mTouchable && mAlive;
+    }
+
+    public boolean isCacheEnabled() {
+        return mCacheEnabled;
+    }
+
+    public void setCacheEnabled(final boolean cacheEnabled) {
+        mCacheEnabled = cacheEnabled;
+
+        invalidate();
     }
 
     protected void onAddedChild(final DisplayObject child) {
