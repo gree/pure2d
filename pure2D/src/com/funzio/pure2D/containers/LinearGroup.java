@@ -14,6 +14,9 @@ import com.funzio.pure2D.InvalidateFlags;
 public abstract class LinearGroup extends DisplayGroup {
 
     protected float mGap = 0;
+    protected float mOffsetX = 0;
+    protected float mOffsetY = 0;
+
     protected int mAlignment = Alignment.NONE;
     protected PointF mScrollPosition = new PointF();
     protected boolean mRepeating = false;
@@ -53,6 +56,14 @@ public abstract class LinearGroup extends DisplayGroup {
      */
     public void setGap(final float gap) {
         mGap = gap;
+
+        // reposition the children
+        invalidateChildrenPosition();
+    }
+
+    public void setOffset(final float offsetX, final float offsetY) {
+        mOffsetX = offsetX;
+        mOffsetY = offsetY;
 
         // reposition the children
         invalidateChildrenPosition();

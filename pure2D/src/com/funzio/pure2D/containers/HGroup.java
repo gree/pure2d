@@ -189,7 +189,7 @@ public class HGroup extends LinearGroup implements UIObject {
                 } else if ((mAlignment & Alignment.TOP) != 0) {
                     alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(nextX, nextY + alignedY);
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // find nextX
                 nextX += childSize.x + mGap;
@@ -214,7 +214,7 @@ public class HGroup extends LinearGroup implements UIObject {
                 } else if ((mAlignment & Alignment.TOP) != 0) {
                     alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(nextX, nextY + alignedY);
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // update sizes
                 nextX += childSize.x + mGap;
