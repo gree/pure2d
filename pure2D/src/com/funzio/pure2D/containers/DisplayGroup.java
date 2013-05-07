@@ -108,7 +108,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                     // init sprite
                     if (mCacheSprite == null) {
                         mCacheSprite = new Sprite();
-                        mCacheSprite.flipTextureCoordBuffer(DisplayObject.FLIP_Y); // because FrameBuffer is upside-down
+                        // mCacheSprite.flipTextureCoordBuffer(DisplayObject.FLIP_Y); // because FrameBuffer is upside-down
                         // mCacheSprite.setDebugFlags(Pure2D.DEBUG_FLAG_WIREFRAME);
                     }
                     mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
