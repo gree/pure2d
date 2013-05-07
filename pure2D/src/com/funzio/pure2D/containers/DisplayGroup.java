@@ -122,7 +122,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             }
 
             // now draw the cache
-            mCacheSprite.draw(glState);
+            drawCache(glState, mCacheSprite);
         } else {
             // draw the children directly
             drawChildren(glState);
@@ -134,6 +134,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         mInvalidateFlags = 0;
 
         return true;
+    }
+
+    protected void drawCache(final GLState glState, final Sprite cacheSprite) {
+        cacheSprite.draw(glState);
     }
 
     @Override
