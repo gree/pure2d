@@ -199,7 +199,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 } else if ((mAlignment & Alignment.RIGHT) != 0) {
                     alignedX = (mSize.x - childSize.x);
                 }
-                child.setPosition(nextX + alignedX, convertY(nextY, childSize.y));
+                child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
 
                 // find nextY
                 nextY += childSize.y + mGap;
@@ -224,7 +224,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 } else if ((mAlignment & Alignment.RIGHT) != 0) {
                     alignedX = (mSize.x - childSize.x);
                 }
-                child.setPosition(nextX + alignedX, convertY(nextY, childSize.y));
+                child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
 
                 // update sizes
                 nextY += childSize.y + mGap;
