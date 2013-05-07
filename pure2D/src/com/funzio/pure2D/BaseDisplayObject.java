@@ -121,6 +121,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // wrap up
         drawEnd(glState);
 
+        // validate everything
+        mInvalidateFlags = 0;
+
         return true;
     }
 
@@ -282,6 +285,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @hide
      */
     final public void invalidate() {
+        // invalidate generally
+        mInvalidateFlags |= InvalidateFlags.UNSPECIFIED;
+
         if (mParent != null) {
             mParent.invalidate();
         }
