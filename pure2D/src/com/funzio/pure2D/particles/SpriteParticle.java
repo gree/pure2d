@@ -7,6 +7,7 @@ import java.util.Random;
 
 import android.graphics.PointF;
 
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.shapes.Sprite;
 
 /**
@@ -41,7 +42,7 @@ public class SpriteParticle extends Sprite implements Particle {
 
         mPosition.x += mVelocity.x;
         mPosition.y += mVelocity.y;
-        invalidate();
+        invalidate(InvalidateFlags.POSITION);
 
         return true;
     }

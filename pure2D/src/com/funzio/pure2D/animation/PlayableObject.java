@@ -1,6 +1,7 @@
 package com.funzio.pure2D.animation;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Playable;
 
 /**
@@ -65,7 +66,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
         if (mCurrentFrame != mPreviousFrame) {
             mPreviousFrame = mCurrentFrame;
             updateFrame(mCurrentFrame);
-            invalidate();
+            invalidate(InvalidateFlags.VISUAL);
         }
 
         return mNumFrames > 0;
@@ -91,7 +92,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
 
             // update the frame
             updateFrame(mCurrentFrame);
-            invalidate();
+            invalidate(InvalidateFlags.VISUAL);
         }
 
         stop();

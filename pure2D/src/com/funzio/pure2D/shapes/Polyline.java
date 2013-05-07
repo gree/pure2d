@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
@@ -120,7 +121,7 @@ public class Polyline extends Shape {
             mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
         }
 
-        invalidate();
+        invalidate(InvalidateFlags.VISUAL);
     }
 
     protected void allocateVertices(final int numVertices) {

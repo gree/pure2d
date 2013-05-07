@@ -41,7 +41,7 @@ public abstract class LinearGroup extends DisplayGroup {
 
     protected void invalidateChildrenPosition() {
         mChildrenPositionInvalidated = true;
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
     }
 
     /**
@@ -148,7 +148,7 @@ public abstract class LinearGroup extends DisplayGroup {
     public void setClipping(final boolean clipping) {
         mClipping = clipping;
 
-        invalidate(InvalidateFlags.VISIBILITY);
+        invalidate(InvalidateFlags.CHILDREN);
     }
 
     public boolean isAutoSleepChildren() {

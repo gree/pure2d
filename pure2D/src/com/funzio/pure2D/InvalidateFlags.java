@@ -20,10 +20,11 @@ public interface InvalidateFlags {
     public static final int BLEND = 1 << 8;
     public static final int TEXTURE = 1 << 9;
     public static final int TEXTURE_COORDS = 1 << 10;
-    public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS;
+    public static final int PERSPECTIVE = 1 << 11;
+    public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS | PERSPECTIVE;
 
-    public static final int TRANSFORM_MATRIX = 1 << 11;
+    public static final int TRANSFORM_MATRIX = 1 << 14;
+    public static final int CHILDREN = 1 << 15;
 
-    public static final int UNSPECIFIED = 1 << 20;
-    public static final int ALL = BOUNDS | VISUAL | TRANSFORM_MATRIX;
+    public static final int ALL = BOUNDS | VISUAL | TRANSFORM_MATRIX | CHILDREN;
 }
