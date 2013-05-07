@@ -140,7 +140,7 @@ public class Button extends DisplayGroup implements UIObject {
 
     @Override
     public boolean isTouchable() {
-        return mTouchable;
+        return mTouchable && mAlive;
     }
 
     public Listener getListener() {

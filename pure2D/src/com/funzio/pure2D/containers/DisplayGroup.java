@@ -41,8 +41,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public boolean update(final int deltaTime) {
         boolean ret = super.update(deltaTime);
 
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isAlive()) {
                 // update child
                 child.update(deltaTime);
@@ -61,8 +62,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         final RectF rect = super.updateBounds();
 
         // if bounds changed, all children's bounds should also be changed
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isAutoUpdateBounds()) {
                 child.updateBounds();
             }
@@ -249,8 +251,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         // child.onPreRemoved();
         // }
 
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             // callback
             child.onRemoved();
             onRemovedChild(child);
@@ -377,8 +380,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     public int getNumGrandChildren() {
         int n = mNumChildren;
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child instanceof Container) {
                 n += ((Container) child).getNumGrandChildren();
             }
@@ -413,7 +417,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     @Override
     public boolean isTouchable() {
-        return mTouchable;
+        return mTouchable && mAlive;
     }
 
     protected void onAddedChild(final DisplayObject child) {
@@ -435,8 +439,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         sb.append(super.getTrace(prefix));
         sb.append("\n");
 
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             sb.append(child.getTrace(prefix + "   "));
             sb.append("\n");
         }
