@@ -4,6 +4,9 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -969,21 +972,63 @@ public class BaseScene implements Scene {
     }
 
     /**
-     * for Debugging
+     * for Debugging.
      * 
      * @return a string that has all the children in Tree format
      */
-    public String getTrace() {
+    public String getObjectTree() {
         final StringBuilder sb = new StringBuilder();
         sb.append(toString());
         sb.append("\n");
 
         for (int i = 0; i < mNumChildren; i++) {
             DisplayObject child = mChildren.get(i);
-            sb.append(child.getTrace("   "));
+            sb.append(child.getObjectTree("   "));
             sb.append("\n");
         }
 
         return sb.toString();
+    }
+
+    /**
+     * For Debugging. Group object with the same class and count
+     * 
+     * @return
+     */
+    public String getObjectCounts() {
+        final HashMap<String, Integer> map = new HashMap<String, Integer>();
+        getObjectCounts(this, map);
+
+        final StringBuilder sb = new StringBuilder();
+        sb.append(toString());
+        sb.append("\n");
+
+        final Set<String> keys = map.keySet();
+        for (String key : keys) {
+            sb.append("   ");
+            sb.append(key);
+            sb.append(": ");
+            sb.append(map.get(key));
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    protected void getObjectCounts(final Container container, final Map<String, Integer> map) {
+        final int num = container.getNumChildren();
+        for (int i = 0; i < num; i++) {
+            final DisplayObject child = container.getChildAt(i);
+            final String name = child.getClass().getSimpleName();
+            if (map.containsKey(name)) {
+                map.put(name, map.get(name) + 1);
+            } else {
+                map.put(name, 1);
+            }
+
+            if (child instanceof Container) {
+                getObjectCounts((Container) child, map);
+            }
+        }
     }
 }
