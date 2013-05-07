@@ -69,6 +69,7 @@ public class ListActivity extends StageActivity {
 
     private void addVList() {
         mVList = new VList();
+        mVList.setCacheEnabled(true);
         // mVList.setPositiveOrientation(false);
         mVList.setGap(10);
         mVList.setSize(LIST_WIDTH, mDisplaySize.y - LIST_WIDTH);
@@ -89,6 +90,7 @@ public class ListActivity extends StageActivity {
 
     private void addHList() {
         mHList = new HList();
+        mHList.setCacheEnabled(true);
         mHList.setGap(10);
         mHList.setSize(mDisplaySize.x, LIST_WIDTH);
 
