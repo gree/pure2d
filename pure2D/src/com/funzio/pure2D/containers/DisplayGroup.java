@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -95,7 +96,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         // check cache enabled
         if (mCacheEnabled) {
             // check invalidate flags
-            if (mInvalidateFlags != 0) {
+            if ((mInvalidateFlags & InvalidateFlags.CHILDREN) != 0) {
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -108,8 +109,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                     // init sprite
                     if (mCacheSprite == null) {
                         mCacheSprite = new Sprite();
-                        // mCacheSprite.flipTextureCoordBuffer(DisplayObject.FLIP_Y); // because FrameBuffer is upside-down
-                        // mCacheSprite.setDebugFlags(Pure2D.DEBUG_FLAG_WIREFRAME);
                     }
                     mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
                 }
@@ -136,6 +135,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return true;
     }
 
+    /**
+     * @param glState
+     * @param cacheSprite
+     * @see #setCacheEnabled(boolean)
+     */
     protected void drawCache(final GLState glState, final Sprite cacheSprite) {
         cacheSprite.draw(glState);
     }
@@ -226,7 +230,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onAdded(this);
-            invalidate();
+            invalidate(InvalidateFlags.CHILDREN);
 
             // internal callback
             onAddedChild(child);
@@ -246,7 +250,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onAdded(this);
-            invalidate();
+            invalidate(InvalidateFlags.CHILDREN);
 
             onAddedChild(child);
             return true;
@@ -265,7 +269,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onRemoved();
-            invalidate();
+            invalidate(InvalidateFlags.CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -286,7 +290,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onRemoved();
-            invalidate();
+            invalidate(InvalidateFlags.CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -313,7 +317,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.clear();
         mNumChildren = 0;
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
     }
 
     public DisplayObject getChildAt(final int index) {
@@ -345,7 +349,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
 
         return true;
     }
@@ -371,7 +375,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
 
         return true;
     }
@@ -391,7 +395,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i + 1));
         }
         mChildren.set(mNumChildren - 1, child);
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
 
         return true;
     }
@@ -411,7 +415,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i - 1));
         }
         mChildren.set(0, child);
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
 
         return true;
     }
@@ -476,10 +480,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return mCacheEnabled;
     }
 
+    /**
+     * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
+     * 
+     * @param cacheEnabled
+     */
     public void setCacheEnabled(final boolean cacheEnabled) {
         mCacheEnabled = cacheEnabled;
 
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
     }
 
     protected void onAddedChild(final DisplayObject child) {

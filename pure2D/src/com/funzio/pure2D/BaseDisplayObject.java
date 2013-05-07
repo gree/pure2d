@@ -286,10 +286,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     final public void invalidate() {
         // invalidate generally
-        mInvalidateFlags |= InvalidateFlags.UNSPECIFIED;
+        mInvalidateFlags = InvalidateFlags.ALL;
 
         if (mParent != null) {
-            mParent.invalidate();
+            mParent.invalidate(mInvalidateFlags | InvalidateFlags.CHILDREN);
         }
     }
 
@@ -300,7 +300,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mInvalidateFlags |= flags;
 
         if (mParent != null) {
-            mParent.invalidate(mInvalidateFlags);
+            mParent.invalidate(mInvalidateFlags | InvalidateFlags.CHILDREN);
         }
     }
 
@@ -1063,7 +1063,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setPerspectiveEnabled(final boolean perspectiveEnabled) {
         mPerspectiveEnabled = perspectiveEnabled;
 
-        invalidate();
+        invalidate(InvalidateFlags.PERSPECTIVE);
     }
 
     /*

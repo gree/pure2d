@@ -9,6 +9,7 @@ import android.util.FloatMath;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.VelocityAnimator;
@@ -91,7 +92,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
 
     protected void invalidateChildrenPosition() {
         mChildrenPositionInvalidated = true;
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
     }
 
     public float getRadius() {
