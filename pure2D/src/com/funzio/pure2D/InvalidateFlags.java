@@ -24,5 +24,6 @@ public interface InvalidateFlags {
 
     public static final int TRANSFORM_MATRIX = 1 << 11;
 
+    public static final int UNSPECIFIED = 1 << 20;
     public static final int ALL = BOUNDS | VISUAL | TRANSFORM_MATRIX;
 }
