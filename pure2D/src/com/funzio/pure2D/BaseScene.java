@@ -1000,17 +1000,21 @@ public class BaseScene implements Scene {
         getObjectCounts(this, map);
 
         final StringBuilder sb = new StringBuilder();
-        sb.append(toString());
-        sb.append("\n");
-
+        int total = 0;
         final Set<String> keys = map.keySet();
         for (String key : keys) {
+            final int count = map.get(key);
             sb.append("   ");
             sb.append(key);
             sb.append(": ");
-            sb.append(map.get(key));
+            sb.append(count);
             sb.append("\n");
+
+            total += count;
         }
+
+        // total count
+        sb.insert(0, toString() + ": " + total + "\n");
 
         return sb.toString();
     }
