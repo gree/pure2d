@@ -4,7 +4,6 @@
 package com.funzio.pure2D.containers;
 
 import com.funzio.pure2D.animators.Animator;
-import com.funzio.pure2D.shapes.Rectangular;
 
 /**
  * List is an extended Wheel that also handles masking and snapping. Mainly used for UI.
@@ -13,8 +12,8 @@ import com.funzio.pure2D.shapes.Rectangular;
  */
 public class VList extends VWheel {
 
-    protected MaskGroup mMaskGroup;
-    protected Rectangular mMaskRect;
+    // protected MaskGroup mMaskGroup;
+    // protected Rectangular mMaskRect;
 
     protected boolean mSnapping = false;
 
@@ -26,38 +25,38 @@ public class VList extends VWheel {
         setSwipeEnabled(true);
         setRepeating(false);
 
-        // prepare the mask
-        mMaskGroup = new MaskGroup();
-        // create a rect for the mask group
-        mMaskGroup.addChild(mMaskRect = new Rectangular());
-
-        // apply the mask
-        setMask(mMaskGroup);
+        // // prepare the mask
+        // mMaskGroup = new MaskGroup();
+        // // create a rect for the mask group
+        // mMaskGroup.addChild(mMaskRect = new Rectangular());
+        //
+        // // apply the mask
+        // setMask(mMaskGroup);
     }
 
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
      */
-    @Override
-    public void setPosition(final float x, final float y) {
-        super.setPosition(x, y);
-
-        // follow me
-        mMaskGroup.setPosition(x, y);
-    }
+    // @Override
+    // public void setPosition(final float x, final float y) {
+    // super.setPosition(x, y);
+    //
+    // // follow me
+    // mMaskGroup.setPosition(x, y);
+    // }
 
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.containers.VGroup#setSize(float, float)
      */
-    @Override
-    public void setSize(final float w, final float h) {
-        super.setSize(w, h);
-
-        // match the size
-        mMaskRect.setSize(w, h);
-    }
+    // @Override
+    // public void setSize(final float w, final float h) {
+    // super.setSize(w, h);
+    //
+    // // match the size
+    // mMaskRect.setSize(w, h);
+    // }
 
     /*
      * (non-Javadoc)
@@ -85,25 +84,25 @@ public class VList extends VWheel {
      * (non-Javadoc)
      * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
      */
-    @Override
-    public void onAdded(final Container container) {
-        super.onAdded(container);
-
-        // mask needs to be added first
-        container.addChild(mMaskGroup, container.getChildIndex(this));
-    }
+    // @Override
+    // public void onAdded(final Container container) {
+    // super.onAdded(container);
+    //
+    // // mask needs to be added first
+    // container.addChild(mMaskGroup, container.getChildIndex(this));
+    // }
 
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.BaseDisplayObject#onRemoved()
      */
-    @Override
-    public void onRemoved() {
-        super.onRemoved();
-
-        // also remove the mask
-        mMaskGroup.removeFromParent();
-    }
+    // @Override
+    // public void onRemoved() {
+    // super.onRemoved();
+    //
+    // // also remove the mask
+    // mMaskGroup.removeFromParent();
+    // }
 
     /*
      * (non-Javadoc)
