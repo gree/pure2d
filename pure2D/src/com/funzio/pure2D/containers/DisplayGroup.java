@@ -434,15 +434,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      * @return a string that has all the children in Tree format
      */
     @Override
-    public String getTrace(final String prefix) {
+    public String getObjectTree(final String prefix) {
         final StringBuilder sb = new StringBuilder();
-        sb.append(super.getTrace(prefix));
+        sb.append(super.getObjectTree(prefix));
         sb.append("\n");
 
         DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
-            sb.append(child.getTrace(prefix + "   "));
+            sb.append(child.getObjectTree(prefix + "   "));
             sb.append("\n");
         }
 

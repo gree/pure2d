@@ -116,5 +116,5 @@ public interface DisplayObject extends Manipulatable {
 
     public void onRemoved();
 
-    public String getTrace(final String prefix);
+    public String getObjectTree(final String prefix);
 }

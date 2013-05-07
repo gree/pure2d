@@ -1104,7 +1104,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * for debugging
      */
-    public String getTrace(final String prefix) {
+    public String getObjectTree(final String prefix) {
         return prefix + toString();
     }
 }
