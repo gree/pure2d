@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 
 /**
  * @author long
@@ -17,6 +18,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected PointF mScrollPosition = new PointF();
     protected boolean mRepeating = false;
     protected boolean mClipping = true;
+    protected boolean mAutoSleepChildren = false;
 
     private boolean mChildrenPositionInvalidated = false;
 
@@ -134,6 +136,16 @@ public abstract class LinearGroup extends DisplayGroup {
      */
     public void setClipping(final boolean clipping) {
         mClipping = clipping;
+
+        invalidate(InvalidateFlags.VISIBILITY);
+    }
+
+    public boolean isAutoSleepChildren() {
+        return mAutoSleepChildren;
+    }
+
+    public void setAutoSleepChildren(final boolean autoSleepChildren) {
+        mAutoSleepChildren = autoSleepChildren;
     }
 
     public int getAlignment() {

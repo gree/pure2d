@@ -127,6 +127,11 @@ public class HGroup extends LinearGroup implements UIObject {
         for (int i = 0; i < mNumChildren; i++) {
             final DisplayObject child = mChildren.get(i);
             if (child.isVisible() && (!mClipping || isChildInBounds(child))) {
+                if (mAutoSleepChildren) {
+                    // wake child up
+                    child.setAlive(true);
+                }
+
                 // draw frame
                 child.draw(glState);
 
@@ -138,6 +143,11 @@ public class HGroup extends LinearGroup implements UIObject {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
+                }
+            } else {
+                if (mAutoSleepChildren) {
+                    // send child to slepp
+                    child.setAlive(false);
                 }
             }
         }

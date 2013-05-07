@@ -39,6 +39,7 @@ public class BufferTexture extends Texture {
 
         // create an blank texture
         load(null, bitmapWidth, bitmapHeight, 0);
+        // update the bitmap size to re-calculate the scale
         setBitmapSize(bitmapWidth, bitmapHeight, width, height);
     }
 
