@@ -4,9 +4,11 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -996,13 +998,20 @@ public class BaseScene implements Scene {
      * @return
      */
     public String getObjectCounts() {
-        final HashMap<String, Integer> map = new HashMap<String, Integer>();
+        final Map<String, Integer> map = new HashMap<String, Integer>();
         getObjectCounts(this, map);
+
+        // Sort keys by values.
+        List<String> sortedKeys = new ArrayList<String>(map.keySet());
+        Collections.sort(sortedKeys, new Comparator<String>() {
+            public int compare(final String left, final String right) {
+                return map.get(right) - map.get(left);
+            }
+        });
 
         final StringBuilder sb = new StringBuilder();
         int total = 0;
-        final Set<String> keys = map.keySet();
-        for (String key : keys) {
+        for (String key : sortedKeys) {
             final int count = map.get(key);
             sb.append("   ");
             sb.append(key);
