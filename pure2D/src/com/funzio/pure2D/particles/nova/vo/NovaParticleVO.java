@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 
 /**
@@ -42,6 +43,10 @@ public class NovaParticleVO extends NovaEntryVO {
     public ArrayList<String> motion_trail;
     public ArrayList<String> blend_mode;
     public ArrayList<Float> alpha;
+    public ArrayList<GLColor> color;
+    public ArrayList<Float> rotation;
+    public ArrayList<Float> scale_x;
+    public ArrayList<Float> scale_y;
 
     public NovaParticleVO(final JSONObject json) throws JSONException {
         super(json);
@@ -85,6 +90,10 @@ public class NovaParticleVO extends NovaEntryVO {
         animator = NovaVO.getListString(json, "animator");
         blend_mode = NovaVO.getListString(json, "blend_mode");
         alpha = NovaVO.getListFloat(json, "alpha");
+        color = NovaVO.getListColor(json, "color");
+        rotation = NovaVO.getListFloat(json, "rotation");
+        scale_x = NovaVO.getListFloat(json, "scale_x");
+        scale_y = NovaVO.getListFloat(json, "scale_y");
         motion_trail = NovaVO.getListString(json, "motion_trail");
     }
 

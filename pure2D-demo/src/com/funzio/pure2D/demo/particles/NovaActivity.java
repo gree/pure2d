@@ -158,7 +158,7 @@ public class NovaActivity extends StageActivity {
     public void finish() {
         super.finish();
 
-        Log.d(TAG, mScene.getObjectCounts());
+        // Log.d(TAG, mScene.getObjectCounts());
     }
 
     private void loadTextures() {
