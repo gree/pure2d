@@ -43,6 +43,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
     public static final String WHIRL = "whirl";
     public static final String COLOR = "color";
     public static final String DELAY = "delay";
+    public static final String SET = "set";
 
     public String name;
     public String type;
@@ -139,6 +140,8 @@ public abstract class AnimatorVO extends NovaEntryVO {
             return new ColorAnimatorVO(json);
         } else if (type.equalsIgnoreCase(DELAY)) {
             return new DelayAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(SET)) {
+            return new PropertiesSetterVO(json);
         } else {
             return null;
         }
