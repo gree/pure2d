@@ -90,6 +90,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * This is used for 3D projection
      * 
      * @return
+     * @see #setPerspectiveEnabled(boolean)
      */
     protected PointF getSceneSize() {
         final Scene scene = getScene();
@@ -1058,7 +1059,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     /**
-     * @see {@link Scene#setDepthRange(float, float)}
+     * @see {@link Scene#setDepthRange(float, float)}, {@link #getSceneSize()}
      */
     public void setPerspectiveEnabled(final boolean perspectiveEnabled) {
         mPerspectiveEnabled = perspectiveEnabled;
