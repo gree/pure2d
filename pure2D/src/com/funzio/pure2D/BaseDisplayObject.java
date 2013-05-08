@@ -64,7 +64,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected GLColor mColor = null;
     protected float mAlpha = 1;
     protected BlendFunc mBlendFunc;
-    private boolean mAlphaTestEnabled = false;
+    protected boolean mAlphaTestEnabled = false;
 
     private boolean mHasOrigin = false;
     private GLColor mSumColor;

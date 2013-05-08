@@ -60,10 +60,15 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         // add offsets
         mPosition.x += NovaConfig.getInt(mParticleVO.x, emitIndex, 0);
         mPosition.y += NovaConfig.getInt(mParticleVO.y, emitIndex, 0);
+        mZ = NovaConfig.getFloat(mParticleVO.z, emitIndex, 0);
+        mAlphaTestEnabled = mZ > 0;
+        mScale.x = NovaConfig.getFloat(mParticleVO.scale_x, emitIndex, 1);
+        mScale.y = NovaConfig.getFloat(mParticleVO.scale_y, emitIndex, 1);
+        mRotation = NovaConfig.getFloat(mParticleVO.rotation, emitIndex, 0);
         mAlpha = NovaConfig.getFloat(mParticleVO.alpha, emitIndex, 1);
-        mScale.x = mScale.y = 1;
-        mRotation = 0;
-        mColor = null;
+        mColor = NovaConfig.getColor(mParticleVO.color, emitIndex, null);
+        mBlendFunc = NovaConfig.getBlendFunc(NovaConfig.getString(mParticleVO.blend_mode, emitIndex));
+        mTexture = null;
 
         // now, find optional animator
         if (mParticleVO.animator != null && !mParticleVO.animator.isEmpty()) {
@@ -81,12 +86,6 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
                 addManipulator(mAnimator);
             }
         }
-
-        // and others attributes
-        setBlendFunc(NovaConfig.getBlendFunc(NovaConfig.getString(mParticleVO.blend_mode, emitIndex)));
-        // z depth
-        setZ(NovaConfig.getFloat(mParticleVO.z, emitIndex, 0));
-        setAlphaTestEnabled(getZ() > 0);
 
         // delegate something to this particle, such as AtlasFrameSet
         if (mNovaEmitter.mFactory.mNovaDelegator != null) {
