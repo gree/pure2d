@@ -5,14 +5,20 @@ import javax.microedition.khronos.opengles.GL10;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.demo.animations.AnimationActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
 
 public class MotionTrailShapeActivity extends StageActivity {
+
+    private Interpolator mInterpolator;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -27,6 +33,15 @@ public class MotionTrailShapeActivity extends StageActivity {
                 }
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
+     */
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_motion_trail;
     }
 
     // private void addObject(float x, float y) {
@@ -76,8 +91,27 @@ public class MotionTrailShapeActivity extends StageActivity {
         trail.setStrokeColors(color1, color2);
         trail.setMinLength(100);
         trail.setTarget(obj);
+        trail.setStrokeInterpolator(mInterpolator);
         mScene.addChild(trail);
 
+    }
+
+    private void setStrokeInterpolator(final Interpolator interpolator) {
+        mInterpolator = interpolator;
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                final int num = mScene.getNumChildren();
+                for (int i = 0; i < num; i++) {
+                    DisplayObject child = mScene.getChildAt(i);
+                    if (child instanceof MotionTrailShape) {
+                        ((MotionTrailShape) child).setStrokeInterpolator(interpolator);
+                    }
+                }
+
+            }
+        });
     }
 
     @Override
@@ -95,5 +129,47 @@ public class MotionTrailShapeActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickRadio(final View view) {
+
+        // tween specific switches
+        switch (view.getId()) {
+            case R.id.radio_linear:
+                setStrokeInterpolator(null);
+                break;
+
+            case R.id.radio_accelarate:
+                setStrokeInterpolator(AnimationActivity.ACCELERATE);
+                break;
+
+            case R.id.radio_decelarate:
+                setStrokeInterpolator(AnimationActivity.DECELERATE);
+                break;
+
+            case R.id.radio_accelerate_decelarate:
+                setStrokeInterpolator(AnimationActivity.ACCELERATE_DECELERATE);
+                break;
+
+            case R.id.radio_bounce:
+                setStrokeInterpolator(AnimationActivity.BOUNCE);
+                break;
+
+            case R.id.radio_anticipate:
+                setStrokeInterpolator(AnimationActivity.ANTICIPATE);
+                break;
+
+            case R.id.radio_anticipate_overshoot:
+                setStrokeInterpolator(AnimationActivity.ANTICIPATE_OVERSHOOT);
+                break;
+
+            case R.id.radio_overshoot:
+                setStrokeInterpolator(AnimationActivity.OVERSHOOT);
+                break;
+
+            case R.id.radio_cycle:
+                setStrokeInterpolator(AnimationActivity.CYCLE);
+                break;
+        }
     }
 }

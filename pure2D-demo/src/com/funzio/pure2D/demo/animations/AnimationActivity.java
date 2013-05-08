@@ -26,14 +26,14 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
 public abstract class AnimationActivity extends StageActivity {
-    protected static final AccelerateInterpolator ACCELERATE = new AccelerateInterpolator();
-    protected static final DecelerateInterpolator DECELERATE = new DecelerateInterpolator();
-    protected static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
-    protected static final BounceInterpolator BOUNCE = new BounceInterpolator();
-    protected static final AnticipateInterpolator ANTICIPATE = new AnticipateInterpolator();
-    protected static final AnticipateOvershootInterpolator ANTICIPATE_OVERSHOOT = new AnticipateOvershootInterpolator();
-    protected static final OvershootInterpolator OVERSHOOT = new OvershootInterpolator();
-    protected static final CycleInterpolator CYCLE = new CycleInterpolator(1);
+    public static final AccelerateInterpolator ACCELERATE = new AccelerateInterpolator();
+    public static final DecelerateInterpolator DECELERATE = new DecelerateInterpolator();
+    public static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
+    public static final BounceInterpolator BOUNCE = new BounceInterpolator();
+    public static final AnticipateInterpolator ANTICIPATE = new AnticipateInterpolator();
+    public static final AnticipateOvershootInterpolator ANTICIPATE_OVERSHOOT = new AnticipateOvershootInterpolator();
+    public static final OvershootInterpolator OVERSHOOT = new OvershootInterpolator();
+    public static final CycleInterpolator CYCLE = new CycleInterpolator(1);
     protected static final int OBJ_SIZE = 128;
 
     protected Texture mTexture;
