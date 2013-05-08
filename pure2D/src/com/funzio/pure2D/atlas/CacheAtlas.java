@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.util.Log;
 
 import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.BufferTexture;
@@ -64,7 +65,7 @@ public class CacheAtlas extends Atlas {
      */
     private void generateFrames() {
         final int frames = mTarget.getNumFrames();
-        mFrameBuffer.bind();
+        mFrameBuffer.bind(Scene.AXIS_TOP_LEFT); // invert
 
         // draw bg
         // Rectangular rect = new Rectangular();

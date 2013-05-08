@@ -16,6 +16,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
@@ -173,7 +174,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
                 initBuffer(texture, filenames.length);
 
                 // start drawing images to the frame buffer
-                mFrameBuffer.bind();
+                mFrameBuffer.bind(Scene.AXIS_TOP_LEFT);
             }
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
@@ -261,7 +262,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
                 initBuffer(texture, files.length);
 
                 // start drawing images to the frame buffer
-                mFrameBuffer.bind();
+                mFrameBuffer.bind(Scene.AXIS_TOP_LEFT);
             }
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
@@ -320,7 +321,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
 
     protected void createFrames() {
         // start drawing images to the frame buffer
-        mFrameBuffer.bind();
+        mFrameBuffer.bind(Scene.AXIS_TOP_LEFT);
         for (int i = 0; i < mTextures.length; i++) {
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
@@ -352,7 +353,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
 
         if (autoBind) {
             // start drawing to the frame buffer
-            mFrameBuffer.bind();
+            mFrameBuffer.bind(Scene.AXIS_TOP_LEFT);
         }
 
         if (mDrawer == null) {
