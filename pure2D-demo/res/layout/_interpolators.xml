@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <RadioGroup
+        android:id="@+id/radio_group_interpolator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/radio_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onClickRadio"
+            android:text="@string/linear" />
+
+        <RadioButton
+            android:id="@+id/radio_accelarate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/accelerate" />
+
+        <RadioButton
+            android:id="@+id/radio_decelarate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/decelerate" />
+
+        <RadioButton
+            android:id="@+id/radio_accelerate_decelarate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/accelerate_decelerate" />
+
+        <RadioButton
+            android:id="@+id/radio_bounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/bounce" />
+
+        <RadioButton
+            android:id="@+id/radio_anticipate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/anticipate" />
+
+        <RadioButton
+            android:id="@+id/radio_anticipate_overshoot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/anticipate_overshoot" />
+
+        <RadioButton
+            android:id="@+id/radio_overshoot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/overshoot" />
+
+        <RadioButton
+            android:id="@+id/radio_cycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:onClick="onClickRadio"
+            android:text="@string/cycle" />
+    </RadioGroup>
+
+</merge>
