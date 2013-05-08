@@ -289,7 +289,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mInvalidateFlags = InvalidateFlags.ALL;
 
         if (mParent != null) {
-            mParent.invalidate(mInvalidateFlags | InvalidateFlags.CHILDREN);
+            mParent.invalidate(InvalidateFlags.CHILDREN);
         }
     }
 
@@ -300,7 +300,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mInvalidateFlags |= flags;
 
         if (mParent != null) {
-            mParent.invalidate(mInvalidateFlags | InvalidateFlags.CHILDREN);
+            mParent.invalidate(InvalidateFlags.CHILDREN);
         }
     }
 
