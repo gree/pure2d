@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -30,9 +31,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected boolean mTouchable = true; // true by default
 
     // cache
-    private FrameBuffer mCacheFrameBuffer;
-    private Sprite mCacheSprite;
-    private boolean mCacheEnabled = false;
+    protected FrameBuffer mCacheFrameBuffer;
+    protected Sprite mCacheSprite;
+    protected boolean mCacheEnabled = false;
+    protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
 
     public DisplayGroup() {
         super();
@@ -109,19 +111,20 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                     // init sprite
                     if (mCacheSprite == null) {
                         mCacheSprite = new Sprite();
+                        mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
                     }
                     mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
                 }
 
                 // cache to framebuffer
-                mCacheFrameBuffer.bind();
+                mCacheFrameBuffer.bind(mCacheProjection);
                 mCacheFrameBuffer.clear();
                 drawChildren(glState);
                 mCacheFrameBuffer.unbind();
             }
 
             // now draw the cache
-            drawCache(glState, mCacheSprite);
+            mCacheSprite.draw(glState);
         } else {
             // draw the children directly
             drawChildren(glState);
@@ -133,15 +136,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         mInvalidateFlags = 0;
 
         return true;
-    }
-
-    /**
-     * @param glState
-     * @param cacheSprite
-     * @see #setCacheEnabled(boolean)
-     */
-    protected void drawCache(final GLState glState, final Sprite cacheSprite) {
-        cacheSprite.draw(glState);
     }
 
     @Override
@@ -487,6 +481,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
         mCacheEnabled = cacheEnabled;
+
+        invalidate(InvalidateFlags.CHILDREN);
+    }
+
+    public int getCacheProjection() {
+        return mCacheProjection;
+    }
+
+    public void setCacheProjection(final int cacheProjection) {
+        mCacheProjection = cacheProjection;
 
         invalidate(InvalidateFlags.CHILDREN);
     }

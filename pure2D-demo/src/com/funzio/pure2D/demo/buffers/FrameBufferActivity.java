@@ -51,7 +51,7 @@ public class FrameBufferActivity extends StageActivity {
         mFrameBuffer = new FrameBuffer(mScene.getGLState(), FB_WIDTH, FB_HEIGHT, true);
         mTexture = mFrameBuffer.getTexture();
 
-        mFrameBuffer.bind();
+        mFrameBuffer.bind(Scene.AXIS_TOP_LEFT); // invert
         // start drawing to the frame buffer
         Rectangular rect = new Rectangular();
         rect.setSize(32f, 32f);

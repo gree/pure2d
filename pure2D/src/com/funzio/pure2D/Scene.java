@@ -17,8 +17,12 @@ import com.funzio.pure2D.gl.gl10.textures.TextureManager;
  * @author long
  */
 public interface Scene extends Renderer, Container {
-    public static final int AXIS_BOTTOM_LEFT = 0;
-    public static final int AXIS_TOP_LEFT = 1;
+
+    // projection methods
+    public static final int AXIS_BOTTOM_LEFT = 0; // orthor projection from bottom-left
+    public static final int AXIS_TOP_LEFT = 1; // othor prjection from top-left
+    public static final int PROJECTION_PERSPECTIVE = 2; // perspective projection
+
     public static final int DEFAULT_FPS = 60; // frame per second
     public static final int DEFAULT_MSPF = 1000 / DEFAULT_FPS; // ms per frame
 

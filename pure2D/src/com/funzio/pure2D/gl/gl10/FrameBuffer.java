@@ -10,6 +10,8 @@ import android.graphics.PointF;
 import android.opengl.GLU;
 import android.util.Log;
 
+import com.funzio.pure2D.Pure2D;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.textures.BufferTexture;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
@@ -120,10 +122,14 @@ public class FrameBuffer {
         mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mOriginalBuffer);
     }
 
+    // public void bind() {
+    // bind(Scene.AXIS_BOTTOM_LEFT);
+    // }
+
     /**
      * Bind this frame buffer
      */
-    public void bind() {
+    public void bind(final int projection) {
         if (mBinded) {
             return;
         }
@@ -145,14 +151,26 @@ public class FrameBuffer {
         mGLState.setViewport(0, 0, mWidth, mHeight);
 
         // set new projection matrix
-        // NOTE: frame-buffer has the Axis inverted
-        mGL.glOrthof(0, mWidth, mHeight, 0, -1, 1);
+        if (projection == Scene.PROJECTION_PERSPECTIVE) {
+            GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, (float) mWidth / (float) mHeight, 0.001f, Math.max(mWidth, mHeight));
+            GLU.gluLookAt(mGL, 0, 0, mHeight, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
+        } else if (projection == Scene.AXIS_TOP_LEFT) {
+            // NOTE: frame-buffer has the Axis inverted
+            mGL.glOrthof(0, mWidth, mHeight, 0, -1, 1);
+        } else {
+            mGL.glOrthof(0, mWidth, 0, mHeight, -1, 1);
+        }
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);
         // Reset the modelview matrix
         mGL.glPushMatrix();
         mGL.glLoadIdentity();
+
+        if (projection == Scene.PROJECTION_PERSPECTIVE) {
+            // offset the translation
+            mGL.glTranslatef(-(float) mWidth / 2f, -(float) mHeight / 2f, 0);
+        }
     }
 
     /**
