@@ -15,11 +15,11 @@ import com.funzio.pure2D.gl.GLFloatBuffer;
  * @author long
  */
 public class VertexBuffer extends GLFloatBuffer {
-    private int mVerticesNum = 0;
-    private int mIndicesNum = 0;
-    private ShortBuffer mIndexBuffer;
-    private int mPrimitive = GL10.GL_TRIANGLES;
-    private int mVertexPointerSize = 2; // only x & y
+    protected int mPrimitive = GL10.GL_TRIANGLES;
+    protected int mVerticesNum = 0;
+    protected int mIndicesNum = 0;
+    protected ShortBuffer mIndexBuffer;
+    protected int mVertexPointerSize = 2; // only x & y
 
     public VertexBuffer(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
         setVertices(primitive, verticesNum, vertices, indices);
@@ -29,7 +29,7 @@ public class VertexBuffer extends GLFloatBuffer {
         setVertices(primitive, verticesNum, vertices, null);
     }
 
-    public void setVertices(final int primitive, final int verticesNum, final float... vertices) {
+    final public void setVertices(final int primitive, final int verticesNum, final float... vertices) {
         setVertices(primitive, verticesNum, vertices, null);
     }
 
