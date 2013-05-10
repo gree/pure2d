@@ -21,6 +21,7 @@ public class TweenAnimator extends BaseAnimator {
 
     protected int mLoopMode = Playable.LOOP_NONE;
     protected int mLoopCount = -1; // forever
+    protected int mTripCount = 0;
 
     public TweenAnimator() {
         super();
@@ -42,6 +43,7 @@ public class TweenAnimator extends BaseAnimator {
 
         // clear the values
         mLastValue = mCurrentValue = mCurrentUninterpolatedValue = (mReversed ? 1 : 0);
+        mTripCount = 0;
     }
 
     /*
@@ -79,6 +81,11 @@ public class TweenAnimator extends BaseAnimator {
                 }
                 // and update
                 onUpdate(mCurrentValue);
+            }
+
+            if (trips > mTripCount) {
+                mTripCount = trips;
+                onLoop();
             }
 
             return true;
@@ -186,5 +193,9 @@ public class TweenAnimator extends BaseAnimator {
         if (mListener != null) {
             mListener.onAnimationUpdate(this, value);
         }
+    }
+
+    protected void onLoop() {
+        // TOOD
     }
 }
