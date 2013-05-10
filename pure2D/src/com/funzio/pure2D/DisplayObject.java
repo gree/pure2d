@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
@@ -71,6 +72,10 @@ public interface DisplayObject extends Manipulatable {
     public float getAlpha();
 
     public void setAlpha(final float alpha);
+
+    public void setBlendFunc(final BlendFunc blendFunc);
+
+    public BlendFunc getBlendFunc();
 
     public void setFps(int value);
 

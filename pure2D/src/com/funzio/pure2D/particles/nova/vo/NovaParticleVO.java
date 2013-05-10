@@ -27,18 +27,18 @@ public class NovaParticleVO extends NovaEntryVO {
     // the containing layer
     public int layer = 0;
 
+    // sprite or clip, optional
+    public ArrayList<String> sprite;
+    public ArrayList<Integer> start_frame;
+    public ArrayList<String> loop_mode;
+
     // the sprite origin, center by default
     public int origin_x = -1;
     public int origin_y = -1;
-
-    // optional
-    public ArrayList<String> sprite;
-    public ArrayList<Integer> start_frame;
-    // offset x, y
+    // DisplayObject's properties, optional
     public ArrayList<Integer> x;
     public ArrayList<Integer> y;
     public ArrayList<Float> z;
-
     public ArrayList<String> animator;
     public ArrayList<String> motion_trail;
     public ArrayList<String> blend_mode;
@@ -81,9 +81,12 @@ public class NovaParticleVO extends NovaEntryVO {
             origin_y = json.getInt("origin_y");
         }
 
-        // optional
+        // optional sprite or clip
         sprite = NovaVO.getListString(json, "sprite");
         start_frame = NovaVO.getListInt(json, "start_frame");
+        loop_mode = NovaVO.getListString(json, "loop_mode");
+
+        // basic DisplayObject's properties
         x = NovaVO.getListInt(json, "x");
         y = NovaVO.getListInt(json, "y");
         z = NovaVO.getListFloat(json, "z");
