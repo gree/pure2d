@@ -94,6 +94,11 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
 
         if (getAtlasFrameSet() != null) {
             playAt(Math.min(NovaConfig.getInt(mParticleVO.start_frame, emitIndex, 0), getNumFrames() - 1));
+            if (mParticleVO.loop_mode != null) {
+                setLoop(NovaConfig.getLoopMode(NovaConfig.getString(mParticleVO.loop_mode, emitIndex)));
+            } else {
+                setLoop(LOOP_REPEAT); // repeat by default
+            }
         } else if (mTexture == null) {
             // just a dummy box
             setSize(50, 50);
