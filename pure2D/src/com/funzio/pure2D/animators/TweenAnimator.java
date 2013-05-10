@@ -60,6 +60,15 @@ public class TweenAnimator extends BaseAnimator {
                 end();
             } else {
 
+                // detect loop
+                if (trips > mTripCount) {
+                    mTripCount = trips;
+                    if (mLoopMode != Playable.LOOP_NONE) {
+                        // callback
+                        onLoop();
+                    }
+                }
+
                 if (mLoopMode == Playable.LOOP_REPEAT) {
                     timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                 } else if (mLoopMode == Playable.LOOP_REVERSE) {
@@ -81,11 +90,6 @@ public class TweenAnimator extends BaseAnimator {
                 }
                 // and update
                 onUpdate(mCurrentValue);
-            }
-
-            if (trips > mTripCount) {
-                mTripCount = trips;
-                onLoop();
             }
 
             return true;
