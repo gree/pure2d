@@ -167,4 +167,15 @@ public class PathAnimator extends TweenAnimator {
         mSnapEnabled = snapEnabled;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.TweenAnimator#onLoop()
+     */
+    @Override
+    protected void onLoop() {
+        super.onLoop();
+
+        mCurrentSegment = 0;
+    }
+
 }
