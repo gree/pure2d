@@ -17,6 +17,7 @@ public class VBO extends VertexBuffer {
     private int mVertexID = 0;
     private int mIndexID = 0;
     private boolean mInvalidated = false;
+    private final int[] mScratch = new int[1];
 
     public VBO(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
         super(primitive, verticesNum, vertices, indices);
@@ -26,9 +27,13 @@ public class VBO extends VertexBuffer {
         super(primitive, verticesNum, vertices);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.gl.GLFloatBuffer#setValues(float[])
+     */
     @Override
-    public void setVertices(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
-        super.setVertices(primitive, verticesNum, vertices, indices);
+    public void setValues(final float... values) {
+        super.setValues(values);
 
         // flag
         mInvalidated = true;
@@ -44,21 +49,20 @@ public class VBO extends VertexBuffer {
 
         if (mVertexID == 0 || mInvalidated) {
 
-            final int[] temp = new int[1];
             if (mVertexID != 0) {
-                temp[0] = mVertexID;
+                mScratch[0] = mVertexID;
                 // unload it
-                GLES11.glDeleteBuffers(1, temp, 0);
+                GLES11.glDeleteBuffers(1, mScratch, 0);
             }
             if (mIndexID != 0) {
-                temp[0] = mIndexID;
+                mScratch[0] = mIndexID;
                 // unload it
-                GLES11.glDeleteBuffers(1, temp, 0);
+                GLES11.glDeleteBuffers(1, mScratch, 0);
             }
 
             // create new vertex id
-            GLES11.glGenBuffers(1, temp, 0);
-            mVertexID = temp[0];
+            GLES11.glGenBuffers(1, mScratch, 0);
+            mVertexID = mScratch[0];
             // bind it
             GLES11.glBindBuffer(GL11.GL_ARRAY_BUFFER, mVertexID);
             // load it
@@ -66,8 +70,8 @@ public class VBO extends VertexBuffer {
 
             if (mIndicesNum > 0) {
                 // create new index id
-                GLES11.glGenBuffers(1, temp, 0);
-                mIndexID = temp[0];
+                GLES11.glGenBuffers(1, mScratch, 0);
+                mIndexID = mScratch[0];
                 // bind it
                 GLES11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, mIndexID);
                 // load it
@@ -104,16 +108,14 @@ public class VBO extends VertexBuffer {
 
     public void unload() {
         if (mVertexID == 0) {
-            final int[] buffers = {
-                mVertexID
-            };
-            GLES11.glDeleteBuffers(1, buffers, 0);
+            mScratch[0] = mVertexID;
+            GLES11.glDeleteBuffers(1, mScratch, 0);
             mVertexID = 0;
 
             // check index
             if (mIndexID != 0) {
-                buffers[0] = mIndexID;
-                GLES11.glDeleteBuffers(1, buffers, 0);
+                mScratch[0] = mIndexID;
+                GLES11.glDeleteBuffers(1, mScratch, 0);
                 mIndexID = 0;
             }
         }
