@@ -28,7 +28,12 @@ public class PathAnimator extends TweenAnimator {
     public void setValues(final PointF... points) {
         mPoints = points;
 
+        // safety check
         final int n = points.length;
+        if (n < 2) {
+            return;
+        }
+
         mSin = new float[n - 1];
         mCos = new float[n - 1];
         mSegments = new float[n - 1];
@@ -65,7 +70,7 @@ public class PathAnimator extends TweenAnimator {
 
     @Override
     protected void onUpdate(final float value) {
-        if (mTarget != null) {
+        if (mTarget != null && mSegments != null) {
 
             if (mSnapEnabled) {
                 final int newSegment = getSegment(value);

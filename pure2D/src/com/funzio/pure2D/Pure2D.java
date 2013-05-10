@@ -31,10 +31,10 @@ public class Pure2D {
     public static final int DEBUG_FLAG_GLOBAL_BOUNDS = 1 << 1;
 
     public static int DEBUG_FLAGS = 0;
-    public static float DEBUG_WIREFRAME_WIDTH = 2;
+    public static float DEBUG_WIREFRAME_WIDTH = 1;
     public static GLColor DEBUG_WIREFRAME_COLOR = new GLColor(1f, 0f, 0f, 1f);
-    public static float DEBUG_GLOBAL_BOUNDS_WIDTH = 4;
-    public static GLColor DEBUG_GLOBAL_BOUNDS_COLOR = new GLColor(1f, 1f, 0f, 0.5f);
+    public static float DEBUG_GLOBAL_BOUNDS_WIDTH = 1;
+    public static GLColor DEBUG_GLOBAL_BOUNDS_COLOR = new GLColor(1f, 1f, 0f, 1f);
     private static final float[] DEBUG_VERTICES = {
             0, 0, // BL
             0, 0, // TL
