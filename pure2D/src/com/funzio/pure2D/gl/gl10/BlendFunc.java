@@ -15,6 +15,9 @@ public final class BlendFunc {
     public int src = DEFAULT_SRC;
     public int dst = DEFAULT_DST;
 
+    // public int equation = GL11ExtensionPack.GL_FUNC_ADD; // by default
+    // For subtractive: GLES11Ext.glBlendEquationOES(equation = GL11ExtensionPack.GL_FUNC_SUBTRACT);
+
     public BlendFunc() {
         // nothing
     }
