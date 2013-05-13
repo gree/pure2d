@@ -200,7 +200,6 @@ public class Shape extends BaseDisplayObject {
         final GLColor currentColor = glState.getColor();
         final boolean textureEnabled = glState.isTextureEnabled();
         final float currentLineWidth = glState.getLineWidth();
-        glState.setLineWidth(Pure2D.DEBUG_WIREFRAME_WIDTH);
         glState.setColor(Pure2D.DEBUG_WIREFRAME_COLOR);
         glState.setTextureEnabled(false);
 
