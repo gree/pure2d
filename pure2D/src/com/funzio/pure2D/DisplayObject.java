@@ -51,6 +51,10 @@ public interface DisplayObject extends Manipulatable {
 
     public void setPivotAtCenter();
 
+    public void setSkew(final float kx, final float ky);
+
+    public PointF getSkew();
+
     public void setAlive(final boolean value);
 
     public boolean isAlive();

@@ -47,6 +47,8 @@ public class NovaParticleVO extends NovaEntryVO {
     public ArrayList<Float> rotation;
     public ArrayList<Float> scale_x;
     public ArrayList<Float> scale_y;
+    public ArrayList<Float> skew_x;
+    public ArrayList<Float> skew_y;
 
     public NovaParticleVO(final JSONObject json) throws JSONException {
         super(json);
@@ -97,6 +99,8 @@ public class NovaParticleVO extends NovaEntryVO {
         rotation = NovaVO.getListFloat(json, "rotation");
         scale_x = NovaVO.getListFloat(json, "scale_x");
         scale_y = NovaVO.getListFloat(json, "scale_y");
+        skew_x = NovaVO.getListFloat(json, "skew_x");
+        skew_y = NovaVO.getListFloat(json, "skew_y");
         motion_trail = NovaVO.getListString(json, "motion_trail");
     }
 

@@ -86,6 +86,17 @@
 		},
 
 		{
+			"name": "skew1",
+			"type": "skew",
+			"x_from": 0,
+			"x_to": 1,
+			"y_from": 0,
+			"y_to": 1.5,
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
 			"name": "alpha1",
 			"type": "alpha",
 			"from": 1,

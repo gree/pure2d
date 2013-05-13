@@ -7,7 +7,6 @@ import android.graphics.PointF;
 
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.atlas.AtlasFrame;
-import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
@@ -16,7 +15,10 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  */
 public class Sprite extends Rectangular {
     private boolean mSizeToTexture = true;
+
     protected AtlasFrame mAtlasFrame;
+    protected float mOffsetX = 0;
+    protected float mOffsetY = 0;
 
     public Sprite() {
         super();
@@ -55,6 +57,19 @@ public class Sprite extends Rectangular {
             }
 
             setTextureCoordBuffer(frame.getTextureCoords());
+
+            // offset check
+            if (frame.mOffset != null) {
+                // add the offset
+                setOrigin(mOrigin.x - (frame.mOffset.x - mOffsetX), mOrigin.y - (frame.mOffset.y - mOffsetY));
+                mOffsetX = frame.mOffset.x;
+                mOffsetY = frame.mOffset.y;
+            } else if (mOffsetX != 0 || mOffsetY != 0) {
+                // cancel previous offset
+                setOrigin(mOrigin.x + mOffsetX, mOrigin.y + mOffsetY);
+                mOffsetX = mOffsetY = 0;
+            }
+
             // size changed?
             final PointF newSize = frame.getSize();
             if (newSize.x != mSize.x || newSize.y != mSize.y) {
@@ -64,6 +79,11 @@ public class Sprite extends Rectangular {
             }
         } else {
             setTextureCoordBuffer(TextureCoordBuffer.getDefault());
+            if (mOffsetX != 0 || mOffsetY != 0) {
+                // cancel previous offset
+                setOrigin(mOrigin.x + mOffsetX, mOrigin.y + mOffsetY);
+                mOffsetX = mOffsetY = 0;
+            }
             // fit size to texture
             if (mTexture != null && mSizeToTexture) {
                 setSize(mTexture.getSize());
@@ -83,23 +103,23 @@ public class Sprite extends Rectangular {
      * (non-Javadoc)
      * @see com.funzio.pure2D.shapes.Shape#draw(com.funzio.pure2D.gl.gl10.GLState)
      */
-    @Override
-    public boolean draw(final GLState glState) {
-
-        if (mAtlasFrame != null && mAtlasFrame.mOffset != null) {
-            final PointF offset = mAtlasFrame.mOffset;
-            if (offset.x != 0 || offset.y != 0) {
-
-                // shift
-                glState.mGL.glTranslatef(offset.x, offset.y, 0);
-                super.draw(glState);
-                // unshift
-                glState.mGL.glTranslatef(-offset.x, -offset.y, 0);
-
-                return true;
-            }
-        }
-
-        return super.draw(glState);
-    }
+    // @Override
+    // public boolean draw(final GLState glState) {
+    //
+    // if (mAtlasFrame != null && mAtlasFrame.mOffset != null) {
+    // final PointF offset = mAtlasFrame.mOffset;
+    // if (offset.x != 0 || offset.y != 0) {
+    //
+    // // shift
+    // glState.mGL.glTranslatef(offset.x, offset.y, 0);
+    // super.draw(glState);
+    // // unshift
+    // glState.mGL.glTranslatef(-offset.x, -offset.y, 0);
+    //
+    // return true;
+    // }
+    // }
+    //
+    // return super.draw(glState);
+    // }
 }

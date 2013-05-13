@@ -64,6 +64,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         mAlphaTestEnabled = mZ > 0;
         mScale.x = NovaConfig.getFloat(mParticleVO.scale_x, emitIndex, 1);
         mScale.y = NovaConfig.getFloat(mParticleVO.scale_y, emitIndex, 1);
+        setSkew(NovaConfig.getFloat(mParticleVO.skew_x, emitIndex, 0), NovaConfig.getFloat(mParticleVO.skew_y, emitIndex, 0));
         mRotation = NovaConfig.getFloat(mParticleVO.rotation, emitIndex, 0);
         mAlpha = NovaConfig.getFloat(mParticleVO.alpha, emitIndex, 1);
         mColor = NovaConfig.getColor(mParticleVO.color, emitIndex, null);

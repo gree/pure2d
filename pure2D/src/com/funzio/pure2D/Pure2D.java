@@ -29,11 +29,9 @@ public class Pure2D {
     // for debugging
     public static final int DEBUG_FLAG_WIREFRAME = 1 << 0;
     public static final int DEBUG_FLAG_GLOBAL_BOUNDS = 1 << 1;
+    public static int DEBUG_FLAGS = 0; // DEBUG_FLAG_GLOBAL_BOUNDS | DEBUG_FLAG_WIREFRAME;
 
-    public static int DEBUG_FLAGS = 0;
-    public static float DEBUG_WIREFRAME_WIDTH = 1;
     public static GLColor DEBUG_WIREFRAME_COLOR = new GLColor(1f, 0f, 0f, 1f);
-    public static float DEBUG_GLOBAL_BOUNDS_WIDTH = 1;
     public static GLColor DEBUG_GLOBAL_BOUNDS_COLOR = new GLColor(1f, 1f, 0f, 1f);
     private static final float[] DEBUG_VERTICES = {
             0, 0, // BL
@@ -70,7 +68,6 @@ public class Pure2D {
         final GLColor currentColor = glState.getColor();
         final boolean textureEnabled = glState.isTextureEnabled();
         final float currentLineWidth = glState.getLineWidth();
-        glState.setLineWidth((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? DEBUG_GLOBAL_BOUNDS_WIDTH : DEBUG_WIREFRAME_WIDTH);
         glState.setColor((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? DEBUG_GLOBAL_BOUNDS_COLOR : DEBUG_WIREFRAME_COLOR);
         glState.setTextureEnabled(false);
 
