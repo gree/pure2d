@@ -72,7 +72,7 @@ public class Clip extends Sprite implements Playable {
     public void setOriginAtCenter() {
         if (mFrameSet != null) {
             final PointF maxSize = mFrameSet.getFrameMaxSize();
-            super.setOrigin(maxSize.x / 2f, maxSize.y / 2f);
+            super.setOrigin(maxSize.x * 0.5f - mOffsetX, maxSize.y * 0.5f - mOffsetY);
         } else {
             super.setOriginAtCenter();
         }
@@ -84,8 +84,6 @@ public class Clip extends Sprite implements Playable {
      */
     @Override
     public boolean update(final int deltaTime) {
-        final boolean returned = super.update(deltaTime);
-
         // get next frame
         if (mNumFrames > 1 && mPlaying) {
             int frames = 1;
@@ -135,7 +133,7 @@ public class Clip extends Sprite implements Playable {
             setAtlasFrame(mFrameSet.getFrame(mCurrentFrame));
         }
 
-        return returned;
+        return super.update(deltaTime);
     }
 
     public void play() {

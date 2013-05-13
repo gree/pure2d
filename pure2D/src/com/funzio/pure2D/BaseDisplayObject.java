@@ -122,8 +122,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // wrap up
         drawEnd(glState);
 
-        // validate everything
-        mInvalidateFlags = 0;
+        // validate visual
+        mInvalidateFlags &= ~InvalidateFlags.VISUAL;
 
         return true;
     }
@@ -151,7 +151,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
 
                 // offset the translation
-                gl.glTranslatef(-mSceneSize.x / 2, -mSceneSize.y / 2, 0);
+                gl.glTranslatef(-mSceneSize.x * 0.5f, -mSceneSize.y * 0.5f, 0);
             }
         }
 
@@ -241,9 +241,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
             Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
             gl.glPopMatrix();
         }
-
-        // clear all visual flags
-        validate(InvalidateFlags.VISUAL);
     }
 
     protected void drawWireframe(final GLState glState) {
@@ -256,6 +253,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     @Override
     public boolean update(final int deltaTime) {
+        // update the manipulators if there's any
+        if (mNumManipulators > 0) {
+            for (int i = 0; i < mNumManipulators; i++) {
+                mManipulators.get(i).update(deltaTime);
+            }
+        }
+
         if ((mInvalidateFlags & InvalidateFlags.TRANSFORM_MATRIX) != 0) {
             if (mTransformMatrix != null) {
                 if (mTransformMatrixValues == null) {
@@ -271,15 +275,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
             updateBounds();
         }
 
-        // update the manipulators if there's any
-        if (mNumManipulators > 0) {
-            for (int i = 0; i < mNumManipulators; i++) {
-                mManipulators.get(i).update(deltaTime);
-            }
-            return true;
-        }
-
-        return false;
+        return mNumManipulators > 0;
     }
 
     /**
@@ -444,12 +440,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @param origin the origin to set. Origin is the local point and (0,0) by default. Origin is used to define offset of this object and also the center of rotation and scaling.
      */
-    public void setOrigin(final PointF origin) {
-        mOrigin.x = origin.x;
-        mOrigin.y = origin.y;
-        mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
-
-        invalidate(InvalidateFlags.ORIGIN);
+    final public void setOrigin(final PointF origin) {
+        setOrigin(origin.x, origin.y);
     }
 
     public void setOrigin(final float x, final float y) {
@@ -461,11 +453,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setOriginAtCenter() {
-        mOrigin.x = mSize.x / 2;
-        mOrigin.y = mSize.y / 2;
-        mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
-
-        invalidate(InvalidateFlags.ORIGIN);
+        setOrigin(mSize.x * 0.5f, mSize.y * 0.5f);
     }
 
     public PointF getPivot() {
@@ -473,23 +461,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setPivot(final PointF pivot) {
-        mPivot = pivot;
+        mPivot.x = pivot.x;
+        mPivot.y = pivot.y;
 
-        invalidate(InvalidateFlags.ORIGIN);
+        invalidate(InvalidateFlags.PIVOT);
     }
 
     public void setPivot(final float x, final float y) {
         mPivot.x = x;
         mPivot.y = y;
 
-        invalidate(InvalidateFlags.ORIGIN);
+        invalidate(InvalidateFlags.PIVOT);
     }
 
     public void setPivotAtCenter() {
-        mPivot.x = mSize.x / 2;
-        mPivot.y = mSize.y / 2;
+        mPivot.x = mSize.x * 0.5f;
+        mPivot.y = mSize.y * 0.5f;
 
-        invalidate(InvalidateFlags.ORIGIN);
+        invalidate(InvalidateFlags.PIVOT);
     }
 
     /**
@@ -603,7 +592,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setTransformationMatrix(final Matrix matrix) {
         mTransformMatrix = matrix;
 
-        invalidate(InvalidateFlags.TRANSFORM_MATRIX | InvalidateFlags.BOUNDS);
+        invalidate(InvalidateFlags.TRANSFORM_MATRIX);
     }
 
     public Matrix getTransformMatrix() {
@@ -955,7 +944,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // rotation first
-        if (mRotation != 0 && mRotationVectorX == 0 && mRotationVectorY == 0 && mRotationVectorZ == 1) {
+        if (mRotation != 0 && (mRotationVectorX == 0 && mRotationVectorY == 0 && mRotationVectorZ == 1)) {
             if (changed) {
                 mMatrix.postRotate(mRotation, mOrigin.x + mPivot.x, mOrigin.y + mPivot.y);
             } else {
@@ -977,7 +966,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // clear flags: bounds
-        validate(InvalidateFlags.BOUNDS);
+        mInvalidateFlags &= ~InvalidateFlags.BOUNDS;
 
         // translate later
         if ((mPosition.x - mOrigin.x) != 0 || (mPosition.y - mOrigin.y) != 0) {
