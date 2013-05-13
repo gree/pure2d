@@ -40,11 +40,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected float mRotationVectorY = 0;
     protected float mRotationVectorZ = 1;
     protected float mZ = 0;// z-depth
+    // skewing
+    protected PointF mSkew;
 
     // extra transformation
     protected Matrix mTransformMatrix;
     // some scratch
     protected float[] mTransformMatrixValues;
+    protected boolean mHasTransformValues = false;
 
     // life
     protected boolean mVisible = true;
@@ -106,7 +109,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         drawStart(glState);
 
         // blend mode
-        // final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
         glState.setBlendFunc(mBlendFunc);
         // color and alpha
         glState.setColor(getSumColor());
@@ -114,15 +116,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // draw the content
         drawChildren(glState);
 
-        // if (blendChanged) {
-        // // recover the blending
-        // glState.setBlendFunc(null);
-        // }
-
         // wrap up
         drawEnd(glState);
 
-        // validate visual
+        // validate visual only
         mInvalidateFlags &= ~InvalidateFlags.VISUAL;
 
         return true;
@@ -174,7 +171,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // extra transformation
-        if (mTransformMatrix != null) {
+        if (mHasTransformValues) {
             gl.glMultMatrixf(mTransformMatrixValues, 0);
         }
 
@@ -260,8 +257,22 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
 
+        // check for extra transformation
         if ((mInvalidateFlags & InvalidateFlags.TRANSFORM_MATRIX) != 0) {
-            if (mTransformMatrix != null) {
+            // check and init matrix
+            if (mTransformMatrix == null) {
+                mTransformMatrix = new Matrix();
+            } else {
+                mTransformMatrix.reset();
+            }
+            // apply to 2d matrix
+            if (mSkew != null) {
+                mTransformMatrix.setSkew(mSkew.x, mSkew.y);
+            }
+            mHasTransformValues = !mTransformMatrix.isIdentity();
+
+            // convert to 3d matrix
+            if (mHasTransformValues) {
                 if (mTransformMatrixValues == null) {
                     mTransformMatrixValues = new float[16];
                 }
@@ -275,6 +286,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
             updateBounds();
         }
 
+        // validate transform AFTER updateBounds()
+        mInvalidateFlags &= ~InvalidateFlags.TRANSFORM_MATRIX;
+
         return mNumManipulators > 0;
     }
 
@@ -282,8 +296,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @hide
      */
     final public void invalidate() {
-        // invalidate generally
-        mInvalidateFlags = InvalidateFlags.ALL;
+        // invalidate generally, NOT!
+        // mInvalidateFlags = InvalidateFlags.ALL;
 
         if (mParent != null) {
             mParent.invalidate(InvalidateFlags.CHILDREN);
@@ -589,14 +603,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(InvalidateFlags.ROTATION);
     }
 
-    public void setTransformationMatrix(final Matrix matrix) {
-        mTransformMatrix = matrix;
+    public void setSkew(final float kx, final float ky) {
+        // sanity check for optimization
+        if (kx == 0 && ky == 0 && mSkew == null) {
+            return;
+        }
 
-        invalidate(InvalidateFlags.TRANSFORM_MATRIX);
+        if (mSkew == null) {
+            mSkew = new PointF(kx, ky);
+        } else {
+            mSkew.x = kx;
+            mSkew.y = ky;
+        }
+
+        invalidate(InvalidateFlags.SKEW);
     }
 
-    public Matrix getTransformMatrix() {
-        return mTransformMatrix;
+    public PointF getSkew() {
+        return mSkew;
     }
 
     /**
@@ -928,17 +952,17 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     /**
-     * Find the global bounds of this object that takes position, scale, rotation... into account. Used mainly for Camera clipping.
+     * Find the global bounds of this object that takes position, scale, rotation, skew... into account. Used mainly for Camera clipping and bounds hit-testing.
      */
     public RectF updateBounds() {
         // init
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
         boolean changed = false;
 
-        if (mTransformMatrix != null) {
-            mMatrix.setTranslate(-mOrigin.x, -mOrigin.y);
+        if (mHasTransformValues) {
+            mMatrix.setTranslate(-mOrigin.x - mPivot.x, -mOrigin.y - mPivot.y);
             mMatrix.postConcat(mTransformMatrix);
-            mMatrix.postTranslate(mOrigin.x, mOrigin.y);
+            mMatrix.postTranslate(mOrigin.x + mPivot.x, mOrigin.y + mPivot.y);
             // flag
             changed = true;
         }
@@ -1091,7 +1115,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mScene = findScene();
 
         // flag the bounds are changed now
-        invalidate(InvalidateFlags.BOUNDS);
+        invalidate(InvalidateFlags.POSITION);
     }
 
     /**
