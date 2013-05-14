@@ -24,6 +24,20 @@ public class AtlasFrameSet {
         mName = name;
     }
 
+    public AtlasFrameSet(final String name, final Texture... textures) {
+        mName = name;
+
+        // null check
+        if (textures == null) {
+            return;
+        }
+
+        final int num = textures.length;
+        for (int i = 0; i < num; i++) {
+            addFrame(new AtlasFrame(textures[i], i, null));
+        }
+    }
+
     public void addFrame(final AtlasFrame frame) {
         mFrames.add(frame);
 

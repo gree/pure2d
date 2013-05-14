@@ -1102,8 +1102,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
+        mTransformMatrix = null;
+        mTransformMatrixValues = null;
+        mGlobalPosition = null;
     }
 
     /**
