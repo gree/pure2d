@@ -27,7 +27,7 @@ public class SingleFrameSet extends AtlasFrameSet {
     public void setTexture(final Texture texture) {
         super.setTexture(texture);
 
-        // set the rect
+        // re-set the rect
         if (texture != null) {
             mFrame.setRect(0, 0, (int) texture.getSize().x - 1, (int) texture.getSize().y - 1);
 
