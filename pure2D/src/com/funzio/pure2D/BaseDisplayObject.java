@@ -71,6 +71,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     private boolean mHasOrigin = false;
     private GLColor mSumColor;
+    private PointF mGlobalPosition;
 
     protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
@@ -949,6 +950,21 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         result.x -= mPosition.x;
         result.y -= mPosition.y;
+    }
+
+    /**
+     * Get global position of this object
+     * 
+     * @return the global point
+     */
+    public PointF getGlobalPosition() {
+        // null check
+        if (mGlobalPosition == null) {
+            mGlobalPosition = new PointF();
+        }
+        localToGlobal(null, mGlobalPosition);
+
+        return mGlobalPosition;
     }
 
     /**
