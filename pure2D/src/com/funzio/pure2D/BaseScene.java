@@ -887,15 +887,17 @@ public class BaseScene implements Scene {
      * Dispose everything
      */
     public void dispose() {
-        removeAllChildren();
-        mChildren = null;
+        if (mChildren != null) {
+            removeAllChildren();
+            mChildren = null;
 
-        mTextureManager.removeAllTextures();
-        mTextureManager = null;
+            mTextureManager.removeAllTextures();
+            mTextureManager = null;
 
-        mColor = null;
-        mSize = null;
-        mGLState = null;
+            mColor = null;
+            mSize = null;
+            mGLState = null;
+        }
     }
 
     public final boolean isUIEnabled() {
