@@ -1,7 +1,5 @@
 package com.funzio.pure2D.sounds;
 
-import java.lang.ref.WeakReference;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
@@ -56,7 +54,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     @Override
     public void run() {
         Looper.prepare();
-        mHandler = new SoundHandler(this);
+        mHandler = new SoundHandler();
         Looper.loop();
     }
 
@@ -285,24 +283,16 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         return true;
     }
 
-    private static class SoundHandler extends Handler {
-        private final WeakReference<SoundManager> mSoundManager;
-
-        public SoundHandler(final SoundManager manager) {
-            mSoundManager = new WeakReference<SoundManager>(manager);
-        }
+    private class SoundHandler extends Handler {
 
         @Override
         public void handleMessage(final Message msg) {
             final int soundID = msg.arg1;
             final int soundLoop = msg.arg2;
 
-            SoundManager manager = mSoundManager.get();
-            if (manager != null) {
-                int streamId = manager.privatePlay(soundID, soundLoop);
-                if (streamId != 0) {
-                    manager.mStreamIds.put(soundID, streamId);
-                }
+            int streamId = privatePlay(soundID, soundLoop);
+            if (streamId != 0) {
+                mStreamIds.put(soundID, streamId);
             }
         }
     }
