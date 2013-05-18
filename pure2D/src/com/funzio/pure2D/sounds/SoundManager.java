@@ -21,6 +21,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     protected static final float DEFAULT_MEDIA_VOLUME = 0.8f;
 
+    // map keys to sounds, for caching
     protected volatile SparseArray<Soundable> mSoundMap;
 
     protected final SoundPool mSoundPool;
