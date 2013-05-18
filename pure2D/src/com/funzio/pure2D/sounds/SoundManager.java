@@ -217,16 +217,15 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     }
 
     public boolean unload(final int soundID) {
-        mSoundMap.remove(soundID);
+        // mSoundMap.remove(soundID); // WRONG, sound map use Key, not soundID
         return mSoundPool.unload(soundID);
     }
 
     public boolean unload(final Soundable sound) {
         if (sound != null) {
-            final int soundID = sound.getSoundID();
-            mSoundMap.remove(soundID);
+            mSoundMap.remove(sound.getKey());
 
-            return mSoundPool.unload(soundID);
+            return mSoundPool.unload(sound.getSoundID());
         } else {
             return false;
         }
