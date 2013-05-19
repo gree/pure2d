@@ -41,6 +41,18 @@ public class URLLoadTextTask extends URLRetriableTask {
 
     /*
      * (non-Javadoc)
+     * @see com.funzio.pure2D.loaders.tasks.URLRetriableTask#reset()
+     */
+    @Override
+    public void reset() {
+        super.reset();
+
+        // reset string
+        mStringBuilder.setLength(0);
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.funzio.pure2D.loaders.tasks.URLTask#onProgress(byte[], int)
      */
     @Override
