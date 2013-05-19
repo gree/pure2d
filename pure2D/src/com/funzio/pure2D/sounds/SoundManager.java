@@ -21,7 +21,8 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     protected static final float DEFAULT_MEDIA_VOLUME = 0.8f;
 
-    protected volatile SparseArray<Soundable> mSoundMap;
+    // map keys to sounds, for caching
+    protected SparseArray<Soundable> mSoundMap;
 
     protected final SoundPool mSoundPool;
     protected volatile boolean mSoundEnabled = true;
@@ -216,21 +217,57 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
-    public boolean unload(final int soundID) {
-        // mSoundMap.remove(soundID); // WRONG, sound map use Key, not soundID
-        return mSoundPool.unload(soundID);
+    public boolean unloadByID(final int soundID) {
+        return unload(getSoundByID(soundID));
+    }
+
+    public boolean unloadByKey(final int key) {
+        return unload(mSoundMap.get(key));
     }
 
     public boolean unload(final Soundable sound) {
         if (sound != null) {
-            mSoundMap.remove(sound.getKey());
+            synchronized (mSoundMap) {
+                // remove from map
+                mSoundMap.remove(sound.getKey());
+            }
 
+            // unload from sound pool
             return mSoundPool.unload(sound.getSoundID());
         } else {
             return false;
         }
     }
 
+    /**
+     * Find a sound by the sound ID
+     * 
+     * @param soundID
+     * @return
+     * @see #getSound(int)
+     */
+    public Soundable getSoundByID(final int soundID) {
+        synchronized (mSoundMap) {
+            final int size = mSoundMap.size();
+            Soundable sound;
+            for (int i = 0; i < size; i++) {
+                sound = mSoundMap.get(mSoundMap.keyAt(i));
+                if (sound.getSoundID() == soundID) {
+                    return sound;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Find a sound by Key
+     * 
+     * @param key
+     * @return
+     * @see #getSoundByID(int)
+     */
     public Soundable getSound(final int key) {
         return mSoundMap.get(key);
     }
