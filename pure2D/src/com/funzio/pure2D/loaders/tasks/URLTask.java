@@ -30,6 +30,8 @@ public abstract class URLTask implements IntentTask {
     public static String EXTRA_URL = "url";
 
     protected int mBufferSize = DEFAULT_BUFFER;
+    protected byte[] mBuffer;
+
     protected final String mURL;
     protected int mContentLength = -1;
     protected int mTotalBytesLoaded = 0;
@@ -98,10 +100,13 @@ public abstract class URLTask implements IntentTask {
         mTotalBytesLoaded = 0;
         try {
             final BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            final byte[] data = new byte[mBufferSize];
-            while ((count = inputStream.read(data)) != -1) {
+            // only create buffer once
+            if (mBuffer == null) {
+                mBuffer = new byte[mBufferSize];
+            }
+            while ((count = inputStream.read(mBuffer)) != -1) {
                 mTotalBytesLoaded += count;
-                onProgress(data, count);
+                onProgress(mBuffer, count);
             }
             inputStream.close();
         } catch (Exception e) {
