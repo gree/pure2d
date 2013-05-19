@@ -46,7 +46,7 @@ public class URLLoadTextTask extends URLRetriableTask {
     @Override
     protected void onProgress(final byte[] data, final int count) throws Exception {
         // append to the string
-        mStringBuilder.append(new String(data));
+        mStringBuilder.append(new String(data, 0, count));
     }
 
     public StringBuilder getStringBuilder() {
