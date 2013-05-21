@@ -29,9 +29,10 @@ LOCAL_SRC_FILES := \
 	LWF/core/lwf_property.cpp \
 	LWF/core/lwf_text.cpp \
 	LWF/core/lwf_utility.cpp \
-	LWF/supports/boost/android.cpp
+	LWF/supports/boost/android.cpp \
+	LWF/pure2d/lwf_pure2d_object.cpp
 
-LOCAL_C_INCLUDES := LWF/supports
+LOCAL_C_INCLUDES := LWF/supports LWF/core
 LOCAL_LDLIBS    := -llog
 
 include $(BUILD_SHARED_LIBRARY)
