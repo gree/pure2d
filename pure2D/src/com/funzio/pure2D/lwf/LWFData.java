@@ -56,5 +56,6 @@ public class LWFData {
 
     public void dispose() {
         destroy(mId);
+        mId = -1;
     }
 }

@@ -8,6 +8,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 public class LWFObject extends BaseDisplayObject {
     private static final String TAG = LWFData.class.getSimpleName();
 
+    private LWFData mData;
     private int mId;
     private long mPtr;
 
@@ -21,6 +22,7 @@ public class LWFObject extends BaseDisplayObject {
         if (mId < 0)
             return;
         mPtr = getPointer(mId);
+        mData = data;
     }
 
     @Override
@@ -41,5 +43,8 @@ public class LWFObject extends BaseDisplayObject {
 
     public void dispose() {
         destroy(mId);
+        mId = -1;
+        mPtr = 0;
+        mData = null;
     }
 }

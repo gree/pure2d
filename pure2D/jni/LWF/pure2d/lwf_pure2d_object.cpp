@@ -1,13 +1,27 @@
 #include <jni.h>
 #include <android/log.h>
 #include "lwf.h"
+#include "lwf_pure2d_bitmap.h"
+#include "lwf_pure2d_factory.h"
 
 #define LOG_TAG "pure2d::LWF"
 #define LOG(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
 using namespace LWF;
 
-typedef map<int, shared_ptr<Data> > DataMap;
+struct DataContext {
+    shared_ptr<Data> data;
+    vector<shared_ptr<Pure2DRendererBitmapContext> > bitmapContexts;
+    vector<shared_ptr<Pure2DRendererBitmapContext> > bitmapExContexts;
+
+    DataContext() {}
+    DataContext(shared_ptr<Data> d,
+            vector<shared_ptr<Pure2DRendererBitmapContext> > &b,
+            vector<shared_ptr<Pure2DRendererBitmapContext> > &bx)
+        : data(d), bitmapContexts(b), bitmapExContexts(bx) {}
+};
+
+typedef map<int, DataContext> DataMap;
 typedef map<int, shared_ptr<class LWF> > LWFMap;
 
 static DataMap s_dataMap;
@@ -24,8 +38,38 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIE
     shared_ptr<Data> data = make_shared<Data>(b, len);
     int id;
     if (data->Check()) {
+        vector<shared_ptr<Pure2DRendererBitmapContext> > bitmapContexts;
+        bitmapContexts.resize(data->bitmaps.size());
+        for (size_t i = 0; i < data->bitmaps.size(); ++i) {
+            const Format::Bitmap &b = data->bitmaps[i];
+            if (b.textureFragmentId == -1)
+                continue;
+
+            Format::BitmapEx bx;
+            bx.matrixId = b.matrixId;
+            bx.textureFragmentId = b.textureFragmentId;
+            bx.u = 0;
+            bx.v = 0;
+            bx.w = 1;
+            bx.h = 1;
+
+            bitmapContexts[i] =
+                make_shared<Pure2DRendererBitmapContext>(data.get(), bx);
+        }
+
+        vector<shared_ptr<Pure2DRendererBitmapContext> > bitmapExContexts;
+        bitmapExContexts.resize(data->bitmapExs.size());
+        for (size_t i = 0; i < data->bitmapExs.size(); ++i) {
+            const Format::BitmapEx &bx = data->bitmapExs[i];
+            if (bx.textureFragmentId == -1)
+                continue;
+
+            bitmapExContexts[i] =
+                make_shared<Pure2DRendererBitmapContext>(data.get(), bx);
+        }
+
         id = ++s_dataId;
-        s_dataMap[id] = data;
+        s_dataMap[id] = DataContext(data, bitmapContexts, bitmapExContexts);
     } else {
         id = -1;
     }
@@ -45,9 +89,11 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFObject_create(JN
     if (it == s_dataMap.end())
         return -1;
 
-    shared_ptr<NullRendererFactory> factory =
-        make_shared<NullRendererFactory>();
-    shared_ptr<class LWF> lwf = make_shared<class LWF>(it->second, factory);
+    shared_ptr<Pure2DRendererFactory> factory =
+        make_shared<Pure2DRendererFactory>(
+            it->second.bitmapContexts, it->second.bitmapExContexts);
+    shared_ptr<class LWF> lwf =
+        make_shared<class LWF>(it->second.data, factory);
 
     int id = ++s_lwfId;
     s_lwfMap[id] = lwf;
