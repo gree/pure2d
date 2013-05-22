@@ -27,6 +27,8 @@ public class ObjectMenuActivity extends Activity {
             startActivity(new Intent(this, JumperActivity.class));
         } else if (view.getId() == R.id.btn_bouncing_objects) {
             startActivity(new Intent(this, BouncerActivity.class));
+        } else if (view.getId() == R.id.btn_lwf) {
+            startActivity(new Intent(this, LWFActivity.class));
         }
     }
 }
