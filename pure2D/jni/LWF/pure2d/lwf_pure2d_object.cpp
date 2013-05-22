@@ -1,5 +1,9 @@
 #include <jni.h>
+#include <android/log.h>
 #include "lwf.h"
+
+#define LOG_TAG "pure2d::LWF"
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
 using namespace LWF;
 
@@ -60,18 +64,13 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_funzio_pure2D_lwf_LWF_getPointer(JNI
     return (jlong)it->second.get();
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_execWithTick(JNIEnv *env, jobject obj, jlong jLWF, jfloat jTick)
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_exec(JNIEnv *env, jobject obj, jlong jLWF, jfloat jTick)
 {
     if (!jLWF)
         return;
 
     class LWF *lwf = (class LWF *)jLWF;
     lwf->Exec(jTick);
-}
-
-extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_exec(JNIEnv *env, jobject obj, jlong jLWF)
-{
-    Java_com_funzio_pure2D_lwf_LWF_execWithTick(env, obj, jLWF, 0);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
