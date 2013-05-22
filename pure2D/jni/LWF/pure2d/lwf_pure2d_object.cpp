@@ -39,7 +39,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_destroy(JNI
     s_dataMap.erase((int)jLWFDataId);
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *env, jobject obj, jint jLWFDataId)
+extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFObject_create(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
     DataMap::iterator it = s_dataMap.find((int)jLWFDataId);
     if (it == s_dataMap.end())
@@ -55,7 +55,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *
     return id;
 }
 
-extern "C" JNIEXPORT jlong JNICALL Java_com_funzio_pure2D_lwf_LWF_getPointer(JNIEnv *env, jobject obj, jint jLWFId)
+extern "C" JNIEXPORT jlong JNICALL Java_com_funzio_pure2D_lwf_LWFObject_getPointer(JNIEnv *env, jobject obj, jint jLWFId)
 {
     LWFMap::iterator it = s_lwfMap.find((int)jLWFId);
     if (it == s_lwfMap.end())
@@ -64,7 +64,7 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_funzio_pure2D_lwf_LWF_getPointer(JNI
     return (jlong)it->second.get();
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_exec(JNIEnv *env, jobject obj, jlong jLWF, jfloat jTick)
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFObject_exec(JNIEnv *env, jobject obj, jlong jLWF, jfloat jTick)
 {
     if (!jLWF)
         return;
@@ -73,7 +73,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_exec(JNIEnv *en
     lwf->Exec(jTick);
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFObject_destroy(JNIEnv *env, jobject obj, jint jLWFId)
 {
     s_lwfMap.erase((int)jLWFId);
 }
