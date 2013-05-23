@@ -54,8 +54,8 @@ struct Data {
 	bool useScript;
 	bool useTextureAtlas;
 
+	Data();
 	Data(const void *bytes, size_t length);
-	Data(int width, int height, int frameRate);
 	bool Check();
 	bool ReplaceTexture(int index,
 		const Format::TextureReplacement &textureReplacement);
