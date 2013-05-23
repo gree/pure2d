@@ -24,7 +24,7 @@ public class LWFData {
     private native int create(byte[] data);
     private native int getTextureNum(int lwfDataId);
     private native String getTextureName(int lwfDataId, int textureNo);
-    private native void setGLTextureId(int lwfDataId, int[] glTextureIds);
+    private native void setGLTexture(int lwfDataId, int[] glTextureIds, float[] glTextureUs, float[] glTextureVs);
     private native void destroy(int lwfDataId);
 
     public LWFData(final Scene scene, final AssetManager assetManager, final String filePath) {
@@ -50,12 +50,16 @@ public class LWFData {
 
             int textureNum = getTextureNum(mId);
             int[] glTextureIds = new int[textureNum];
+            float[] glTextureUs = new float[textureNum];
+            float[] glTextureVs = new float[textureNum];
             for (int i = 0; i < textureNum; ++i) {
                 String name = getTextureName(mId, i);
                 Texture texture = scene.getTextureManager().createAssetTexture(base + name, null);
                 glTextureIds[i] = texture.getTextureID();
+                glTextureUs[i] = texture.mCoordScaleX;
+                glTextureVs[i] = texture.mCoordScaleY;
             }
-            setGLTextureId(mId, glTextureIds);
+            setGLTexture(mId, glTextureIds, glTextureUs, glTextureVs);
         } catch (Exception e) {
             Log.e(TAG, "ERROR", e);
         }

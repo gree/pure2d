@@ -18,28 +18,28 @@ Pure2DRendererBitmapContext::Pure2DRendererBitmapContext(
 
 	float tw = (float)t.width;
 	float th = (float)t.height;
-	
+
 	float x = (float)f.x;
 	float y = (float)f.y;
 	float u = (float)f.u;
 	float v = (float)f.v;
 	float w = (float)f.w;
 	float h = (float)f.h;
-	
+
 	float bu = bx.u * w;
 	float bv = bx.v * h;
 	float bw = bx.w;
 	float bh = bx.h;
-	
+
 	x += bu;
 	y += bv;
 	u += bu;
 	v += bv;
 	w *= bw;
 	h *= bh;
-	
+
 	m_height = h / t.scale;
-	
+
 	float x0 = x / t.scale;
 	float y0 = y / t.scale;
 	float x1 = (x + w) / t.scale;
@@ -78,6 +78,16 @@ Pure2DRendererBitmapContext::Pure2DRendererBitmapContext(
 
 Pure2DRendererBitmapContext::~Pure2DRendererBitmapContext()
 {
+}
+
+void Pure2DRendererBitmapContext::SetGLTexture(int id, float u, float v)
+{
+	m_glTextureId = id;
+
+	for (int i = 0; i < 4; ++i) {
+		m_coordinates[i].x *= u;
+		m_coordinates[i].y *= v;
+	}
 }
 
 Pure2DRendererBitmapRenderer::Pure2DRendererBitmapRenderer(

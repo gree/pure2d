@@ -35,7 +35,7 @@ public:
 	float GetHeight() const {return m_height;}
 	int GetTextureId() const {return m_textureId;}
 	int GetGLTextureId() const {return m_glTextureId;}
-	void SetGLTextureId(int id) {m_glTextureId = id;}
+	void SetGLTexture(int id, float u, float v);
 	const Vector2 *GetVertices() const {return m_vertices;}
 	const Vector2 *GetCoordinates() const {return m_coordinates;}
 	const unsigned short *GetIndices() const {return m_indices;}

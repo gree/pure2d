@@ -49,7 +49,7 @@ static vector<shared_ptr<Pure2DRendererBitmapContext> > s_nullContexts;
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIEnv *env, jobject obj, jbyteArray jdata)
 {
     jsize len = env->GetArrayLength(jdata);
-    jbyte *b = (jbyte *)env->GetByteArrayElements(jdata, NULL);
+    jbyte *b = env->GetByteArrayElements(jdata, NULL);
 
     shared_ptr<Data> data = make_shared<Data>(b, len);
     int id;
@@ -96,7 +96,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIE
 
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_getTextureNum(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
-    DataMap::iterator it = s_dataMap.find((int)jLWFDataId);
+    DataMap::iterator it = s_dataMap.find(jLWFDataId);
     if (it == s_dataMap.end())
         return 0;
 
@@ -105,23 +105,25 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_getTextureN
 
 extern "C" JNIEXPORT jstring JNICALL Java_com_funzio_pure2D_lwf_LWFData_getTextureName(JNIEnv *env, jobject obj, jint jLWFDataId, jint jNo)
 {
-    DataMap::iterator it = s_dataMap.find((int)jLWFDataId);
+    DataMap::iterator it = s_dataMap.find(jLWFDataId);
     if (it == s_dataMap.end())
         return 0;
 
-    const Format::Texture &t = it->second.data->textures[(int)jNo];
+    const Format::Texture &t = it->second.data->textures[jNo];
     string name = t.GetFilename(it->second.data.get());
     return env->NewStringUTF(name.c_str());
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextureId(JNIEnv *env, jobject obj, jint jLWFDataId, jintArray jGLTextureIds)
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTexture(JNIEnv *env, jobject obj, jint jLWFDataId, jintArray jGLTextureIds, jfloatArray jGLTextureUs, jfloatArray jGLTextureVs)
 {
-    DataMap::iterator it = s_dataMap.find((int)jLWFDataId);
+    DataMap::iterator it = s_dataMap.find(jLWFDataId);
     if (it == s_dataMap.end())
         return;
 
     jsize len = env->GetArrayLength(jGLTextureIds);
-    jint *ids = (jint *)env->GetIntArrayElements(jGLTextureIds, NULL);
+    jint *ids = env->GetIntArrayElements(jGLTextureIds, NULL);
+    jfloat *us = env->GetFloatArrayElements(jGLTextureUs, NULL);
+    jfloat *vs = env->GetFloatArrayElements(jGLTextureVs, NULL);
 
     vector<shared_ptr<Pure2DRendererBitmapContext> >::iterator cit, citend;
     cit = it->second.bitmapContexts.begin();
@@ -131,7 +133,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextur
             continue;
         int id = (*cit)->GetTextureId();
         if (id >= 0)
-            (*cit)->SetGLTextureId((int)ids[id]);
+            (*cit)->SetGLTexture(ids[id], us[id], vs[id]);
     }
     cit = it->second.bitmapExContexts.begin();
     citend = it->second.bitmapExContexts.end();
@@ -140,22 +142,24 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextur
             continue;
         int id = (*cit)->GetTextureId();
         if (id >= 0)
-            (*cit)->SetGLTextureId((int)ids[id]);
+            (*cit)->SetGLTexture(ids[id], us[id], vs[id]);
     }
 
     env->ReleaseIntArrayElements(jGLTextureIds, ids, 0);
+    env->ReleaseFloatArrayElements(jGLTextureUs, us, 0);
+    env->ReleaseFloatArrayElements(jGLTextureVs, vs, 0);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_destroy(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
-    s_dataMap.erase((int)jLWFDataId);
+    s_dataMap.erase(jLWFDataId);
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
     shared_ptr<class LWF> lwf;
 
-    if ((int)jLWFDataId == INT_MAX) {
+    if (jLWFDataId == INT_MAX) {
 
         shared_ptr<Data> data = make_shared<Data>();
         shared_ptr<Pure2DRendererFactory> factory =
@@ -164,7 +168,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *
 
     } else {
 
-        DataMap::iterator it = s_dataMap.find((int)jLWFDataId);
+        DataMap::iterator it = s_dataMap.find(jLWFDataId);
         if (it == s_dataMap.end())
             return -1;
 
@@ -183,7 +187,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *
 
 extern "C" JNIEXPORT jlong JNICALL Java_com_funzio_pure2D_lwf_LWF_getPointer(JNIEnv *env, jobject obj, jint jLWFId)
 {
-    LWFMap::iterator it = s_lwfMap.find((int)jLWFId);
+    LWFMap::iterator it = s_lwfMap.find(jLWFId);
     if (it == s_lwfMap.end())
         return 0;
 
@@ -213,7 +217,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_attachLWF(JNIEn
     if (!jLWF)
         return;
 
-    LWFMap::iterator it = s_lwfMap.find((int)jChildId);
+    LWFMap::iterator it = s_lwfMap.find(jChildId);
     if (it == s_lwfMap.end())
         return;
 
@@ -243,7 +247,7 @@ extern "C" JNIEXPORT int JNICALL Java_com_funzio_pure2D_lwf_LWF_addEventHandler(
     jmethodID method = env->GetMethodID(cls, "callHandler", "(I)V");
 
     EventHandlerWrapper h =
-        EventHandlerWrapper(env, obj, method, (int)jHandlerId);
+        EventHandlerWrapper(env, obj, method, jHandlerId);
     int id = lwf->AddEventHandler(event, h);
 
     env->ReleaseStringUTFChars(jEvent, event);
@@ -272,7 +276,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoFrameAndPla
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
     if (movie)
-        movie->GotoAndPlay((int)jFrame);
+        movie->GotoAndPlay(jFrame);
 
     env->ReleaseStringUTFChars(jTarget, target);
 }
@@ -284,13 +288,13 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_moveTo(JNIEnv *
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
     if (movie)
-        movie->MoveTo((float)jX, (float)jY);
+        movie->MoveTo(jX, jY);
 
     env->ReleaseStringUTFChars(jTarget, target);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
 {
-    s_lwfMap.erase((int)jLWFId);
+    s_lwfMap.erase(jLWFId);
 }
 
