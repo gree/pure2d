@@ -33,10 +33,13 @@ public:
 		vector<Vertex> vertices;
 		vector<unsigned short> indices;
 		int glTextureId;
+		bool preMultipliedAlpha;
+		float height;
 		int index;
 
 		Buffer() : glTextureId(-1), index(0) {}
-		Buffer(int gId) : glTextureId(gId), index(0) {}
+		Buffer(int gId, bool p, float h) : glTextureId(gId),
+			preMultipliedAlpha(p), height(h), index(0) {}
 	};
 
 protected:
@@ -44,6 +47,8 @@ protected:
 	const vector<shared_ptr<Pure2DRendererBitmapContext> > &m_bitmapContexts;
 	const vector<shared_ptr<Pure2DRendererBitmapContext> > &m_bitmapExContexts;
 	vector<Buffer> m_buffers;
+	unsigned int m_vertexBuffer;
+	unsigned int m_indicesBuffer;
 	int m_updateCount;
 	int m_updated;
 

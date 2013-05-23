@@ -39,7 +39,7 @@ public class LWFActivity extends StageActivity {
         lwf.setOriginAtCenter();
 
         // position
-        lwf.setPosition(x, y);
+        lwf.setPosition(x - 500, y);
 
         // add to scene
         mScene.addChild(lwf);

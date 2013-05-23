@@ -109,13 +109,10 @@ void Pure2DRendererBitmapRenderer::Render(
 	const Matrix *matrix, const ColorTransform *colorTransform,
 	int renderingIndex, int renderingCount, bool visible)
 {
-	if (!m_context)
+	if (!m_context || !m_factory->IsUpdated())
 		return;
 
 	int bufferIndex = m_factory->GetBufferIndex(m_context);
-
-	if (!m_factory->IsUpdated())
-		return;
 
 	const unsigned short *indices = m_context->GetIndices();
 	int indexOffset = bufferIndex * 4;
@@ -157,7 +154,7 @@ void Pure2DRendererBitmapRenderer::Render(
 
 			float vx = x * scaleX + y * skew0 + translateX;
 			float vy = x * skew1 + y * scaleY + translateY;
-			float vz = translateZ;
+			float vz = 0; //translateZ;
 
 			m_factory->SetVertex(offset + i, vx, vy, vz,
 				c[i].x, c[i].y, red, green, blue, alpha);

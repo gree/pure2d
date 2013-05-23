@@ -42,9 +42,6 @@ public class LWFObject extends BaseDisplayObject {
         if (mId < 0)
             return false;
         render(mPtr);
-
-        // VBO
-
         return true;
     }
 

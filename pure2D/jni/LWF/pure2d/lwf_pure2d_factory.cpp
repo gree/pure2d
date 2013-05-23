@@ -1,4 +1,5 @@
 #include <android/log.h>
+#include <GLES/gl.h>
 #include "lwf_core.h"
 #include "lwf_movie.h"
 #include "lwf_pure2d_bitmap.h"
@@ -37,6 +38,11 @@ void Pure2DRendererFactory::Init(LWF *lwf)
 {
 	m_lwf = lwf;
 
+	GLuint buffers[2];
+	glGenBuffers(2, buffers);
+	m_vertexBuffer = buffers[0];
+	m_indicesBuffer = buffers[1];
+
 	m_updateCount = -1;
 }
 
@@ -52,15 +58,47 @@ void Pure2DRendererFactory::BeginRender(LWF *lwf)
 	if (m_lwf->parent)
 		return;
 
-	m_buffers.clear();
+	if (m_updated)
+		m_buffers.clear();
 }
 
 void Pure2DRendererFactory::EndRender(LWF *lwf)
 {
+	vector<Buffer>::iterator it(m_buffers.begin()), itend(m_buffers.end());
+	for (; it != itend; ++it) {
+		glBindTexture(GL_TEXTURE_2D, it->glTextureId);
+		glBlendFunc(it->preMultipliedAlpha ?
+			GL_ONE : GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		size_t size = sizeof(Vertex) * 4 * it->index;
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, size, &it->vertices[0], GL_DYNAMIC_DRAW);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+
+		glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (GLvoid *)0);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid *)12);
+		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), (GLvoid *)20);
+
+		size = sizeof(GLushort) * 6 * it->index;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+			size, &it->indices[0], GL_DYNAMIC_DRAW);
+
+		glDrawElements(GL_TRIANGLES,
+			(GLsizei)it->index * 6, GL_UNSIGNED_SHORT, 0);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void Pure2DRendererFactory::Destruct()
 {
+	GLuint buffers[] = {m_vertexBuffer, m_indicesBuffer};
+	glDeleteBuffers(2, buffers);
 }
 
 int Pure2DRendererFactory::GetBufferIndex(Pure2DRendererBitmapContext *context)
@@ -73,7 +111,8 @@ int Pure2DRendererFactory::GetBufferIndex(Pure2DRendererBitmapContext *context)
 
 	if (m_buffers.empty() ||
 			m_buffers.back().glTextureId != context->GetGLTextureId()) {
-		Buffer buffer(context->GetGLTextureId());
+		Buffer buffer(context->GetGLTextureId(),
+			context->IsPreMultipliedAlpha(), context->GetHeight());
 		m_buffers.push_back(buffer);
 	}
 
