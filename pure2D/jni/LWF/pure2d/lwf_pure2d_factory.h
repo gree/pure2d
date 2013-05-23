@@ -29,20 +29,23 @@ public:
 			: x(ax), y(ay), z(az), u(au), v(av), r(ar), g(ag), b(ab), a(aa) {}
 	};
 
+	struct Buffer {
+		vector<Vertex> vertices;
+		vector<unsigned short> indices;
+		int glTextureId;
+		int index;
+
+		Buffer() : glTextureId(-1), index(0) {}
+		Buffer(int gId) : glTextureId(gId), index(0) {}
+	};
+
 protected:
 	LWF *m_lwf;
 	const vector<shared_ptr<Pure2DRendererBitmapContext> > &m_bitmapContexts;
 	const vector<shared_ptr<Pure2DRendererBitmapContext> > &m_bitmapExContexts;
-	vector<Pure2DRendererBitmapContext *> m_contexts;
-	vector<Vertex> m_vertices;
-	vector<unsigned short> m_indices;
-	unsigned int m_vertexArray;
-	unsigned int m_vertexBuffer;
-	unsigned int m_indicesBuffer;
-	int m_bitmaps;
+	vector<Buffer> m_buffers;
 	int m_updateCount;
 	int m_updated;
-	int m_index;
 
 public:
 	Pure2DRendererFactory(const vector<shared_ptr<Pure2DRendererBitmapContext> > &bitmapContexts, const vector<shared_ptr<Pure2DRendererBitmapContext> > &bitmapExContexts) : m_bitmapContexts(bitmapContexts), m_bitmapExContexts(bitmapExContexts) {}
@@ -68,8 +71,6 @@ public:
 		{return id < 0 || id >= m_bitmapExContexts.size() ?
 			0 : m_bitmapExContexts[id].get();}
 	bool IsUpdated() const {return m_updated;}
-	void AddBitmap();
-	void DeleteBitmap();
 	int GetBufferIndex(Pure2DRendererBitmapContext *context);
 	void SetVertex(int offset, float x, float y, float z,
 		float u, float v, float r, float g, float b, float a);

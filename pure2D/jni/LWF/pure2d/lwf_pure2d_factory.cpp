@@ -1,5 +1,4 @@
 #include <android/log.h>
-#include <GLES/gl.h>
 #include "lwf_core.h"
 #include "lwf_movie.h"
 #include "lwf_pure2d_bitmap.h"
@@ -38,14 +37,6 @@ void Pure2DRendererFactory::Init(LWF *lwf)
 {
 	m_lwf = lwf;
 
-#if 1
-	GLuint buffers[2];
-	glGenBuffers(2, buffers);
-	m_vertexBuffer = buffers[0];
-	m_indicesBuffer = buffers[1];
-#endif
-
-	m_bitmaps = 0;
 	m_updateCount = -1;
 }
 
@@ -61,83 +52,15 @@ void Pure2DRendererFactory::BeginRender(LWF *lwf)
 	if (m_lwf->parent)
 		return;
 
-	m_index = 0;
-
-	if (m_updated) {
-		if ((size_t)m_bitmaps > m_contexts.size()) {
-			m_contexts.resize(m_bitmaps);
-			m_vertices.resize(m_bitmaps * 4);
-			m_indices.resize(m_bitmaps * 6);
-		}
-	}
+	m_buffers.clear();
 }
 
 void Pure2DRendererFactory::EndRender(LWF *lwf)
 {
-#if 1
-	if (m_index == 0 || m_lwf->parent)
-		return;
-
-	// TODO bind texture
-	// TODO blendmode
-
-	// TODO matrix
-	glLoadIdentity();
-	glScalef(0.01f, -0.01f, 0.01f);
-
-	size_t size = sizeof(Vertex) * 4 * m_index;
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, size, &m_vertices[0], GL_DYNAMIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-
-	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (GLvoid *)0);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid *)12);
-	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), (GLvoid *)20);
-
-	size = sizeof(GLushort) * 6 * m_index;
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, &m_indices[0], GL_DYNAMIC_DRAW);
-
-	glDrawElements(GL_TRIANGLES, (GLsizei)m_index * 6, GL_UNSIGNED_SHORT, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-#endif
 }
 
 void Pure2DRendererFactory::Destruct()
 {
-#if 1
-	GLuint buffers[] = {m_vertexBuffer, m_indicesBuffer};
-	glDeleteBuffers(2, buffers);
-#endif
-}
-
-void Pure2DRendererFactory::AddBitmap()
-{
-	if (m_lwf->parent) {
-		Pure2DRendererFactory *parent =
-			(Pure2DRendererFactory *)m_lwf->parent->lwf->rendererFactory.get();
-		parent->AddBitmap();
-		return;
-	}
-
-	++m_bitmaps;
-}
-
-void Pure2DRendererFactory::DeleteBitmap()
-{
-	if (m_lwf->parent) {
-		Pure2DRendererFactory *parent =
-			(Pure2DRendererFactory *)m_lwf->parent->lwf->rendererFactory.get();
-		parent->DeleteBitmap();
-		return;
-	}
-
-	--m_bitmaps;
 }
 
 int Pure2DRendererFactory::GetBufferIndex(Pure2DRendererBitmapContext *context)
@@ -148,8 +71,13 @@ int Pure2DRendererFactory::GetBufferIndex(Pure2DRendererBitmapContext *context)
 		return parent->GetBufferIndex(context);
 	}
 
-	m_contexts.push_back(context);
-	return m_index++;
+	if (m_buffers.empty() ||
+			m_buffers.back().glTextureId != context->GetGLTextureId()) {
+		Buffer buffer(context->GetGLTextureId());
+		m_buffers.push_back(buffer);
+	}
+
+	return m_buffers.back().index++;
 }
 
 void Pure2DRendererFactory::SetVertex(int offset, float x, float y,
@@ -162,7 +90,8 @@ void Pure2DRendererFactory::SetVertex(int offset, float x, float y,
 		return;
 	}
 
-	m_vertices[offset] =
+	m_buffers.back().vertices.resize(offset + 1);
+	m_buffers.back().vertices[offset] =
 		Vertex(x, y, z, u, v, 255 * r, 255 * g, 255 * b, 255 * a);
 }
 
@@ -175,7 +104,8 @@ void Pure2DRendererFactory::SetIndex(int offset, unsigned short index)
 		return;
 	}
 
-	m_indices[offset] = index;
+	m_buffers.back().indices.resize(offset + 1);
+	m_buffers.back().indices[offset] = index;
 }
 
 }	// namespace LWF

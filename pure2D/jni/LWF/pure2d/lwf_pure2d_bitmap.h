@@ -46,7 +46,6 @@ class Pure2DRendererBitmapRenderer : public Renderer
 protected:
 	Pure2DRendererFactory *m_factory;
 	Pure2DRendererBitmapContext *m_context;
-	bool m_added;
 
 public:
 	Pure2DRendererBitmapRenderer(

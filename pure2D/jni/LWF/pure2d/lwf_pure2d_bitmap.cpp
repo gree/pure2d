@@ -82,32 +82,22 @@ Pure2DRendererBitmapContext::~Pure2DRendererBitmapContext()
 
 Pure2DRendererBitmapRenderer::Pure2DRendererBitmapRenderer(
 		Pure2DRendererFactory *factory, LWF *l, Bitmap *bitmap)
-	: Renderer(l), m_factory(factory), m_context(0), m_added(false)
+	: Renderer(l), m_factory(factory), m_context(0)
 {
 	int objId = bitmap->objectId;
 	m_context = factory->GetBitmapContext(objId);
-	if (!m_context)
-		return;
-	m_factory->AddBitmap();
-	m_added = true;
 }
 
 Pure2DRendererBitmapRenderer::Pure2DRendererBitmapRenderer(
 		Pure2DRendererFactory *factory, LWF *l, BitmapEx *bitmapEx)
-	: Renderer(l), m_factory(factory), m_context(0), m_added(false)
+	: Renderer(l), m_factory(factory), m_context(0)
 {
 	int objId = bitmapEx->objectId;
 	m_context = factory->GetBitmapExContext(objId);
-	if (!m_context)
-		return;
-	m_factory->AddBitmap();
-	m_added = true;
 }
 
 void Pure2DRendererBitmapRenderer::Destruct()
 {
-	if (m_added)
-		m_factory->DeleteBitmap();
 }
 
 void Pure2DRendererBitmapRenderer::Update(

@@ -4,8 +4,6 @@
 #include "lwf_pure2d_bitmap.h"
 #include "lwf_pure2d_factory.h"
 
-#include <GLES/gl.h>
-
 #define LOG_TAG "pure2d::LWF"
 #define LOG(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
@@ -31,8 +29,6 @@ static int s_dataId;
 
 static LWFMap s_lwfMap;
 static int s_lwfId;
-
-static int TEXTUREID;
 
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIEnv *env, jobject obj, jbyteArray jdata)
 {
@@ -119,10 +115,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextur
             continue;
         int id = (*cit)->GetTextureId();
         if (id >= 0)
-{
             (*cit)->SetGLTextureId((int)ids[id]);
-TEXTUREID = ids[id];
-}
     }
     cit = it->second.bitmapExContexts.begin();
     citend = it->second.bitmapExContexts.end();
@@ -184,7 +177,6 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFObject_render(JN
         return;
 
     class LWF *lwf = (class LWF *)jLWF;
-glBindTexture(GL_TEXTURE_2D, TEXTUREID);
     lwf->Render();
 }
 
