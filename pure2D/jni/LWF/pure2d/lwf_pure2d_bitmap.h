@@ -19,6 +19,8 @@ public:
 	};
 
 protected:
+	int m_textureId;
+	int m_glTextureId;
 	Vector2 m_vertices[4];
 	Vector2 m_coordinates[4];
 	unsigned short m_indices[6];
@@ -31,6 +33,9 @@ public:
 	virtual ~Pure2DRendererBitmapContext();
 	bool IsPreMultipliedAlpha() const {return m_preMultipliedAlpha;}
 	float GetHeight() const {return m_height;}
+	int GetTextureId() const {return m_textureId;}
+	int GetGLTextureId() const {return m_glTextureId;}
+	void SetGLTextureId(int id) {m_glTextureId = id;}
 	const Vector2 *GetVertices() const {return m_vertices;}
 	const Vector2 *GetCoordinates() const {return m_coordinates;}
 	const unsigned short *GetIndices() const {return m_indices;}

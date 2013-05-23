@@ -1,10 +1,14 @@
 package com.funzio.pure2D.demo.objects;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
+//import com.funzio.pure2D.gl.GL10;
 import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
@@ -16,9 +20,15 @@ public class LWFActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLWFData = new LWFData(getAssets(), "lwf/YetiBlue.lwf");
+        mScene.setListener(new Scene.Listener() {
 
-        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+             @Override
+             public void onSurfaceCreated(final GL10 gl) {
+                mLWFData = new LWFData(mScene, getAssets(), "lwf/YetiBlue.lwf");
+
+                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+             }
+        });
     }
 
     private void addObject(final float x, final float y) {

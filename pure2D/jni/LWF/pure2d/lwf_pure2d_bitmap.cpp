@@ -12,11 +12,8 @@ Pure2DRendererBitmapContext::Pure2DRendererBitmapContext(
 {
 	const Format::TextureFragment &f =
 		data->textureFragments[bx.textureFragmentId];
+	m_textureId = f.textureId;
 	const Format::Texture &t = data->textures[f.textureId];
-	string filename = t.GetFilename(data);
-
-	// TODO load texture
-
 	m_preMultipliedAlpha = t.format == Format::TEXTUREFORMAT_PREMULTIPLIEDALPHA;
 
 	float tw = (float)t.width;
@@ -81,7 +78,6 @@ Pure2DRendererBitmapContext::Pure2DRendererBitmapContext(
 
 Pure2DRendererBitmapContext::~Pure2DRendererBitmapContext()
 {
-	// TODO unload texture
 }
 
 Pure2DRendererBitmapRenderer::Pure2DRendererBitmapRenderer(

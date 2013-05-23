@@ -3,6 +3,7 @@ package com.funzio.pure2D.lwf;
 import android.util.Log;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 public class LWFObject extends BaseDisplayObject {
@@ -16,6 +17,7 @@ public class LWFObject extends BaseDisplayObject {
     private native long getPointer(int lwfId);
     private native void destroy(int lwfId);
     private native void exec(long ptr, float tick);
+    private native void render(long ptr);
 
     public LWFObject(LWFData data) {
         mId = create(data.getId());
@@ -30,7 +32,8 @@ public class LWFObject extends BaseDisplayObject {
         super.update(deltaTime);
         if (mId < 0)
             return false;
-        exec(mPtr, deltaTime / 1000.f);
+        exec(mPtr, (float)deltaTime / 1000.f);
+        invalidate(InvalidateFlags.VISUAL);
         return true;
     }
 
@@ -38,6 +41,10 @@ public class LWFObject extends BaseDisplayObject {
     protected boolean drawChildren(final GLState glState) {
         if (mId < 0)
             return false;
+        render(mPtr);
+
+        // VBO
+
         return true;
     }
 

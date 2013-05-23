@@ -1,8 +1,12 @@
+#include <android/log.h>
 #include <GLES/gl.h>
 #include "lwf_core.h"
 #include "lwf_movie.h"
 #include "lwf_pure2d_bitmap.h"
 #include "lwf_pure2d_factory.h"
+
+#define LOG_TAG "pure2d::LWF"
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
 namespace LWF {
 
@@ -34,10 +38,12 @@ void Pure2DRendererFactory::Init(LWF *lwf)
 {
 	m_lwf = lwf;
 
+#if 1
 	GLuint buffers[2];
 	glGenBuffers(2, buffers);
 	m_vertexBuffer = buffers[0];
 	m_indicesBuffer = buffers[1];
+#endif
 
 	m_bitmaps = 0;
 	m_updateCount = -1;
@@ -68,6 +74,7 @@ void Pure2DRendererFactory::BeginRender(LWF *lwf)
 
 void Pure2DRendererFactory::EndRender(LWF *lwf)
 {
+#if 1
 	if (m_index == 0 || m_lwf->parent)
 		return;
 
@@ -75,32 +82,38 @@ void Pure2DRendererFactory::EndRender(LWF *lwf)
 	// TODO blendmode
 
 	// TODO matrix
+	glLoadIdentity();
+	glScalef(0.01f, -0.01f, 0.01f);
 
 	size_t size = sizeof(Vertex) * 4 * m_index;
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, size, &m_vertices[0], GL_DYNAMIC_DRAW);
 
-	size = sizeof(GLushort) * 6 * m_index;
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, &m_indices[0], GL_DYNAMIC_DRAW);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
 
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (GLvoid *)0);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid *)12);
 	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), (GLvoid *)20);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
+
+	size = sizeof(GLushort) * 6 * m_index;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, &m_indices[0], GL_DYNAMIC_DRAW);
 
 	glDrawElements(GL_TRIANGLES, (GLsizei)m_index * 6, GL_UNSIGNED_SHORT, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#endif
 }
 
 void Pure2DRendererFactory::Destruct()
 {
+#if 1
 	GLuint buffers[] = {m_vertexBuffer, m_indicesBuffer};
 	glDeleteBuffers(2, buffers);
+#endif
 }
 
 void Pure2DRendererFactory::AddBitmap()
