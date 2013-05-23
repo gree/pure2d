@@ -55,11 +55,15 @@ struct Data {
 	bool useTextureAtlas;
 
 	Data(const void *bytes, size_t length);
+	Data(int width, int height, int frameRate);
 	bool Check();
 	bool ReplaceTexture(int index,
 		const Format::TextureReplacement &textureReplacement);
 	bool ReplaceTextureFragment(int index,
 		const Format::TextureFragmentReplacement &textureFragmentReplacement);
+
+private:
+	void Load(const void *bytes, size_t length);
 };
 
 }	// namespace LWF
