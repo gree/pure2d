@@ -197,6 +197,7 @@ int LWF::Exec(
 {
 	bool execed = false;
 	float currentProgress = m_progress;
+	thisTick = t;
 
 	if (isExecDisabled/* TODO && tweens == 0 */) {
 		if (!m_executedForExecDisabled) {
@@ -208,7 +209,6 @@ int LWF::Exec(
 		}
 	} else {
 		bool progressing = true;
-		thisTick = t;
 		if (t == 0) {
 			m_progress = tick;
 		} else if (t < 0) {
@@ -281,7 +281,6 @@ void LWF::Update(const Matrix *matrix, const ColorTransform *colorTransform)
 	renderingIndexOffsetted = 0;
 	rootMovie->Update(m, c);
 	renderingCount = renderingIndex;
-	thisTick = 0;
 	isPropertyDirty = false;
 }
 
