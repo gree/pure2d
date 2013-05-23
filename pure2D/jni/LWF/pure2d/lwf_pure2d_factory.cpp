@@ -64,6 +64,9 @@ void Pure2DRendererFactory::BeginRender(LWF *lwf)
 
 void Pure2DRendererFactory::EndRender(LWF *lwf)
 {
+	if (m_lwf->parent)
+		return;
+
 	vector<Buffer>::iterator it(m_buffers.begin()), itend(m_buffers.end());
 	for (; it != itend; ++it) {
 		glBindTexture(GL_TEXTURE_2D, it->glTextureId);
@@ -90,6 +93,10 @@ void Pure2DRendererFactory::EndRender(LWF *lwf)
 		glDrawElements(GL_TRIANGLES,
 			(GLsizei)it->index * 6, GL_UNSIGNED_SHORT, 0);
 	}
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -129,8 +136,9 @@ void Pure2DRendererFactory::SetVertex(int offset, float x, float y,
 		return;
 	}
 
-	m_buffers.back().vertices.resize(offset + 1);
-	m_buffers.back().vertices[offset] =
+	vector<Vertex> &vertices = m_buffers.back().vertices;
+	vertices.resize(offset + 1);
+	vertices[offset] =
 		Vertex(x, y, z, u, v, 255 * r, 255 * g, 255 * b, 255 * a);
 }
 
@@ -143,8 +151,9 @@ void Pure2DRendererFactory::SetIndex(int offset, unsigned short index)
 		return;
 	}
 
-	m_buffers.back().indices.resize(offset + 1);
-	m_buffers.back().indices[offset] = index;
+	vector<unsigned short> &indices = m_buffers.back().indices;
+	indices.resize(offset + 1);
+	indices[offset] = index;
 }
 
 }	// namespace LWF

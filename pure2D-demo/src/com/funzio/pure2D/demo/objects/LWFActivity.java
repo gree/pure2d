@@ -3,22 +3,27 @@ package com.funzio.pure2D.demo.objects;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
-//import com.funzio.pure2D.gl.GL10;
+import com.funzio.pure2D.lwf.LWF;
 import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
 public class LWFActivity extends StageActivity {
 
+    private LWFObject mLWFObject;
     private LWFData mLWFData;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mLWFObject = new LWFObject();
+        mScene.addChild(mLWFObject);
 
         mScene.setListener(new Scene.Listener() {
 
@@ -26,23 +31,20 @@ public class LWFActivity extends StageActivity {
              public void onSurfaceCreated(final GL10 gl) {
                 mLWFData = new LWFData(mScene, getAssets(), "lwf/YetiBlue.lwf");
 
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
              }
         });
     }
 
-    private void addObject(final float x, final float y) {
-        // create object
-        LWFObject lwf = new LWFObject(mLWFData);
+    private void attachLWF(final float x, final float y) {
+        // create lwf
+        LWF lwf = new LWF(mLWFData);
 
-        // center origin
-        lwf.setOriginAtCenter();
+        // attach lwf
+        mLWFObject.attachLWF(lwf);
 
         // position
-        lwf.setPosition(x - 500, y);
-
-        // add to scene
-        mScene.addChild(lwf);
+        lwf.moveTo("_root", x - 450, -y - 80);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class LWFActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addObject(event.getX(), mDisplaySize.y - event.getY());
+                    attachLWF(event.getX(), mDisplaySize.y - event.getY());
                 }
             });
         }

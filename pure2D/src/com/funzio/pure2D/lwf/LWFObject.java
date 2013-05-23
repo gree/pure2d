@@ -7,48 +7,51 @@ import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 public class LWFObject extends BaseDisplayObject {
-    private static final String TAG = LWFData.class.getSimpleName();
+    private static final String TAG = LWFObject.class.getSimpleName();
 
-    private LWFData mData;
-    private int mId;
-    private long mPtr;
+    private LWF mLWF;
+    private int mAttachId;
 
-    private native int create(int lwfDataId);
-    private native long getPointer(int lwfId);
-    private native void destroy(int lwfId);
-    private native void exec(long ptr, float tick);
-    private native void render(long ptr);
-
-    public LWFObject(LWFData data) {
-        mId = create(data.getId());
-        if (mId < 0)
-            return;
-        mPtr = getPointer(mId);
-        mData = data;
+    public LWFObject() {
+        mLWF = new LWF();
     }
 
     @Override
     public boolean update(final int deltaTime) {
-        super.update(deltaTime);
-        if (mId < 0)
-            return false;
-        exec(mPtr, (float)deltaTime / 1000.f);
+        mLWF.update(deltaTime);
         invalidate(InvalidateFlags.VISUAL);
-        return true;
+        return super.update(deltaTime);
     }
 
     @Override
     protected boolean drawChildren(final GLState glState) {
-        if (mId < 0)
-            return false;
-        render(mPtr);
+        mLWF.draw();
         return true;
     }
 
+    public void attachLWF(LWF lwf) {
+        String attachName = String.format("childLWF%d", mAttachId++);
+        attachLWF(lwf, "_root", attachName);
+    }
+
+    public void attachLWF(LWF lwf, String target, String attachName) {
+        mLWF.attachLWF(lwf, target, attachName);
+    }
+
+    public void addEventHandler(LWF.Handler handler) {
+        mLWF.addEventHandler(handler);
+    }
+
+    public void gotoAndPlay(String target, String label) {
+        mLWF.gotoAndPlay(target, label);
+    }
+
+    public void gotoAndPlay(String target, int frame) {
+        mLWF.gotoAndPlay(target, frame);
+    }
+
     public void dispose() {
-        destroy(mId);
-        mId = -1;
-        mPtr = 0;
-        mData = null;
+        mLWF.dispose();
+        mLWF = null;
     }
 }
