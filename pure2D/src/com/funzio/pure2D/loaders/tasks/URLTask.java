@@ -120,6 +120,7 @@ public abstract class URLTask implements IntentTask {
         return mContentLength < 0 || (mContentLength == mTotalBytesLoaded) || (mGzipEnabled && mTotalBytesLoaded > 0);
     }
 
+    @Deprecated
     protected boolean postURL(final String data, final Map<String, String> properties) {
         final HttpURLConnection conn;
 
@@ -143,8 +144,9 @@ public abstract class URLTask implements IntentTask {
             conn.setFixedLengthStreamingMode(data.getBytes().length);
 
         } catch (IOException e) {
-
-            e.printStackTrace();
+            if (LOG_ENABLED) {
+                Log.v(TAG, "READ ERROR!", e);
+            }
             return false;
         }
 

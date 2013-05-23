@@ -17,7 +17,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 
@@ -186,12 +186,12 @@ public class NovaConfig {
      */
     public static int getLoopMode(final String mode) {
         if (LOOP_REPEAT.equalsIgnoreCase(mode)) {
-            return Playable.LOOP_REPEAT;
+            return LoopModes.LOOP_REPEAT;
         } else if (LOOP_REVERSE.equalsIgnoreCase(mode)) {
-            return Playable.LOOP_REVERSE;
+            return LoopModes.LOOP_REVERSE;
         }
 
-        return Playable.LOOP_NONE;
+        return LoopModes.LOOP_NONE;
     }
 
     /**
