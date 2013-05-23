@@ -257,6 +257,9 @@ extern "C" JNIEXPORT int JNICALL Java_com_funzio_pure2D_lwf_LWF_addEventHandler(
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoAndPlay(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jstring jLabel)
 {
+    if (!jLWF)
+        return;
+
     const char *target = env->GetStringUTFChars(jTarget, 0);
     const char *label = env->GetStringUTFChars(jLabel, 0);
 
@@ -271,6 +274,9 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoAndPlay(JNI
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoFrameAndPlay(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jint jFrame)
 {
+    if (!jLWF)
+        return;
+
     const char *target = env->GetStringUTFChars(jTarget, 0);
 
     class LWF *lwf = (class LWF *)jLWF;
@@ -281,8 +287,41 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoFrameAndPla
     env->ReleaseStringUTFChars(jTarget, target);
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_play(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget)
+{
+    if (!jLWF)
+        return;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    if (movie)
+        movie->Play();
+
+    env->ReleaseStringUTFChars(jTarget, target);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_stop(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget)
+{
+    if (!jLWF)
+        return;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    if (movie)
+        movie->Stop();
+
+    env->ReleaseStringUTFChars(jTarget, target);
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_moveTo(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
 {
+    if (!jLWF)
+        return;
+
     const char *target = env->GetStringUTFChars(jTarget, 0);
 
     class LWF *lwf = (class LWF *)jLWF;
@@ -291,6 +330,15 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_moveTo(JNIEnv *
         movie->MoveTo(jX, jY);
 
     env->ReleaseStringUTFChars(jTarget, target);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setPlaying(JNIEnv *env, jobject obj, jlong jLWF, jboolean jPlaying)
+{
+    if (!jLWF)
+        return;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    lwf->playing = jPlaying;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)

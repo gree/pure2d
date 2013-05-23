@@ -20,6 +20,7 @@ public class LWF {
     private long mPtr;
     private HashMap<Integer, Handler> mHandlers;
     private int mHandlerId;
+    private boolean mPlaying = true;
 
     private native int create(int lwfDataId);
     private native long getPointer(int lwfId);
@@ -30,7 +31,10 @@ public class LWF {
     private native int addEventHandler(long ptr, int handlerId);
     private native void gotoAndPlay(long ptr, String target, String label);
     private native void gotoFrameAndPlay(long ptr, String target, int frame);
+    private native void play(long ptr, String target);
+    private native void stop(long ptr, String target);
     private native void moveTo(long ptr, String target, float x, float y);
+    private native void setPlaying(long ptr, boolean playing);
 
     public LWF() {
         mId = create(Integer.MAX_VALUE);
@@ -82,10 +86,51 @@ public class LWF {
         gotoFrameAndPlay(mPtr, target, frame);
     }
 
+    public void playAt(String target, String label) {
+        gotoAndPlay(target, label);
+    }
+
+    public void playAt(String target, int frame) {
+        gotoAndPlay(target, frame);
+    }
+
+    public void stopAt(String target, String label) {
+        gotoAndPlay(target, label);
+        stop(target);
+    }
+
+    public void stopAt(String target, int frame) {
+        gotoAndPlay(target, frame);
+        stop(target);
+    }
+
+    public void play(String target) {
+        if (mId < 0)
+            return;
+        play(mPtr, target);
+    }
+
+    public void stop(String target) {
+        if (mId < 0)
+            return;
+        stop(mPtr, target);
+    }
+
     public void moveTo(String target, float x, float y) {
         if (mId < 0)
             return;
         moveTo(mPtr, target, x, y);
+    }
+
+    public void setPlaying(boolean playing) {
+        if (mId < 0)
+            return;
+        mPlaying = playing;
+        setPlaying(mPtr, playing);
+    }
+
+    public boolean isPlaying() {
+        return mPlaying;
     }
 
     public void update(final int deltaTime) {
