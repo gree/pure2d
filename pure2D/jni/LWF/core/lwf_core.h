@@ -76,6 +76,7 @@ public:
 	bool isLWFAttached;
 	bool interceptByNotAllowOrDenyButtons;
 	bool intercepted;
+	bool playing;
 	void *privateData;
 
 	//TODO

@@ -41,6 +41,7 @@ LWF::LWF(shared_ptr<Data> d, shared_ptr<IRendererFactory> r)
 	isLWFAttached = false;
 	interceptByNotAllowOrDenyButtons = true;
 	intercepted = false;
+	playing = true;
 	privateData = 0;
 
 	m_roundOffTick = tick * ROUND_OFF_TICK_RATE;
@@ -195,6 +196,9 @@ const ColorTransform *LWF::CalcColorTransform(
 int LWF::Exec(
 	float t, const Matrix *matrix, const ColorTransform *colorTransform)
 {
+	if (!playing)
+		return renderingCount;
+
 	bool execed = false;
 	float currentProgress = m_progress;
 	thisTick = t;
