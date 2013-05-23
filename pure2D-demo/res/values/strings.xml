@@ -14,7 +14,8 @@
     <string name="bouncing_objects">Bouncing Objects</string>
     <string name="sprite">Sprite</string>
     <string name="frame_buffer">Frame Buffer</string>
-    <string name="lwf">LWF</string>
+    <string name="lwf_character">LWF Character</string>
+    <string name="lwf_cinematic">LWF Cinematic</string>
 
     <!-- display groups -->
     <string name="containers">Containers</string>

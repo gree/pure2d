@@ -35,10 +35,17 @@
         android:text="@string/bouncing_objects" />
 
     <Button
-        android:id="@+id/btn_lwf"
+        android:id="@+id/btn_lwf_character"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="onClickButton"
-        android:text="@string/lwf" />
+        android:text="@string/lwf_character" />
+
+    <Button
+        android:id="@+id/btn_lwf_cinematic"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/lwf_cinematic" />
 
 </LinearLayout>

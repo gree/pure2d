@@ -13,7 +13,7 @@ import com.funzio.pure2D.lwf.LWF;
 import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
-public class LWFActivity extends StageActivity {
+public class LWFCharacterActivity extends StageActivity {
 
     private LWFObject mLWFObject;
     private LWFData mLWFData;
@@ -29,7 +29,7 @@ public class LWFActivity extends StageActivity {
 
              @Override
              public void onSurfaceCreated(final GL10 gl) {
-                mLWFData = new LWFData(mScene, getAssets(), "lwf/YetiBlue.lwf");
+                mLWFData = new LWFData(mScene, getAssets(), "lwf/YetiBlue/YetiBlue.lwf");
 
                 attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
              }
