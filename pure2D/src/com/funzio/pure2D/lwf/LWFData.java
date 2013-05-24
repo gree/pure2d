@@ -16,10 +16,15 @@ public class LWFData {
         System.loadLibrary("pure2d");
     }
 
+    public static boolean LOG_ENABLED = true;
     private static final String TAG = LWFData.class.getSimpleName();
     private static final int HEADER_SIZE = 324;
 
+    private LWFManager mManager;
+    private String mPath;
     private int mId = -1;
+    private int mRefCount = 0;
+    private Texture[] mTextures;
 
     private native int create(byte[] data);
     private native int getTextureNum(int lwfDataId);
@@ -27,9 +32,11 @@ public class LWFData {
     private native void setGLTexture(int lwfDataId, int[] glTextureIds, float[] glTextureUs, float[] glTextureVs);
     private native void destroy(int lwfDataId);
 
-    public LWFData(final Scene scene, final AssetManager assetManager, final String filePath) {
+    public LWFData(final Scene scene, final AssetManager assetManager, final String path) {
         try {
-            InputStream stream = assetManager.open(filePath);
+            mManager = scene.getLWFManager();
+            mPath = path;
+            InputStream stream = assetManager.open(path);
 
             byte[] header = new byte[HEADER_SIZE];
             stream.read(header);
@@ -44,17 +51,19 @@ public class LWFData {
             mId = create(data);
 
             String base = "";
-            int index = filePath.lastIndexOf('/');
+            int index = path.lastIndexOf('/');
             if (index > 0)
-                base = filePath.substring(0, index + 1);
+                base = path.substring(0, index + 1);
 
             int textureNum = getTextureNum(mId);
+            mTextures = new Texture[textureNum];
             int[] glTextureIds = new int[textureNum];
             float[] glTextureUs = new float[textureNum];
             float[] glTextureVs = new float[textureNum];
             for (int i = 0; i < textureNum; ++i) {
                 String name = getTextureName(mId, i);
                 Texture texture = scene.getTextureManager().createAssetTexture(base + name, null);
+                mTextures[i] = texture;
                 glTextureIds[i] = texture.getTextureID();
                 glTextureUs[i] = texture.mCoordScaleX;
                 glTextureVs[i] = texture.mCoordScaleY;
@@ -69,8 +78,31 @@ public class LWFData {
         return mId;
     }
 
+    public void deleteReference() {
+        if (--mRefCount <= 0) {
+            mManager.removeLWFData(this);
+            dispose();
+        }
+    }
+
+    public void addReference() {
+        ++mRefCount;
+    }
+
+    public String getPath() {
+        return mPath;
+    }
+
     public void dispose() {
-        destroy(mId);
-        mId = -1;
+        if (mId != -1) {
+            if (LOG_ENABLED) {
+                Log.e(TAG, "dispose()");
+            }
+            destroy(mId);
+            // unload textures?
+            mTextures = null;
+            mManager = null;
+            mId = -1;
+        }
     }
 }

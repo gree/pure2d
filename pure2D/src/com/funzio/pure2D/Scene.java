@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
+import com.funzio.pure2D.lwf.LWFManager;
 
 /**
  * @author long
@@ -43,6 +44,8 @@ public interface Scene extends Renderer, Container {
     public GLState getGLState();
 
     public TextureManager getTextureManager();
+
+    public LWFManager getLWFManager();
 
     public PointF globalToScreen(final float globalX, final float globalY);
 

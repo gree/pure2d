@@ -10,13 +10,11 @@ import android.view.View;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.lwf.LWF;
-import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
 public class LWFCharacterActivity extends StageActivity {
 
     private LWFObject mLWFObject;
-    private LWFData mLWFData;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -29,21 +27,22 @@ public class LWFCharacterActivity extends StageActivity {
 
              @Override
              public void onSurfaceCreated(final GL10 gl) {
-                mLWFData = new LWFData(mScene, getAssets(), "lwf/YetiBlue/YetiBlue.lwf");
-
                 attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
              }
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mScene.dispose();
+    }
+
     private void attachLWF(final float x, final float y) {
-        // create lwf
-        LWF lwf = new LWF(mLWFData);
-
         // attach lwf
-        mLWFObject.attachLWF(lwf);
+        LWF lwf = mLWFObject.attachLWF(getAssets(), "lwf/YetiBlue/YetiBlue.lwf");
 
-        // position
+        // position in Flash coordinate
         lwf.moveTo("_root", x - 450, -y - 80);
     }
 

@@ -1,6 +1,7 @@
 package com.funzio.pure2D.lwf;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import android.util.Log;
 
@@ -13,18 +14,22 @@ public class LWF {
         void call();
     }
 
+    public static boolean LOG_ENABLED = true;
     private static final String TAG = LWF.class.getSimpleName();
 
+    private LWFManager mManager;
     private LWFData mData;
     private int mId;
     private long mPtr;
     private HashMap<Integer, Handler> mHandlers;
+    private HashSet<LWF> mLWFs;
     private int mHandlerId;
     private boolean mPlaying = true;
 
     private native int create(int lwfDataId);
     private native long getPointer(int lwfId);
     private native void destroy(int lwfId);
+    private native void init(long ptr);
     private native void exec(long ptr, float tick);
     private native void render(long ptr);
     private native void attachLWF(long ptr, int childId, String target, String attachName);
@@ -36,26 +41,38 @@ public class LWF {
     private native void moveTo(long ptr, String target, float x, float y);
     private native void setPlaying(long ptr, boolean playing);
 
-    public LWF() {
+    public LWF(LWFManager manager) {
         mId = create(Integer.MAX_VALUE);
         if (mId < 0)
             return;
+        mManager = manager;
         mPtr = getPointer(mId);
         mHandlers = new HashMap<Integer, Handler>();
+        mLWFs = new HashSet<LWF>();
     }
 
-    public LWF(LWFData data) {
+    public LWF(LWFManager manager, LWFData data) {
         mId = create(data.getId());
         if (mId < 0)
             return;
+        mManager = manager;
         mData = data;
+        mData.addReference();
         mPtr = getPointer(mId);
         mHandlers = new HashMap<Integer, Handler>();
+        mLWFs = new HashSet<LWF>();
+    }
+
+    public void init() {
+        if (mId < 0)
+            return;
+        init(mPtr);
     }
 
     public void attachLWF(LWF lwf, String target, String attachName) {
         if (mId < 0)
             return;
+        mLWFs.add(lwf);
         attachLWF(mPtr, lwf.mId, target, attachName);
     }
 
@@ -68,6 +85,8 @@ public class LWF {
     }
 
     public void callHandler(int handlerId) {
+        if (mId < 0)
+            return;
         Handler handler = mHandlers.get(Integer.valueOf(handlerId));
         if (handler == null)
             return;
@@ -146,9 +165,28 @@ public class LWF {
     }
 
     public void dispose() {
-        destroy(mId);
-        mId = -1;
-        mPtr = 0;
-        mData = null;
+        if (mId != -1) {
+            if (LOG_ENABLED) {
+                Log.e(TAG, "dispose()");
+            }
+            final int id = mId;
+            mManager.getScene().queueEvent(new Runnable() {
+                @Override
+                public void run() {
+                    destroy(id);
+                }
+            });
+            mId = -1;
+            mPtr = 0;
+            for (LWF lwf : mLWFs)
+                lwf.dispose();
+            mLWFs.clear();
+            if (mData != null) {
+                mData.deleteReference();
+                mData = null;
+            }
+            mManager.removeLWF(this);
+            mManager = null;
+        }
     }
 }

@@ -26,6 +26,7 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
+import com.funzio.pure2D.lwf.LWFManager;
 
 /**
  * @author long
@@ -38,6 +39,7 @@ public class BaseScene implements Scene {
     protected GLState mGLState;
     protected Camera mCamera;
     protected TextureManager mTextureManager;
+    protected LWFManager mLWFManager = new LWFManager(this);
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     private int mNumChildren;
 
@@ -190,6 +192,10 @@ public class BaseScene implements Scene {
 
     final public TextureManager getTextureManager() {
         return mTextureManager;
+    }
+
+    final public LWFManager getLWFManager() {
+        return mLWFManager;
     }
 
     /*
@@ -890,6 +896,9 @@ public class BaseScene implements Scene {
         if (mChildren != null) {
             removeAllChildren();
             mChildren = null;
+
+            mLWFManager.removeAllInstances();
+            mLWFManager = null;
 
             mTextureManager.removeAllTextures();
             mTextureManager = null;

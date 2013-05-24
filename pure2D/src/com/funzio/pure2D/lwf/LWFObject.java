@@ -2,13 +2,16 @@ package com.funzio.pure2D.lwf;
 
 import android.util.Log;
 import android.graphics.RectF;
+import android.content.res.AssetManager;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 public class LWFObject extends BaseDisplayObject implements Playable {
+    public static boolean LOG_ENABLED = true;
     private static final String TAG = LWFObject.class.getSimpleName();
 
     private LWF mLWF;
@@ -16,12 +19,12 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     private boolean mPlaying;
 
     public LWFObject() {
-        mLWF = new LWF();
-        mPlaying = true;
     }
 
     @Override
     public boolean update(final int deltaTime) {
+        if (mLWF == null)
+            return false;
         mLWF.update(deltaTime);
         invalidate(InvalidateFlags.VISUAL);
         return super.update(deltaTime);
@@ -29,23 +32,33 @@ public class LWFObject extends BaseDisplayObject implements Playable {
 
     @Override
     protected boolean drawChildren(final GLState glState) {
+        if (mLWF == null)
+            return false;
         mLWF.draw();
         return true;
     }
 
     public void play() {
+        if (mLWF == null)
+            return;
         mLWF.setPlaying(true);
     }
 
     public void playAt(final int frame) {
+        if (mLWF == null)
+            return;
         mLWF.setPlaying(true);
     }
 
     public void stop() {
+        if (mLWF == null)
+            return;
         mLWF.setPlaying(false);
     }
 
     public void stopAt(final int frame) {
+        if (mLWF == null)
+            return;
         mLWF.setPlaying(false);
     }
 
@@ -65,6 +78,8 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     }
 
     public boolean isPlaying() {
+        if (mLWF == null)
+            return false;
         return mLWF.isPlaying();
     }
 
@@ -73,17 +88,31 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         return r;
     }
 
-    public void attachLWF(LWF lwf) {
+    public LWF attachLWF(AssetManager assetManager, String path) {
         String attachName = String.format("childLWF%d", mAttachId++);
-        attachLWF(lwf, "_root", attachName);
+        return attachLWF(assetManager, path, "_root", attachName);
     }
 
-    public void attachLWF(LWF lwf, String target, String attachName) {
+    public LWF attachLWF(AssetManager assetManager, String path, String target, String attachName) {
+        if (mLWF == null)  {
+            mLWF = mScene.getLWFManager().createLWF();
+            mPlaying = true;
+        }
+
+        LWF lwf = mScene.getLWFManager().createLWF(assetManager, path);
         mLWF.attachLWF(lwf, target, attachName);
+        return lwf;
     }
 
+    @Override
     public void dispose() {
-        mLWF.dispose();
-        mLWF = null;
+        super.dispose();
+        if (mLWF != null) {
+            if (LOG_ENABLED) {
+                Log.e(TAG, "dispose()");
+            }
+            mLWF.dispose();
+            mLWF = null;
+        }
     }
 }

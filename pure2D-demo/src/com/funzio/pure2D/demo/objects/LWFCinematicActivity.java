@@ -10,14 +10,12 @@ import android.view.View;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.lwf.LWF;
-import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
 public class LWFCinematicActivity extends StageActivity {
     private static final String TAG = LWFCinematicActivity.class.getSimpleName();
 
     private LWFObject mLWFObject;
-    private LWFData mLWFData;
     private LWF mLWF;
 
     @Override
@@ -31,21 +29,22 @@ public class LWFCinematicActivity extends StageActivity {
 
              @Override
              public void onSurfaceCreated(final GL10 gl) {
-                mLWFData = new LWFData(mScene, getAssets(), "lwf/evolve/evolve.lwf");
-
                 attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
              }
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mScene.dispose();
+    }
+
     private void attachLWF(final float x, final float y) {
-        // create lwf
-        mLWF = new LWF(mLWFData);
-
         // attach lwf
-        mLWFObject.attachLWF(mLWF);
+        mLWF = mLWFObject.attachLWF(getAssets(), "lwf/evolve/evolve.lwf");
 
-        // position
+        // position in Flash coordinate
         mLWF.moveTo("_root", 0, -700);
 
         // handler
@@ -55,13 +54,25 @@ public class LWFCinematicActivity extends StageActivity {
                 Log.v(TAG, "done");
             }
         });
+        mLWF.addEventHandler("STOP_DRAWING_BASE_UNITS", new LWF.Handler() {
+            @Override
+            public void call() {
+                Log.v(TAG, "STOP_DRAWING_BASE_UNITS");
+            }
+        });
+        mLWF.addEventHandler("START_DRAWING_FINAL_UNIT", new LWF.Handler() {
+            @Override
+            public void call() {
+                Log.v(TAG, "START_DRAWING_FINAL_UNIT");
+            }
+        });
     }
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (mLWF != null)
-                mLWF.gotoAndPlay("_root", 1);
+                mLWF.gotoAndPlay("_root", "start");
         }
 
         return true;
