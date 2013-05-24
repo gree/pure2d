@@ -14,6 +14,7 @@ import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
 public class LWFCinematicActivity extends StageActivity {
+    private static final String TAG = LWFCinematicActivity.class.getSimpleName();
 
     private LWFObject mLWFObject;
     private LWFData mLWFData;
@@ -46,6 +47,14 @@ public class LWFCinematicActivity extends StageActivity {
 
         // position
         mLWF.moveTo("_root", 0, -700);
+
+        // handler
+        mLWF.addEventHandler("done", new LWF.Handler() {
+            @Override
+            public void call() {
+                Log.v(TAG, "done");
+            }
+        });
     }
 
     @Override

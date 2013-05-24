@@ -24,14 +24,14 @@ struct DataContext {
 class EventHandlerWrapper {
 private:
     JNIEnv *env;
-    jobject object;
     jmethodID method;
     int handlerId;
 public:
-    EventHandlerWrapper(JNIEnv *e, jobject o, jmethodID m, int i)
-        : env(e), object(o), method(m), handlerId(i) {}
-    void operator()(Movie *, Button *) {
-        env->CallIntMethod(object, method, handlerId);
+    EventHandlerWrapper(JNIEnv *e, jmethodID m, int i)
+        : env(e), method(m), handlerId(i) {}
+    void operator()(Movie *movie, Button *) {
+        env->CallVoidMethod(
+            (jobject)movie->lwf->privateData, method, handlerId);
     }
 };
 
@@ -179,6 +179,8 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *
 
     }
 
+    lwf->privateData = env->NewGlobalRef(obj);
+
     int id = ++s_lwfId;
     s_lwfMap[id] = lwf;
 
@@ -246,8 +248,7 @@ extern "C" JNIEXPORT int JNICALL Java_com_funzio_pure2D_lwf_LWF_addEventHandler(
     jclass cls = env->GetObjectClass(obj);
     jmethodID method = env->GetMethodID(cls, "callHandler", "(I)V");
 
-    EventHandlerWrapper h =
-        EventHandlerWrapper(env, obj, method, jHandlerId);
+    EventHandlerWrapper h = EventHandlerWrapper(env, method, jHandlerId);
     int id = lwf->AddEventHandler(event, h);
 
     env->ReleaseStringUTFChars(jEvent, event);
@@ -343,6 +344,12 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setPlaying(JNIE
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
 {
-    s_lwfMap.erase(jLWFId);
+    LWFMap::iterator it = s_lwfMap.find(jLWFId);
+    if (it == s_lwfMap.end())
+        return;
+
+    env->DeleteGlobalRef((jobject)it->second->privateData);
+
+    s_lwfMap.erase(it);
 }
 

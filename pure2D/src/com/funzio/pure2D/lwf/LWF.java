@@ -9,8 +9,8 @@ public class LWF {
         System.loadLibrary("pure2d");
     }
 
-    public class Handler {
-        void call() {}
+    public interface Handler {
+        void call();
     }
 
     private static final String TAG = LWF.class.getSimpleName();
@@ -28,7 +28,7 @@ public class LWF {
     private native void exec(long ptr, float tick);
     private native void render(long ptr);
     private native void attachLWF(long ptr, int childId, String target, String attachName);
-    private native int addEventHandler(long ptr, int handlerId);
+    private native int addEventHandler(long ptr, String event, int handlerId);
     private native void gotoAndPlay(long ptr, String target, String label);
     private native void gotoFrameAndPlay(long ptr, String target, int frame);
     private native void play(long ptr, String target);
@@ -59,12 +59,12 @@ public class LWF {
         attachLWF(mPtr, lwf.mId, target, attachName);
     }
 
-    public void addEventHandler(Handler handler) {
+    public void addEventHandler(String event, Handler handler) {
         if (mId < 0)
             return;
         int handlerId = ++mHandlerId;
         mHandlers.put(Integer.valueOf(handlerId), handler);
-        addEventHandler(mPtr, handlerId);
+        addEventHandler(mPtr, event, handlerId);
     }
 
     public void callHandler(int handlerId) {
