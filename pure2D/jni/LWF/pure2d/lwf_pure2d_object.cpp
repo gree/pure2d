@@ -94,6 +94,15 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIE
     return id;
 }
 
+extern "C" JNIEXPORT jstring JNICALL Java_com_funzio_pure2D_lwf_LWFData_getName(JNIEnv *env, jobject obj, jint jLWFDataId)
+{
+    DataMap::iterator it = s_dataMap.find(jLWFDataId);
+    if (it == s_dataMap.end())
+        return 0;
+
+    return env->NewStringUTF(it->second.data->name.c_str());
+}
+
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_getTextureNum(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
     DataMap::iterator it = s_dataMap.find(jLWFDataId);

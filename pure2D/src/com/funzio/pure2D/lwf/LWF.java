@@ -57,7 +57,6 @@ public class LWF {
             return;
         mManager = manager;
         mData = data;
-        mData.addReference();
         mPtr = getPointer(mId);
         mHandlers = new HashMap<Integer, Handler>();
         mLWFs = new HashSet<LWF>();
@@ -181,10 +180,7 @@ public class LWF {
             for (LWF lwf : mLWFs)
                 lwf.dispose();
             mLWFs.clear();
-            if (mData != null) {
-                mData.deleteReference();
-                mData = null;
-            }
+            mData = null;
             mManager.removeLWF(this);
             mManager = null;
         }

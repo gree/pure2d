@@ -1,5 +1,7 @@
 package com.funzio.pure2D.demo.objects;
 
+import java.io.InputStream;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.os.Bundle;
@@ -9,13 +11,16 @@ import android.view.View;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.lwf.LWF;
+import com.funzio.pure2D.lwf.LWFData;
 import com.funzio.pure2D.lwf.LWFObject;
 
 public class LWFCinematicActivity extends StageActivity {
     private static final String TAG = LWFCinematicActivity.class.getSimpleName();
 
     private LWFObject mLWFObject;
+    private LWFData mLWFData;
     private LWF mLWF;
 
     @Override
@@ -29,6 +34,21 @@ public class LWFCinematicActivity extends StageActivity {
 
              @Override
              public void onSurfaceCreated(final GL10 gl) {
+                try {
+                    InputStream stream = getAssets().open("lwf/evolve/evolve.lwf");
+                    mLWFData = mScene.getLWFManager().createLWFData(stream);
+                } catch (Exception e) {
+                    Log.e("LWFCharacterActivity", "ERROR: " + e);
+                }
+
+                int textureNum = mLWFData.getTextureNum();
+                Texture[] textures = new Texture[textureNum];
+                for (int i = 0; i < textureNum; ++i) {
+                    String name = mLWFData.getTextureName(i);
+                    textures[i] = mScene.getTextureManager().createAssetTexture("lwf/evolve/" + name, null);
+                }
+                mLWFData.setTextures(textures);
+
                 attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
              }
         });
@@ -42,7 +62,7 @@ public class LWFCinematicActivity extends StageActivity {
 
     private void attachLWF(final float x, final float y) {
         // attach lwf
-        mLWF = mLWFObject.attachLWF(getAssets(), "lwf/evolve/evolve.lwf");
+        mLWF = mLWFObject.attachLWF(mLWFData);
 
         // position in Flash coordinate
         mLWF.moveTo("_root", 0, -700);

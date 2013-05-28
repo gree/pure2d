@@ -2,7 +2,6 @@ package com.funzio.pure2D.lwf;
 
 import android.util.Log;
 import android.graphics.RectF;
-import android.content.res.AssetManager;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
@@ -88,18 +87,18 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         return r;
     }
 
-    public LWF attachLWF(AssetManager assetManager, String path) {
+    public LWF attachLWF(LWFData data) {
         String attachName = String.format("childLWF%d", mAttachId++);
-        return attachLWF(assetManager, path, "_root", attachName);
+        return attachLWF(data, "_root", attachName);
     }
 
-    public LWF attachLWF(AssetManager assetManager, String path, String target, String attachName) {
+    public LWF attachLWF(LWFData data, String target, String attachName) {
         if (mLWF == null)  {
             mLWF = mScene.getLWFManager().createLWF();
             mPlaying = true;
         }
 
-        LWF lwf = mScene.getLWFManager().createLWF(assetManager, path);
+        LWF lwf = mScene.getLWFManager().createLWF(data);
         mLWF.attachLWF(lwf, target, attachName);
         return lwf;
     }

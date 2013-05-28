@@ -1,9 +1,9 @@
 package com.funzio.pure2D.lwf;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.funzio.pure2D.Scene;
@@ -13,14 +13,20 @@ public class LWFManager {
     private static final String TAG = LWFManager.class.getSimpleName();
 
     private final Scene mScene;
-    private HashMap<String, LWFData> mDataCache;
+    private HashSet<LWFData> mDatas;
     private HashSet<LWF> mLWFs;
     private boolean mRemoving = false;
 
     public LWFManager(final Scene scene) {
         mScene = scene;
-        mDataCache = new HashMap<String, LWFData>();
+        mDatas = new HashSet<LWFData>();
         mLWFs = new HashSet<LWF>();
+    }
+
+    public LWFData createLWFData(InputStream stream) {
+        LWFData data = new LWFData(this, stream);
+        mDatas.add(data);
+        return data;
     }
 
     public LWF createLWF() {
@@ -29,15 +35,14 @@ public class LWFManager {
         return lwf;
     }
 
-    public LWF createLWF(AssetManager assetManager, String path) {
-        LWFData data = mDataCache.get(path);
-        if (data == null) {
-            data = new LWFData(mScene, assetManager, path);
-            mDataCache.put(path, data);
-        }
+    public LWF createLWF(LWFData data) {
         LWF lwf = new LWF(this, data);
         mLWFs.add(lwf);
         return lwf;
+    }
+
+    public void removeLWFData(LWFData data) {
+        mDatas.remove(data);
     }
 
     public void removeLWF(LWF lwf) {
@@ -45,16 +50,12 @@ public class LWFManager {
             mLWFs.remove(lwf);
     }
 
-    public void removeLWFData(LWFData data) {
-        mDataCache.remove(data.getPath());
-    }
-
     public void removeAllInstances() {
         mRemoving = true;
         for (LWF lwf : mLWFs)
             lwf.dispose();
         mRemoving = false;
-        mDataCache.clear();
+        mDatas.clear();
         mLWFs.clear();
     }
 
