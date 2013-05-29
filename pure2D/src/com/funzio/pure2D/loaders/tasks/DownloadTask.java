@@ -24,7 +24,7 @@ public class DownloadTask extends URLTask implements Retriable {
     public static final String EXTRA_FILE_PATH = "filePath";
 
     protected final String mFilePath;
-    protected final boolean mOverriding;
+    protected boolean mOverriding;
     private OutputStream mOutputStream;
 
     protected boolean mSucceeded; // whether the execution was successful or not.
@@ -166,6 +166,14 @@ public class DownloadTask extends URLTask implements Retriable {
 
     public String getFilePath() {
         return mFilePath;
+    }
+
+    public boolean isOverriding() {
+        return mOverriding;
+    }
+
+    public void setOverriding(final boolean overriding) {
+        mOverriding = overriding;
     }
 
     /*
