@@ -11,7 +11,7 @@ import java.util.Properties;
  */
 public class URLLoadPropertiesTask extends URLRetriableTask {
 
-    protected Properties mProperties;
+    protected Properties mContent;
 
     /**
      * @param srcURL
@@ -43,10 +43,10 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
      */
     @Override
     protected int readStream(final InputStream stream) throws Exception {
-        if (mProperties == null) {
-            mProperties = new Properties();
+        if (mContent == null) {
+            mContent = new Properties();
         }
-        mProperties.load(stream);
+        mContent.load(stream);
 
         // always true
         return mContentLength;
@@ -61,7 +61,7 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
         // nothing
     }
 
-    public Properties getProperties() {
-        return mProperties;
+    public Properties getContent() {
+        return mContent;
     }
 }
