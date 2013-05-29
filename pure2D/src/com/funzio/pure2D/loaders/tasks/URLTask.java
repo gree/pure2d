@@ -5,6 +5,7 @@ package com.funzio.pure2D.loaders.tasks;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -96,19 +97,8 @@ public abstract class URLTask implements IntentTask {
             return false;
         }
 
-        int count = 0;
-        mTotalBytesLoaded = 0;
         try {
-            final BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            // only create buffer once
-            if (mBuffer == null) {
-                mBuffer = new byte[mBufferSize];
-            }
-            while ((count = inputStream.read(mBuffer)) != -1) {
-                mTotalBytesLoaded += count;
-                onProgress(mBuffer, count);
-            }
-            inputStream.close();
+            mTotalBytesLoaded = readStream(conn.getInputStream());
         } catch (Exception e) {
             if (LOG_ENABLED) {
                 Log.v(TAG, "READ ERROR!", e);
@@ -118,6 +108,23 @@ public abstract class URLTask implements IntentTask {
 
         // verify the size if it's specified. NOTE: this only works with gzip disabled!
         return mContentLength < 0 || (mContentLength == mTotalBytesLoaded) || (mGzipEnabled && mTotalBytesLoaded > 0);
+    }
+
+    protected int readStream(final InputStream stream) throws Exception {
+        int count = 0;
+        int totalBytesLoaded = 0;
+        final BufferedInputStream inputStream = new BufferedInputStream(stream);
+        // only create buffer once
+        if (mBuffer == null) {
+            mBuffer = new byte[mBufferSize];
+        }
+        while ((count = inputStream.read(mBuffer)) != -1) {
+            totalBytesLoaded += count;
+            onProgress(mBuffer, count);
+        }
+        inputStream.close();
+
+        return totalBytesLoaded;
     }
 
     @Deprecated
@@ -170,6 +177,13 @@ public abstract class URLTask implements IntentTask {
         return true;
     }
 
+    /**
+     * Internal callback when progressing
+     * 
+     * @param data
+     * @param count
+     * @throws Exception
+     */
     abstract protected void onProgress(final byte[] data, final int count) throws Exception;
 
     @Override
