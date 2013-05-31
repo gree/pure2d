@@ -43,6 +43,10 @@ public class LWFData {
         mId = create(data);
     }
 
+    public LWFManager getLWFManager() {
+        return mManager;
+    }
+
     public int getId() {
         return mId;
     }

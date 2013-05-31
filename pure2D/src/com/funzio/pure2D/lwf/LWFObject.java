@@ -6,16 +6,25 @@ import android.graphics.RectF;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 public class LWFObject extends BaseDisplayObject implements Playable {
     public static boolean LOG_ENABLED = true;
     private static final String TAG = LWFObject.class.getSimpleName();
 
+    public static final int SCALING_NONE = 0;
+    public static final int SCALING_FIT_FOR_HEIGHT = 1;
+    public static final int SCALING_FIT_FOR_WIDTH = 2;
+    public static final int SCALING_SCALE_FOR_HEIGHT = 3;
+    public static final int SCALING_SCALE_FOR_WIDTH = 4;
+    public static final int SCALING_USE_DEFAULT = 5;
+
     private LWF mLWF;
     private int mAttachId;
     private boolean mPlaying;
+    private float mWidth;
+    private float mHeight;
+    private int mDefaultScaling = SCALING_NONE;
 
     public LWFObject() {
     }
@@ -35,6 +44,12 @@ public class LWFObject extends BaseDisplayObject implements Playable {
             return false;
         mLWF.draw();
         return true;
+    }
+
+    public void setStageSize(float width, float height, int defaultScaling) {
+        mWidth = width;
+        mHeight = height;
+        mDefaultScaling = defaultScaling;
     }
 
     public void play() {
@@ -88,17 +103,47 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     }
 
     public LWF attachLWF(LWFData data) {
+        return attachLWF(data, SCALING_USE_DEFAULT);
+    }
+
+    public LWF attachLWF(LWFData data, int scaling) {
         String attachName = String.format("childLWF%d", mAttachId++);
-        return attachLWF(data, "_root", attachName);
+        return attachLWF(data, "_root", attachName, scaling);
     }
 
     public LWF attachLWF(LWFData data, String target, String attachName) {
+        return attachLWF(data, target, attachName, SCALING_USE_DEFAULT);
+    }
+
+    public LWF attachLWF(LWFData data, String target, String attachName, int scaling) {
         if (mLWF == null)  {
-            mLWF = mScene.getLWFManager().createLWF();
+            mLWF = data.getLWFManager().createLWF();
             mPlaying = true;
         }
 
-        LWF lwf = mScene.getLWFManager().createLWF(data);
+        LWF lwf = data.getLWFManager().createLWF(data);
+
+        if (scaling == SCALING_USE_DEFAULT)
+            scaling = mDefaultScaling;
+
+        switch (scaling) {
+        case SCALING_FIT_FOR_HEIGHT:
+            mLWF.fitForHeight(mWidth, mHeight);
+            break;
+
+        case SCALING_FIT_FOR_WIDTH:
+            mLWF.fitForWidth(mWidth, mHeight);
+            break;
+
+        case SCALING_SCALE_FOR_HEIGHT:
+            mLWF.scaleForHeight(mWidth, mHeight);
+            break;
+
+        case SCALING_SCALE_FOR_WIDTH:
+            mLWF.scaleForWidth(mWidth, mHeight);
+            break;
+        }
+
         mLWF.attachLWF(lwf, target, attachName);
         return lwf;
     }

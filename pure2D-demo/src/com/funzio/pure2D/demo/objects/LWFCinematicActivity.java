@@ -14,11 +14,13 @@ import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.lwf.LWF;
 import com.funzio.pure2D.lwf.LWFData;
+import com.funzio.pure2D.lwf.LWFManager;
 import com.funzio.pure2D.lwf.LWFObject;
 
 public class LWFCinematicActivity extends StageActivity {
     private static final String TAG = LWFCinematicActivity.class.getSimpleName();
 
+    private LWFManager mLWFManager;
     private LWFObject mLWFObject;
     private LWFData mLWFData;
     private LWF mLWF;
@@ -26,6 +28,8 @@ public class LWFCinematicActivity extends StageActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mLWFManager = new LWFManager();
 
         mLWFObject = new LWFObject();
         mScene.addChild(mLWFObject);
@@ -36,7 +40,7 @@ public class LWFCinematicActivity extends StageActivity {
              public void onSurfaceCreated(final GL10 gl) {
                 try {
                     InputStream stream = getAssets().open("lwf/evolve/evolve.lwf");
-                    mLWFData = mScene.getLWFManager().createLWFData(stream);
+                    mLWFData = mLWFManager.createLWFData(stream);
                 } catch (Exception e) {
                     Log.e("LWFCharacterActivity", "ERROR: " + e);
                 }
@@ -57,6 +61,7 @@ public class LWFCinematicActivity extends StageActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mLWFManager.dispose(mScene);
         mScene.dispose();
     }
 

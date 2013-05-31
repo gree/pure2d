@@ -40,6 +40,10 @@ public class LWF {
     private native void stop(long ptr, String target);
     private native void moveTo(long ptr, String target, float x, float y);
     private native void setPlaying(long ptr, boolean playing);
+    private native void fitForHeight(long ptr, float w, float h);
+    private native void fitForWidth(long ptr, float w, float h);
+    private native void scaleForHeight(long ptr, float w, float h);
+    private native void scaleForWidth(long ptr, float w, float h);
 
     public LWF(LWFManager manager) {
         mId = create(Integer.MAX_VALUE);
@@ -147,6 +151,30 @@ public class LWF {
         setPlaying(mPtr, playing);
     }
 
+    public void fitForHeight(float width, float height) {
+        if (mId < 0)
+            return;
+        fitForHeight(mPtr, width, height);
+    }
+
+    public void fitForWidth(float width, float height) {
+        if (mId < 0)
+            return;
+        fitForWidth(mPtr, width, height);
+    }
+
+    public void scaleForHeight(float width, float height) {
+        if (mId < 0)
+            return;
+        scaleForHeight(mPtr, width, height);
+    }
+
+    public void scaleForWidth(float width, float height) {
+        if (mId < 0)
+            return;
+        scaleForWidth(mPtr, width, height);
+    }
+
     public boolean isPlaying() {
         return mPlaying;
     }
@@ -168,13 +196,7 @@ public class LWF {
             if (LOG_ENABLED) {
                 Log.e(TAG, "dispose()");
             }
-            final int id = mId;
-            mManager.getScene().queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    destroy(id);
-                }
-            });
+            destroy(mId);
             mId = -1;
             mPtr = 0;
             for (LWF lwf : mLWFs)
