@@ -18,6 +18,8 @@ import com.funzio.pure2D.gl.gl10.VertexBuffer;
  */
 public class Polyline extends Shape {
 
+    protected static final int VERTEX_POINTER_SIZE = 2; // xy
+
     protected PointF[] mPoints;
     protected float mStroke1 = 1;
     protected float mStroke2 = 1;
@@ -28,7 +30,7 @@ public class Polyline extends Shape {
     protected float[] mVertices;
     protected int mVerticesNum = 0;
     protected float mTotalLength;
-    protected Interpolator mStrokeInterpolator = null;// new DecelerateInterpolator();
+    protected Interpolator mStrokeInterpolator = null;
 
     public PointF[] getPoints() {
         return mPoints;
@@ -38,7 +40,7 @@ public class Polyline extends Shape {
         mPoints = points;
         final int len = mPoints.length;
 
-        allocateVertices(len * 2);// each point has upper and lower points
+        allocateVertices(len * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
 
         final float strokeDelta = mStroke2 - mStroke1;
         float dx, dy, segment = 0;
@@ -110,7 +112,7 @@ public class Polyline extends Shape {
             // lower point
             mVertices[vertexIndex + 2] = currentPoint.x - rx;
             mVertices[vertexIndex + 3] = currentPoint.y - ry;
-            vertexIndex += 4;
+            vertexIndex += VERTEX_POINTER_SIZE * 2;
 
             angle0 = angle1;
         }
@@ -124,11 +126,11 @@ public class Polyline extends Shape {
         invalidate(InvalidateFlags.VISUAL);
     }
 
-    protected void allocateVertices(final int numVertices) {
+    protected void allocateVertices(final int numVertices, final int vertexSize) {
         mVerticesNum = numVertices; // each point has upper and lower points
         // NOTE: only re-allocate when the required size is bigger
-        if (mVertices == null || mVerticesNum * 2 > mVertices.length) {
-            mVertices = new float[mVerticesNum * 2];
+        if (mVertices == null || mVerticesNum * vertexSize > mVertices.length) {
+            mVertices = new float[mVerticesNum * vertexSize];
 
             // only set colors ONCE!
             setStrokeColors(mStrokeColors);
