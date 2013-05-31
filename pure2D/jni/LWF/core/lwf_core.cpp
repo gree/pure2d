@@ -80,24 +80,24 @@ void LWF::SetPreferredFrameRate(int f, int eLimit)
 	execLimit = (int)ceilf(frameRate / (float)f) + eLimit;
 }
 
-void LWF::FitForHeight(int stageHeight)
+void LWF::FitForHeight(float stageWidth, float stageHeight)
 {
-    Utility::FitForHeight(this, stageHeight);
+    Utility::FitForHeight(this, stageWidth, stageHeight);
 }
 
-void LWF::FitForWidth(int stageWidth)
+void LWF::FitForWidth(float stageWidth, float stageHeight)
 {
-    Utility::FitForWidth(this, stageWidth);
+    Utility::FitForWidth(this, stageWidth, stageHeight);
 }
 
-void LWF::ScaleForHeight(int stageHeight)
+void LWF::ScaleForHeight(float stageWidth, float stageHeight)
 {
-    Utility::ScaleForHeight(this, stageHeight);
+    Utility::ScaleForHeight(this, stageWidth, stageHeight);
 }
 
-void LWF::ScaleForWidth(int stageWidth)
+void LWF::ScaleForWidth(float stageWidth, float stageHeight)
 {
-    Utility::ScaleForWidth(this, stageWidth);
+    Utility::ScaleForWidth(this, stageWidth, stageHeight);
 }
 
 void LWF::RenderOffset()
@@ -248,11 +248,11 @@ int LWF::Exec(
 
 		if (m_progress < m_roundOffTick)
 			m_progress = 0;
-
-		buttonHead = 0;
-		if (interactive && rootMovie->hasButton)
-			rootMovie->LinkButton();
 	}
+
+	buttonHead = 0;
+	if (interactive && rootMovie->hasButton)
+		rootMovie->LinkButton();
 
 	if (execed || isLWFAttached || isPropertyDirty || matrix || colorTransform)
 		Update(matrix, colorTransform);

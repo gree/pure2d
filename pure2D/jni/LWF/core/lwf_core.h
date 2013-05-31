@@ -113,10 +113,10 @@ public:
 	void SetFrameRate(int f);
 	void SetPreferredFrameRate(int f, int eLimit = 2);
 
-	void FitForHeight(int stageHeight);
-	void FitForWidth(int stageWidth);
-	void ScaleForHeight(int stageHeight);
-	void ScaleForWidth(int stageWidth);
+	void FitForHeight(float stageWidth, float stageHeight);
+	void FitForWidth(float stageWidth, float stageHeight);
+	void ScaleForHeight(float stageWidth, float stageHeight);
+	void ScaleForWidth(float stageWidth, float stageHeight);
 
 	void RenderOffset();
 	void ClearRenderOffset();
