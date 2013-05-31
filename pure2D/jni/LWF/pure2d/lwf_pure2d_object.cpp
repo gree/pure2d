@@ -360,6 +360,42 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setPlaying(JNIE
     lwf->playing = jPlaying;
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_fitForHeight(JNIEnv *env, jobject obj, jlong jLWF, jfloat jWidth, jfloat jHeight)
+{
+    if (!jLWF)
+        return;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    lwf->FitForHeight(jWidth, jHeight);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_fitForWidth(JNIEnv *env, jobject obj, jlong jLWF, jfloat jWidth, jfloat jHeight)
+{
+    if (!jLWF)
+        return;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    lwf->FitForWidth(jWidth, jHeight);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleForHeight(JNIEnv *env, jobject obj, jlong jLWF, jfloat jWidth, jfloat jHeight)
+{
+    if (!jLWF)
+        return;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    lwf->ScaleForHeight(jWidth, jHeight);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleForWidth(JNIEnv *env, jobject obj, jlong jLWF, jfloat jWidth, jfloat jHeight)
+{
+    if (!jLWF)
+        return;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    lwf->ScaleForWidth(jWidth, jHeight);
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
 {
     LWFMap::iterator it = s_lwfMap.find(jLWFId);
