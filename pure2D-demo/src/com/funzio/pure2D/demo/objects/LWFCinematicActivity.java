@@ -61,7 +61,7 @@ public class LWFCinematicActivity extends StageActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mLWFManager.dispose(mScene);
+        mLWFManager.dispose();
         mScene.dispose();
     }
 
