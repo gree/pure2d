@@ -85,14 +85,14 @@ public class Polyline extends Shape {
 
             if (i == 0 || i == len - 1) {
                 // beginning and closing cut
-                angleCut = angle1 + (float) Math.PI / 2f;
+                angleCut = angle1 + (float) Math.PI * 0.5f;
             } else {
                 angleDelta = (angle1 - angle0);
-                angleCut += angleDelta / 2;
+                angleCut += angleDelta * 0.5f;
             }
 
-            rx = stroke * (float) Math.cos(angleCut) / 2f;
-            ry = stroke * (float) Math.sin(angleCut) / 2f;
+            rx = stroke * (float) Math.cos(angleCut) * 0.5f;
+            ry = stroke * (float) Math.sin(angleCut) * 0.5f;
             // Log.e("long", "a t r x y: " + angle1 + " " + Math.round(stroke) + " " + Math.round(radius) + " " + Math.round(rx) + " " + Math.round(ry));
 
             if (lastRY * ry < 0 && lastRX * rx < 0) {

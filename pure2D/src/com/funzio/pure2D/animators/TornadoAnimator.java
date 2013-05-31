@@ -6,6 +6,8 @@ package com.funzio.pure2D.animators;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.DisplayObject;
+
 /**
  * @author long
  */
@@ -28,10 +30,13 @@ public class TornadoAnimator extends TweenAnimator {
     private float mRadianLength;
     private float mLastX;
     private float mLastY;
+    private float mLastZ;
     private float mLengthX;
     private float mLengthY;
     private float mSinAngle;
     private float mCosAngle;
+
+    private boolean mZEnabled = false;
 
     public TornadoAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -52,7 +57,7 @@ public class TornadoAnimator extends TweenAnimator {
         // find implicit radian length
         mRadianLength = ((float) Math.PI * (mCircleNum * 2)) * mCircleMultiplier;
 
-        mLastX = mLastY = 0;
+        mLastX = mLastY = mLastZ = 0;
     }
 
     public Interpolator getCircleInterpolator() {
@@ -138,6 +143,14 @@ public class TornadoAnimator extends TweenAnimator {
         return mDelta;
     }
 
+    public void setZEnabled(final boolean value) {
+        mZEnabled = value;
+    }
+
+    public boolean getZEnabled() {
+        return mZEnabled;
+    }
+
     @Override
     protected void onUpdate(final float value) {
         if (mTarget != null) {
@@ -147,7 +160,8 @@ public class TornadoAnimator extends TweenAnimator {
             final float angle = value * mRadianLength;
             final float radius = mCircleRadius * (mCircleInterpolator == null ? value : mCircleInterpolator.getInterpolation(mCurrentUninterpolatedValue));
 
-            final float dx = radius * mCircleRatio * (float) Math.cos(angle);
+            final float cos = (float) Math.cos(angle);
+            final float dx = radius * mCircleRatio * cos;
             final float dy = radius * (float) Math.sin(angle);
             // rotate to the main direction
             final float newX = centerX + dx * mCosAngle - dy * mSinAngle;
@@ -158,8 +172,22 @@ public class TornadoAnimator extends TweenAnimator {
             } else {
                 mTarget.setPosition(mSrcX + newX, mSrcY + newY);
             }
+
             mLastX = newX;
             mLastY = newY;
+
+            // z-enabled?
+            if (mZEnabled && mTarget instanceof DisplayObject) {
+                final float newZ = -radius * cos;
+
+                if (mAccumulating) {
+                    ((DisplayObject) mTarget).setZ(((DisplayObject) mTarget).getZ() + newZ - mLastZ);
+                } else {
+                    ((DisplayObject) mTarget).setZ(newZ);
+                }
+
+                mLastZ = newZ;
+            }
         }
 
         super.onUpdate(value);
