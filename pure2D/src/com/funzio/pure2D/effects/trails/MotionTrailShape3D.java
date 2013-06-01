@@ -81,6 +81,34 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
 
     /*
      * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#setZ(float)
+     */
+    @Override
+    public void setZ(final float z) {
+        if (mNumPoints > 0) {
+            ((Point3D) mPoints[0]).set(mPoints[0].x, mPoints[0].y, z);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#move(float, float)
+     */
+    @Override
+    public void move(final float dx, final float dy) {
+        if (mNumPoints > 0) {
+            mPoints[0].offset(dx, dy);
+        }
+    }
+
+    public void move(final float dx, final float dy, final float dz) {
+        if (mNumPoints > 0) {
+            ((Point3D) mPoints[0]).offset(dx, dy, dz);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.funzio.pure2D.BaseDisplayObject#update(int)
      */
     @Override

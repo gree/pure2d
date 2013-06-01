@@ -107,6 +107,19 @@ public class Rotation3DActivity extends StageActivity {
         obj.setRotationVector(0, 1, 0);
         obj.addManipulator(animator);
         animator.start(360);
+
+        // TornadoAnimator ta = new TornadoAnimator(null);
+        // ta.setZEnabled(true);
+        // ta.setLoop(LoopModes.LOOP_REPEAT);
+        // ta.setDuration(10000);
+        // ta.setCircles(300, 10, TornadoAnimator.DEFAULT_CIRCLE_RATIO, null);
+        // ta.start(x, y - 200, x, y + 300);
+        // MotionTrailShape3D trail = new MotionTrailShape3D();
+        // trail.setStrokeRange(20, 20);
+        // trail.addManipulator(ta);
+        // trail.setPerspectiveEnabled(true);
+        // trail.setPointsAt(x, y, 0);
+        // mScene.addChild(trail);
     }
 
     @Override
