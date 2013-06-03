@@ -22,10 +22,10 @@ shared_ptr<Renderer> Pure2DRendererFactory::ConstructBitmapEx(
 	return make_shared<Pure2DRendererBitmapRenderer>(this, lwf, bitmapEx);
 }
 
-shared_ptr<Renderer> Pure2DRendererFactory::ConstructText(
+shared_ptr<TextRenderer> Pure2DRendererFactory::ConstructText(
 	LWF *lwf, int objId, Text *text)
 {
-	return shared_ptr<Renderer>();
+	return shared_ptr<TextRenderer>();
 }
 
 shared_ptr<Renderer> Pure2DRendererFactory::ConstructParticle(

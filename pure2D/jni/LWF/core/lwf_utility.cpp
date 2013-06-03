@@ -255,6 +255,7 @@ void Utility::FitForHeight(LWF *lwf, float stageWidth, float stageHeight)
 	float scale = stageHeight / lwf->height;
 	float offsetX = -lwf->width * scale / 2.0f;
 	float offsetY = -stageHeight / 2.0f;
+	lwf->scaleByStage = scale;
 	lwf->property->Scale(scale, scale);
 	lwf->property->Move(offsetX, offsetY);
 }
@@ -264,6 +265,7 @@ void Utility::FitForWidth(LWF *lwf, float stageWidth, float stageHeight)
 	float scale = stageWidth / lwf->width;
 	float offsetX = -stageWidth / 2.0f;
 	float offsetY = -lwf->height * scale / 2.0f;
+	lwf->scaleByStage = scale;
 	lwf->property->Scale(scale, scale);
 	lwf->property->Move(offsetX, offsetY);
 }
@@ -271,12 +273,14 @@ void Utility::FitForWidth(LWF *lwf, float stageWidth, float stageHeight)
 void Utility::ScaleForHeight(LWF *lwf, float stageWidth, float stageHeight)
 {
 	float scale = stageHeight / lwf->height;
+	lwf->scaleByStage = scale;
 	lwf->property->Scale(scale, scale);
 }
 
 void Utility::ScaleForWidth(LWF *lwf, float stageWidth, float stageHeight)
 {
 	float scale = stageWidth / lwf->width;
+	lwf->scaleByStage = scale;
 	lwf->property->Scale(scale, scale);
 }
 

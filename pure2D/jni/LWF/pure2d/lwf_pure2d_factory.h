@@ -59,7 +59,7 @@ public:
 		LWF *lwf, int objId, Bitmap *bitmap);
 	shared_ptr<Renderer> ConstructBitmapEx(
 		LWF *lwf, int objId, BitmapEx *bitmapEx);
-	shared_ptr<Renderer> ConstructText(
+	shared_ptr<TextRenderer> ConstructText(
 		LWF *lwf, int objId, Text *text);
 	shared_ptr<Renderer> ConstructParticle(
 		LWF *lwf, int objId, Particle *particle);

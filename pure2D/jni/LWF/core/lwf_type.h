@@ -48,7 +48,7 @@ class Movie;
 class Button;
 
 typedef function<void (Object *, int, int, int)> Inspector;
-typedef function<void (LWF *)> DetachHandler;
+typedef function<bool (LWF *)> DetachHandler;
 typedef function<void (Movie *, Button *)> EventHandler;
 typedef vector<pair<int, EventHandler> > EventHandlerList;
 

@@ -610,4 +610,54 @@ int LWF::SetExecHandler(ExecHandler execHandler)
 	return AddExecHandler(execHandler);
 }
 
+void LWF::SetText(string textName, string text)
+{
+	TextDictionary::iterator it = m_textDictionary.find(textName);
+	if (it == m_textDictionary.end()) {
+		m_textDictionary[textName] = make_pair(text, (TextRenderer *)0);
+	} else {
+		if (it->second.second != 0)
+			it->second.second->SetText(text);
+		it->second.first = text;
+	}
+}
+
+void LWF::SetTextRenderer(string fullPath,
+	string textName, string text, TextRenderer *textRenderer)
+{
+	bool setText = false;
+	string fullName = fullPath + "." + textName;
+	TextDictionary::iterator it = m_textDictionary.find(fullName);
+	if (it != m_textDictionary.end()) {
+		it->second.second = textRenderer;
+		if (!it->second.first.empty()) {
+			textRenderer->SetText(it->second.first);
+			setText = true;
+		}
+	} else {
+		m_textDictionary[fullName] = make_pair(string(), textRenderer);
+	}
+
+	it = m_textDictionary.find(textName);
+	if (it != m_textDictionary.end()) {
+		it->second.second = textRenderer;
+		if (!setText && !it->second.first.empty()) {
+			textRenderer->SetText(it->second.first);
+			setText = true;
+		}
+	} else {
+		m_textDictionary[textName] = make_pair(string(), textRenderer);
+	}
+
+	if (!setText)
+		textRenderer->SetText(text);
+}
+
+void LWF::ClearTextRenderer(string textName)
+{
+	TextDictionary::iterator it = m_textDictionary.find(textName);
+	if (it != m_textDictionary.end())
+		it->second.second = 0;
+}
+
 }	// namespace LWF

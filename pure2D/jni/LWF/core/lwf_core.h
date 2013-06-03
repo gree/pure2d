@@ -15,6 +15,7 @@ class Movie;
 class ProgramObject;
 class Property;
 class Renderer;
+class TextRenderer;
 
 typedef function<shared_ptr<Renderer> (ProgramObject *, int, int, int)>
 	ProgramObjectConstructor;
@@ -29,6 +30,7 @@ typedef map<int, bool> AllowButtonList;
 typedef map<int, bool> DenyButtonList;
 typedef function<void (LWF *)> ExecHandler;
 typedef vector<pair<int, ExecHandler> > ExecHandlerList;
+typedef map<string, pair<string, TextRenderer *> > TextDictionary;
 
 class LWF
 {
@@ -96,6 +98,7 @@ private:
 	AllowButtonList m_allowButtonList;
 	DenyButtonList m_denyButtonList;
 	ExecHandlerList m_execHandlers;
+	TextDictionary m_textDictionary;
 	float m_progress;
 	float m_roundOffTick;
 	bool m_executedForExecDisabled;
@@ -243,6 +246,11 @@ public:
 	void SetButtonEventHandler(int instId,
 		const ButtonEventHandlerDictionary &h, ButtonKeyPressHandler kh);
 	void ClearAllEventHandlers();
+
+	void SetText(string textName, string text);
+	void SetTextRenderer(string fullPath,
+		string textName, string text, TextRenderer *textRenderer);
+	void ClearTextRenderer(string textName);
 
 private:
 	const Matrix *CalcMatrix(const Matrix *matrix);

@@ -165,9 +165,14 @@ void Movie::DeleteAttachedLWF(Movie *p, shared_ptr<LWFContainer> lwfContainer,
 	p->m_attachedLWFList.erase(aDepth);
 	if (deleteFromDetachedLWFs)
 		p->m_detachedLWFs.erase(aName);
-	if (destroy && lwfContainer->child->detachHandler) {
+	if (destroy) {
 		LWF *l = lwfContainer->child.get();
-		l->detachHandler(l);
+		if (l->detachHandler) {
+			if (l->detachHandler(l))
+				l->Destroy();
+		} else {
+			l->Destroy();
+		}
 		l->parent = 0;
 		l->detachHandler = 0;
 		l->attachName.clear();

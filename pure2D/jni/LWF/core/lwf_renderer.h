@@ -27,6 +27,15 @@ public:
 		int renderingIndex, int renderingCount, bool visible) = 0;
 };
 
+class TextRenderer : public Renderer
+{
+public:
+	TextRenderer(LWF *l) : Renderer(l) {}
+	virtual ~TextRenderer() {}
+
+	virtual void SetText(string text) = 0;
+};
+
 class IRendererFactory
 {
 public:
@@ -36,7 +45,7 @@ public:
 		LWF *lwf, int objId, Bitmap *bitmap) = 0;
 	virtual shared_ptr<Renderer> ConstructBitmapEx(
 		LWF *lwf, int objId, BitmapEx *bitmapEx) = 0;
-	virtual shared_ptr<Renderer> ConstructText(
+	virtual shared_ptr<TextRenderer> ConstructText(
 		LWF *lwf, int objId, Text *text) = 0;
 	virtual shared_ptr<Renderer> ConstructParticle(
 		LWF *lwf, int objId, Particle *particle) = 0;
@@ -53,8 +62,8 @@ public:
 		int objId, Bitmap *bitmap) {return shared_ptr<Renderer>();}
 	shared_ptr<Renderer> ConstructBitmapEx(LWF *lwf,
 		int objId, BitmapEx *bitmapEx) {return shared_ptr<Renderer>();}
-	shared_ptr<Renderer> ConstructText(LWF *lwf,
-		int objId, Text *text) {return shared_ptr<Renderer>();}
+	shared_ptr<TextRenderer> ConstructText(LWF *lwf,
+		int objId, Text *text) {return shared_ptr<TextRenderer>();}
 	shared_ptr<Renderer> ConstructParticle(LWF *lwf,
 		int objId, Particle *particle) {return shared_ptr<Renderer>();}
 	void Init(LWF *lwf) {}
