@@ -38,7 +38,10 @@ public class LWF {
     private native void gotoFrameAndPlay(long ptr, String target, int frame);
     private native void play(long ptr, String target);
     private native void stop(long ptr, String target);
+    private native void move(long ptr, String target, float x, float y);
     private native void moveTo(long ptr, String target, float x, float y);
+    private native void scale(long ptr, String target, float x, float y);
+    private native void scaleTo(long ptr, String target, float x, float y);
     private native void setPlaying(long ptr, boolean playing);
     private native void fitForHeight(long ptr, float w, float h);
     private native void fitForWidth(long ptr, float w, float h);
@@ -138,10 +141,28 @@ public class LWF {
         stop(mPtr, target);
     }
 
+    public void move(String target, float x, float y) {
+        if (mId < 0)
+            return;
+        move(mPtr, target, x, y);
+    }
+
     public void moveTo(String target, float x, float y) {
         if (mId < 0)
             return;
         moveTo(mPtr, target, x, y);
+    }
+
+    public void scale(String target, float x, float y) {
+        if (mId < 0)
+            return;
+        scale(mPtr, target, x, y);
+    }
+
+    public void scaleTo(String target, float x, float y) {
+        if (mId < 0)
+            return;
+        scaleTo(mPtr, target, x, y);
     }
 
     public void setPlaying(boolean playing) {
