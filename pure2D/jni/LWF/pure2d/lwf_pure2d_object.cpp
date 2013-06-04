@@ -336,6 +336,21 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_stop(JNIEnv *en
     env->ReleaseStringUTFChars(jTarget, target);
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_move(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
+{
+    if (!jLWF)
+        return;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    if (movie)
+        movie->Move(jX, jY);
+
+    env->ReleaseStringUTFChars(jTarget, target);
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_moveTo(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
 {
     if (!jLWF)
@@ -347,6 +362,36 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_moveTo(JNIEnv *
     Movie *movie = lwf->SearchMovieInstance(target);
     if (movie)
         movie->MoveTo(jX, jY);
+
+    env->ReleaseStringUTFChars(jTarget, target);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scale(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
+{
+    if (!jLWF)
+        return;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    if (movie)
+        movie->Scale(jX, jY);
+
+    env->ReleaseStringUTFChars(jTarget, target);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleTo(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
+{
+    if (!jLWF)
+        return;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    if (movie)
+        movie->ScaleTo(jX, jY);
 
     env->ReleaseStringUTFChars(jTarget, target);
 }
