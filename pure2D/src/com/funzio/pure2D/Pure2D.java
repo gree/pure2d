@@ -21,6 +21,7 @@ public class Pure2D {
     public static String GL_EXTENSIONS = null;
     public static boolean GL_NPOT_TEXTURE_SUPPORTED = false;
     public static boolean GL_STENCIL8_SUPPORTED = false;
+    public static boolean GL_DEPTH24_SUPPORTED = false;
     public static final float GL_PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection
 
     // for non-pure2d engine to plug in

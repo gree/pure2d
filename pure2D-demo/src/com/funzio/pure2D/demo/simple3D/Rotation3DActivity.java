@@ -32,7 +32,7 @@ public class Rotation3DActivity extends StageActivity {
     @Override
     protected BaseScene createScene() {
         // enable depth sorting
-        mStage.setEGLConfigChooser(8, 8, 8, 8, 24, 0);
+        // mStage.setEGLConfigChooser(8, 8, 8, 8, 24, 0);
         return super.createScene();
     }
 
