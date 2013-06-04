@@ -82,22 +82,22 @@ void LWF::SetPreferredFrameRate(int f, int eLimit)
 
 void LWF::FitForHeight(float stageWidth, float stageHeight)
 {
-    Utility::FitForHeight(this, stageWidth, stageHeight);
+    rendererFactory->FitForHeight(this, stageWidth, stageHeight);
 }
 
 void LWF::FitForWidth(float stageWidth, float stageHeight)
 {
-    Utility::FitForWidth(this, stageWidth, stageHeight);
+    rendererFactory->FitForWidth(this, stageWidth, stageHeight);
 }
 
 void LWF::ScaleForHeight(float stageWidth, float stageHeight)
 {
-    Utility::ScaleForHeight(this, stageWidth, stageHeight);
+    rendererFactory->ScaleForHeight(this, stageWidth, stageHeight);
 }
 
 void LWF::ScaleForWidth(float stageWidth, float stageHeight)
 {
-    Utility::ScaleForWidth(this, stageWidth, stageHeight);
+    rendererFactory->ScaleForWidth(this, stageWidth, stageHeight);
 }
 
 void LWF::RenderOffset()

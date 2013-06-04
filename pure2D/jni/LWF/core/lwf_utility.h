@@ -29,10 +29,6 @@ public:
 		LWF *lwf, Matrix *dst, const Matrix *src0, int src1Id);
 	static Matrix *CalcMatrix(
 		Matrix *dst, const Matrix *src0, const Matrix *src1);
-	static void FitForHeight(LWF *lwf, float stageWidth, float stageHeight);
-	static void FitForWidth(LWF *lwf, float stageWidth, float stageHeight);
-	static void ScaleForHeight(LWF *lwf, float stageWidth, float stageHeight);
-	static void ScaleForWidth(LWF *lwf, float stageWidth, float stageHeight);
 	static Matrix *CopyMatrix(Matrix *dst, const Matrix *src);
 	static void InvertMatrix(Matrix *dst, const Matrix *src);
 	static ColorTransform *CalcColorTransform(LWF *lwf,
