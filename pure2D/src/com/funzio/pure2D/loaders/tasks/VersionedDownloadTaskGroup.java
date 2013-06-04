@@ -7,13 +7,6 @@ import java.util.Properties;
 
 import android.util.Log;
 
-import com.funzio.pure2D.loaders.tasks.DownloadTask;
-import com.funzio.pure2D.loaders.tasks.ReadPropertiesFileTask;
-import com.funzio.pure2D.loaders.tasks.Task;
-import com.funzio.pure2D.loaders.tasks.TaskGroup;
-import com.funzio.pure2D.loaders.tasks.URLLoadPropertiesTask;
-import com.funzio.pure2D.loaders.tasks.WritePropertiesFileTask;
-
 /**
  * @author long
  */
@@ -86,7 +79,7 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
                     final String[] tokens = downloadTask.getURL().split("/");
                     final String filename = tokens[tokens.length - 1];
                     final String remoteFileVersion = remoteVersionTask.getContent().getProperty(filename, "");
-                    if (!remoteFileVersion.isEmpty()) {
+                    if (!remoteFileVersion.equals("")) {
                         if (localVersionTask != null) {
                             final String localFileVersion = localVersionTask.getContent().getProperty(filename, "'");
                             // compare file versions
