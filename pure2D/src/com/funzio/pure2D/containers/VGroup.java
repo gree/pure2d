@@ -130,8 +130,10 @@ public class VGroup extends LinearGroup implements UIObject {
         }
 
         // draw the children
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
+
             if (child.isVisible() && (!mClipping || isChildInBounds(child))) {
                 if (mAutoSleepChildren) {
                     // wake child up
