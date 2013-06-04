@@ -24,6 +24,7 @@ import com.funzio.pure2D.shapes.Sprite;
 public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
 
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
     protected int mNumChildren = 0;
 
     // UI
@@ -153,11 +154,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         // draw the children
-        DisplayObject child;
         int numVisibles = 0;
         final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
-        for (int i = 0; i < mNumChildren; i++) {
-            child = mChildren.get(i);
+        DisplayObject child;
+        final int numChildren = mChildrenDisplayOrder.size();
+        for (int i = 0; i < numChildren; i++) {
+            child = mChildrenDisplayOrder.get(i);
+
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
@@ -491,6 +494,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public void setCacheProjection(final int cacheProjection) {
         mCacheProjection = cacheProjection;
+
+        invalidate(InvalidateFlags.CHILDREN);
+    }
+
+    public ArrayList<DisplayObject> getChildrenDisplayOrder() {
+        return mChildrenDisplayOrder;
+    }
+
+    public void setChildrenDisplayOrder(final ArrayList<DisplayObject> childrenDisplayOrder) {
+        mChildrenDisplayOrder = childrenDisplayOrder;
 
         invalidate(InvalidateFlags.CHILDREN);
     }
