@@ -106,7 +106,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                         mCacheFrameBuffer.unload();
                         mCacheFrameBuffer.getTexture().unload();
                     }
-                    mCacheFrameBuffer = new FrameBuffer(glState, Math.round(mSize.x), Math.round(mSize.y), true, mDepthTestEnabled);
+                    mCacheFrameBuffer = new FrameBuffer(glState, Math.round(mSize.x), Math.round(mSize.y), true);
 
                     // init sprite
                     if (mCacheSprite == null) {

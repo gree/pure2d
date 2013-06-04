@@ -178,6 +178,9 @@ public class FrameBuffer {
             // offset the translation
             mGL.glTranslatef(-(float) mWidth / 2f, -(float) mHeight / 2f, 0);
         }
+
+        // toggle depth test
+        mGLState.setDepthTestEnabled(mDepthEnabled);
     }
 
     /**
