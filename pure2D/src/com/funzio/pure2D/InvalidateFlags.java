@@ -24,6 +24,7 @@ public interface InvalidateFlags {
     public static final int TEXTURE = 1 << 14;
     public static final int TEXTURE_COORDS = 1 << 15;
     public static final int PERSPECTIVE = 1 << 16;
+    public static final int DEPTH = 1 << 17;
 
     // container related
     public static final int CHILDREN = 1 << 20;
@@ -31,6 +32,6 @@ public interface InvalidateFlags {
     // combined flags
     public static final int TRANSFORM_MATRIX = SKEW;
     public static final int BOUNDS = ORIGIN | POSITION | ROTATION | SCALE | SIZE | PIVOT | TRANSFORM_MATRIX;
-    public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS | PERSPECTIVE;
+    public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS | PERSPECTIVE | DEPTH;
     public static final int ALL = BOUNDS | VISUAL | CHILDREN;
 }

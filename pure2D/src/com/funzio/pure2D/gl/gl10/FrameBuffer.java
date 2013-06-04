@@ -30,14 +30,20 @@ public class FrameBuffer {
     private int mOriginalBuffer = 0;
     private int mWidth = 0;
     private int mHeight = 0;
+    private final boolean mDepthEnabled;
 
     private int[] mOriginalViewport = new int[4];
     private boolean mBinded = false;
 
     public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2) {
+        this(glState, width, height, checkPo2, false);
+    }
+
+    public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2, final boolean depthEnabled) {
         mGLState = glState;
         mGL = glState.mGL;
         mGL11Ex = (GL11ExtensionPack) mGL;
+        mDepthEnabled = depthEnabled;
 
         init();
 
@@ -54,6 +60,7 @@ public class FrameBuffer {
     public FrameBuffer(final GL10 gl, final Texture texture) {
         mGL = gl;
         mGL11Ex = (GL11ExtensionPack) gl;
+        mDepthEnabled = false;
 
         init();
 
@@ -77,24 +84,6 @@ public class FrameBuffer {
         // error checking
         int error = mGL.glGetError();
         Log.v(TAG, "init(); id: " + mFrameBuffer + ", error: " + error + " - " + GLU.gluErrorString(error));
-
-        // bind frame buffer temporarily
-        // mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
-
-        // TODO create depth buffer
-        // int[] depthBuffers = new int[1];
-        // mGL11Ex.glGenRenderbuffersOES(1, depthBuffers, 0);
-        // mDepthBuffer = depthBuffers[0];
-        // mGL11Ex.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
-
-        // Some experiments:
-        // A renderbuffer are just objects which are used to support offscreen rendering,
-        // often for sections of the framebuffer which don't have a texture format associated with them such as the stencil or depth buffer.
-        // mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_DEPTH_COMPONENT16, mWidth, mHeight);
-        // mGL11Ex.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
-
-        // mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_STENCIL_INDEX8_OES, mWidth, mHeight);
-        // mGL11Ex.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_STENCIL_ATTACHMENT_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
     }
 
     public void attachTexture(final Texture texture) {
@@ -107,8 +96,26 @@ public class FrameBuffer {
 
         // attach the texture
         mGL11Ex.glFramebufferTexture2DOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_COLOR_ATTACHMENT0_OES, GL10.GL_TEXTURE_2D, mTexture.getTextureID(), 0);
-        int status = mGL11Ex.glCheckFramebufferStatusOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES);
 
+        if (mDepthEnabled) {
+            // create depth buffer
+            int[] depthBuffers = new int[1];
+            mGL11Ex.glGenRenderbuffersOES(1, depthBuffers, 0);
+            mDepthBuffer = depthBuffers[0];
+            mGL11Ex.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
+
+            // Depth enable
+            // A renderbuffer are just objects which are used to support offscreen rendering,
+            // often for sections of the framebuffer which don't have a texture format associated with them such as the stencil or depth buffer.
+            mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_DEPTH_COMPONENT24, mWidth, mHeight);
+            mGL11Ex.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
+
+            // stencil enable
+            // mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_STENCIL_INDEX8_OES, mWidth, mHeight);
+            // mGL11Ex.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_STENCIL_ATTACHMENT_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
+        }
+
+        final int status = mGL11Ex.glCheckFramebufferStatusOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES);
         if (status != GL11ExtensionPack.GL_FRAMEBUFFER_COMPLETE_OES) {
             Log.e(TAG, "Failed to generate FrameBuffer: " + getStatusString(status) + "\n" + Log.getStackTraceString(new Exception()));
             // throw new RuntimeException(msg + ": " + Integer.toHexString(status));
