@@ -69,6 +69,11 @@ public:
 	void EndRender(LWF *lwf);
 	void Destruct();
 
+	void FitForHeight(LWF *lwf, float w, float h);
+	void FitForWidth(LWF *lwf, float w, float h);
+	void ScaleForHeight(LWF *lwf, float w, float h);
+	void ScaleForWidth(LWF *lwf, float w, float h);
+
 	Pure2DRendererBitmapContext *GetBitmapContext(int id)
 		{return id < 0 || id >= m_bitmapContexts.size() ?
 			0 : m_bitmapContexts[id].get();}

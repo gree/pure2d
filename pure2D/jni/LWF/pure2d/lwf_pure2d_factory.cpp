@@ -2,6 +2,7 @@
 #include <GLES/gl.h>
 #include "lwf_core.h"
 #include "lwf_movie.h"
+#include "lwf_property.h"
 #include "lwf_pure2d_bitmap.h"
 #include "lwf_pure2d_factory.h"
 
@@ -106,6 +107,36 @@ void Pure2DRendererFactory::Destruct()
 {
 	GLuint buffers[] = {m_vertexBuffer, m_indicesBuffer};
 	glDeleteBuffers(2, buffers);
+}
+
+void Pure2DRendererFactory::FitForHeight(LWF *lwf, float w, float h)
+{
+	ScaleForHeight(lwf, w, h);
+	float offsetX = -lwf->width * lwf->scaleByStage / 2.0f;
+	float offsetY = -h / 2.0f;
+	lwf->property->Move(offsetX, offsetY);
+}
+
+void Pure2DRendererFactory::FitForWidth(LWF *lwf, float w, float h)
+{
+	ScaleForWidth(lwf, w, h);
+	float offsetX = -w / 2.0f;
+	float offsetY = -lwf->height * lwf->scaleByStage / 2.0f;
+	lwf->property->Move(offsetX, offsetY);
+}
+
+void Pure2DRendererFactory::ScaleForHeight(LWF *lwf, float w, float h)
+{
+	float scale = h / lwf->height;
+	lwf->scaleByStage = scale;
+	lwf->property->Scale(scale, scale);
+}
+
+void Pure2DRendererFactory::ScaleForWidth(LWF *lwf, float w, float h)
+{
+	float scale = w / lwf->width;
+	lwf->scaleByStage = scale;
+	lwf->property->Scale(scale, scale);
 }
 
 int Pure2DRendererFactory::GetBufferIndex(Pure2DRendererBitmapContext *context)

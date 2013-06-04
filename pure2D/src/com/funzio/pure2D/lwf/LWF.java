@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import android.util.Log;
+import android.graphics.PointF;
 
 public class LWF {
     static {
@@ -42,6 +43,8 @@ public class LWF {
     private native void moveTo(long ptr, String target, float x, float y);
     private native void scale(long ptr, String target, float x, float y);
     private native void scaleTo(long ptr, String target, float x, float y);
+    private native PointF localToGlobal(long ptr, String target, float x, float y);
+    private native PointF globalToLocal(long ptr, String target, float x, float y);
     private native void setPlaying(long ptr, boolean playing);
     private native void fitForHeight(long ptr, float w, float h);
     private native void fitForWidth(long ptr, float w, float h);
@@ -163,6 +166,18 @@ public class LWF {
         if (mId < 0)
             return;
         scaleTo(mPtr, target, x, y);
+    }
+
+    public PointF localToGlobal(String target, float x, float y) {
+        if (mId < 0)
+            return null;
+        return localToGlobal(mPtr, target, x, y);
+    }
+
+    public PointF globalToLocal(String target, float x, float y) {
+        if (mId < 0)
+            return null;
+        return globalToLocal(mPtr, target, x, y);
     }
 
     public void setPlaying(boolean playing) {

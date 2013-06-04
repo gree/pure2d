@@ -21,6 +21,9 @@ struct DataContext {
         : data(d), bitmapContexts(b), bitmapExContexts(bx) {}
 };
 
+static jclass gPointFClass;
+static jmethodID gPointFConstructor;
+
 class EventHandlerWrapper {
 private:
     JNIEnv *env;
@@ -394,6 +397,60 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleTo(JNIEnv 
         movie->ScaleTo(jX, jY);
 
     env->ReleaseStringUTFChars(jTarget, target);
+}
+
+extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_localToGlobal(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
+{
+    if (!jLWF)
+        return NULL;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    Point point;
+    if (movie)
+        point = movie->LocalToGlobal(Point(jX, jY));
+
+    if (!gPointFClass) {
+        jclass cls = env->FindClass("android/graphics/PointF");
+        gPointFClass = (jclass)env->NewGlobalRef(cls);
+        gPointFConstructor = env->GetMethodID(gPointFClass, "<init>", "(FF)V");
+    }
+
+    jobject jPointF =
+        env->NewObject(gPointFClass, gPointFConstructor, point.x, point.y);
+
+    env->ReleaseStringUTFChars(jTarget, target);
+
+    return jPointF;
+}
+
+extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_globalToLocal(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
+{
+    if (!jLWF)
+        return NULL;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    Point point;
+    if (movie)
+        point = movie->GlobalToLocal(Point(jX, jY));
+
+    if (!gPointFClass) {
+        jclass cls = env->FindClass("android/graphics/PointF");
+        gPointFClass = (jclass)env->NewGlobalRef(cls);
+        gPointFConstructor = env->GetMethodID(gPointFClass, "<init>", "(FF)V");
+    }
+
+    jobject jPointF =
+        env->NewObject(gPointFClass, gPointFConstructor, point.x, point.y);
+
+    env->ReleaseStringUTFChars(jTarget, target);
+
+    return jPointF;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setPlaying(JNIEnv *env, jobject obj, jlong jLWF, jboolean jPlaying)
