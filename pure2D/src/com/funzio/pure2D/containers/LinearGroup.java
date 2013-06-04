@@ -23,7 +23,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected boolean mClipping = true;
     protected boolean mAutoSleepChildren = false;
 
-    private boolean mChildrenPositionInvalidated = false;
+    protected boolean mChildrenPositionInvalidated = false;
 
     /*
      * (non-Javadoc)
