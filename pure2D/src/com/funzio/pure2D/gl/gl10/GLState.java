@@ -29,6 +29,7 @@ public class GLState {
 
     // array toggles
     private boolean mVertexArrayEnabled = false;
+    private boolean mDepthTestEnabled = false;
 
     // colors
     private boolean mColorArrayEnabled = false;
@@ -444,6 +445,25 @@ public class GLState {
             }
 
             mMask = mask;
+        }
+    }
+
+    public boolean isDepthTestEnabled() {
+        return mDepthTestEnabled;
+    }
+
+    public void setDepthTestEnabled(final boolean depthTestEnabled) {
+        // diff check
+        if (mDepthTestEnabled == depthTestEnabled) {
+            return;
+        }
+
+        mDepthTestEnabled = depthTestEnabled;
+
+        if (mDepthTestEnabled) {
+            mGL.glEnable(GL10.GL_DEPTH_TEST);
+        } else {
+            mGL.glDisable(GL10.GL_DEPTH_TEST);
         }
     }
 }

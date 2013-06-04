@@ -67,6 +67,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected GLColor mColor = null;
     protected float mAlpha = 1;
     protected BlendFunc mBlendFunc;
+    protected boolean mDepthTestEnabled = false;
     protected boolean mAlphaTestEnabled = false;
 
     private boolean mHasOrigin = false;
@@ -197,6 +198,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // GLU.gluProject(0, 0, 0, model, 0, project, 0, view, 0, win, 0);
         // Log.e("long", " " + win[0] + " " + win[1] + " " + win[2]);
 
+        // check and turn on depth test
+        glState.setDepthTestEnabled(mDepthTestEnabled);
         // check and turn on alpha test
         glState.setAlphaTestEnabled(mAlphaTestEnabled);
 
@@ -783,6 +786,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setBlendFunc(final BlendFunc blendFunc) {
         mBlendFunc = blendFunc;
         invalidate(InvalidateFlags.BLEND);
+    }
+
+    final public boolean isDepthTestEnabled() {
+        return mDepthTestEnabled;
+    }
+
+    public void setDepthTestEnabled(final boolean depthTestEnabled) {
+        mDepthTestEnabled = depthTestEnabled;
+
+        invalidate(InvalidateFlags.DEPTH);
     }
 
     final public boolean isAlphaTestEnabled() {
