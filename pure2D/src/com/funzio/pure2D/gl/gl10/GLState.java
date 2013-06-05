@@ -5,6 +5,8 @@ package com.funzio.pure2D.gl.gl10;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.opengl.GLES11Ext;
+
 import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Maskable;
 import com.funzio.pure2D.Scene;
@@ -379,7 +381,11 @@ public class GLState {
                 // set to default
                 mBlendFunc.set(mDefaultBlendFunc);
                 // apply
-                mGL.glBlendFunc(mBlendFunc.src, mBlendFunc.dst);
+                if (mBlendFunc.src_alpha < 0 || mBlendFunc.dst_alpha < 0) {
+                    mGL.glBlendFunc(mBlendFunc.src, mBlendFunc.dst);
+                } else {
+                    GLES11Ext.glBlendFuncSeparateOES(mBlendFunc.src, mBlendFunc.dst, mBlendFunc.src_alpha, mBlendFunc.dst_alpha);
+                }
                 return true;
             } else {
                 return false;
@@ -390,9 +396,12 @@ public class GLState {
         }
 
         // apply
-        mBlendFunc.src = blendFunc.src;
-        mBlendFunc.dst = blendFunc.dst;
-        mGL.glBlendFunc(blendFunc.src, blendFunc.dst);
+        mBlendFunc.set(blendFunc);
+        if (mBlendFunc.src_alpha < 0 || mBlendFunc.dst_alpha < 0) {
+            mGL.glBlendFunc(blendFunc.src, blendFunc.dst);
+        } else {
+            GLES11Ext.glBlendFuncSeparateOES(blendFunc.src, blendFunc.dst, blendFunc.src_alpha, blendFunc.dst_alpha);
+        }
 
         return true;
     }
