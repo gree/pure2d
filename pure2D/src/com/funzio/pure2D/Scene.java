@@ -66,8 +66,6 @@ public interface Scene extends Renderer, Container {
 
     public void setUIEnabled(final boolean enabled);
 
-    public boolean isNpotTextureSupported();
-
     public PointF getTouchedPoint();
 
     public PointF getTouchedPoint(final int pointerIndex);
