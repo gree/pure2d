@@ -57,7 +57,7 @@ public final class BlendFunc {
     }
 
     /**
-     * Addictive blending
+     * Additive blending
      * 
      * @return
      */
