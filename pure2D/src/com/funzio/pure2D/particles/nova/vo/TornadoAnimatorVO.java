@@ -25,6 +25,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
     public ArrayList<String> circle_interpolation;
     public ArrayList<Float> circle_multiplier;
     public ArrayList<Float> circle_ratio;
+    public boolean z_enabled;
 
     public TornadoAnimatorVO(final JSONObject json) throws JSONException {
         super(json);
@@ -36,6 +37,8 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
         circle_interpolation = NovaVO.getListString(json, "circle_interpolation");
         circle_multiplier = NovaVO.getListFloat(json, "circle_multiplier");
         circle_ratio = NovaVO.getListFloat(json, "circle_ratio");
+
+        z_enabled = json.getInt("z_enabled") > 0;
     }
 
     @Override
@@ -54,6 +57,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
                 NovaConfig.getFloat(circle_ratio, emitIndex, TornadoAnimator.DEFAULT_CIRCLE_RATIO), NovaConfig.getInterpolator(NovaConfig.getString(circle_interpolation, emitIndex)));
         tornado.setCircleMultiplier(NovaConfig.getFloat(circle_multiplier, emitIndex, 1));
         tornado.setDuration(NovaConfig.getInt(duration, emitIndex, 0));
+        tornado.setZEnabled(z_enabled);
         // }
     }
 
