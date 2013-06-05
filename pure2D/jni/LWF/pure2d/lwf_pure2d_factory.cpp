@@ -68,6 +68,8 @@ void Pure2DRendererFactory::EndRender(LWF *lwf)
 	if (m_lwf->parent)
 		return;
 
+	glEnable(GL_TEXTURE_2D);
+
 	vector<Buffer>::iterator it(m_buffers.begin()), itend(m_buffers.end());
 	for (; it != itend; ++it) {
 		glBindTexture(GL_TEXTURE_2D, it->glTextureId);
