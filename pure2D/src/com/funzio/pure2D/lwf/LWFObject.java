@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 public class LWFObject extends BaseDisplayObject implements Playable {
@@ -42,7 +43,17 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     protected boolean drawChildren(final GLState glState) {
         if (mLWF == null)
             return false;
+
+        BlendFunc blendFunc = glState.getBlendFunc();
+
         mLWF.draw();
+
+        glState.unbindTexture();
+        glState.setBlendFunc(blendFunc);
+        glState.setVertexArrayEnabled(false);
+        glState.setTextureCoordArrayEnabled(false);
+        glState.setColorArrayEnabled(false);
+        glState.setTextureCoordBuffer(null);
         return true;
     }
 
