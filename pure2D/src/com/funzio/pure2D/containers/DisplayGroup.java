@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
@@ -498,11 +499,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         invalidate(InvalidateFlags.CHILDREN);
     }
 
-    public ArrayList<DisplayObject> getChildrenDisplayOrder() {
-        return mChildrenDisplayOrder;
-    }
+    // public ArrayList<DisplayObject> getChildrenDisplayOrder() {
+    // return mChildrenDisplayOrder;
+    // }
 
     public void setChildrenDisplayOrder(final ArrayList<DisplayObject> childrenDisplayOrder) {
+        if (childrenDisplayOrder.size() != mNumChildren) {
+            Log.e(TAG, "Invalid Children array!");
+            return;
+        }
+
         mChildrenDisplayOrder = childrenDisplayOrder;
 
         invalidate(InvalidateFlags.CHILDREN);
