@@ -87,6 +87,16 @@ public final class BlendFunc {
     }
 
     /**
+     * Interpolative blending, with separate alpha
+     * 
+     * @return
+     */
+    public static BlendFunc getInterpolate2() {
+        // (src * src_alpha) + (dst * (1 - src_apha)) = src * src_alpha + dst - (dst * src_alpha)
+        return new BlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA, GL10.GL_ONE, GL10.GL_ONE);
+    }
+
+    /**
      * Pre-multiplied Alpha
      * 
      * @return
