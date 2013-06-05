@@ -14,7 +14,9 @@ Pure2DRendererBitmapContext::Pure2DRendererBitmapContext(
 		data->textureFragments[bx.textureFragmentId];
 	m_textureId = f.textureId;
 	const Format::Texture &t = data->textures[f.textureId];
-	m_preMultipliedAlpha = t.format == Format::TEXTUREFORMAT_PREMULTIPLIEDALPHA;
+	m_preMultipliedAlpha = true;
+	// Pure2D always uses pre-multiplied-alpha-textures
+	// t.format == Format::TEXTUREFORMAT_PREMULTIPLIEDALPHA;
 
 	float tw = (float)t.width;
 	float th = (float)t.height;
