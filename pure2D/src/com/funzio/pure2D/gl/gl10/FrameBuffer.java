@@ -180,7 +180,7 @@ public class FrameBuffer {
         }
 
         // toggle depth test
-        mGLState.setDepthTestEnabled(mDepthEnabled);
+        // mGLState.setDepthTestEnabled(mDepthEnabled);
     }
 
     /**
