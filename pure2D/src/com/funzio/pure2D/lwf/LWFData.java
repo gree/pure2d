@@ -27,7 +27,15 @@ public class LWFData {
     private native void setGLTexture(int lwfDataId, int[] glTextureIds, float[] glTextureUs, float[] glTextureVs);
     private native void destroy(int lwfDataId);
 
+    public LWFData(InputStream stream) throws Exception {
+        init(null, stream);
+    }
+
     public LWFData(final LWFManager lwfManager, InputStream stream) throws Exception {
+        init(lwfManager, stream);
+    }
+
+    private void init(final LWFManager lwfManager, InputStream stream) throws Exception {
         mManager = lwfManager;
 
         byte[] header = new byte[HEADER_SIZE];
@@ -45,6 +53,10 @@ public class LWFData {
 
     public LWFManager getLWFManager() {
         return mManager;
+    }
+
+    public void setLWFManager(LWFManager lwfManager) {
+        mManager = lwfManager;
     }
 
     public int getId() {
