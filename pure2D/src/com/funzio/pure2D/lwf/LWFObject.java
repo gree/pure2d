@@ -21,6 +21,7 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     public static final int SCALING_USE_DEFAULT = 5;
 
     private LWF mLWF;
+    private LWF mLastAttachedLWF;
     private int mAttachId;
     private boolean mPlaying;
     private float mWidth;
@@ -156,7 +157,13 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         }
 
         mLWF.attachLWF(lwf, target, attachName);
+        mLastAttachedLWF = lwf;
+
         return lwf;
+    }
+
+    public LWF getLWF() {
+        return mLastAttachedLWF;
     }
 
     @Override
