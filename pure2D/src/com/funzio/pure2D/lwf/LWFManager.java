@@ -25,6 +25,10 @@ public class LWFManager {
         return data;
     }
 
+    public void addLWFData(LWFData data) {
+        mDatas.add(data);
+    }
+
     public LWF createLWF() {
         LWF lwf = new LWF(this);
         mLWFs.add(lwf);
