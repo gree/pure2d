@@ -33,6 +33,7 @@ public class FrameBuffer {
     private final int mHeight;
     private final boolean mDepthEnabled;
 
+    private final int[] mScratch = new int[1];
     private int[] mOriginalViewport = new int[4];
     private boolean mBinded = false;
     private boolean mTextureAttached = false;
@@ -90,14 +91,12 @@ public class FrameBuffer {
         mGLState.unbindTexture();
 
         // get the original buffer
-        int[] originalBuffers = new int[1];
-        mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, originalBuffers, 0);
-        mOriginalBuffer = originalBuffers[0];
+        mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, mScratch, 0);
+        mOriginalBuffer = mScratch[0];
 
         // create a new frame buffer
-        int[] framebuffers = new int[1];
-        mGL11Ex.glGenFramebuffersOES(1, framebuffers, 0);
-        mFrameBuffer = framebuffers[0];
+        mGL11Ex.glGenFramebuffersOES(1, mScratch, 0);
+        mFrameBuffer = mScratch[0];
 
         // error checking
         int error = mGL.glGetError();
@@ -115,9 +114,8 @@ public class FrameBuffer {
 
         if (mDepthEnabled) {
             // create depth buffer
-            int[] depthBuffers = new int[1];
-            mGL11Ex.glGenRenderbuffersOES(1, depthBuffers, 0);
-            mDepthBuffer = depthBuffers[0];
+            mGL11Ex.glGenRenderbuffersOES(1, mScratch, 0);
+            mDepthBuffer = mScratch[0];
             mGL11Ex.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
 
             // Depth enable
@@ -163,6 +161,11 @@ public class FrameBuffer {
         // flag
         mBinded = true;
 
+        // get the original buffer
+        mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, mScratch, 0);
+        mOriginalBuffer = mScratch[0];
+
+        // bind me
         mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
 
         // Select the projection matrix
