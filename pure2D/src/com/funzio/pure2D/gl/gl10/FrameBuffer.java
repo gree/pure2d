@@ -29,8 +29,8 @@ public class FrameBuffer {
     private int mFrameBuffer = 0;
     private int mDepthBuffer = 0;
     private int mOriginalBuffer = 0;
-    private int mWidth = 0;
-    private int mHeight = 0;
+    private final int mWidth;
+    private final int mHeight;
     private final boolean mDepthEnabled;
 
     private int[] mOriginalViewport = new int[4];
@@ -46,6 +46,8 @@ public class FrameBuffer {
         mGL = glState.mGL;
         mGL11Ex = (GL11ExtensionPack) mGL;
         mDepthEnabled = depthEnabled;
+        mWidth = width;
+        mHeight = height;
 
         init();
 
@@ -72,6 +74,8 @@ public class FrameBuffer {
         mGL = gl;
         mGL11Ex = (GL11ExtensionPack) gl;
         mDepthEnabled = false;
+        mWidth = (int) texture.getSize().x;
+        mHeight = (int) texture.getSize().y;
 
         init();
 
@@ -102,8 +106,6 @@ public class FrameBuffer {
 
     public boolean attachTexture(final Texture texture) {
         mTexture = texture;
-        mWidth = (int) mTexture.getSize().x;
-        mHeight = (int) mTexture.getSize().y;
 
         // bind frame buffer temporarily
         mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
