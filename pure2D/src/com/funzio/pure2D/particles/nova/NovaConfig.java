@@ -54,7 +54,7 @@ public class NovaConfig {
     public static final String BF_ST_SCREEN_ALPHA = "screen_alpha";
     public static final String BF_ST_MULTIPLY = "multiply";
     public static final String BF_ST_INTERPOLATE = "interpolate";
-    public static final String BF_ST_INTERPOLATE2 = "interpolate2"; // with addictive alpha (separate)
+    public static final String BF_ST_INTERPOLATE2 = "interpolate2"; // with additive alpha (separate)
     public static final String BF_ST_PREMULTIPLIED_ALPHA = "premultiplied_alpha";
     public static final String BF_ST_INTERPOLATE_COLOR = "interpolate_color";
 

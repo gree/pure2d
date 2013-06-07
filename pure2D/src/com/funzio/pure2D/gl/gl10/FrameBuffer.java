@@ -14,6 +14,7 @@ import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.textures.BufferTexture;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
@@ -34,6 +35,7 @@ public class FrameBuffer {
 
     private int[] mOriginalViewport = new int[4];
     private boolean mBinded = false;
+    private boolean mTextureAttached = false;
 
     public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2) {
         this(glState, width, height, checkPo2, false);
@@ -48,7 +50,16 @@ public class FrameBuffer {
         init();
 
         // auto create a new texture
-        attachTexture(new BufferTexture(mGLState, width, height, checkPo2));
+        BufferTexture texture = new BufferTexture(mGLState, width, height, checkPo2);
+        if (!attachTexture(texture) && !texture.isPo2()) {
+            // NOTE: most of 2.2 devices have problem with NPOT texture (even thought it's supported) when attached to a FrameBuffer
+            // so this is a work-around
+            texture.unload();
+            // force the size to be PO2
+            texture = new BufferTexture(mGLState, Pure2DUtils.getNextPO2(width), Pure2DUtils.getNextPO2(height));
+            // re-attach it
+            attachTexture(texture);
+        }
     }
 
     @Deprecated
@@ -69,6 +80,8 @@ public class FrameBuffer {
     }
 
     private void init() {
+        mGLState.clearErrors();
+
         // this is a must for some certain devices such as Samsung S2
         mGLState.unbindTexture();
 
@@ -76,7 +89,8 @@ public class FrameBuffer {
         int[] originalBuffers = new int[1];
         mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, originalBuffers, 0);
         mOriginalBuffer = originalBuffers[0];
-        // create frame buffer
+
+        // create a new frame buffer
         int[] framebuffers = new int[1];
         mGL11Ex.glGenFramebuffersOES(1, framebuffers, 0);
         mFrameBuffer = framebuffers[0];
@@ -86,7 +100,7 @@ public class FrameBuffer {
         Log.v(TAG, "init(); id: " + mFrameBuffer + ", error: " + error + " - " + GLU.gluErrorString(error));
     }
 
-    public void attachTexture(final Texture texture) {
+    public boolean attachTexture(final Texture texture) {
         mTexture = texture;
         mWidth = (int) mTexture.getSize().x;
         mHeight = (int) mTexture.getSize().y;
@@ -117,9 +131,10 @@ public class FrameBuffer {
 
         final int status = mGL11Ex.glCheckFramebufferStatusOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES);
         if (status != GL11ExtensionPack.GL_FRAMEBUFFER_COMPLETE_OES) {
-            Log.e(TAG, "Failed to generate FrameBuffer: " + getStatusString(status) + "\n" + Log.getStackTraceString(new Exception()));
-            // throw new RuntimeException(msg + ": " + Integer.toHexString(status));
+            mTextureAttached = false;
+            Log.e(TAG, "Failed to attach Texture: " + getStatusString(status) + "\n" + texture.toString(), new Exception());
         } else {
+            mTextureAttached = true;
             // make sure to clear all the pixels initially. Needed for some devices such as Nexus 7 (Jelly Bean)
             mGL.glClearColor(0f, 0f, 0f, 0f);
             mGL.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -127,6 +142,8 @@ public class FrameBuffer {
 
         // restore back to the original buffer
         mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mOriginalBuffer);
+
+        return mTextureAttached;
     }
 
     // public void bind() {
@@ -136,9 +153,9 @@ public class FrameBuffer {
     /**
      * Bind this frame buffer
      */
-    public void bind(final int projection) {
-        if (mBinded) {
-            return;
+    public boolean bind(final int projection) {
+        if (!mTextureAttached || mBinded) {
+            return false;
         }
 
         // flag
@@ -181,14 +198,16 @@ public class FrameBuffer {
 
         // toggle depth test
         // mGLState.setDepthTestEnabled(mDepthEnabled);
+
+        return true;
     }
 
     /**
      * Unbind this frame buffer and switch back to the original buffer
      */
-    public void unbind() {
-        if (!mBinded) {
-            return;
+    public boolean unbind() {
+        if (!mTextureAttached || !mBinded) {
+            return false;
         }
 
         // unflag
@@ -208,6 +227,8 @@ public class FrameBuffer {
         mGL.glMatrixMode(GL10.GL_MODELVIEW);
         // Reset the modelview matrix
         mGL.glPopMatrix();
+
+        return true;
     }
 
     public boolean isBinded() {
@@ -268,13 +289,11 @@ public class FrameBuffer {
     }
 
     public static boolean isSupported(final GL10 gl) {
-        // check for the extension
-        String extensions = gl.glGetString(GL10.GL_EXTENSIONS);
-        return (extensions.indexOf(" GL_OES_framebuffer_object ") >= 0);
+        return Pure2D.GL_FBO_SUPPORTED;
     }
 
     public static String getStatusString(final int status) {
-        String msg = "GL_FRAMEBUFFER_COMPLETE_OES";
+        String msg = "UNKNOWN STATUS: " + status;
         if (status == GL11ExtensionPack.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES) {
             msg = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES";
         } else if (status == GL11ExtensionPack.GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_OES) {
