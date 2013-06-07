@@ -194,6 +194,9 @@ public abstract class Texture {
             mGLState.bindTexture(this);
             mGL.glDeleteTextures(1, ids, 0);
             mTextureID = 0;
+
+            // now unbind me
+            mGLState.unbindTexture();
         }
     }
 
@@ -222,7 +225,7 @@ public abstract class Texture {
      */
     @Override
     public String toString() {
-        return "Texture {id: + " + mTextureID + ", size: " + mSize.x + " x " + mSize.y + "}";
+        return "Texture {id: " + mTextureID + ", size: " + mSize.x + " x " + mSize.y + "}";
     }
 
     public abstract void reload();
