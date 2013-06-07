@@ -164,6 +164,8 @@ public class FrameBuffer {
         // get the original buffer
         mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, mScratch, 0);
         mOriginalBuffer = mScratch[0];
+        // back up the viewport
+        mGLState.getViewport(mOriginalViewport);
 
         // bind me
         mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
@@ -174,8 +176,6 @@ public class FrameBuffer {
         mGL.glPushMatrix();
         mGL.glLoadIdentity();
 
-        // back up the viewport
-        mOriginalViewport = mGLState.getViewport();
         // set new viewport
         mGLState.setViewport(0, 0, mWidth, mHeight);
 

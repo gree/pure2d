@@ -110,13 +110,11 @@ public class GLState {
         mViewport[3] = height;
     }
 
-    public int[] getViewport() {
-        int[] clone = mViewport.clone();
-        clone[0] = mViewport[0];
-        clone[1] = mViewport[1];
-        clone[2] = mViewport[2];
-        clone[3] = mViewport[3];
-        return clone;
+    public void getViewport(final int[] viewport) {
+        viewport[0] = mViewport[0];
+        viewport[1] = mViewport[1];
+        viewport[2] = mViewport[2];
+        viewport[3] = mViewport[3];
     }
 
     public void setLineWidth(final float width) {
