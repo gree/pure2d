@@ -4,6 +4,7 @@
 package com.funzio.pure2D.gl.gl10;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import android.opengl.GLES11Ext;
 
@@ -22,6 +23,9 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 public class GLState {
     public GL10 mGL;
     private Stage mStage;
+
+    // frame buffer
+    private int mFrameBuffer = 0;
 
     // texture
     private Texture mTexture = null;
@@ -129,6 +133,23 @@ public class GLState {
 
     public float getLineWidth() {
         return mLineWidth;
+    }
+
+    public boolean bindFrameBuffer(final int frameBuffer) {
+        // diff check
+        if (mFrameBuffer == frameBuffer) {
+            return false;
+        }
+        mFrameBuffer = frameBuffer;
+
+        // only works for GLES11
+        GLES11Ext.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
+
+        return true;
+    }
+
+    public int getFrameBuffer() {
+        return mFrameBuffer;
     }
 
     public boolean bindTexture(final Texture texture) {
