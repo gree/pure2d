@@ -53,7 +53,7 @@ public class FrameBuffer {
         init();
 
         // auto create a new texture
-        BufferTexture texture = new BufferTexture(mGLState, width, height, checkPo2);
+        final BufferTexture texture = new BufferTexture(mGLState, width, height, checkPo2);
         if (!attachTexture(texture) && !texture.isPo2()) {
             // NOTE: most of 2.2 devices have problem with NPOT texture (even thought it's supported) when attached to a FrameBuffer
             // so this is a work-around
@@ -90,10 +90,6 @@ public class FrameBuffer {
         // this is a must for some certain devices such as Samsung S2
         mGLState.unbindTexture();
 
-        // get the original buffer
-        mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, mScratch, 0);
-        mOriginalBuffer = mScratch[0];
-
         // create a new frame buffer
         mGL11Ex.glGenFramebuffersOES(1, mScratch, 0);
         mFrameBuffer = mScratch[0];
@@ -106,8 +102,11 @@ public class FrameBuffer {
     public boolean attachTexture(final Texture texture) {
         mTexture = texture;
 
+        // get the original buffer
+        mOriginalBuffer = mGLState.getFrameBuffer();
+
         // bind frame buffer temporarily
-        mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
+        mGLState.bindFrameBuffer(mFrameBuffer);
 
         // attach the texture
         mGL11Ex.glFramebufferTexture2DOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_COLOR_ATTACHMENT0_OES, GL10.GL_TEXTURE_2D, mTexture.getTextureID(), 0);
@@ -141,7 +140,7 @@ public class FrameBuffer {
         }
 
         // restore back to the original buffer
-        mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mOriginalBuffer);
+        mGLState.bindFrameBuffer(mOriginalBuffer);
 
         return mTextureAttached;
     }
@@ -162,13 +161,12 @@ public class FrameBuffer {
         mBinded = true;
 
         // get the original buffer
-        mGL11Ex.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, mScratch, 0);
-        mOriginalBuffer = mScratch[0];
+        mOriginalBuffer = mGLState.getFrameBuffer();
         // back up the viewport
         mGLState.getViewport(mOriginalViewport);
 
         // bind me
-        mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
+        mGLState.bindFrameBuffer(mFrameBuffer);
 
         // Select the projection matrix
         mGL.glMatrixMode(GL10.GL_PROJECTION);
@@ -219,7 +217,7 @@ public class FrameBuffer {
         mBinded = false;
 
         // back to the previous buffer
-        mGL11Ex.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mOriginalBuffer);
+        mGLState.bindFrameBuffer(mOriginalBuffer);
 
         mGL.glMatrixMode(GL10.GL_PROJECTION);
         // Restore the projection matrix
