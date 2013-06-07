@@ -13,6 +13,7 @@ import android.opengl.GLUtils;
 import android.util.Log;
 
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
@@ -209,6 +210,19 @@ public abstract class Texture {
         mGL = mGLState.mGL;
 
         reload();
+    }
+
+    public boolean isPo2() {
+        return Pure2DUtils.isPO2((int) mSize.x) && Pure2DUtils.isPO2((int) mSize.y);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Texture {id: + " + mTextureID + ", size: " + mSize.x + " x " + mSize.y + "}";
     }
 
     public abstract void reload();

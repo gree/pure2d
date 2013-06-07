@@ -210,6 +210,8 @@ public class BaseScene implements Scene {
             Pure2D.GL_NPOT_TEXTURE_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_texture_npot");
             // || Pure2D.GL_EXTENSIONS.contains("GL_ARB_texture_non_power_of_two"); // this might not be good enough
             // || Pure2D.GL_EXTENSIONS.contains("GL_APPLE_texture_2D_limited_npot"); // this is bad!
+            Pure2D.GL_FBO_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_framebuffer_object");
+            Pure2D.GL_VBO_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_ARB_vertex_buffer_object");
             Pure2D.GL_STENCIL8_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_stencil8");
             Pure2D.GL_DEPTH24_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_depth24");
         }

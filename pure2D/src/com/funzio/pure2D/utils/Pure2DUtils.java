@@ -324,6 +324,10 @@ public class Pure2DUtils {
         return n + 1;
     }
 
+    public static boolean isPO2(final int n) {
+        return (n != 0) && ((n & (n - 1)) == 0);
+    }
+
     /**
      * Find the smallest area that contains multiples rect defined by width & height
      * 
