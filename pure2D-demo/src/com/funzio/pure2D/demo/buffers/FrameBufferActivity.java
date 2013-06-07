@@ -71,11 +71,10 @@ public class FrameBufferActivity extends StageActivity {
         mFrameBuffer.bind(Scene.AXIS_TOP_LEFT); // invert
         // start drawing to the frame buffer
         Sprite sprite = new Sprite();
-        sprite.setSize(32f, 32f);
         for (int i = 0; i < 100; i++) {
             sprite.setTexture(mTextures.get(RANDOM.nextInt(mTextures.size())));
             // random color and position
-            sprite.moveTo(mRandom.nextInt(FB_WIDTH), mRandom.nextInt(FB_HEIGHT));
+            sprite.moveTo((i % 10) * 32, (i / 10) * 32);
             // draw onto frame buffer
             sprite.draw(mScene.getGLState());
         }
