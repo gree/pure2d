@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLU;
+import android.util.Log;
 
 import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Maskable;
@@ -23,6 +24,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  * @category This class is used to manage and also limit the number of JNI calls, for optimization purpose.
  */
 public class GLState {
+    private static final String TAG = GLState.class.getSimpleName();
+
     public GL10 mGL;
     private Stage mStage;
 
@@ -109,6 +112,14 @@ public class GLState {
         return mMaxTextureSize;
     }
 
+    /**
+     * Set Projection mode
+     * 
+     * @param projection
+     * @param width
+     * @param height
+     * @see #Scene , Scene.AXIS_BOTTOM_LEFT, Scene.AXIS_TOP_LEFT
+     */
     public void setProjection(final int projection, final int width, final int height) {
         if (projection == Scene.PROJECTION_PERSPECTIVE) {
             GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, (float) width / (float) height, 0.001f, Math.max(width, height));
@@ -119,6 +130,8 @@ public class GLState {
             mGL.glOrthof(0, width, height, 0, -1, 1);
         } else if (projection == Scene.AXIS_BOTTOM_LEFT) {
             mGL.glOrthof(0, width, 0, height, -1, 1);
+        } else {
+            Log.e(TAG, "Unknown Projection mode: " + projection, new Exception());
         }
 
         mProjection[0] = projection;
