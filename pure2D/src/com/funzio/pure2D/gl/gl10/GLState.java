@@ -7,9 +7,11 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import android.opengl.GLES11Ext;
+import android.opengl.GLU;
 
 import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Maskable;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Stage;
 import com.funzio.pure2D.gl.GLColor;
@@ -48,6 +50,7 @@ public class GLState {
     private Maskable mMask;
 
     // viewport and camera
+    private int[] mProjection = new int[3];
     private int[] mViewport = new int[4];
     private int mMaxTextureSize = 0;
     private float mLineWidth = 0;
@@ -106,6 +109,29 @@ public class GLState {
         return mMaxTextureSize;
     }
 
+    public void setProjection(final int projection, final int width, final int height) {
+        if (projection == Scene.PROJECTION_PERSPECTIVE) {
+            GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, (float) width / (float) height, 0.001f, Math.max(width, height));
+            GLU.gluLookAt(mGL, 0, 0, height, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
+            mGL.glTranslatef(-width / 2f, -height / 2f, 0);
+        } else if (projection == Scene.AXIS_TOP_LEFT) {
+            // NOTE: frame-buffer has the Axis inverted
+            mGL.glOrthof(0, width, height, 0, -1, 1);
+        } else if (projection == Scene.AXIS_BOTTOM_LEFT) {
+            mGL.glOrthof(0, width, 0, height, -1, 1);
+        }
+
+        mProjection[0] = projection;
+        mProjection[1] = width;
+        mProjection[2] = height;
+    }
+
+    public void getProjection(final int[] projection) {
+        projection[0] = mProjection[0];
+        projection[1] = mProjection[1];
+        projection[2] = mProjection[2];
+    }
+
     public void setViewport(final int x, final int y, final int width, final int height) {
         mGL.glViewport(x, y, width, height);
         mViewport[0] = x;
@@ -143,7 +169,7 @@ public class GLState {
         mFrameBuffer = frameBuffer;
 
         // only works for GLES11
-        GLES11Ext.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
+        ((GL11ExtensionPack) mGL).glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
 
         return true;
     }

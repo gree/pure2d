@@ -72,7 +72,7 @@ public class FrameBufferActivity extends StageActivity {
         // start drawing to the frame buffer
         Sprite sprite = new Sprite();
         for (int i = 0; i < 100; i++) {
-            sprite.setTexture(mTextures.get(RANDOM.nextInt(mTextures.size())));
+            sprite.setTexture(mTextures.get(i % mTextures.size()));
             // random color and position
             sprite.moveTo((i % 10) * 32, (i / 10) * 32);
             // draw onto frame buffer
@@ -88,6 +88,8 @@ public class FrameBufferActivity extends StageActivity {
         // create object
         Sprite obj = new Sprite();
         obj.setTexture(mBufferTexture);
+        // obj.setAutoUpdateBounds(true);
+        // obj.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
 
         // center origin
         obj.setOriginAtCenter();

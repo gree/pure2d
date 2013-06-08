@@ -59,7 +59,7 @@ public class FrameBuffer {
             // so this is a work-around
             texture.unload();
             // force the size to be PO2
-            texture.load(null, Pure2DUtils.getNextPO2(width), Pure2DUtils.getNextPO2(height), 0);
+            texture.load(Pure2DUtils.getNextPO2(width), Pure2DUtils.getNextPO2(height), width, height, 0);
             // re-attach it
             attachTexture(texture);
         }
