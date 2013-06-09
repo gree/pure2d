@@ -154,6 +154,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
                 // set new projection
                 glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, (int) mSceneSize.x, 0, (int) mSceneSize.y);
+
+                // back to modelview
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
             }
         }
 
@@ -188,18 +191,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mHasOrigin) {
             gl.glTranslatef(-mOrigin.x, -mOrigin.y, 0);
         }
-
-        // test projection values
-        // float[] model = new float[16];
-        // ((GL11) gl).glGetFloatv(GL11.GL_MODELVIEW_MATRIX, model, 0);
-        // float[] project = new float[16];
-        // ((GL11) gl).glGetFloatv(GL11.GL_PROJECTION_MATRIX, project, 0);
-        // int[] view = {
-        // 0, 0, (int) mSceneSize.x, (int) mSceneSize.y
-        // };
-        // float[] win = new float[3];
-        // GLU.gluProject(0, 0, 0, model, 0, project, 0, view, 0, win, 0);
-        // Log.e("long", " " + win[0] + " " + win[1] + " " + win[2]);
 
         // check and turn on depth test
         // glState.setDepthTestEnabled(mDepthTestEnabled);
