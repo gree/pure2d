@@ -143,6 +143,10 @@ public class GLState {
         mProjection[4] = top;
     }
 
+    public void setProjection(final int[] projection) {
+        setProjection(projection[0], projection[1], projection[2], projection[3], projection[4]);
+    }
+
     public void getProjection(final int[] projection) {
         projection[0] = mProjection[0];
         projection[1] = mProjection[1];

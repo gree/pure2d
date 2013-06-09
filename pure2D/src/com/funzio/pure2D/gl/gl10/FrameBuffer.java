@@ -227,7 +227,7 @@ public class FrameBuffer {
         } else {
             mGL.glLoadIdentity();
             // Use mOriginalProjection instead
-            mGLState.setProjection(mOriginalProjection[0], mOriginalProjection[1], mOriginalProjection[2], mOriginalProjection[3], mOriginalProjection[4]);
+            mGLState.setProjection(mOriginalProjection);
         }
 
         // Restore the view port

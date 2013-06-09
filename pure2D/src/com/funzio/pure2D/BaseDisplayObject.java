@@ -10,7 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.opengl.GLU;
 
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
@@ -87,6 +86,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // perspective projection
     protected boolean mPerspectiveEnabled = false;
     private boolean mPerspectiveProjecting = false; // flag to prevent matrix out of sync caused by Threads
+    private int[] mOriginalProjection;
     protected PointF mSceneSize;
 
     abstract protected boolean drawChildren(final GLState glState);
@@ -143,14 +143,17 @@ public abstract class BaseDisplayObject implements DisplayObject {
             if (mSceneSize != null) {
                 mPerspectiveProjecting = true; // flag
                 gl.glMatrixMode(GL10.GL_PROJECTION);
-                gl.glPushMatrix();
+                // gl.glPushMatrix();
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, Pure2D.GL_PERSPECTIVE_FOVY, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
-                GLU.gluLookAt(gl, 0, 0, mSceneSize.y, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
 
-                // offset the translation
-                gl.glTranslatef(-mSceneSize.x * 0.5f, -mSceneSize.y * 0.5f, 0);
+                // keep original projection
+                if (mOriginalProjection == null) {
+                    mOriginalProjection = new int[5];
+                }
+                glState.getProjection(mOriginalProjection);
+
+                // set new projection
+                glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, (int) mSceneSize.x, 0, (int) mSceneSize.y);
             }
         }
 
@@ -228,7 +231,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // restore the matrix
         if (mPerspectiveProjecting) {
             gl.glMatrixMode(GL10.GL_PROJECTION);
-            gl.glPopMatrix();
+            // gl.glPopMatrix();
+            gl.glLoadIdentity();
+            glState.setProjection(mOriginalProjection);
+
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             mPerspectiveProjecting = false; // unflag
         }
