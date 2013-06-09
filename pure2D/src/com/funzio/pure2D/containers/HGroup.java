@@ -129,7 +129,7 @@ public class HGroup extends LinearGroup implements UIObject {
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && (!mClipping || isChildInBounds(child))) {
+            if (child.isVisible() && (!mCheckingBounds || isChildInBounds(child))) {
                 if (mAutoSleepChildren) {
                     // wake child up
                     child.setAlive(true);
