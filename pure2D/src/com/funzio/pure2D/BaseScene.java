@@ -725,18 +725,8 @@ public class BaseScene implements Scene {
             mGLState.mGL.glMatrixMode(GL10.GL_PROJECTION);
             // Reset the projection matrix
             mGLState.mGL.glLoadIdentity();
-
-            // default view and axis system
-            if (mAxisSystem == AXIS_TOP_LEFT) {
-                // invert the y-axis
-                mGLState.mGL.glOrthof(0, mSize.x, mSize.y, 0, -1, 1);
-            } else {
-                mGLState.mGL.glOrthof(0, mSize.x, 0, mSize.y, -1, 1);
-            }
-
-            // testing perspective
-            // GLU.gluPerspective(mGLState.mGL, 60, mSize.x / mSize.y, 0.1f, 1000f);
-            // GLU.gluLookAt(mGLState.mGL, mSize.x / 2, mSize.y / 2, 1000f, mSize.x / 2, mSize.y / 2, 0, 0, 1, 0);
+            // default axis system and projection
+            mGLState.setProjection(mAxisSystem, 0, (int) mSize.x, 0, (int) mSize.y);
 
             // back to model
             mGLState.mGL.glMatrixMode(GL10.GL_MODELVIEW);

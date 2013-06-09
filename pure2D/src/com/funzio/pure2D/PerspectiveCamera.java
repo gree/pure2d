@@ -74,8 +74,8 @@ public class PerspectiveCamera extends Camera {
         gl.glLoadIdentity();
 
         // perspective projection
+        // TODO: use glState.setProjection() instead
         GLU.gluPerspective(gl, Pure2D.GL_PERSPECTIVE_FOVY / mZoom.x, mSize.x / mSize.y, 0.001f, mZFar);
-
         // camera view and axis system
         if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
             // invert the y-axis

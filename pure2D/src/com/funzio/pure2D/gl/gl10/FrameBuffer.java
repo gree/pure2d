@@ -34,6 +34,7 @@ public class FrameBuffer {
 
     private final int[] mScratch = new int[1];
     private int[] mOriginalViewport = new int[4];
+    private int[] mOriginalProjection = new int[5];
     private boolean mBinded = false;
     private boolean mTextureAttached = false;
 
@@ -161,6 +162,8 @@ public class FrameBuffer {
 
         // get the original buffer
         mOriginalBuffer = mGLState.getFrameBuffer();
+        // back up projection
+        mGLState.getProjection(mOriginalProjection);
         // back up the viewport
         mGLState.getViewport(mOriginalViewport);
 
@@ -170,14 +173,14 @@ public class FrameBuffer {
         // Select the projection matrix
         mGL.glMatrixMode(GL10.GL_PROJECTION);
         // Reset the projection matrix
-        mGL.glPushMatrix();
+        // mGL.glPushMatrix(); // this doesn't work for older version of OpenGL. So use mOriginalProjection instead!
         mGL.glLoadIdentity();
 
         // set new viewport
         mGLState.setViewport(0, 0, mWidth, mHeight);
 
         // set new projection matrix
-        mGLState.setProjection(projection, mWidth, mHeight);
+        mGLState.setProjection(projection, 0, mWidth, 0, mHeight);
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);
@@ -206,8 +209,10 @@ public class FrameBuffer {
         mGLState.bindFrameBuffer(mOriginalBuffer);
 
         mGL.glMatrixMode(GL10.GL_PROJECTION);
+        mGL.glLoadIdentity();
         // Restore the projection matrix
-        mGL.glPopMatrix();
+        // mGL.glPopMatrix(); // this does not work on older version of OpenGL. Use mOriginalProjection instead
+        mGLState.setProjection(mOriginalProjection[0], mOriginalProjection[1], mOriginalProjection[2], mOriginalProjection[3], mOriginalProjection[4]);
 
         // Restore the view port
         mGLState.setViewport(mOriginalViewport[0], mOriginalViewport[1], mOriginalViewport[2], mOriginalViewport[3]);

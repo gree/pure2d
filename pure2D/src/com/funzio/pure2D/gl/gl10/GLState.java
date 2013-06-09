@@ -53,7 +53,7 @@ public class GLState {
     private Maskable mMask;
 
     // viewport and camera
-    private int[] mProjection = new int[3];
+    private int[] mProjection = new int[5];
     private int[] mViewport = new int[4];
     private int mMaxTextureSize = 0;
     private float mLineWidth = 0;
@@ -116,33 +116,39 @@ public class GLState {
      * Set Projection mode
      * 
      * @param projection
-     * @param width
-     * @param height
+     * @param right
+     * @param top
      * @see #Scene , Scene.AXIS_BOTTOM_LEFT, Scene.AXIS_TOP_LEFT
      */
-    public void setProjection(final int projection, final int width, final int height) {
+    public void setProjection(final int projection, final int left, final int right, final int bottom, final int top) {
         if (projection == Scene.PROJECTION_PERSPECTIVE) {
+            final int width = right - left;
+            final int height = top - bottom;
             GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, (float) width / (float) height, 0.001f, Math.max(width, height));
             GLU.gluLookAt(mGL, 0, 0, height, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
             mGL.glTranslatef(-width / 2f, -height / 2f, 0);
         } else if (projection == Scene.AXIS_TOP_LEFT) {
             // NOTE: frame-buffer has the Axis inverted
-            mGL.glOrthof(0, width, height, 0, -1, 1);
+            mGL.glOrthof(left, right, top, bottom, -1, 1);
         } else if (projection == Scene.AXIS_BOTTOM_LEFT) {
-            mGL.glOrthof(0, width, 0, height, -1, 1);
+            mGL.glOrthof(left, right, bottom, top, -1, 1);
         } else {
             Log.e(TAG, "Unknown Projection mode: " + projection, new Exception());
         }
 
         mProjection[0] = projection;
-        mProjection[1] = width;
-        mProjection[2] = height;
+        mProjection[1] = left;
+        mProjection[2] = right;
+        mProjection[3] = bottom;
+        mProjection[4] = top;
     }
 
     public void getProjection(final int[] projection) {
         projection[0] = mProjection[0];
         projection[1] = mProjection[1];
         projection[2] = mProjection[2];
+        projection[3] = mProjection[3];
+        projection[4] = mProjection[4];
     }
 
     public void setViewport(final int x, final int y, final int width, final int height) {
