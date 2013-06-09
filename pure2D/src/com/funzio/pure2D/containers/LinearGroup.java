@@ -20,7 +20,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected int mAlignment = Alignment.NONE;
     protected PointF mScrollPosition = new PointF();
     protected boolean mRepeating = false;
-    protected boolean mClipping = true;
+    protected boolean mCheckingBounds = true;
     protected boolean mAutoSleepChildren = false;
 
     protected boolean mChildrenPositionInvalidated = false;
@@ -136,17 +136,19 @@ public abstract class LinearGroup extends DisplayGroup {
     }
 
     /**
-     * @return the clipping
+     * @return the checking bounds
      */
-    public boolean isClipping() {
-        return mClipping;
+    public boolean isCheckingBounds() {
+        return mCheckingBounds;
     }
 
     /**
-     * @param clipping the clipping to set
+     * Toggle checking bounds and draw children
+     * 
+     * @param checking the bounds to set
      */
-    public void setClipping(final boolean clipping) {
-        mClipping = clipping;
+    public void setCheckingBounds(final boolean checking) {
+        mCheckingBounds = checking;
 
         invalidate(InvalidateFlags.CHILDREN);
     }
