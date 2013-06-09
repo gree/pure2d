@@ -273,14 +273,8 @@ public class Camera implements Manipulatable {
         gl.glMatrixMode(GL10.GL_PROJECTION);
         // Reset the projection matrix
         gl.glLoadIdentity();
-
         // camera view and axis system
-        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
-            // invert the y-axis
-            gl.glOrthof(mRect.left, mRect.right, mRect.bottom, mRect.top, -1, 1);
-        } else {
-            gl.glOrthof(mRect.left, mRect.right, mRect.top, mRect.bottom, -1, 1);
-        }
+        glState.setProjection(mAxisSystem, (int) mRect.left, (int) mRect.right, (int) mRect.top, (int) mRect.bottom);
 
         // camera rotation
         if (mRotation != 0) {
