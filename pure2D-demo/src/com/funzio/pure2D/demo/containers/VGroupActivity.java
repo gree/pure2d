@@ -68,6 +68,11 @@ public class VGroupActivity extends StageActivity {
         mContainer.setSize(200, mDisplaySize.y);
         mContainer.setSwipeEnabled(true);
 
+        // mContainer.setClippingEnabled(true);
+        // mContainer.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+        // mContainer.setScale(1.5f);
+        // mContainer.setRotation(5);
+
         for (int n = 0; n < 3; n++) {
             Texture texture = mTextures.get(n % mTextures.size());
             // create object

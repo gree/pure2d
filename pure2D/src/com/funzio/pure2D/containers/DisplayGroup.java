@@ -40,7 +40,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     // clipping
     private boolean mClippingEnabled = false;
-    private int[] mClipOriginalViewport;
+    private boolean mOriginalScissorEnabled = false;
+    private int[] mOriginalScissor;
 
     public DisplayGroup() {
         super();
@@ -103,16 +104,22 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         // NOTE: this clipping method doesn't work for Rotation!!!
         if (mClippingEnabled) {
-            // backup the viewport
-            if (mClipOriginalViewport == null) {
-                mClipOriginalViewport = new int[4];
+            mOriginalScissorEnabled = glState.isScissorTestEnabled();
+            if (mOriginalScissorEnabled) {
+                // backup the current scissor
+                if (mOriginalScissor == null) {
+                    mOriginalScissor = new int[4];
+                }
+                glState.getScissor(mOriginalScissor);
+            } else {
+                // need to enable scissor test
+                glState.setScissorTestEnabled(true);
             }
-            glState.getViewport(mClipOriginalViewport);
 
-            // set the new viewport, only take position and scale into account!
-            glState.setViewport((int) mBounds.left, (int) mBounds.top, (int) mBounds.width(), (int) mBounds.height());
-            glState.mGL.glTranslatef(-mPosition.x / mScale.x, -mPosition.y / mScale.y, 0);
-            glState.mGL.glScalef(mClipOriginalViewport[2] / (mSize.x * mScale.x), mClipOriginalViewport[3] / (mSize.y * mScale.y), 0);
+            // set the new scissor rect, only take position and scale into account!
+            glState.setScissor((int) mBounds.left, (int) mBounds.top, (int) mBounds.width(), (int) mBounds.height());
+            // glState.mGL.glTranslatef(-mPosition.x / mScale.x, -mPosition.y / mScale.y, 0);
+            // glState.mGL.glScalef(mOriginalScissor[2] / (mSize.x * mScale.x), mOriginalScissor[3] / (mSize.y * mScale.y), 0);
         }
 
         // check cache enabled
@@ -151,8 +158,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         if (mClippingEnabled) {
-            // restore
-            glState.setViewport(mClipOriginalViewport);
+            if (mOriginalScissorEnabled) {
+                // restore original scissor
+                glState.setScissor(mOriginalScissor);
+            } else {
+                // disable scissor test
+                glState.setScissorTestEnabled(false);
+            }
         }
 
         drawEnd(glState);

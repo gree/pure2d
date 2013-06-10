@@ -195,28 +195,20 @@ public class BaseScene implements Scene {
      */
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+        Log.v(TAG, "onSurfaceCreated()");
         // this might help but I have not seen any difference yet!
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
+        // init GL properties, ONCE!
+        if (Pure2D.GL_MAX_TEXTURE_SIZE == 0) {
+            Pure2D.initGLProperties(gl);
+        }
 
         mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
         mDownTime = 0;
         mFrameCount = 0;
         mCurrentFps = 0;
         mFrameCountDuration = 0;
-
-        // find the extensions
-        if (Pure2D.GL_EXTENSIONS == null) {
-            Pure2D.GL_EXTENSIONS = gl.glGetString(GL10.GL_EXTENSIONS);
-            Pure2D.GL_NPOT_TEXTURE_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_texture_npot");
-            // || Pure2D.GL_EXTENSIONS.contains("GL_ARB_texture_non_power_of_two"); // this might not be good enough
-            // || Pure2D.GL_EXTENSIONS.contains("GL_APPLE_texture_2D_limited_npot"); // this is bad!
-            Pure2D.GL_FBO_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_framebuffer_object");
-            Pure2D.GL_VBO_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_ARB_vertex_buffer_object");
-            Pure2D.GL_STENCIL8_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_stencil8");
-            Pure2D.GL_DEPTH24_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_depth24");
-        }
-
-        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.GL_NPOT_TEXTURE_SUPPORTED);
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);

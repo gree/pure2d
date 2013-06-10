@@ -41,6 +41,7 @@ public class GLState {
     // array toggles
     private boolean mVertexArrayEnabled = false;
     private boolean mDepthTestEnabled = false;
+    private boolean mScissorTestEnabled = false;
 
     // colors
     private boolean mColorArrayEnabled = false;
@@ -55,9 +56,9 @@ public class GLState {
     // viewport and camera
     private int[] mProjection = new int[5];
     private int[] mViewport = new int[4];
-    private int mMaxTextureSize = 0;
-    private float mLineWidth = 0;
+    private int[] mScissor = new int[4];
 
+    private float mLineWidth = 0;
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     public Camera mCamera;
 
@@ -87,11 +88,6 @@ public class GLState {
         mLineWidth = 0;
 
         clearErrors();
-
-        // find the max texture size
-        int[] textureSize = new int[1];
-        gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, textureSize, 0);
-        mMaxTextureSize = textureSize[0];
     }
 
     public void queueEvent(final Runnable r) {
@@ -106,10 +102,6 @@ public class GLState {
 
     public void setAxisSystem(final int axisSystem) {
         mAxisSystem = axisSystem;
-    }
-
-    public int getMaxTextureSize() {
-        return mMaxTextureSize;
     }
 
     /**
@@ -541,10 +533,48 @@ public class GLState {
 
         mDepthTestEnabled = depthTestEnabled;
 
-        if (mDepthTestEnabled) {
+        if (depthTestEnabled) {
             mGL.glEnable(GL10.GL_DEPTH_TEST);
         } else {
             mGL.glDisable(GL10.GL_DEPTH_TEST);
         }
+    }
+
+    public boolean isScissorTestEnabled() {
+        return mScissorTestEnabled;
+    }
+
+    public void setScissorTestEnabled(final boolean scissorEnabled) {
+        // diff check
+        if (mScissorTestEnabled == scissorEnabled) {
+            return;
+        }
+
+        mScissorTestEnabled = scissorEnabled;
+
+        if (scissorEnabled) {
+            mGL.glEnable(GL10.GL_SCISSOR_TEST);
+        } else {
+            mGL.glDisable(GL10.GL_SCISSOR_TEST);
+        }
+    }
+
+    public void setScissor(final int x, final int y, final int width, final int height) {
+        mGL.glScissor(x, y, width, height);
+        mScissor[0] = x;
+        mScissor[1] = y;
+        mScissor[2] = width;
+        mScissor[3] = height;
+    }
+
+    public void setScissor(final int[] scissor) {
+        setScissor(scissor[0], scissor[1], scissor[2], scissor[3]);
+    }
+
+    public void getScissor(final int[] scissor) {
+        scissor[0] = mScissor[0];
+        scissor[1] = mScissor[1];
+        scissor[2] = mScissor[2];
+        scissor[3] = mScissor[3];
     }
 }
