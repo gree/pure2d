@@ -135,7 +135,7 @@ public class VGroup extends LinearGroup implements UIObject {
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && (!mCheckingBounds || isChildInBounds(child))) {
+            if (child.isVisible() && (!mBoundsCheckEnabled || isChildInBounds(child))) {
                 if (mAutoSleepChildren) {
                     // wake child up
                     child.setAlive(true);
