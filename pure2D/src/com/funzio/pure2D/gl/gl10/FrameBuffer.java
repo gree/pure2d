@@ -37,6 +37,7 @@ public class FrameBuffer {
     private int[] mOriginalProjection = new int[5];
     private boolean mBinded = false;
     private boolean mTextureAttached = false;
+    private boolean mOriginalScissorEnabled = false;
 
     public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2) {
         this(glState, width, height, checkPo2, false);
@@ -160,12 +161,16 @@ public class FrameBuffer {
         // flag
         mBinded = true;
 
+        mOriginalScissorEnabled = mGLState.isScissorTestEnabled();
         // get the original buffer
         mOriginalBuffer = mGLState.getFrameBuffer();
         // back up the viewport
         mGLState.getViewport(mOriginalViewport);
         // fall-back solution: back up projection instead of glPushMatrix() which can cause Stack-Overflow
         mGLState.getProjection(mOriginalProjection);
+
+        // no scissor test
+        mGLState.setScissorTestEnabled(false);
 
         // bind me
         mGLState.bindFrameBuffer(mFrameBuffer);
@@ -212,6 +217,9 @@ public class FrameBuffer {
         mGLState.setProjection(mOriginalProjection);
         // Restore the view port
         mGLState.setViewport(mOriginalViewport);
+
+        // re-enable scissor test if any
+        mGLState.setScissorTestEnabled(mOriginalScissorEnabled);
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);

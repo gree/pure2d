@@ -20,7 +20,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected int mAlignment = Alignment.NONE;
     protected PointF mScrollPosition = new PointF();
     protected boolean mRepeating = false;
-    protected boolean mCheckingBounds = true;
+    protected boolean mBoundsCheckEnabled = true;
     protected boolean mAutoSleepChildren = false;
 
     protected boolean mChildrenPositionInvalidated = false;
@@ -138,8 +138,8 @@ public abstract class LinearGroup extends DisplayGroup {
     /**
      * @return the checking bounds
      */
-    public boolean isCheckingBounds() {
-        return mCheckingBounds;
+    public boolean isBoundsCheckEnabled() {
+        return mBoundsCheckEnabled;
     }
 
     /**
@@ -147,8 +147,8 @@ public abstract class LinearGroup extends DisplayGroup {
      * 
      * @param checking the bounds to set
      */
-    public void setCheckingBounds(final boolean checking) {
-        mCheckingBounds = checking;
+    public void setBoundsCheckEnabled(final boolean checking) {
+        mBoundsCheckEnabled = checking;
 
         invalidate(InvalidateFlags.CHILDREN);
     }
