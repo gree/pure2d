@@ -178,7 +178,7 @@ public class FrameBuffer {
         // set new viewport
         mGLState.setViewport(0, 0, mWidth, mHeight);
         // set new projection matrix
-        mGLState.setProjection(projection, 0, mWidth, 0, mHeight);
+        mGLState.setProjection(projection, 0, mWidth - 1, 0, mHeight - 1);
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);
@@ -211,7 +211,7 @@ public class FrameBuffer {
         // Use mOriginalProjection instead of glPopMatrix()
         mGLState.setProjection(mOriginalProjection);
         // Restore the view port
-        mGLState.setViewport(mOriginalViewport[0], mOriginalViewport[1], mOriginalViewport[2], mOriginalViewport[3]);
+        mGLState.setViewport(mOriginalViewport);
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);
