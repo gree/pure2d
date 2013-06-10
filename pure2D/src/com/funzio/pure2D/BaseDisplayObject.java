@@ -153,7 +153,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 glState.getProjection(mOriginalProjection);
 
                 // set new projection
-                glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, (int) mSceneSize.x, 0, (int) mSceneSize.y);
+                glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, (int) mSceneSize.x - 1, 0, (int) mSceneSize.y - 1);
 
                 // back to modelview
                 gl.glMatrixMode(GL10.GL_MODELVIEW);

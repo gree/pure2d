@@ -122,11 +122,11 @@ public class GLState {
      */
     public void setProjection(final int projection, final int left, final int right, final int bottom, final int top) {
         if (projection == Scene.PROJECTION_PERSPECTIVE) {
-            final int width = right - left;
-            final int height = top - bottom;
+            final int width = right - left + 1;
+            final int height = top - bottom + 1;
             GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, (float) width / (float) height, 0.001f, Math.max(width, height));
             GLU.gluLookAt(mGL, 0, 0, height, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
-            mGL.glTranslatef(-width / 2f, -height / 2f, 0);
+            mGL.glTranslatef(-width * 0.5f, -height * 0.5f, 0);
         } else if (projection == Scene.AXIS_TOP_LEFT) {
             // NOTE: frame-buffer has the Axis inverted
             mGL.glOrthof(left, right, top, bottom, -1, 1);
@@ -161,6 +161,10 @@ public class GLState {
         mViewport[1] = y;
         mViewport[2] = width;
         mViewport[3] = height;
+    }
+
+    public void setViewport(final int[] viewport) {
+        setViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
     }
 
     public void getViewport(final int[] viewport) {

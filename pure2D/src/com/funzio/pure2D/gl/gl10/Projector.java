@@ -70,7 +70,7 @@ public class Projector {
         mGLState.setViewport(0, 0, mWidth, mHeight);
 
         // set new projection matrix
-        mGLState.setProjection(mProjection, 0, mWidth, 0, mHeight);
+        mGLState.setProjection(mProjection, 0, mWidth - 1, 0, mHeight - 1);
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);
@@ -99,11 +99,11 @@ public class Projector {
         } else {
             mGL.glLoadIdentity();
             // Use mOriginalProjection instead
-            mGLState.setProjection(mOriginalProjection[0], mOriginalProjection[1], mOriginalProjection[2], mOriginalProjection[3], mOriginalProjection[4]);
+            mGLState.setProjection(mOriginalProjection);
         }
 
         // Restore the view port
-        mGLState.setViewport(mOriginalViewport[0], mOriginalViewport[1], mOriginalViewport[2], mOriginalViewport[3]);
+        mGLState.setViewport(mOriginalViewport);
 
         // back to model
         mGL.glMatrixMode(GL10.GL_MODELVIEW);

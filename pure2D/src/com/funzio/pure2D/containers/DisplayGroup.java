@@ -38,6 +38,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
 
+    // clipping
+    private boolean mClippingEnabled = false;
+    private int[] mClipOriginalViewport;
+
     public DisplayGroup() {
         super();
 
@@ -97,6 +101,20 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         drawStart(glState);
 
+        // NOTE: this clipping method doesn't work for Rotation!!!
+        if (mClippingEnabled) {
+            // backup the viewport
+            if (mClipOriginalViewport == null) {
+                mClipOriginalViewport = new int[4];
+            }
+            glState.getViewport(mClipOriginalViewport);
+
+            // set the new viewport, only take position and scale into account!
+            glState.setViewport((int) mBounds.left, (int) mBounds.top, (int) mBounds.width(), (int) mBounds.height());
+            glState.mGL.glTranslatef(-mPosition.x / mScale.x, -mPosition.y / mScale.y, 0);
+            glState.mGL.glScalef(mClipOriginalViewport[2] / (mSize.x * mScale.x), mClipOriginalViewport[3] / (mSize.y * mScale.y), 0);
+        }
+
         // check cache enabled
         if (mCacheEnabled) {
             // check invalidate flags
@@ -130,6 +148,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         } else {
             // draw the children directly
             drawChildren(glState);
+        }
+
+        if (mClippingEnabled) {
+            // restore
+            glState.setViewport(mClipOriginalViewport);
         }
 
         drawEnd(glState);
@@ -472,6 +495,21 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     @Override
     public boolean isTouchable() {
         return mTouchable && mAlive;
+    }
+
+    public boolean isClippingEnabled() {
+        return mClippingEnabled;
+    }
+
+    /**
+     * Enable/Disable Bound-clipping. Note this does not work for rotation.
+     * 
+     * @param clippingEnabled
+     */
+    public void setClippingEnabled(final boolean clippingEnabled) {
+        mClippingEnabled = clippingEnabled;
+
+        invalidate(InvalidateFlags.VISUAL);
     }
 
     public boolean isCacheEnabled() {
