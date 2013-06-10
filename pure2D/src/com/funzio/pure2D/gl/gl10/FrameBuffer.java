@@ -37,7 +37,6 @@ public class FrameBuffer {
     private int[] mOriginalProjection = new int[5];
     private boolean mBinded = false;
     private boolean mTextureAttached = false;
-    private int mPushMatrixError = 0;
 
     public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2) {
         this(glState, width, height, checkPo2, false);
@@ -165,32 +164,19 @@ public class FrameBuffer {
         mOriginalBuffer = mGLState.getFrameBuffer();
         // back up the viewport
         mGLState.getViewport(mOriginalViewport);
+        // fall-back solution: back up projection instead of glPushMatrix() which can cause Stack-Overflow
+        mGLState.getProjection(mOriginalProjection);
 
         // bind me
         mGLState.bindFrameBuffer(mFrameBuffer);
 
         // Select the projection matrix
         mGL.glMatrixMode(GL10.GL_PROJECTION);
-        // test pushing
-        if (mPushMatrixError == 0) {
-            mGL.glPushMatrix(); // see glGetIntegerv(GL_MAX_PROJECTION_STACK_DEPTH, &result, 0);
-            // check error
-            mPushMatrixError = mGL.glGetError();
-        }
-        if (mPushMatrixError == GL10.GL_STACK_OVERFLOW) {
-            // Log.e(TAG, "Error Push Matrix: " + mPushMatrixError + ": " + GLU.gluErrorString(mPushMatrixError));
-            // fall-back solution: back up projection
-            mGLState.getProjection(mOriginalProjection);
-        } else {
-            // clear
-            mPushMatrixError = 0;
-        }
         // Reset the projection matrix
         mGL.glLoadIdentity();
 
         // set new viewport
         mGLState.setViewport(0, 0, mWidth, mHeight);
-
         // set new projection matrix
         mGLState.setProjection(projection, 0, mWidth, 0, mHeight);
 
@@ -221,15 +207,9 @@ public class FrameBuffer {
         mGLState.bindFrameBuffer(mOriginalBuffer);
 
         mGL.glMatrixMode(GL10.GL_PROJECTION);
-        if (mPushMatrixError == 0) {
-            // Restore the projection matrix
-            mGL.glPopMatrix();
-        } else {
-            mGL.glLoadIdentity();
-            // Use mOriginalProjection instead
-            mGLState.setProjection(mOriginalProjection);
-        }
-
+        mGL.glLoadIdentity();
+        // Use mOriginalProjection instead of glPopMatrix()
+        mGLState.setProjection(mOriginalProjection);
         // Restore the view port
         mGLState.setViewport(mOriginalViewport[0], mOriginalViewport[1], mOriginalViewport[2], mOriginalViewport[3]);
 
