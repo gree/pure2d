@@ -42,6 +42,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     private boolean mClippingEnabled = false;
     private boolean mOriginalScissorEnabled = false;
     private int[] mOriginalScissor;
+    private RectF mClipStageRect;
 
     public DisplayGroup() {
         super();
@@ -116,10 +117,21 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 glState.setScissorTestEnabled(true);
             }
 
+            // instantiate the Clip rect
+            if (mClipStageRect == null) {
+                mClipStageRect = new RectF();
+            }
+
+            final Scene scene = getScene();
+            if (scene != null) {
+                // find the rect on stage, needed when there is a Camera!
+                scene.globalToStage(mBounds, mClipStageRect);
+            } else {
+                mClipStageRect.set(mBounds);
+            }
+
             // set the new scissor rect, only take position and scale into account!
-            glState.setScissor((int) mBounds.left, (int) mBounds.top, (int) mBounds.width(), (int) mBounds.height());
-            // glState.mGL.glTranslatef(-mPosition.x / mScale.x, -mPosition.y / mScale.y, 0);
-            // glState.mGL.glScalef(mOriginalScissor[2] / (mSize.x * mScale.x), mOriginalScissor[3] / (mSize.y * mScale.y), 0);
+            glState.setScissor((int) mClipStageRect.left, (int) mClipStageRect.top, (int) mClipStageRect.width(), (int) mClipStageRect.height());
         }
 
         // check cache enabled
