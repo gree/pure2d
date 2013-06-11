@@ -736,6 +736,7 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
+    @Deprecated
     final public PointF localToGlobal(final PointF local) {
         return new PointF(local.x, local.y);
     }
@@ -778,6 +779,7 @@ public class BaseScene implements Scene {
      * @param globalY
      * @return
      */
+    @Deprecated
     final public PointF globalToScreen(final float globalX, final float globalY) {
         final Rect stageRect = mStage.getRect();
         final PointF screen;
@@ -805,6 +807,36 @@ public class BaseScene implements Scene {
     }
 
     /**
+     * Get the Screen's coordinates from a global point relative to this scene
+     * 
+     * @param globalX
+     * @param globalY
+     */
+    final public void globalToScreen(final float globalX, final float globalY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalX, globalY, result);
+
+            final RectF cameraRect = mCamera.getRect();
+            result.x /= cameraRect.width() / stageRect.width();
+            result.y /= cameraRect.height() / stageRect.height();
+        } else {
+            result.x = globalX;
+            result.y = globalY;
+        }
+
+        result.x += stageRect.left;
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            result.y += stageRect.top;
+        } else {
+            // inverse y
+            result.y = stageRect.bottom - result.y;
+        }
+    }
+
+    /**
      * @param global
      * @return
      * @see #globalToScreen(float, float)
@@ -820,6 +852,7 @@ public class BaseScene implements Scene {
      * @param screenY
      * @return
      */
+    @Deprecated
     final public PointF screenToGlobal(final float screenX, final float screenY) {
         final Rect stageRect = mStage.getRect();
         float localX = screenX - stageRect.left;
@@ -843,12 +876,100 @@ public class BaseScene implements Scene {
     }
 
     /**
+     * Get the global coordinates from the Screen's coordinates
+     * 
+     * @param screenX
+     * @param screenY
+     */
+    final public void screenToGlobal(final float screenX, final float screenY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        float localX = screenX - stageRect.left;
+        float localY;
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            localY = screenY - stageRect.top;
+        } else {
+            // inverse y
+            localY = stageRect.bottom - screenY;
+        }
+
+        // check the camera
+        if (mCamera != null) {
+            final RectF cameraRect = mCamera.getRect();
+            localX *= cameraRect.width() / stageRect.width();
+            localY *= cameraRect.height() / stageRect.height();
+            mCamera.localToGlobal(localX, localY, result);
+        } else {
+            result.x = localX;
+            result.y = localY;
+        }
+    }
+
+    /**
      * @param screen
      * @return
      * @see BaseScene#screenToGlobal(float, float)
      */
+    @Deprecated
     final public PointF screenToGlobal(final PointF screen) {
         return screenToGlobal(screen.x, screen.y);
+    }
+
+    /**
+     * @param screen
+     * @return
+     * @see BaseScene#screenToGlobal(float, float)
+     */
+    final public void screenToGlobal(final PointF screen, final PointF result) {
+        screenToGlobal(screen.x, screen.y, result);
+    }
+
+    /**
+     * Convert a Global Point to a Pixel Point on the Stage
+     * 
+     * @param globalX
+     * @param globalY
+     * @param result
+     */
+    final public void globalToStage(final float globalX, final float globalY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalX, globalY, result);
+
+            final RectF cameraRect = mCamera.getRect();
+            result.x /= cameraRect.width() / stageRect.width();
+            result.y /= cameraRect.height() / stageRect.height();
+        } else {
+            result.x = globalX;
+            result.y = globalY;
+        }
+    }
+
+    /**
+     * Convert a Global Rectangle to a Pixel Rectangle on the Stage
+     * 
+     * @param globalRect
+     * @param result
+     */
+    final public void globalToStage(final RectF globalRect, final RectF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalRect, result);
+
+            final RectF cameraRect = mCamera.getRect();
+            final float scaleX = cameraRect.width() / stageRect.width();
+            final float scaleY = cameraRect.height() / stageRect.height();
+            result.left /= scaleX;
+            result.top /= scaleY;
+            result.right /= scaleX;
+            result.bottom /= scaleY;
+        } else {
+            result.left = globalRect.left;
+            result.top = globalRect.top;
+            result.right = globalRect.right;
+            result.bottom = globalRect.bottom;
+        }
     }
 
     /**
