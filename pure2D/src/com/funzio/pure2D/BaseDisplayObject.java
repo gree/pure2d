@@ -872,6 +872,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param local
      * @return
      */
+    @Deprecated
     final public PointF localToGlobal(final PointF local) {
         // final PointF temp = new PointF(pt.x + mPosition.x - mOrigin.x, pt.y + mPosition.y - mOrigin.y);
         final PointF result = new PointF((local == null ? 0 : local.x) + mPosition.x, (local == null ? 0 : local.y) + mPosition.y);
@@ -917,6 +918,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param global
      * @return
      */
+    @Deprecated
     final public PointF globalToLocal(final PointF global) {
         final PointF local;
         if (mParent != null && !(mParent instanceof Scene)) {

@@ -193,9 +193,9 @@ public class Unit extends DisplayGroup {
         mTargetPosition.y = point.y;
     }
 
-    public PointF getProgressBarPosition() {
-        return localToGlobal(new PointF(0, mSprite.getSize().y * mSpriteScale - 80));
-    }
+    // public PointF getProgressBarPosition() {
+    // return localToGlobal(new PointF(0, mSprite.getSize().y * mSpriteScale - 80));
+    // }
 
     /*
      * (non-Javadoc)
