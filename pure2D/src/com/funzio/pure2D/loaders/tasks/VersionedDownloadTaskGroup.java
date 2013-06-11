@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import android.util.Log;
 
+import com.funzio.pure2D.utils.PathUtils;
+
 /**
  * @author long
  */
@@ -76,21 +78,20 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
 
                 // check for specific file's version
                 if (remoteVersionTask != null && remoteVersionTask.getContent() != null) {
-                    final String[] tokens = downloadTask.getURL().split("/");
-                    final String filename = tokens[tokens.length - 1];
-                    final String remoteFileVersion = remoteVersionTask.getContent().getProperty(filename, "");
+                    final String relativePathFromVersionFile = PathUtils.getRelativePath(mRemoteVersion, downloadTask.getURL());
+                    final String remoteFileVersion = remoteVersionTask.getContent().getProperty(relativePathFromVersionFile, "");
                     if (!remoteFileVersion.equals("")) {
                         if (localVersionTask != null) {
-                            final String localFileVersion = localVersionTask.getContent().getProperty(filename, "'");
+                            final String localFileVersion = localVersionTask.getContent().getProperty(relativePathFromVersionFile, "");
                             // compare file versions
                             if (!remoteFileVersion.equals(localFileVersion)) {
                                 fileHasSpecificVersion = true;
-                                Log.d(TAG, filename + " has new version: " + remoteFileVersion);
+                                Log.d(TAG, relativePathFromVersionFile + " has new version: " + remoteFileVersion);
                             }
                         }
 
                         // put to the local version file
-                        localVersionProperties.put(filename, remoteFileVersion);
+                        localVersionProperties.put(relativePathFromVersionFile, remoteFileVersion);
                         // flag to update the file
                         localVersionFileUpdated |= fileHasSpecificVersion;
                     }

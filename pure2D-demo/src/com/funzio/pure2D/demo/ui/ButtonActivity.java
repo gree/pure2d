@@ -2,6 +2,7 @@ package com.funzio.pure2D.demo.ui;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,7 +54,9 @@ public class ButtonActivity extends StageActivity {
         obj.setOriginAtCenter();
 
         // set positions
-        obj.setPosition(mScene.screenToGlobal(x, y));
+        final PointF point = new PointF();
+        mScene.screenToGlobal(x, y, point);
+        obj.setPosition(point);
 
         // add to scene
         mScene.addChild(obj);
