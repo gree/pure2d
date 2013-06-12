@@ -86,7 +86,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // perspective projection
     protected boolean mPerspectiveEnabled = false;
     private boolean mPerspectiveProjecting = false; // flag to prevent matrix out of sync caused by Threads
-    private int[] mOriginalProjection;
+    private float[] mOriginalProjection;
     protected PointF mSceneSize;
 
     abstract protected boolean drawChildren(final GLState glState);
@@ -148,12 +148,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
                 // keep original projection
                 if (mOriginalProjection == null) {
-                    mOriginalProjection = new int[5];
+                    mOriginalProjection = new float[5];
                 }
                 glState.getProjection(mOriginalProjection);
 
                 // set new projection
-                glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, (int) mSceneSize.x - 1, 0, (int) mSceneSize.y - 1);
+                glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, mSceneSize.x - 1, 0, mSceneSize.y - 1);
 
                 // back to modelview
                 gl.glMatrixMode(GL10.GL_MODELVIEW);

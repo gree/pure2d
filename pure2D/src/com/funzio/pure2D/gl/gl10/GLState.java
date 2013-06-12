@@ -54,7 +54,7 @@ public class GLState {
     private Maskable mMask;
 
     // viewport and camera
-    private int[] mProjection = new int[5];
+    private float[] mProjection = new float[5];
     private int[] mViewport = new int[4];
     private int[] mScissor = new int[4];
 
@@ -112,11 +112,11 @@ public class GLState {
      * @param top
      * @see #Scene , Scene.AXIS_BOTTOM_LEFT, Scene.AXIS_TOP_LEFT
      */
-    public void setProjection(final int projection, final int left, final int right, final int bottom, final int top) {
+    public void setProjection(final float projection, final float left, final float right, final float bottom, final float top) {
         if (projection == Scene.PROJECTION_PERSPECTIVE) {
-            final int width = right - left + 1;
-            final int height = top - bottom + 1;
-            GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, (float) width / (float) height, 0.001f, Math.max(width, height));
+            final float width = right - left + 1;
+            final float height = top - bottom + 1;
+            GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, width / height, 0.001f, Math.max(width, height));
             GLU.gluLookAt(mGL, 0, 0, height, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
             mGL.glTranslatef(-width * 0.5f, -height * 0.5f, 0);
         } else if (projection == Scene.AXIS_TOP_LEFT) {
@@ -135,11 +135,11 @@ public class GLState {
         mProjection[4] = top;
     }
 
-    public void setProjection(final int[] projection) {
+    public void setProjection(final float[] projection) {
         setProjection(projection[0], projection[1], projection[2], projection[3], projection[4]);
     }
 
-    public void getProjection(final int[] projection) {
+    public void getProjection(final float[] projection) {
         projection[0] = mProjection[0];
         projection[1] = mProjection[1];
         projection[2] = mProjection[2];

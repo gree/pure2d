@@ -718,7 +718,7 @@ public class BaseScene implements Scene {
             // Reset the projection matrix
             mGLState.mGL.glLoadIdentity();
             // default axis system and projection
-            mGLState.setProjection(mAxisSystem, 0, (int) mSize.x - 1, 0, (int) mSize.y - 1);
+            mGLState.setProjection(mAxisSystem, 0, mSize.x - 1, 0, mSize.y - 1);
 
             // back to model
             mGLState.mGL.glMatrixMode(GL10.GL_MODELVIEW);

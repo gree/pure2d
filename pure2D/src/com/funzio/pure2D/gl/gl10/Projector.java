@@ -21,7 +21,7 @@ public class Projector {
     private final int mHeight;
 
     private int[] mOriginalViewport = new int[4];
-    private int[] mOriginalProjection = new int[5];
+    private float[] mOriginalProjection = new float[5];
     private boolean mBinded = false;
     private int mPushMatrixError = 0;
 
