@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
@@ -37,6 +36,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected Sprite mCacheSprite;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
+    private boolean mCacheInvalidated = false;
 
     // clipping
     private boolean mClippingEnabled = false;
@@ -134,11 +134,18 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             glState.setScissor((int) mClipStageRect.left, (int) mClipStageRect.top, (int) mClipStageRect.width(), (int) mClipStageRect.height());
         }
 
-        // check cache enabled
-        if (mCacheEnabled) {
-            // check invalidate flags
-            if ((mInvalidateFlags & InvalidateFlags.CHILDREN) != 0) {
+        // check children
+        if (!mCacheEnabled || (mInvalidateFlags & CHILDREN) != 0) {
+            // draw the children directly
+            drawChildren(glState);
 
+            // NOTE: only cache when all the children settle, e.g nothing is moving/changing...
+            if (mCacheEnabled) {
+                // invalidate cache
+                mCacheInvalidated = true;
+            }
+        } else {
+            if (mCacheInvalidated) {
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
                     if (mCacheFrameBuffer != null) {
@@ -160,13 +167,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 mCacheFrameBuffer.clear();
                 drawChildren(glState);
                 mCacheFrameBuffer.unbind();
+
+                // validate it
+                mCacheInvalidated = false;
             }
 
             // now draw the cache
             mCacheSprite.draw(glState);
-        } else {
-            // draw the children directly
-            drawChildren(glState);
         }
 
         if (mClippingEnabled) {
@@ -182,7 +189,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         drawEnd(glState);
 
         // validate visual and children, NOT bounds
-        mInvalidateFlags &= ~(InvalidateFlags.VISUAL | InvalidateFlags.CHILDREN);
+        mInvalidateFlags &= ~(VISUAL | CHILDREN);
 
         return true;
     }
@@ -275,7 +282,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onAdded(this);
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             // internal callback
             onAddedChild(child);
@@ -295,7 +302,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onAdded(this);
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             onAddedChild(child);
             return true;
@@ -314,7 +321,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onRemoved();
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -335,7 +342,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onRemoved();
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -362,7 +369,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.clear();
         mNumChildren = 0;
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
     }
 
     public DisplayObject getChildAt(final int index) {
@@ -394,7 +401,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -420,7 +427,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -440,7 +447,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i + 1));
         }
         mChildren.set(mNumChildren - 1, child);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -460,7 +467,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i - 1));
         }
         mChildren.set(0, child);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -533,7 +540,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void setClippingEnabled(final boolean clippingEnabled) {
         mClippingEnabled = clippingEnabled;
 
-        invalidate(InvalidateFlags.VISUAL);
+        invalidate(VISUAL);
     }
 
     public boolean isCacheEnabled() {
@@ -548,7 +555,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void setCacheEnabled(final boolean cacheEnabled) {
         mCacheEnabled = cacheEnabled;
 
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
     }
 
     public int getCacheProjection() {
@@ -558,7 +565,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void setCacheProjection(final int cacheProjection) {
         mCacheProjection = cacheProjection;
 
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
     }
 
     // public ArrayList<DisplayObject> getChildrenDisplayOrder() {
@@ -573,7 +580,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildrenDisplayOrder = childrenDisplayOrder;
 
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
     }
 
     protected void onAddedChild(final DisplayObject child) {
