@@ -36,7 +36,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected Sprite mCacheSprite;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
-    private boolean mCacheInvalidated = false;
 
     // clipping
     private boolean mClippingEnabled = false;
@@ -134,18 +133,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             glState.setScissor((int) mClipStageRect.left, (int) mClipStageRect.top, (int) mClipStageRect.width(), (int) mClipStageRect.height());
         }
 
-        // check children
-        if (!mCacheEnabled || (mInvalidateFlags & CHILDREN) != 0) {
-            // draw the children directly
-            drawChildren(glState);
+        // check cache enabled
+        if (mCacheEnabled) {
+            // check invalidate flags
+            if ((mInvalidateFlags & CHILDREN) != 0) {
 
-            // NOTE: only cache when all the children settle, e.g nothing is moving/changing...
-            if (mCacheEnabled) {
-                // invalidate cache
-                mCacheInvalidated = true;
-            }
-        } else {
-            if (mCacheInvalidated) {
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
                     if (mCacheFrameBuffer != null) {
@@ -167,13 +159,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 mCacheFrameBuffer.clear();
                 drawChildren(glState);
                 mCacheFrameBuffer.unbind();
-
-                // validate it
-                mCacheInvalidated = false;
             }
 
             // now draw the cache
             mCacheSprite.draw(glState);
+        } else {
+            // draw the children directly
+            drawChildren(glState);
         }
 
         if (mClippingEnabled) {
