@@ -15,7 +15,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 /**
  * @author long
  */
-public interface DisplayObject extends Manipulatable {
+public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public static final int FLIP_X = 1;
     public static final int FLIP_Y = 1 << 1;
 
