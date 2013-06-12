@@ -8,7 +8,7 @@ import android.graphics.PointF;
 
 public class LWF {
     static {
-        System.loadLibrary("pure2d");
+        System.loadLibrary("lwf-pure2d");
     }
 
     public interface Handler {

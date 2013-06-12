@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := pure2d
+LOCAL_MODULE    := lwf-pure2d
 LOCAL_SRC_FILES := \
 	LWF/core/lwf_animation.cpp \
 	LWF/core/lwf_bitmap.cpp \
