@@ -140,19 +140,19 @@ public class LWFObject extends BaseDisplayObject implements Playable {
 
         switch (scaling) {
         case SCALING_FIT_FOR_HEIGHT:
-            mLWF.fitForHeight(mWidth, mHeight);
+            lwf.fitForHeight(mWidth, mHeight);
             break;
 
         case SCALING_FIT_FOR_WIDTH:
-            mLWF.fitForWidth(mWidth, mHeight);
+            lwf.fitForWidth(mWidth, mHeight);
             break;
 
         case SCALING_SCALE_FOR_HEIGHT:
-            mLWF.scaleForHeight(mWidth, mHeight);
+            lwf.scaleForHeight(mWidth, mHeight);
             break;
 
         case SCALING_SCALE_FOR_WIDTH:
-            mLWF.scaleForWidth(mWidth, mHeight);
+            lwf.scaleForWidth(mWidth, mHeight);
             break;
         }
 
