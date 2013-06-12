@@ -114,16 +114,16 @@ void Pure2DRendererFactory::Destruct()
 void Pure2DRendererFactory::FitForHeight(LWF *lwf, float w, float h)
 {
 	ScaleForHeight(lwf, w, h);
-	float offsetX = -lwf->width * lwf->scaleByStage / 2.0f;
-	float offsetY = -h / 2.0f;
+	float offsetX = (w - lwf->width * lwf->scaleByStage) / 2.0f;
+	float offsetY = -h;
 	lwf->property->Move(offsetX, offsetY);
 }
 
 void Pure2DRendererFactory::FitForWidth(LWF *lwf, float w, float h)
 {
 	ScaleForWidth(lwf, w, h);
-	float offsetX = -w / 2.0f;
-	float offsetY = -lwf->height * lwf->scaleByStage / 2.0f;
+	float offsetX = (w - lwf->width * lwf->scaleByStage) / 2.0f;
+	float offsetY = -h;
 	lwf->property->Move(offsetX, offsetY);
 }
 
