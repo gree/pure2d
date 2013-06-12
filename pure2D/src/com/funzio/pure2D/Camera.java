@@ -275,7 +275,7 @@ public class Camera implements Manipulatable {
         // Reset the projection matrix
         gl.glLoadIdentity();
         // camera view and axis system
-        glState.setProjection(mAxisSystem, (int) mRect.left, (int) mRect.right, (int) mRect.top, (int) mRect.bottom);
+        glState.setProjection(mAxisSystem, mRect.left, mRect.right, mRect.top, mRect.bottom);
 
         // camera rotation
         if (mRotation != 0) {

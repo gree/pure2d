@@ -28,22 +28,22 @@ public class FrameBuffer {
     private int mFrameBuffer = 0;
     private int mDepthBuffer = 0;
     private int mOriginalBuffer = 0;
-    private final int mWidth;
-    private final int mHeight;
+    private final float mWidth;
+    private final float mHeight;
     private final boolean mDepthEnabled;
 
     private final int[] mScratch = new int[1];
     private int[] mOriginalViewport = new int[4];
-    private int[] mOriginalProjection = new int[5];
+    private float[] mOriginalProjection = new float[5];
     private boolean mBinded = false;
     private boolean mTextureAttached = false;
     private boolean mOriginalScissorEnabled = false;
 
-    public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2) {
+    public FrameBuffer(final GLState glState, final float width, final float height, final boolean checkPo2) {
         this(glState, width, height, checkPo2, false);
     }
 
-    public FrameBuffer(final GLState glState, final int width, final int height, final boolean checkPo2, final boolean depthEnabled) {
+    public FrameBuffer(final GLState glState, final float width, final float height, final boolean checkPo2, final boolean depthEnabled) {
         mGLState = glState;
         mGL = glState.mGL;
         mGL11Ex = (GL11ExtensionPack) mGL;
@@ -54,13 +54,15 @@ public class FrameBuffer {
         init();
 
         // auto create a new texture
-        final BufferTexture texture = new BufferTexture(mGLState, width, height, checkPo2);
+        final int roundedWidth = Math.round(width);
+        final int roundedHeight = Math.round(height);
+        final BufferTexture texture = new BufferTexture(mGLState, roundedWidth, roundedHeight, checkPo2);
         if (!attachTexture(texture) && !texture.isPo2()) {
             // NOTE: most of 2.2 devices have problem with NPOT texture (even thought it's supported) when attached to a FrameBuffer
             // so this is a work-around
             texture.unload();
             // force the size to be PO2
-            texture.load(Pure2DUtils.getNextPO2(width), Pure2DUtils.getNextPO2(height), width, height, 0);
+            texture.load(Pure2DUtils.getNextPO2(roundedWidth), Pure2DUtils.getNextPO2(roundedHeight), roundedWidth, roundedHeight, 0);
             // re-attach it
             attachTexture(texture);
         }
@@ -121,7 +123,7 @@ public class FrameBuffer {
             // Depth enable
             // A renderbuffer are just objects which are used to support offscreen rendering,
             // often for sections of the framebuffer which don't have a texture format associated with them such as the stencil or depth buffer.
-            mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_DEPTH_COMPONENT24, mWidth, mHeight);
+            mGL11Ex.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, GL11ExtensionPack.GL_DEPTH_COMPONENT24, Math.round(mWidth), Math.round(mHeight));
             mGL11Ex.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, mDepthBuffer);
 
             // stencil enable
@@ -181,7 +183,7 @@ public class FrameBuffer {
         mGL.glLoadIdentity();
 
         // set new viewport
-        mGLState.setViewport(0, 0, mWidth, mHeight);
+        mGLState.setViewport(0, 0, Math.round(mWidth), Math.round(mHeight));
         // set new projection matrix
         mGLState.setProjection(projection, 0, mWidth - 1, 0, mHeight - 1);
 
@@ -274,16 +276,16 @@ public class FrameBuffer {
         return mTexture;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return mWidth;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return mHeight;
     }
 
     public boolean hasSize(final PointF size) {
-        return mWidth == Math.round(size.x) && mHeight == Math.round(size.y);
+        return mWidth == size.x && mHeight == size.y;
     }
 
     public static boolean isSupported(final GL10 gl) {
