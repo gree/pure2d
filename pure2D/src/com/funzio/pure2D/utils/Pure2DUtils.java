@@ -5,6 +5,9 @@ package com.funzio.pure2D.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -279,6 +282,60 @@ public class Pure2DUtils {
     }
 
     /**
+     * non-premultiplied alpha version of GLUtils.texImage2D(). Note: this method is Slow and should only be used when really necessary!
+     * 
+     * @param gl
+     * @param bitmap
+     * @see GLUtils.texImage2D()
+     */
+    public static void texImage2DNonPremultipliedAlpha(final GL10 gl, final Bitmap bitmap) {
+        final int[] pixels = extractPixels(bitmap);
+        final byte[] pixelComponents = new byte[pixels.length * 4];
+        int byteIndex = 0, p;
+        for (int i = 0; i < pixels.length; i++) {
+            p = pixels[i];
+            // Convert to byte representation RGBA required by gl.glTexImage2D.
+            pixelComponents[byteIndex++] = (byte) ((p >> 16) & 0xFF); // red
+            pixelComponents[byteIndex++] = (byte) ((p >> 8) & 0xFF); //
+            pixelComponents[byteIndex++] = (byte) ((p) & 0xFF); // blue
+            pixelComponents[byteIndex++] = (byte) (p >> 24); // alpha
+        }
+        gl.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA, bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ByteBuffer.wrap(pixelComponents));
+    }
+
+    // /**
+    // * non-premultiplied alpha version of GLUtils.texImage2D(). Note: this method is Slow and should only be used when really necessary!
+    // *
+    // * @param gl
+    // * @param bitmap
+    // * @see GLUtils.texImage2D()
+    // */
+    // public static void texImage2DNonPremultipliedAlpha(final GL10 gl, final Bitmap bitmap) {
+    // final int width = bitmap.getWidth();
+    // final int height = bitmap.getHeight();
+    // final int size = width * height;
+    // final byte[] pixelComponents = new byte[size * 4];
+    // int byteIndex = 0, p;
+    // for (int i = 0; i < size; i++) {
+    // p = bitmap.getPixel(i % width, i / width);
+    // // Convert to byte representation RGBA required by gl.glTexImage2D.
+    // pixelComponents[byteIndex++] = (byte) ((p >> 16) & 0xFF); // red
+    // pixelComponents[byteIndex++] = (byte) ((p >> 8) & 0xFF); //
+    // pixelComponents[byteIndex++] = (byte) ((p) & 0xFF); // blue
+    // pixelComponents[byteIndex++] = (byte) (p >> 24); // alpha
+    // }
+    // gl.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA, bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ByteBuffer.wrap(pixelComponents));
+    // }
+
+    public static int[] extractPixels(final Bitmap bitmap) {
+        final int w = bitmap.getWidth();
+        final int h = bitmap.getHeight();
+        final int[] colors = new int[w * h];
+        bitmap.getPixels(colors, 0, w, 0, 0, w, h);
+        return colors;
+    }
+
+    /**
      * Scale the specified bitmap to the size of the closest-power-of-2 of the current size
      * 
      * @param bitmap
@@ -322,6 +379,10 @@ public class Pure2DUtils {
         n = n | (n >> 16);
         n = n | (n >> 32);
         return n + 1;
+    }
+
+    public static boolean isPO2(final int n) {
+        return (n != 0) && ((n & (n - 1)) == 0);
     }
 
     /**

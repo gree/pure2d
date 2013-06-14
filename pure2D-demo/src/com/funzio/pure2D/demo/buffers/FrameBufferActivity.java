@@ -1,5 +1,8 @@
 package com.funzio.pure2D.demo.buffers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.os.Bundle;
@@ -9,18 +12,18 @@ import android.view.View;
 
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.shapes.Rectangular;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class FrameBufferActivity extends StageActivity {
-    private static final int FB_WIDTH = 256;
-    private static final int FB_HEIGHT = 256;
+    private static final int FB_WIDTH = 200;
+    private static final int FB_HEIGHT = 200;
 
-    private Texture mTexture;
+    private List<Texture> mTextures = new ArrayList<Texture>();
+    private Texture mBufferTexture;
     private FrameBuffer mFrameBuffer;
 
     @Override
@@ -32,44 +35,61 @@ public class FrameBufferActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
-                createTexture();
+                loadTextures();
+                createBufferTexture();
                 addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
             }
         });
     }
 
-    private void createTexture() {
+    private void loadTextures() {
+        final int[] ids = {
+                R.drawable.cc_32, // cc
+                R.drawable.mw_32, // mw
+                R.drawable.ka_32, // ka
+        // R.drawable.cc_128, // cc
+        // R.drawable.mw_128, // mw
+        // R.drawable.ka_128, // ka
+        };
+
+        for (int id : ids) {
+            // add texture to list
+            mTextures.add(mScene.getTextureManager().createDrawableTexture(id, null));
+        }
+    }
+
+    private void createBufferTexture() {
         if (!FrameBuffer.isSupported(mScene.getGLState().mGL)) {
             Log.e(Pure2D.TAG, "FrameBuffer is not supported!");
             return;
         }
 
-        // generate the texture
-        // new texture
-        // mTexture = mScene.getTextureManager().createTexture(FB_WIDTH, FB_HEIGHT);
         // create a frame buffer
         mFrameBuffer = new FrameBuffer(mScene.getGLState(), FB_WIDTH, FB_HEIGHT, true);
-        mTexture = mFrameBuffer.getTexture();
+        mBufferTexture = mFrameBuffer.getTexture();
 
         mFrameBuffer.bind(Scene.AXIS_TOP_LEFT); // invert
         // start drawing to the frame buffer
-        Rectangular rect = new Rectangular();
-        rect.setSize(32f, 32f);
+        Sprite sprite = new Sprite();
         for (int i = 0; i < 100; i++) {
+            sprite.setTexture(mTextures.get(i % mTextures.size()));
             // random color and position
-            rect.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
-            rect.moveTo(mRandom.nextInt(FB_WIDTH), mRandom.nextInt(FB_HEIGHT));
+            sprite.moveTo((i % 10) * 32, (i / 10) * 32);
             // draw onto frame buffer
-            rect.draw(mScene.getGLState());
+            sprite.draw(mScene.getGLState());
         }
         mFrameBuffer.unbind();
+
+        // framebuffer no longer needed
         mFrameBuffer.unload();
     }
 
     private void addObject(final float x, final float y) {
         // create object
         Sprite obj = new Sprite();
-        obj.setTexture(mTexture);
+        obj.setTexture(mBufferTexture);
+        // obj.setAutoUpdateBounds(true);
+        // obj.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
 
         // center origin
         obj.setOriginAtCenter();

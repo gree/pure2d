@@ -189,12 +189,13 @@ public class Button extends DisplayGroup implements UIObject {
                 mFocus = false;
                 setState(STATE_UP);
 
-                if (hitTest(touchedPoint.x, touchedPoint.y)) {
-                    // event
-                    if (mListener != null) {
-                        mListener.onTouchUp(this);
-                    }
-
+                // hit test
+                final boolean hit = hitTest(touchedPoint.x, touchedPoint.y);
+                // event
+                if (mListener != null) {
+                    mListener.onTouchUp(this, hit);
+                }
+                if (hit) {
                     // take control
                     return true;
                 }
@@ -217,6 +218,6 @@ public class Button extends DisplayGroup implements UIObject {
     public static interface Listener {
         public void onTouchDown(Button button);
 
-        public void onTouchUp(Button button);
+        public void onTouchUp(Button button, boolean hit);
     }
 }

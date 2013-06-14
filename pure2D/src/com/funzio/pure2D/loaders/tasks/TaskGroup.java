@@ -14,7 +14,7 @@ import android.util.Log;
 public class TaskGroup implements Task, Retriable {
     private static final String TAG = TaskGroup.class.getSimpleName();
 
-    private List<Task> mTasks = new ArrayList<Task>();
+    protected List<Task> mTasks = new ArrayList<Task>();
 
     protected TaskListener mTaskListener;
     protected long mTaskDelay = 0;

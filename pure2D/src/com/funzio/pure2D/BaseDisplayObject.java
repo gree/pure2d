@@ -10,7 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.opengl.GLU;
 
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
@@ -67,6 +66,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected GLColor mColor = null;
     protected float mAlpha = 1;
     protected BlendFunc mBlendFunc;
+    // protected boolean mDepthTestEnabled = false;
     protected boolean mAlphaTestEnabled = false;
 
     private boolean mHasOrigin = false;
@@ -86,6 +86,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // perspective projection
     protected boolean mPerspectiveEnabled = false;
     private boolean mPerspectiveProjecting = false; // flag to prevent matrix out of sync caused by Threads
+    private float[] mOriginalProjection;
     protected PointF mSceneSize;
 
     abstract protected boolean drawChildren(final GLState glState);
@@ -121,7 +122,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         drawEnd(glState);
 
         // validate visual only
-        mInvalidateFlags &= ~InvalidateFlags.VISUAL;
+        mInvalidateFlags &= ~VISUAL;
 
         return true;
     }
@@ -142,14 +143,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
             if (mSceneSize != null) {
                 mPerspectiveProjecting = true; // flag
                 gl.glMatrixMode(GL10.GL_PROJECTION);
-                gl.glPushMatrix();
+                // gl.glPushMatrix();
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, Pure2D.GL_PERSPECTIVE_FOVY, mSceneSize.x / mSceneSize.y, 0.001f, Math.max(mSceneSize.x, mSceneSize.y));
-                GLU.gluLookAt(gl, 0, 0, mSceneSize.y, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
 
-                // offset the translation
-                gl.glTranslatef(-mSceneSize.x * 0.5f, -mSceneSize.y * 0.5f, 0);
+                // keep original projection
+                if (mOriginalProjection == null) {
+                    mOriginalProjection = new float[5];
+                }
+                glState.getProjection(mOriginalProjection);
+
+                // set new projection
+                glState.setProjection(Scene.PROJECTION_PERSPECTIVE, 0, mSceneSize.x - 1, 0, mSceneSize.y - 1);
+
+                // back to modelview
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
             }
         }
 
@@ -185,18 +192,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
             gl.glTranslatef(-mOrigin.x, -mOrigin.y, 0);
         }
 
-        // test projection values
-        // float[] model = new float[16];
-        // ((GL11) gl).glGetFloatv(GL11.GL_MODELVIEW_MATRIX, model, 0);
-        // float[] project = new float[16];
-        // ((GL11) gl).glGetFloatv(GL11.GL_PROJECTION_MATRIX, project, 0);
-        // int[] view = {
-        // 0, 0, (int) mSceneSize.x, (int) mSceneSize.y
-        // };
-        // float[] win = new float[3];
-        // GLU.gluProject(0, 0, 0, model, 0, project, 0, view, 0, win, 0);
-        // Log.e("long", " " + win[0] + " " + win[1] + " " + win[2]);
-
+        // check and turn on depth test
+        // glState.setDepthTestEnabled(mDepthTestEnabled);
         // check and turn on alpha test
         glState.setAlphaTestEnabled(mAlphaTestEnabled);
 
@@ -225,7 +222,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // restore the matrix
         if (mPerspectiveProjecting) {
             gl.glMatrixMode(GL10.GL_PROJECTION);
-            gl.glPopMatrix();
+            // gl.glPopMatrix();
+            gl.glLoadIdentity();
+            glState.setProjection(mOriginalProjection);
+
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             mPerspectiveProjecting = false; // unflag
         }
@@ -259,7 +259,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // check for extra transformation
-        if ((mInvalidateFlags & InvalidateFlags.TRANSFORM_MATRIX) != 0) {
+        if ((mInvalidateFlags & TRANSFORM_MATRIX) != 0) {
             // check and init matrix
             if (mTransformMatrix == null) {
                 mTransformMatrix = new Matrix();
@@ -282,13 +282,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
 
-        if (mAutoUpdateBounds && (mInvalidateFlags & InvalidateFlags.BOUNDS) != 0) {
+        if (mAutoUpdateBounds && (mInvalidateFlags & BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
         }
 
         // validate transform AFTER updateBounds()
-        mInvalidateFlags &= ~InvalidateFlags.TRANSFORM_MATRIX;
+        mInvalidateFlags &= ~TRANSFORM_MATRIX;
 
         return mNumManipulators > 0;
     }
@@ -298,10 +298,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     final public void invalidate() {
         // invalidate generally, NOT!
-        // mInvalidateFlags = InvalidateFlags.ALL;
+        // mInvalidateFlags = ALL;
 
         if (mParent != null) {
-            mParent.invalidate(InvalidateFlags.CHILDREN);
+            mParent.invalidate(CHILDREN);
         }
     }
 
@@ -312,7 +312,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mInvalidateFlags |= flags;
 
         if (mParent != null) {
-            mParent.invalidate(InvalidateFlags.CHILDREN);
+            mParent.invalidate(CHILDREN);
         }
     }
 
@@ -350,7 +350,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     @Override
     public void setVisible(final boolean value) {
         mVisible = value;
-        invalidate(InvalidateFlags.VISIBILITY);
+        invalidate(VISIBILITY);
     }
 
     /*
@@ -391,12 +391,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setPosition(final float x, final float y) {
         mPosition.x = x;
         mPosition.y = y;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     public void setX(final float x) {
         mPosition.x = x;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     final public float getX() {
@@ -405,7 +405,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     public void setY(final float y) {
         mPosition.y = y;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     final public float getY() {
@@ -419,7 +419,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setZ(final float z) {
         mZ = z;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     final public float getZ() {
@@ -429,20 +429,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void moveTo(final float x, final float y) {
         mPosition.x = x;
         mPosition.y = y;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     public void move(final float dx, final float dy) {
         mPosition.x += dx;
         mPosition.y += dy;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     @Deprecated
     public void moveBy(final float dx, final float dy) {
         mPosition.x += dx;
         mPosition.y += dy;
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     /**
@@ -464,7 +464,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.y = y;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
 
-        invalidate(InvalidateFlags.ORIGIN);
+        invalidate(ORIGIN);
     }
 
     public void setOriginAtCenter() {
@@ -479,21 +479,21 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mPivot.x = pivot.x;
         mPivot.y = pivot.y;
 
-        invalidate(InvalidateFlags.PIVOT);
+        invalidate(PIVOT);
     }
 
     public void setPivot(final float x, final float y) {
         mPivot.x = x;
         mPivot.y = y;
 
-        invalidate(InvalidateFlags.PIVOT);
+        invalidate(PIVOT);
     }
 
     public void setPivotAtCenter() {
         mPivot.x = mSize.x * 0.5f;
         mPivot.y = mSize.y * 0.5f;
 
-        invalidate(InvalidateFlags.PIVOT);
+        invalidate(PIVOT);
     }
 
     /**
@@ -524,7 +524,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setSize(final float w, final float h) {
         mSize.x = w;
         mSize.y = h;
-        invalidate(InvalidateFlags.SIZE);
+        invalidate(SIZE);
     }
 
     /**
@@ -533,7 +533,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setScale(final float sx, final float sy) {
         mScale.x = sx;
         mScale.y = sy;
-        invalidate(InvalidateFlags.SCALE);
+        invalidate(SCALE);
     }
 
     /**
@@ -541,7 +541,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setScale(final float scale) {
         mScale.x = mScale.y = scale;
-        invalidate(InvalidateFlags.SCALE);
+        invalidate(SCALE);
     }
 
     final public PointF getScale() {
@@ -550,18 +550,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     public void setRotation(final float degree) {
         mRotation = degree;
-        invalidate(InvalidateFlags.ROTATION);
+        invalidate(ROTATION);
     }
 
     @Deprecated
     public void rotateBy(final float degreeDelta) {
         mRotation += degreeDelta;
-        invalidate(InvalidateFlags.ROTATION);
+        invalidate(ROTATION);
     }
 
     public void rotate(final float degreeDelta) {
         mRotation += degreeDelta;
-        invalidate(InvalidateFlags.ROTATION);
+        invalidate(ROTATION);
     }
 
     final public float getRotation() {
@@ -570,12 +570,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     // public void setRotationX(final float degree) {
     // mRotationX = degree;
-    // invalidate(InvalidateFlags.ROTATION);
+    // invalidate(ROTATION);
     // }
     //
     // public void rotateX(final float degreeDelta) {
     // mRotationX += degreeDelta;
-    // invalidate(InvalidateFlags.ROTATION);
+    // invalidate(ROTATION);
     // }
     //
     // final public float getRotationX() {
@@ -584,12 +584,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
     //
     // public void setRotationY(final float degree) {
     // mRotationY = degree;
-    // invalidate(InvalidateFlags.ROTATION);
+    // invalidate(ROTATION);
     // }
     //
     // public void rotateY(final float degreeDelta) {
     // mRotationY += degreeDelta;
-    // invalidate(InvalidateFlags.ROTATION);
+    // invalidate(ROTATION);
     // }
     //
     // final public float getRotationY() {
@@ -601,7 +601,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mRotationVectorY = y;
         mRotationVectorZ = z;
 
-        invalidate(InvalidateFlags.ROTATION);
+        invalidate(ROTATION);
     }
 
     public void setSkew(final float kx, final float ky) {
@@ -617,7 +617,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
             mSkew.y = ky;
         }
 
-        invalidate(InvalidateFlags.SKEW);
+        invalidate(SKEW);
     }
 
     public PointF getSkew() {
@@ -636,7 +636,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setColor(final GLColor color) {
         mColor = color;
-        invalidate(InvalidateFlags.COLOR);
+        invalidate(COLOR);
     }
 
     /**
@@ -708,7 +708,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setAlpha(final float alpha) {
         mAlpha = alpha;
-        invalidate(InvalidateFlags.ALPHA);
+        invalidate(ALPHA);
     }
 
     /**
@@ -782,8 +782,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setBlendFunc(final BlendFunc blendFunc) {
         mBlendFunc = blendFunc;
-        invalidate(InvalidateFlags.BLEND);
+        invalidate(BLEND);
     }
+
+    // final public boolean isDepthTestEnabled() {
+    // return mDepthTestEnabled;
+    // }
+    //
+    // public void setDepthTestEnabled(final boolean depthTestEnabled) {
+    // mDepthTestEnabled = depthTestEnabled;
+    //
+    // invalidate(DEPTH);
+    // }
 
     final public boolean isAlphaTestEnabled() {
         return mAlphaTestEnabled;
@@ -798,7 +808,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setAlphaTestEnabled(final boolean alphaTestEnabled) {
         mAlphaTestEnabled = alphaTestEnabled;
 
-        invalidate(InvalidateFlags.ALPHA);
+        invalidate(ALPHA);
     }
 
     final public Maskable getMask() {
@@ -808,7 +818,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setMask(final Maskable mask) {
         mMask = mask;
 
-        invalidate(InvalidateFlags.VISIBILITY);
+        invalidate(VISIBILITY);
     }
 
     private Scene findScene() {
@@ -862,6 +872,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param local
      * @return
      */
+    @Deprecated
     final public PointF localToGlobal(final PointF local) {
         // final PointF temp = new PointF(pt.x + mPosition.x - mOrigin.x, pt.y + mPosition.y - mOrigin.y);
         final PointF result = new PointF((local == null ? 0 : local.x) + mPosition.x, (local == null ? 0 : local.y) + mPosition.y);
@@ -907,6 +918,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param global
      * @return
      */
+    @Deprecated
     final public PointF globalToLocal(final PointF global) {
         final PointF local;
         if (mParent != null && !(mParent instanceof Scene)) {
@@ -1006,7 +1018,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // clear flags: bounds
-        mInvalidateFlags &= ~InvalidateFlags.BOUNDS;
+        mInvalidateFlags &= ~BOUNDS;
 
         // translate later
         if ((mPosition.x - mOrigin.x) != 0 || (mPosition.y - mOrigin.y) != 0) {
@@ -1093,7 +1105,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setPerspectiveEnabled(final boolean perspectiveEnabled) {
         mPerspectiveEnabled = perspectiveEnabled;
 
-        invalidate(InvalidateFlags.PERSPECTIVE);
+        invalidate(PERSPECTIVE);
     }
 
     /*
@@ -1121,7 +1133,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void setDebugFlags(final int flags) {
         mDebugFlags = flags;
-        invalidate(InvalidateFlags.VISUAL);
+        invalidate(VISUAL);
     }
 
     /**
@@ -1132,7 +1144,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mScene = findScene();
 
         // flag the bounds are changed now
-        invalidate(InvalidateFlags.POSITION);
+        invalidate(POSITION);
     }
 
     /**

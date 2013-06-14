@@ -17,7 +17,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 
@@ -54,6 +54,7 @@ public class NovaConfig {
     public static final String BF_ST_SCREEN_ALPHA = "screen_alpha";
     public static final String BF_ST_MULTIPLY = "multiply";
     public static final String BF_ST_INTERPOLATE = "interpolate";
+    public static final String BF_ST_INTERPOLATE2 = "interpolate2"; // with additive alpha (separate)
     public static final String BF_ST_PREMULTIPLIED_ALPHA = "premultiplied_alpha";
     public static final String BF_ST_INTERPOLATE_COLOR = "interpolate_color";
 
@@ -62,6 +63,7 @@ public class NovaConfig {
     public static final BlendFunc BF_SCREEN_ALPHA = BlendFunc.getScreenAlpha();
     public static final BlendFunc BF_MULTIPLY = BlendFunc.getMultiply();
     public static final BlendFunc BF_INTERPOLATE = BlendFunc.getInterpolate();
+    public static final BlendFunc BF_INTERPOLATE2 = BlendFunc.getInterpolate2();
     public static final BlendFunc BF_PREMULTIPLIED_ALPHA = BlendFunc.getPremultipliedAlpha();
     public static final BlendFunc BF_INTERPOLATE_COLOR = BlendFunc.getInterpolateColor();
 
@@ -171,6 +173,8 @@ public class NovaConfig {
             return BF_MULTIPLY;
         } else if (BF_ST_INTERPOLATE.equalsIgnoreCase(mode)) {
             return BF_INTERPOLATE;
+        } else if (BF_ST_INTERPOLATE2.equalsIgnoreCase(mode)) {
+            return BF_INTERPOLATE2;
         } else if (BF_ST_INTERPOLATE_COLOR.equalsIgnoreCase(mode)) {
             return BF_INTERPOLATE_COLOR;
         } else if (BF_ST_PREMULTIPLIED_ALPHA.equalsIgnoreCase(mode)) {
@@ -186,12 +190,12 @@ public class NovaConfig {
      */
     public static int getLoopMode(final String mode) {
         if (LOOP_REPEAT.equalsIgnoreCase(mode)) {
-            return Playable.LOOP_REPEAT;
+            return LoopModes.LOOP_REPEAT;
         } else if (LOOP_REVERSE.equalsIgnoreCase(mode)) {
-            return Playable.LOOP_REVERSE;
+            return LoopModes.LOOP_REVERSE;
         }
 
-        return Playable.LOOP_NONE;
+        return LoopModes.LOOP_NONE;
     }
 
     /**

@@ -15,7 +15,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 /**
  * @author long
  */
-public interface DisplayObject extends Manipulatable {
+public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public static final int FLIP_X = 1;
     public static final int FLIP_Y = 1 << 1;
 
@@ -101,10 +101,12 @@ public interface DisplayObject extends Manipulatable {
 
     public void dispose();
 
+    @Deprecated
     public PointF localToGlobal(final PointF local);
 
     public void localToGlobal(final PointF local, final PointF result);
 
+    @Deprecated
     public PointF globalToLocal(final PointF global);
 
     public void globalToLocal(final PointF global, final PointF result);

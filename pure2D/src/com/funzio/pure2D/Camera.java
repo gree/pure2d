@@ -36,6 +36,7 @@ public class Camera implements Manipulatable {
     private boolean mClipping = false;
     private RectF mBounds = new RectF(); // the bounds that contains the rect (with/without rotation)
     private Matrix mMatrix = new Matrix();
+    private static final float[] mScratch = new float[4];
 
     public Camera(final PointF size) {
         mSize.x = size.x;
@@ -273,14 +274,8 @@ public class Camera implements Manipulatable {
         gl.glMatrixMode(GL10.GL_PROJECTION);
         // Reset the projection matrix
         gl.glLoadIdentity();
-
         // camera view and axis system
-        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
-            // invert the y-axis
-            gl.glOrthof(mRect.left, mRect.right, mRect.bottom, mRect.top, -1, 1);
-        } else {
-            gl.glOrthof(mRect.left, mRect.right, mRect.top, mRect.bottom, -1, 1);
-        }
+        glState.setProjection(mAxisSystem, mRect.left, mRect.right, mRect.top, mRect.bottom);
 
         // camera rotation
         if (mRotation != 0) {
@@ -338,15 +333,35 @@ public class Camera implements Manipulatable {
      * @return
      * @see #globalToLocal(float, float)
      */
+    @Deprecated
     public PointF localToGlobal(final float cameraX, final float cameraY) {
-        final float[] worldPoint = {
-                mRect.left + cameraX, mRect.top + cameraY
-        };
+        mScratch[0] = mRect.left + cameraX;
+        mScratch[1] = mRect.top + cameraY;
+
         if (mRotation != 0) {
-            mMatrix.mapPoints(worldPoint);
+            mMatrix.mapPoints(mScratch);
         }
 
-        return new PointF(worldPoint[0], worldPoint[1]);
+        return new PointF(mScratch[0], mScratch[1]);
+    }
+
+    /**
+     * Find the world coordinates of a point relative to the TL corner of the Camera's Rect.
+     * 
+     * @param cameraX
+     * @param cameraY
+     * @param result
+     */
+    public void localToGlobal(final float cameraX, final float cameraY, final PointF result) {
+        mScratch[0] = mRect.left + cameraX;
+        mScratch[1] = mRect.top + cameraY;
+
+        if (mRotation != 0) {
+            mMatrix.mapPoints(mScratch);
+        }
+
+        result.x = mScratch[0];
+        result.y = mScratch[1];
     }
 
     /**
@@ -357,18 +372,63 @@ public class Camera implements Manipulatable {
      * @return
      * @see #localToGlobal(float, float)
      */
+    @Deprecated
     public PointF globalToLocal(final float worldX, final float worldY) {
-        final float[] worldPoint = {
-                worldX, worldY
-        };
+        mScratch[0] = worldX;
+        mScratch[1] = worldY;
 
         if (mRotation != 0) {
-            final Matrix inverse = new Matrix();
+            final Matrix inverse = new Matrix(); // FIXME: reuse Matrix
             inverse.setRotate(-mRotation, mCenter.x, mCenter.y);
-            inverse.mapPoints(worldPoint);
+            inverse.mapPoints(mScratch);
         }
 
-        return new PointF(worldPoint[0] - mRect.left, worldPoint[1] - mRect.top);
+        return new PointF(mScratch[0] - mRect.left, mScratch[1] - mRect.top);
+    }
+
+    /**
+     * Find the local coordinates of a point relative to the TL corner of the Camera's Rect.
+     * 
+     * @param worldX
+     * @param worldY
+     * @param result
+     */
+    public void globalToLocal(final float worldX, final float worldY, final PointF result) {
+        mScratch[0] = worldX;
+        mScratch[1] = worldY;
+
+        if (mRotation != 0) {
+            final Matrix inverse = new Matrix(); // FIXME: reuse Matrix
+            inverse.setRotate(-mRotation, mCenter.x, mCenter.y);
+            inverse.mapPoints(mScratch);
+        }
+
+        result.x = mScratch[0] - mRect.left;
+        result.y = mScratch[1] - mRect.top;
+    }
+
+    /**
+     * Find the local coordinates of a Rectangle relative to the TL corner of the Camera's Rect.
+     * 
+     * @param globalRect
+     * @param result
+     */
+    public void globalToLocal(final RectF globalRect, final RectF result) {
+        mScratch[0] = globalRect.left;
+        mScratch[1] = globalRect.top;
+        mScratch[2] = globalRect.right;
+        mScratch[3] = globalRect.bottom;
+
+        if (mRotation != 0) {
+            final Matrix inverse = new Matrix(); // FIXME: reuse Matrix
+            inverse.setRotate(-mRotation, mCenter.x, mCenter.y);
+            inverse.mapPoints(mScratch);
+        }
+
+        result.left = mScratch[0] - mRect.left;
+        result.top = mScratch[1] - mRect.top;
+        result.right = mScratch[2] - mRect.left;
+        result.bottom = mScratch[3] - mRect.top;
     }
 
     public boolean addManipulator(final Manipulator manipulator) {

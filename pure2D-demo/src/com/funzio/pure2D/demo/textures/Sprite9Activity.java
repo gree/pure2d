@@ -2,6 +2,7 @@ package com.funzio.pure2D.demo.textures;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,7 +62,9 @@ public class Sprite9Activity extends StageActivity {
         obj.setOriginAtCenter();
 
         // set positions
-        obj.setPosition(mScene.screenToGlobal(x, y));
+        PointF global = new PointF();
+        mScene.screenToGlobal(x, y, global);
+        obj.setPosition(global);
 
         // add to scene
         mScene.addChild(obj);

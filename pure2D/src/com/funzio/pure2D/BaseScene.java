@@ -73,9 +73,6 @@ public class BaseScene implements Scene {
     private ArrayList<PointF> mTouchedPoints = new ArrayList<PointF>();
     private int mPointerCount = 0;
 
-    // GL extensions
-    protected boolean mNpotTextureSupported = false;
-
     public BaseScene() {
     }
 
@@ -198,23 +195,20 @@ public class BaseScene implements Scene {
      */
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+        Log.v(TAG, "onSurfaceCreated()");
         // this might help but I have not seen any difference yet!
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
+        // init GL properties, ONCE!
+        if (Pure2D.GL_MAX_TEXTURE_SIZE == 0) {
+            Pure2D.initGLProperties(gl);
+        }
 
         mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
         mDownTime = 0;
         mFrameCount = 0;
         mCurrentFps = 0;
         mFrameCountDuration = 0;
-
-        // find the extensions
-        if (Pure2D.GL_EXTENSIONS == null) {
-            Pure2D.GL_EXTENSIONS = gl.glGetString(GL10.GL_EXTENSIONS);
-            Pure2D.GL_NPOT_TEXTURE_SUPPORTED = mNpotTextureSupported = Pure2D.GL_EXTENSIONS.contains("GL_OES_texture_npot") || Pure2D.GL_EXTENSIONS.contains("GL_ARB_texture_non_power_of_two");
-            Pure2D.GL_STENCIL8_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_stencil8");
-        }
-
-        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.GL_NPOT_TEXTURE_SUPPORTED);
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
@@ -723,18 +717,8 @@ public class BaseScene implements Scene {
             mGLState.mGL.glMatrixMode(GL10.GL_PROJECTION);
             // Reset the projection matrix
             mGLState.mGL.glLoadIdentity();
-
-            // default view and axis system
-            if (mAxisSystem == AXIS_TOP_LEFT) {
-                // invert the y-axis
-                mGLState.mGL.glOrthof(0, mSize.x, mSize.y, 0, -1, 1);
-            } else {
-                mGLState.mGL.glOrthof(0, mSize.x, 0, mSize.y, -1, 1);
-            }
-
-            // testing perspective
-            // GLU.gluPerspective(mGLState.mGL, 60, mSize.x / mSize.y, 0.1f, 1000f);
-            // GLU.gluLookAt(mGLState.mGL, mSize.x / 2, mSize.y / 2, 1000f, mSize.x / 2, mSize.y / 2, 0, 0, 1, 0);
+            // default axis system and projection
+            mGLState.setProjection(mAxisSystem, 0, mSize.x - 1, 0, mSize.y - 1);
 
             // back to model
             mGLState.mGL.glMatrixMode(GL10.GL_MODELVIEW);
@@ -752,6 +736,7 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
+    @Deprecated
     final public PointF localToGlobal(final PointF local) {
         return new PointF(local.x, local.y);
     }
@@ -794,6 +779,7 @@ public class BaseScene implements Scene {
      * @param globalY
      * @return
      */
+    @Deprecated
     final public PointF globalToScreen(final float globalX, final float globalY) {
         final Rect stageRect = mStage.getRect();
         final PointF screen;
@@ -821,6 +807,36 @@ public class BaseScene implements Scene {
     }
 
     /**
+     * Get the Screen's coordinates from a global point relative to this scene
+     * 
+     * @param globalX
+     * @param globalY
+     */
+    final public void globalToScreen(final float globalX, final float globalY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalX, globalY, result);
+
+            final RectF cameraRect = mCamera.getRect();
+            result.x /= cameraRect.width() / stageRect.width();
+            result.y /= cameraRect.height() / stageRect.height();
+        } else {
+            result.x = globalX;
+            result.y = globalY;
+        }
+
+        result.x += stageRect.left;
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            result.y += stageRect.top;
+        } else {
+            // inverse y
+            result.y = stageRect.bottom - result.y;
+        }
+    }
+
+    /**
      * @param global
      * @return
      * @see #globalToScreen(float, float)
@@ -836,6 +852,7 @@ public class BaseScene implements Scene {
      * @param screenY
      * @return
      */
+    @Deprecated
     final public PointF screenToGlobal(final float screenX, final float screenY) {
         final Rect stageRect = mStage.getRect();
         float localX = screenX - stageRect.left;
@@ -859,12 +876,100 @@ public class BaseScene implements Scene {
     }
 
     /**
+     * Get the global coordinates from the Screen's coordinates
+     * 
+     * @param screenX
+     * @param screenY
+     */
+    final public void screenToGlobal(final float screenX, final float screenY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        float localX = screenX - stageRect.left;
+        float localY;
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            localY = screenY - stageRect.top;
+        } else {
+            // inverse y
+            localY = stageRect.bottom - screenY;
+        }
+
+        // check the camera
+        if (mCamera != null) {
+            final RectF cameraRect = mCamera.getRect();
+            localX *= cameraRect.width() / stageRect.width();
+            localY *= cameraRect.height() / stageRect.height();
+            mCamera.localToGlobal(localX, localY, result);
+        } else {
+            result.x = localX;
+            result.y = localY;
+        }
+    }
+
+    /**
      * @param screen
      * @return
      * @see BaseScene#screenToGlobal(float, float)
      */
+    @Deprecated
     final public PointF screenToGlobal(final PointF screen) {
         return screenToGlobal(screen.x, screen.y);
+    }
+
+    /**
+     * @param screen
+     * @return
+     * @see BaseScene#screenToGlobal(float, float)
+     */
+    final public void screenToGlobal(final PointF screen, final PointF result) {
+        screenToGlobal(screen.x, screen.y, result);
+    }
+
+    /**
+     * Convert a Global Point to a Pixel Point on the Stage
+     * 
+     * @param globalX
+     * @param globalY
+     * @param result
+     */
+    final public void globalToStage(final float globalX, final float globalY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalX, globalY, result);
+
+            final RectF cameraRect = mCamera.getRect();
+            result.x /= cameraRect.width() / stageRect.width();
+            result.y /= cameraRect.height() / stageRect.height();
+        } else {
+            result.x = globalX;
+            result.y = globalY;
+        }
+    }
+
+    /**
+     * Convert a Global Rectangle to a Pixel Rectangle on the Stage
+     * 
+     * @param globalRect
+     * @param result
+     */
+    final public void globalToStage(final RectF globalRect, final RectF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalRect, result);
+
+            final RectF cameraRect = mCamera.getRect();
+            final float scaleX = cameraRect.width() / stageRect.width();
+            final float scaleY = cameraRect.height() / stageRect.height();
+            result.left /= scaleX;
+            result.top /= scaleY;
+            result.right /= scaleX;
+            result.bottom /= scaleY;
+        } else {
+            result.left = globalRect.left;
+            result.top = globalRect.top;
+            result.right = globalRect.right;
+            result.bottom = globalRect.bottom;
+        }
     }
 
     /**
@@ -909,10 +1014,6 @@ public class BaseScene implements Scene {
      */
     public void setUIEnabled(final boolean enabled) {
         mUIEnabled = enabled;
-    }
-
-    public final boolean isNpotTextureSupported() {
-        return mNpotTextureSupported;
     }
 
     /**

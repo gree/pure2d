@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.PerspectiveCamera;
 import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.Pure2D;
@@ -29,6 +30,13 @@ public class Rotation3DActivity extends StageActivity {
     }
 
     @Override
+    protected BaseScene createScene() {
+        // enable depth sorting
+        // mStage.setEGLConfigChooser(8, 8, 8, 8, 24, 0);
+        return super.createScene();
+    }
+
+    @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -42,7 +50,7 @@ public class Rotation3DActivity extends StageActivity {
                 mCamera = new PerspectiveCamera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
                 mScene.setCamera(mCamera);
                 // need more depth for better z-sorting
-                mScene.setDepthRange(1, mCamera.getZFar());
+                // mScene.setDepthRange(0.001f, mCamera.getZFar()); // doesn't help
 
                 // load the textures
                 loadTexture();
@@ -89,10 +97,9 @@ public class Rotation3DActivity extends StageActivity {
         obj.setOriginAtCenter();
         // obj.setPivotAtCenter();
         // obj.setPerspectiveEnabled(mCBPerspective.isChecked());
-
         // set positions
         obj.setPosition(x, y);
-
+        // obj.setZ(100);
         // add to scene
         mScene.addChild(obj);
 
@@ -107,6 +114,19 @@ public class Rotation3DActivity extends StageActivity {
         obj.setRotationVector(0, 1, 0);
         obj.addManipulator(animator);
         animator.start(360);
+
+        // TornadoAnimator ta = new TornadoAnimator(null);
+        // ta.setZEnabled(true);
+        // ta.setLoop(LoopModes.LOOP_REPEAT);
+        // ta.setDuration(10000);
+        // ta.setCircles(300, 10, TornadoAnimator.DEFAULT_CIRCLE_RATIO, null);
+        // ta.start(x, y - 200, x, y + 300);
+        // MotionTrailShape3D trail = new MotionTrailShape3D();
+        // trail.setStrokeRange(20, 20);
+        // trail.addManipulator(ta);
+        // trail.setPerspectiveEnabled(true);
+        // trail.setPointsAt(x, y, 0);
+        // mScene.addChild(trail);
     }
 
     @Override

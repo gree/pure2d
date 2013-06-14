@@ -15,6 +15,10 @@ public final class BlendFunc {
     public int src = DEFAULT_SRC;
     public int dst = DEFAULT_DST;
 
+    // for GLES11Ext.glBlendFuncSeparate()
+    public int src_alpha = -1;
+    public int dst_alpha = -1;
+
     // public int equation = GL11ExtensionPack.GL_FUNC_ADD; // by default
     // For subtractive: GLES11Ext.glBlendEquationOES(equation = GL11ExtensionPack.GL_FUNC_SUBTRACT);
 
@@ -27,14 +31,13 @@ public final class BlendFunc {
         this.dst = dst;
     }
 
-    // public void reset() {
-    // src = DEFAULT_SRC;
-    // dst = DEFAULT_DST;
-    // }
+    public BlendFunc(final int src, final int dst, final int srcAlpha, final int dstAlpha) {
+        this.src = src;
+        this.dst = dst;
 
-    // public boolean isSet() {
-    // return src != DEFAULT_SRC || dst != DEFAULT_DST;
-    // }
+        this.src_alpha = srcAlpha;
+        this.dst_alpha = dstAlpha;
+    }
 
     public void setValues(final int src, final int dst) {
         this.src = src;
@@ -44,14 +47,17 @@ public final class BlendFunc {
     public void set(final BlendFunc value) {
         this.src = value.src;
         this.dst = value.dst;
+
+        this.src_alpha = value.src_alpha;
+        this.dst_alpha = value.dst_alpha;
     }
 
     public boolean equals(final BlendFunc func) {
-        return (this == func) || (src == func.src && dst == func.dst);
+        return (this == func) || (src == func.src && dst == func.dst && src_alpha == func.src_alpha && dst_alpha == func.dst_alpha);
     }
 
     /**
-     * Addictive blending
+     * Additive blending
      * 
      * @return
      */
@@ -78,6 +84,16 @@ public final class BlendFunc {
     public static BlendFunc getInterpolate() {
         // (src * src_alpha) + (dst * (1 - src_apha)) = src * src_alpha + dst - (dst * src_alpha)
         return new BlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /**
+     * Interpolative blending, with separate alpha
+     * 
+     * @return
+     */
+    public static BlendFunc getInterpolate2() {
+        // (src * src_alpha) + (dst * (1 - src_apha)) = src * src_alpha + dst - (dst * src_alpha)
+        return new BlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA, GL10.GL_ONE, GL10.GL_ONE);
     }
 
     /**

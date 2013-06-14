@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
@@ -24,6 +24,7 @@ import com.funzio.pure2D.shapes.Sprite;
 public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
 
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
     protected int mNumChildren = 0;
 
     // UI
@@ -35,6 +36,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     protected Sprite mCacheSprite;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
+
+    // clipping
+    private boolean mClippingEnabled = false;
+    private boolean mOriginalScissorEnabled = false;
+    private int[] mOriginalScissor;
+    private RectF mClipStageRect;
 
     public DisplayGroup() {
         super();
@@ -95,10 +102,41 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         drawStart(glState);
 
+        // NOTE: this clipping method doesn't work for Rotation!!!
+        if (mClippingEnabled) {
+            mOriginalScissorEnabled = glState.isScissorTestEnabled();
+            if (mOriginalScissorEnabled) {
+                // backup the current scissor
+                if (mOriginalScissor == null) {
+                    mOriginalScissor = new int[4];
+                }
+                glState.getScissor(mOriginalScissor);
+            } else {
+                // need to enable scissor test
+                glState.setScissorTestEnabled(true);
+            }
+
+            // instantiate the Clip rect
+            if (mClipStageRect == null) {
+                mClipStageRect = new RectF();
+            }
+
+            final Scene scene = getScene();
+            if (scene != null) {
+                // find the rect on stage, needed when there is a Camera!
+                scene.globalToStage(mBounds, mClipStageRect);
+            } else {
+                mClipStageRect.set(mBounds);
+            }
+
+            // set the new scissor rect, only take position and scale into account!
+            glState.setScissor((int) mClipStageRect.left, (int) mClipStageRect.top, (int) mClipStageRect.width(), (int) mClipStageRect.height());
+        }
+
         // check cache enabled
         if (mCacheEnabled) {
             // check invalidate flags
-            if ((mInvalidateFlags & InvalidateFlags.CHILDREN) != 0) {
+            if ((mInvalidateFlags & CHILDREN) != 0) {
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -106,7 +144,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                         mCacheFrameBuffer.unload();
                         mCacheFrameBuffer.getTexture().unload();
                     }
-                    mCacheFrameBuffer = new FrameBuffer(glState, Math.round(mSize.x), Math.round(mSize.y), true);
+                    mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
 
                     // init sprite
                     if (mCacheSprite == null) {
@@ -130,10 +168,20 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             drawChildren(glState);
         }
 
+        if (mClippingEnabled) {
+            if (mOriginalScissorEnabled) {
+                // restore original scissor
+                glState.setScissor(mOriginalScissor);
+            } else {
+                // disable scissor test
+                glState.setScissorTestEnabled(false);
+            }
+        }
+
         drawEnd(glState);
 
         // validate visual and children, NOT bounds
-        mInvalidateFlags &= ~(InvalidateFlags.VISUAL | InvalidateFlags.CHILDREN);
+        mInvalidateFlags &= ~(VISUAL | CHILDREN);
 
         return true;
     }
@@ -153,11 +201,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         // draw the children
-        DisplayObject child;
         int numVisibles = 0;
         final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
-        for (int i = 0; i < mNumChildren; i++) {
-            child = mChildren.get(i);
+        DisplayObject child;
+        final int numChildren = mChildrenDisplayOrder.size();
+        for (int i = 0; i < numChildren; i++) {
+            child = mChildrenDisplayOrder.get(i);
+
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
@@ -224,7 +274,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onAdded(this);
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             // internal callback
             onAddedChild(child);
@@ -244,7 +294,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onAdded(this);
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             onAddedChild(child);
             return true;
@@ -263,7 +313,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onRemoved();
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -284,7 +334,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
             // child callback
             child.onRemoved();
-            invalidate(InvalidateFlags.CHILDREN);
+            invalidate(CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -311,7 +361,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.clear();
         mNumChildren = 0;
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
     }
 
     public DisplayObject getChildAt(final int index) {
@@ -343,7 +393,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -369,7 +419,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -389,7 +439,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i + 1));
         }
         mChildren.set(mNumChildren - 1, child);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -409,7 +459,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i - 1));
         }
         mChildren.set(0, child);
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -470,6 +520,21 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return mTouchable && mAlive;
     }
 
+    public boolean isClippingEnabled() {
+        return mClippingEnabled;
+    }
+
+    /**
+     * Enable/Disable Bound-clipping. Note this does not work for rotation.
+     * 
+     * @param clippingEnabled
+     */
+    public void setClippingEnabled(final boolean clippingEnabled) {
+        mClippingEnabled = clippingEnabled;
+
+        invalidate(VISUAL);
+    }
+
     public boolean isCacheEnabled() {
         return mCacheEnabled;
     }
@@ -482,7 +547,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void setCacheEnabled(final boolean cacheEnabled) {
         mCacheEnabled = cacheEnabled;
 
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
     }
 
     public int getCacheProjection() {
@@ -492,7 +557,22 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void setCacheProjection(final int cacheProjection) {
         mCacheProjection = cacheProjection;
 
-        invalidate(InvalidateFlags.CHILDREN);
+        invalidate(CHILDREN);
+    }
+
+    // public ArrayList<DisplayObject> getChildrenDisplayOrder() {
+    // return mChildrenDisplayOrder;
+    // }
+
+    public void setChildrenDisplayOrder(final ArrayList<DisplayObject> childrenDisplayOrder) {
+        if (childrenDisplayOrder.size() != mNumChildren) {
+            Log.e(TAG, "Invalid Children array!");
+            return;
+        }
+
+        mChildrenDisplayOrder = childrenDisplayOrder;
+
+        invalidate(CHILDREN);
     }
 
     protected void onAddedChild(final DisplayObject child) {

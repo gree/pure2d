@@ -194,6 +194,10 @@ public class Shape extends BaseDisplayObject {
      */
     @Override
     protected void drawWireframe(final GLState glState) {
+        // null check
+        if (mVertexBuffer == null) {
+            return;
+        }
 
         // pre-draw
         final int primitive = mVertexBuffer.getPrimitive();

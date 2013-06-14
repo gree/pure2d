@@ -25,22 +25,30 @@ public class BufferTexture extends Texture {
     /**
      * @param gl
      */
-    public BufferTexture(final GLState glState, final int width, final int height, final boolean checkPo2) {
+    public BufferTexture(final GLState glState, final int actualWidth, final int actualHeight, final boolean checkPo2) {
         super(glState);
 
-        int bitmapWidth = width;
-        int bitmapHeight = height;
-
+        final int bitmapWidth;
+        final int bitmapHeight;
         // check for power of 2
         if (checkPo2 && !Pure2D.GL_NPOT_TEXTURE_SUPPORTED) {
-            bitmapWidth = Pure2DUtils.getNextPO2(width);
-            bitmapHeight = Pure2DUtils.getNextPO2(height);
+            bitmapWidth = Pure2DUtils.getNextPO2(actualWidth);
+            bitmapHeight = Pure2DUtils.getNextPO2(actualHeight);
+        } else {
+            bitmapWidth = actualWidth;
+            bitmapHeight = actualHeight;
         }
 
+        // BitmapSize >= ActualSize!
+        load(bitmapWidth, bitmapHeight, actualWidth, actualHeight, 0);
+    }
+
+    public void load(final int bitmapWidth, final int bitmapHeight, final int actualWidth, final int actualHeight, final int mipmaps) {
         // create an blank texture
-        load(null, bitmapWidth, bitmapHeight, 0);
-        // update the bitmap size to re-calculate the scale
-        setBitmapSize(bitmapWidth, bitmapHeight, width, height);
+        load(null, bitmapWidth, bitmapHeight, mipmaps);
+
+        // update the bitmap size to re-calculate the scale. BitmapSize >= ActualSize!
+        setBitmapSize(bitmapWidth, bitmapHeight, actualWidth, actualHeight);
     }
 
     /*
