@@ -931,11 +931,11 @@ public class BaseScene implements Scene {
      * @param result
      */
     final public void globalToStage(final float globalX, final float globalY, final PointF result) {
-        final Rect stageRect = mStage.getRect();
         // check the camera
         if (mCamera != null) {
             mCamera.globalToLocal(globalX, globalY, result);
 
+            final Rect stageRect = mStage.getRect();
             final RectF cameraRect = mCamera.getRect();
             result.x /= cameraRect.width() / stageRect.width();
             result.y /= cameraRect.height() / stageRect.height();
@@ -952,11 +952,11 @@ public class BaseScene implements Scene {
      * @param result
      */
     final public void globalToStage(final RectF globalRect, final RectF result) {
-        final Rect stageRect = mStage.getRect();
         // check the camera
         if (mCamera != null) {
             mCamera.globalToLocal(globalRect, result);
 
+            final Rect stageRect = mStage.getRect();
             final RectF cameraRect = mCamera.getRect();
             final float scaleX = cameraRect.width() / stageRect.width();
             final float scaleY = cameraRect.height() / stageRect.height();
