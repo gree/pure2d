@@ -130,7 +130,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             }
 
             // set the new scissor rect, only take position and scale into account!
-            glState.setScissor((int) mClipStageRect.left, (int) mClipStageRect.top, (int) mClipStageRect.width(), (int) mClipStageRect.height());
+            glState.setScissor((int) Math.ceil(mClipStageRect.left), (int) Math.ceil(mClipStageRect.top), (int) Math.ceil(mClipStageRect.width()), (int) Math.ceil(mClipStageRect.height()));
         }
 
         // check cache enabled
