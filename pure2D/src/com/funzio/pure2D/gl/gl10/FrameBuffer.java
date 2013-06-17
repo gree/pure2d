@@ -183,7 +183,7 @@ public class FrameBuffer {
         mGL.glLoadIdentity();
 
         // set new viewport
-        mGLState.setViewport(0, 0, Math.round(mWidth) - 1, Math.round(mHeight) - 1); // NOTE: there is 1 pixel off in relation to the scene, so we need -1
+        mGLState.setViewport(0, 0, Math.round(mWidth), Math.round(mHeight));
         // set new projection matrix
         mGLState.setProjection(projection, 0, mWidth - 1, 0, mHeight - 1);
 
