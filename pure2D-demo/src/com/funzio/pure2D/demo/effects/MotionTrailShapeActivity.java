@@ -15,10 +15,14 @@ import com.funzio.pure2D.demo.animations.AnimationActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 public class MotionTrailShapeActivity extends StageActivity {
 
     private Interpolator mInterpolator;
+
+    @SuppressWarnings("unused")
+    private Texture mTexture;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -28,6 +32,8 @@ public class MotionTrailShapeActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
+                loadTexture();
+
                 for (int i = 0; i < 50; i++) {
                     addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
                 }
@@ -70,6 +76,11 @@ public class MotionTrailShapeActivity extends StageActivity {
     // mScene.addChild(obj);
     // }
 
+    private void loadTexture() {
+        // create texture
+        mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_175, null);
+    }
+
     private void addObject(final float x, final float y) {
         final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
         final GLColor color2 = new GLColor(color1);// new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 0.5f);
@@ -85,10 +96,12 @@ public class MotionTrailShapeActivity extends StageActivity {
         mScene.addChild(obj);
 
         MotionTrailShape trail = new MotionTrailShape();
-        trail.setColor(color1);
+        // trail.setColor(color1);
         trail.setStrokeRange(30, 1);
         trail.setNumPoints(20);
         trail.setStrokeColors(color1, color2);
+        // trail.setTexture(mTexture);
+        // trail.setTextureCoordBuffer(TextureCoordBuffer.getDefault());
         trail.setMinLength(100);
         trail.setTarget(obj);
         trail.setStrokeInterpolator(mInterpolator);

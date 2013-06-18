@@ -156,5 +156,7 @@
     <string name="overshoot">Overshoot</string>
     <string name="anticipate_overshoot">Anticipate Overshoot</string>
     <string name="anticipate">Anticipate</string>
+    <string name="motion_trail_dots">Motion Trail Dots</string>
+    <string name="motion_trail_plot">Motion Trail Plot</string>
 
 </resources>

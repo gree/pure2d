@@ -20,4 +20,11 @@
         android:onClick="onClickButton"
         android:text="@string/motion_trail_shape" />
 
+    <Button
+        android:id="@+id/btn_motion_trail_plot"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/motion_trail_plot" />
+
 </LinearLayout>

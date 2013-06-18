@@ -244,6 +244,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".effects.MotionTrailPlotActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".physics.PhysicsMenuActivity"
             android:label="@string/physics"
             android:screenOrientation="portrait" >

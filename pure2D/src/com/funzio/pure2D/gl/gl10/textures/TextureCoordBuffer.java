@@ -47,12 +47,20 @@ public class TextureCoordBuffer extends GLFloatBuffer {
     }
 
     public void setXYWH(final float x, final float y, final float width, final float height) {
-        setValues(//
-                x, y + height, // TL
-                x, y, // BL
-                x + width, y + height, // TR
-                x + width, y // BR
-        );
+        if (mValues == null || mValues.length < 8) {
+            mValues = new float[8];
+        }
+
+        mValues[0] = x;
+        mValues[1] = y + height;
+        mValues[2] = x;
+        mValues[3] = y;
+        mValues[4] = x + width;
+        mValues[5] = y + height;
+        mValues[6] = x + width;
+        mValues[7] = y;
+
+        super.setValues(mValues);
     }
 
     public void scale(final float sx, final float sy) {

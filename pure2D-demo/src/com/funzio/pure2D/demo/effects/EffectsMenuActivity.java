@@ -14,5 +14,6 @@ public class EffectsMenuActivity extends MenuActivity {
     protected void createMenus() {
         addMenu(R.id.btn_sparks, SparksActivity.class);
         addMenu(R.id.btn_motion_trail_shape, MotionTrailShapeActivity.class);
+        addMenu(R.id.btn_motion_trail_plot, MotionTrailPlotActivity.class);
     }
 }

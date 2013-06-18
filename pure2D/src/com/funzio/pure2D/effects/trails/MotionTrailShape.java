@@ -100,7 +100,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                     p2 = mPoints[i - 1];
                     dx = p2.x - p1.x;
                     dy = p2.y - p1.y;
-                    if (mSegmentLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
+                    if (mMinLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
                         // move toward the leading point
                         p1.x += dx * mMotionEasingX;
                         p1.y += dy * mMotionEasingY;
