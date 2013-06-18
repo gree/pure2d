@@ -50,6 +50,7 @@ public class LWF {
     private native void fitForWidth(long ptr, float w, float h);
     private native void scaleForHeight(long ptr, float w, float h);
     private native void scaleForWidth(long ptr, float w, float h);
+    public static native void disposeAll();
 
     public LWF(LWFManager manager) {
         mId = create(Integer.MAX_VALUE);
@@ -232,11 +233,11 @@ public class LWF {
             if (LOG_ENABLED) {
                 Log.e(TAG, "dispose()");
             }
+            for (LWF lwf : mLWFs)
+                lwf.dispose();
             destroy(mId);
             mId = -1;
             mPtr = 0;
-            for (LWF lwf : mLWFs)
-                lwf.dispose();
             mLWFs.clear();
             mData = null;
             mManager.removeLWF(this);

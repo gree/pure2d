@@ -26,6 +26,7 @@ public class LWFManager {
     }
 
     public void addLWFData(LWFData data) {
+        data.setLWFManager(this);
         mDatas.add(data);
     }
 

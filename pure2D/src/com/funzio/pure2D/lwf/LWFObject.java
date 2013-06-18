@@ -140,19 +140,19 @@ public class LWFObject extends BaseDisplayObject implements Playable {
 
         switch (scaling) {
         case SCALING_FIT_FOR_HEIGHT:
-            lwf.fitForHeight(mWidth, mHeight);
+            mLWF.fitForHeight(mWidth, mHeight);
             break;
 
         case SCALING_FIT_FOR_WIDTH:
-            lwf.fitForWidth(mWidth, mHeight);
+            mLWF.fitForWidth(mWidth, mHeight);
             break;
 
         case SCALING_SCALE_FOR_HEIGHT:
-            lwf.scaleForHeight(mWidth, mHeight);
+            mLWF.scaleForHeight(mWidth, mHeight);
             break;
 
         case SCALING_SCALE_FOR_WIDTH:
-            lwf.scaleForWidth(mWidth, mHeight);
+            mLWF.scaleForWidth(mWidth, mHeight);
             break;
         }
 
@@ -175,6 +175,7 @@ public class LWFObject extends BaseDisplayObject implements Playable {
             }
             mLWF.dispose();
             mLWF = null;
+            mLastAttachedLWF = null;
         }
     }
 }

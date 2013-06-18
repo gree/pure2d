@@ -167,6 +167,11 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_destroy(JNI
     s_dataMap.erase(jLWFDataId);
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_disposeAll(JNIEnv *env, jobject obj)
+{
+    s_dataMap.clear();
+}
+
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
     shared_ptr<class LWF> lwf;
@@ -504,8 +509,19 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv 
     if (it == s_lwfMap.end())
         return;
 
-    env->DeleteGlobalRef((jobject)it->second->privateData);
+    shared_ptr<class LWF> lwf = it->second;
+
+    env->DeleteGlobalRef((jobject)lwf->privateData);
+
+    if (lwf->parent)
+        lwf->parent->DetachLWF(lwf);
+    lwf->Destroy();
 
     s_lwfMap.erase(it);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_disposeAll(JNIEnv *env, jobject obj)
+{
+    s_lwfMap.clear();
 }
 

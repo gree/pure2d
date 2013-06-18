@@ -26,6 +26,7 @@ public class LWFData {
     private native String getTextureName(int lwfDataId, int textureNo);
     private native void setGLTexture(int lwfDataId, int[] glTextureIds, float[] glTextureUs, float[] glTextureVs);
     private native void destroy(int lwfDataId);
+    public static native void disposeAll();
 
     public LWFData(InputStream stream) throws Exception {
         init(null, stream);
