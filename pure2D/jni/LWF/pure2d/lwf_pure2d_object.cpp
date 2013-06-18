@@ -503,6 +503,24 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleForWidth(J
     lwf->ScaleForWidth(jWidth, jHeight);
 }
 
+extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_getWidth(JNIEnv *env, jobject obj, jlong jLWF)
+{
+    if (!jLWF)
+        return (jint)0;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    return (jint)lwf->width;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_getHeight(JNIEnv *env, jobject obj, jlong jLWF)
+{
+    if (!jLWF)
+        return (jint)0;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    return (jint)lwf->height;
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
 {
     LWFMap::iterator it = s_lwfMap.find(jLWFId);

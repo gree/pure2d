@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import android.util.Log;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public class LWF {
@@ -50,6 +51,8 @@ public class LWF {
     private native void fitForWidth(long ptr, float w, float h);
     private native void scaleForHeight(long ptr, float w, float h);
     private native void scaleForWidth(long ptr, float w, float h);
+    private native int getWidth(long ptr);
+    private native int getHeight(long ptr);
     public static native void disposeAll();
 
     public LWF(LWFManager manager) {
@@ -210,6 +213,12 @@ public class LWF {
         if (mId < 0)
             return;
         scaleForWidth(mPtr, width, height);
+    }
+
+    public Point getSize() {
+        if (mId < 0)
+            return new Point();
+        return new Point(getWidth(mPtr), getHeight(mPtr));
     }
 
     public boolean isPlaying() {
