@@ -8,39 +8,21 @@ import android.graphics.PointF;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.geom.Point3D;
-import com.funzio.pure2D.shapes.Polyline3D;
 
 /**
  * @author long
  */
-public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
-    public static final int DEFAULT_NUM_POINTS = 10;
-    public static final float DEFAULT_MOTION_EASING = 0.5f;
-
-    protected int mNumPoints = DEFAULT_NUM_POINTS;
-    protected float mMotionEasingX = DEFAULT_MOTION_EASING;
-    protected float mMotionEasingY = DEFAULT_MOTION_EASING;
+@Deprecated
+// NOT READY YET!
+public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
     protected float mMotionEasingZ = DEFAULT_MOTION_EASING;
-    protected int mMinLength = 0;
-    protected int mSegmentLength = 0;
 
-    protected DisplayObject mTarget;
-    protected Point3D mTargetOffset = new Point3D(0, 0, 0);
-    protected Object mData;
-
-    public MotionTrailShape3D() {
+    public MotionTrailPlot3D() {
         this(null);
     }
 
-    public MotionTrailShape3D(final DisplayObject target) {
-        super();
-
-        // set default num points
-        setNumPoints(mNumPoints);
-
-        if (target != null) {
-            setTarget(target);
-        }
+    public MotionTrailPlot3D(final DisplayObject target) {
+        super(target);
     }
 
     /*
@@ -50,27 +32,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = mMotionEasingZ = DEFAULT_MOTION_EASING;
-    }
-
-    @Override
-    public Object getData() {
-        return mData;
-    }
-
-    @Override
-    public void setData(final Object data) {
-        mData = data;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
-     */
-    @Override
-    public void setPosition(final float x, final float y) {
-        if (mNumPoints > 0) {
-            mPoints[0].set(x, y);
-        }
     }
 
     public final void setPosition(final float x, final float y, final float z) {
@@ -87,17 +48,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
     public void setZ(final float z) {
         if (mNumPoints > 0) {
             ((Point3D) mPoints[0]).set(mPoints[0].x, mPoints[0].y, z);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#move(float, float)
-     */
-    @Override
-    public void move(final float dx, final float dy) {
-        if (mNumPoints > 0) {
-            mPoints[0].offset(dx, dy);
         }
     }
 
@@ -139,7 +89,7 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
             if (mTarget != null) {
                 // set the head
                 final PointF pos = mTarget.getPosition();
-                ((Point3D) mPoints[0]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + mTargetOffset.z);
+                ((Point3D) mPoints[0]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + ((Point3D) mTargetOffset).z);
             }
 
             // apply
@@ -149,10 +99,18 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         return super.update(deltaTime);
     }
 
-    public int getNumPoints() {
-        return mNumPoints;
-    }
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.effects.trails.MotionTrailDots#drawPoint(com.funzio.pure2D.gl.gl10.GLState, android.graphics.PointF, float, float)
+     */
+    // @Override
+    // protected void drawDot(final GLState glState, final int index, final float width, final float height) {
+    // super.drawDot(glState, index, width, height);
+    //
+    // // TODO apply Z
+    // }
 
+    @Override
     public void setNumPoints(final int numPoints) {
         mNumPoints = numPoints;
 
@@ -169,29 +127,23 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
                 mPoints[i] = new Point3D();
 
                 if (pos != null) {
-                    ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + mTargetOffset.z);
+                    ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + ((Point3D) mTargetOffset).z);
                 }
             }
 
             // find the
             mSegmentLength = mMinLength / (numPoints - 1);
         }
-
-        // re-count, each point has 2 vertices
-        allocateVertices(numPoints * 2, VERTEX_POINTER_SIZE);
     }
 
-    public DisplayObject getTarget() {
-        return mTarget;
-    }
-
+    @Override
     public void setTarget(final DisplayObject target) {
         mTarget = target;
 
         if (mTarget != null) {
             final PointF pos = mTarget.getPosition();
             for (int i = 0; i < mNumPoints; i++) {
-                ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + mTargetOffset.z);
+                ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + ((Point3D) mTargetOffset).z);
             }
         }
 
@@ -199,6 +151,7 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         setPoints(mPoints);
     }
 
+    @Override
     public void setPointsAt(final float x, final float y, final float z) {
         for (int i = 0; i < mNumPoints; i++) {
             ((Point3D) mPoints[i]).set(x, y, z);
@@ -217,23 +170,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         setPoints(mPoints);
     }
 
-    public int getMinLength() {
-        return mMinLength;
-    }
-
-    public void setMinLength(final int totalLength) {
-        mMinLength = totalLength;
-        mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
-    }
-
-    public float getMotionEasingX() {
-        return mMotionEasingX;
-    }
-
-    public float getMotionEasingY() {
-        return mMotionEasingY;
-    }
-
     public float getMotionEasingZ() {
         return mMotionEasingZ;
     }
@@ -241,6 +177,7 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
     /**
      * @param easing, must be from 0 to 1
      */
+    @Override
     public void setMotionEasing(final float easing) {
         mMotionEasingX = mMotionEasingY = mMotionEasingZ = easing;
     }
@@ -251,12 +188,8 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         mMotionEasingZ = easingZ;
     }
 
-    public Point3D getTargetOffset() {
-        return mTargetOffset;
-    }
-
     public void setTargetOffset(final float offsetX, final float offsetY, final float offsetZ) {
-        mTargetOffset.set(offsetX, offsetY, offsetZ);
+        ((Point3D) mTargetOffset).set(offsetX, offsetY, offsetZ);
     }
 
 }
