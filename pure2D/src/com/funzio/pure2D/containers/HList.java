@@ -10,10 +10,7 @@ import com.funzio.pure2D.animators.Animator;
  * 
  * @author long
  */
-public class HList extends HWheel {
-    // protected MaskGroup mMaskGroup;
-    // protected Rectangular mMaskRect;
-
+public class HList extends HWheel implements List {
     protected boolean mSnapping = false;
 
     public HList() {
@@ -23,14 +20,6 @@ public class HList extends HWheel {
         setAlignment(Alignment.VERTICAL_CENTER);
         setSwipeEnabled(true);
         setRepeating(false);
-
-        // // prepare the mask
-        // mMaskGroup = new MaskGroup();
-        // // create a rect for the mask group
-        // mMaskGroup.addChild(mMaskRect = new Rectangular());
-        //
-        // // apply the mask
-        // setMask(mMaskGroup);
     }
 
     /*
@@ -57,51 +46,20 @@ public class HList extends HWheel {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
+     * @see com.funzio.pure2D.containers.LinearGroup#scrollTo(float, float)
      */
-    // @Override
-    // public void setPosition(final float x, final float y) {
-    // super.setPosition(x, y);
-    //
-    // // follow me
-    // mMaskGroup.setPosition(x, y);
-    // }
+    @Override
+    public void scrollTo(float x, final float y) {
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.VGroup#setSize(float, float)
-     */
-    // @Override
-    // public void setSize(final float w, final float h) {
-    // super.setSize(w, h);
-    //
-    // // match the size
-    // mMaskRect.setSize(w, h);
-    // }
+        // add friction when scroll out of bounds
+        if (x < 0) {
+            x *= SCROLL_OOB_FRICTION;
+        } else if (x > mScrollMax.x) {
+            x = mScrollMax.x + (x - mScrollMax.x) * SCROLL_OOB_FRICTION;
+        }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
-     */
-    // @Override
-    // public void onAdded(final Container container) {
-    // super.onAdded(container);
-    //
-    // // mask needs to be added first
-    // container.addChild(mMaskGroup, container.getChildIndex(this));
-    // }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#onRemoved()
-     */
-    // @Override
-    // public void onRemoved() {
-    // super.onRemoved();
-    //
-    // // remove the mask
-    // mMaskGroup.removeFromParent();
-    // }
+        super.scrollTo(x, y);
+    }
 
     /*
      * (non-Javadoc)

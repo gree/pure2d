@@ -20,7 +20,7 @@ public class Clip extends Sprite implements Playable {
     private int mNumFrames = 0;
     private AtlasFrameSet mFrameSet;
     private int mPendingTime = 0;
-    private int mAccumimatedFrames = 0;
+    private int mAccumulatedFrames = 0;
 
     public Clip() {
         super();
@@ -84,6 +84,12 @@ public class Clip extends Sprite implements Playable {
      */
     @Override
     public boolean update(final int deltaTime) {
+        // update current frame
+        if (mCurrentFrame != mPreviousFrame && mFrameSet != null) {
+            mPreviousFrame = mCurrentFrame;
+            setAtlasFrame(mFrameSet.getFrame(mCurrentFrame));
+        }
+
         // get next frame
         if (mNumFrames > 1 && mPlaying) {
             int frames = 1;
@@ -97,14 +103,14 @@ public class Clip extends Sprite implements Playable {
             }
 
             if (frames > 0) {
-                mAccumimatedFrames += frames;
+                mAccumulatedFrames += frames;
                 mCurrentFrame += frames;
                 if (mLoop == LOOP_REPEAT) {
                     if (mCurrentFrame >= mNumFrames) {
                         mCurrentFrame %= mNumFrames;
                     }
                 } else if (mLoop == LOOP_REVERSE) {
-                    final int trips = (mAccumimatedFrames / mNumFrames);
+                    final int trips = (mAccumulatedFrames / mNumFrames);
                     if (trips % 2 == 0) {
                         // play forward
                         if (mCurrentFrame >= mNumFrames) {
@@ -112,7 +118,7 @@ public class Clip extends Sprite implements Playable {
                         }
                     } else {
                         // play backward
-                        mCurrentFrame = mNumFrames - 1 - mAccumimatedFrames % mNumFrames;
+                        mCurrentFrame = mNumFrames - 1 - mAccumulatedFrames % mNumFrames;
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
@@ -125,12 +131,6 @@ public class Clip extends Sprite implements Playable {
                     }
                 }
             }
-        }
-
-        // change frame
-        if (mCurrentFrame != mPreviousFrame && mFrameSet != null) {
-            mPreviousFrame = mCurrentFrame;
-            setAtlasFrame(mFrameSet.getFrame(mCurrentFrame));
         }
 
         return super.update(deltaTime);
