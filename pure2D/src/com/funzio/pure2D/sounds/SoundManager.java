@@ -119,6 +119,17 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
             Log.e(TAG, "Unable to play sound: " + sound);
         }
     }
+    
+    public void playWithDelay(final Soundable sound, long msec) {
+        if (sound != null) {
+            Message msg = new Message();
+            msg.arg1 = sound.getSoundID();
+            msg.arg2 = sound.getLoop();
+            mHandler.sendMessageDelayed(msg, msec);
+        } else {
+            Log.e(TAG, "Unable to play sound: " + sound);
+        }
+    }
 
     private int privatePlay(final int soundID, final int loop) {
         // Log.v(TAG, "play(" + sound + ")");
@@ -178,6 +189,10 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
             mMediaPlayer = null;
             mMediaPrepared = false;
         }
+    }
+    
+    public void seekToMedia(int msec){
+    	mMediaPlayer.seekTo(msec);
     }
 
     public boolean isMediaEnabled() {
