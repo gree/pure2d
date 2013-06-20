@@ -120,7 +120,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
-    public void playWithDelay(final Soundable sound, final int msec) {
+    public void playDelayed(final Soundable sound, final int msec) {
         if (sound != null) {
             Message msg = new Message();
             msg.arg1 = sound.getSoundID();
