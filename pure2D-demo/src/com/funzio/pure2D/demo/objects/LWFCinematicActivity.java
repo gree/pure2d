@@ -62,7 +62,6 @@ public class LWFCinematicActivity extends StageActivity {
     public void onDestroy() {
         super.onDestroy();
         mLWFManager.dispose();
-        mScene.dispose();
     }
 
     private void attachLWF(final float x, final float y) {
