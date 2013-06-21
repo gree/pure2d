@@ -19,10 +19,6 @@ public class VBO extends VertexBuffer {
     private boolean mInvalidated = false;
     private final int[] mScratch = new int[1];
 
-    public VBO(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
-        super(primitive, verticesNum, vertices, indices);
-    }
-
     public VBO(final int primitive, final int verticesNum, final float... vertices) {
         super(primitive, verticesNum, vertices);
     }

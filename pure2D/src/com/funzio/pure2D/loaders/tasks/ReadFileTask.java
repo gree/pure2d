@@ -58,7 +58,7 @@ public abstract class ReadFileTask implements IntentTask {
             // read from file system
             final File file = new File(mFilePath);
             if (!file.exists()) {
-                Log.e(TAG, mFilePath + " does not exists!");
+                Log.e(TAG, mFilePath + " does not exist!");
                 return false; // early success
             }
 

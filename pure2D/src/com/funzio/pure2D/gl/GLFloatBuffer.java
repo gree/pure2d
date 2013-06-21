@@ -12,6 +12,7 @@ import java.nio.FloatBuffer;
  */
 public class GLFloatBuffer {
     public FloatBuffer mBuffer;
+
     private int mCapacity = 0;
 
     public GLFloatBuffer() {
