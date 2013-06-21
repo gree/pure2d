@@ -15,6 +15,7 @@ import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
@@ -70,7 +71,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAlphaTestEnabled = false;
 
     private boolean mHasOrigin = false;
-    private GLColor mSumColor;
+    private GLColor mBlendColor;
     private PointF mGlobalPosition;
 
     protected ArrayList<Manipulator> mManipulators;
@@ -113,7 +114,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // blend mode
         glState.setBlendFunc(mBlendFunc);
         // color and alpha
-        glState.setColor(getSumColor());
+        glState.setColor(getBlendColor());
 
         // draw the content
         drawChildren(glState);
@@ -642,59 +643,44 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    final protected GLColor getSumColor() {
-        if (mSumColor == null) {
-            // init the mSumColor
-            mSumColor = (mColor == null) ? new GLColor(1f, 1f, 1f, mAlpha) : new GLColor(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
-        } else {
-            // recycle the mSumColor object to prevent GC
-            if (mColor == null) {
-                mSumColor.setValues(1f, 1f, 1f, mAlpha);
+    final protected GLColor getBlendColor() {
+        if (BlendModes.isInterpolate(mBlendFunc)) {
+            if (mBlendColor == null) {
+                // init
+                mBlendColor = (mColor == null) ? new GLColor(1f, 1f, 1f, mAlpha) : new GLColor(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
             } else {
-                mSumColor.setValues(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
+                if (mColor == null) {
+                    mBlendColor.setValues(1f, 1f, 1f, mAlpha);
+                } else {
+                    mBlendColor.setValues(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
+                }
+            }
+
+        } else {
+
+            if (mBlendColor == null) {
+                // init
+                mBlendColor = (mColor == null) ? new GLColor(mAlpha, mAlpha, mAlpha, mAlpha) : new GLColor(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
+            } else {
+                if (mColor == null) {
+                    mBlendColor.setValues(mAlpha, mAlpha, mAlpha, mAlpha);
+                } else {
+                    mBlendColor.setValues(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
+                }
             }
         }
+
         // multiply by parent's attributes
         if (mParent != null && mParent instanceof BaseDisplayObject) {
             final BaseDisplayObject parent = (BaseDisplayObject) mParent;
-            final GLColor parentColor = parent.getSumColor();
+            final GLColor parentColor = parent.getBlendColor();
             if (parentColor != null) {
-                mSumColor.multiply(parentColor);
+                mBlendColor.multiply(parentColor);
             }
         }
 
-        return mSumColor;
+        return mBlendColor;
     }
-
-    /**
-     * This looks better in Premultiplied-alpha mode
-     * 
-     * @return
-     */
-    // final protected GLColor getSumColor() {
-    // if (mSumColor == null) {
-    // // init the mSumColor
-    // mSumColor = (mColor == null) ? new GLColor(1f, 1f, 1f, 1f) : new GLColor(mColor);
-    // mSumColor.multiply(mAlpha);
-    // } else {
-    // // recycle the mSumColor object to prevent GC
-    // if (mColor == null) {
-    // mSumColor.setValues(mAlpha, mAlpha, mAlpha, mAlpha);
-    // } else {
-    // mSumColor.setValues(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
-    // }
-    // }
-    // // multiply by parent's attributes
-    // if (mParent != null && mParent instanceof BaseDisplayObject) {
-    // final BaseDisplayObject parent = (BaseDisplayObject) mParent;
-    // final GLColor color = parent.getSumColor();
-    // if (color != null) {
-    // mSumColor.multiply(color);
-    // }
-    // }
-    //
-    // return mSumColor;
-    // }
 
     /**
      * @return the alpha
