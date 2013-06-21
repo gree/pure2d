@@ -29,7 +29,7 @@ public class Pure2D {
     public static int GL_MAX_TEXTURE_SIZE = 0;
     public static int GL_MAX_MODELVIEW_STACK_DEPTH = 0;
     public static int GL_MAX_PROJECTION_STACK_DEPTH = 0;
-    public static final float GL_PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection
+    public static final float GL_PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection, try 53.075f
 
     // for non-pure2d engine to plug in
     public static Adapter ADAPTER = null;
