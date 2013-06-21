@@ -218,7 +218,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
             }
 
             // set position and size
-            mQuadBuffer.setXYWH(point.x - width * 0.5f, point.y - height * 0.5f, width, height);
+            mQuadBuffer.setRect(point.x - width * 0.5f, point.y - height * 0.5f, width, height);
             // draw
             mQuadBuffer.draw(glState);
 

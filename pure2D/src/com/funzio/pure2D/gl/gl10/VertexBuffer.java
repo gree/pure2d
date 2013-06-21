@@ -89,7 +89,8 @@ public class VertexBuffer extends GLFloatBuffer {
         glState.setVertexArrayEnabled(true);
 
         // Specifies the location and data format of an array of vertex coordinates to use when rendering.
-        glState.mGL.glVertexPointer(mVertexPointerSize, GL10.GL_FLOAT, 0, mBuffer);
+        // glState.mGL.glVertexPointer(mVertexPointerSize, GL10.GL_FLOAT, 0, mBuffer);
+        glState.setVertexBuffer(this);
 
         if (mIndicesNum > 0) {
             glState.mGL.glDrawElements(mPrimitive, mIndicesNum, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
