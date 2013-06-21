@@ -21,25 +21,23 @@ public class VertexBuffer extends GLFloatBuffer {
     protected ShortBuffer mIndexBuffer;
     protected int mVertexPointerSize = 2; // only x & y
 
-    public VertexBuffer(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
-        setVertices(primitive, verticesNum, vertices, indices);
-    }
-
     public VertexBuffer(final int primitive, final int verticesNum, final float... vertices) {
-        setVertices(primitive, verticesNum, vertices, null);
+        setVertices(primitive, verticesNum, vertices);
     }
 
-    final public void setVertices(final int primitive, final int verticesNum, final float... vertices) {
-        setVertices(primitive, verticesNum, vertices, null);
-    }
-
-    public void setVertices(final int primitive, final int verticesNum, final float[] vertices, final short[] indices) {
+    public void setVertices(final int primitive, final int verticesNum, final float... vertices) {
         setPrimitive(primitive);
 
         // vertices buffer
         mVerticesNum = verticesNum;
         setValues(vertices);
+    }
 
+    public int getVerticesNum() {
+        return mVerticesNum;
+    }
+
+    public void setIndices(final short... indices) {
         if (indices != null) {
             if (mIndexBuffer == null || mIndicesNum != indices.length) {
                 // short is 2 bytes, therefore we multiply the number if vertices with 2.
@@ -62,8 +60,12 @@ public class VertexBuffer extends GLFloatBuffer {
         }
     }
 
-    public int getVerticesNum() {
-        return mVerticesNum;
+    public ShortBuffer getIndexBuffer() {
+        return mIndexBuffer;
+    }
+
+    public int getIndicesNum() {
+        return mIndicesNum;
     }
 
     public int getPrimitive() {
