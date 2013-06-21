@@ -191,7 +191,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
     public static boolean compare(final TextureCoordBuffer a, final TextureCoordBuffer b) {
         if (a == b) {
             return true;
-        } else if (a == null || b == null || a.mValues.length != b.mValues.length) {
+        } else if (a == null || b == null) { // || a.mValues.length != b.mValues.length
             return false;
         } else {
 
