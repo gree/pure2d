@@ -38,7 +38,7 @@ public class TornadoAnimatorVO extends TweenAnimatorVO {
         circle_multiplier = NovaVO.getListFloat(json, "circle_multiplier");
         circle_ratio = NovaVO.getListFloat(json, "circle_ratio");
 
-        z_enabled = json.getInt("z_enabled") > 0;
+        z_enabled = json.optInt("z_enabled", 0) > 0;
     }
 
     @Override
