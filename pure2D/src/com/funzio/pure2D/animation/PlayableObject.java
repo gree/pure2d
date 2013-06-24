@@ -1,7 +1,6 @@
 package com.funzio.pure2D.animation;
 
 import com.funzio.pure2D.BaseDisplayObject;
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Playable;
 
 /**
@@ -14,7 +13,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
     protected int mPreviousFrame = -1;
     protected int mNumFrames = 0;
     protected int mPendingTime = 0;
-    protected int mAccumimatedFrames = 0;
+    protected int mAccumulatedFrames = 0;
 
     abstract protected void updateFrame(final int frame);
 
@@ -35,14 +34,14 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
             }
 
             if (frames > 0) {
-                mAccumimatedFrames += frames;
+                mAccumulatedFrames += frames;
                 mCurrentFrame += frames;
                 if (mLoop == LOOP_REPEAT) {
                     if (mCurrentFrame >= mNumFrames) {
                         mCurrentFrame %= mNumFrames;
                     }
                 } else if (mLoop == LOOP_REVERSE) {
-                    final int trips = (mAccumimatedFrames / mNumFrames);
+                    final int trips = (mAccumulatedFrames / mNumFrames);
                     if (trips % 2 == 0) {
                         // play forward
                         if (mCurrentFrame >= mNumFrames) {
@@ -50,7 +49,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
                         }
                     } else {
                         // play backward
-                        mCurrentFrame = mNumFrames - 1 - mAccumimatedFrames % mNumFrames;
+                        mCurrentFrame = mNumFrames - 1 - mAccumulatedFrames % mNumFrames;
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
@@ -62,11 +61,11 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
             }
         }
 
-        // change frame
+        // update current frame
         if (mCurrentFrame != mPreviousFrame) {
-            mPreviousFrame = mCurrentFrame;
             updateFrame(mCurrentFrame);
-            invalidate(InvalidateFlags.VISUAL);
+            mPreviousFrame = mCurrentFrame;
+            invalidate(FRAME);
         }
 
         return mNumFrames > 0;
@@ -92,7 +91,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
 
             // update the frame
             updateFrame(mCurrentFrame);
-            invalidate(InvalidateFlags.VISUAL);
+            invalidate(FRAME);
         }
 
         stop();
