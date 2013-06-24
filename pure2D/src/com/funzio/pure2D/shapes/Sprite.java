@@ -5,7 +5,6 @@ package com.funzio.pure2D.shapes;
 
 import android.graphics.PointF;
 
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
@@ -75,7 +74,7 @@ public class Sprite extends Rectangular {
             if (newSize.x != mSize.x || newSize.y != mSize.y) {
                 setSize(newSize.x, newSize.y);
             } else {
-                invalidate(InvalidateFlags.VISUAL);
+                invalidate(FRAME);
             }
         } else {
             setTextureCoordBuffer(TextureCoordBuffer.getDefault());
@@ -88,7 +87,7 @@ public class Sprite extends Rectangular {
             if (mTexture != null && mSizeToTexture) {
                 setSize(mTexture.getSize());
             } else {
-                invalidate(InvalidateFlags.VISUAL);
+                invalidate(FRAME);
             }
         }
 
