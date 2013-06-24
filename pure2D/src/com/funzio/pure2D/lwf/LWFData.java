@@ -96,8 +96,9 @@ public class LWFData {
                 Log.e(TAG, "dispose()");
             }
             destroy(mId);
-            mManager = null;
             mId = -1;
+            mManager.removeLWFData(this);
+            mManager = null;
         }
     }
 }
