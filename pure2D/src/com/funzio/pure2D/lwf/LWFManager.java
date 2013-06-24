@@ -43,7 +43,8 @@ public class LWFManager {
     }
 
     public void removeLWFData(LWFData data) {
-        mDatas.remove(data);
+        if (!mRemoving)
+            mDatas.remove(data);
     }
 
     public void removeLWF(LWF lwf) {
@@ -55,8 +56,10 @@ public class LWFManager {
         mRemoving = true;
         for (LWF lwf : mLWFs)
             lwf.dispose();
+        for (LWFData data : mDatas)
+            data.dispose();
         mRemoving = false;
-        mDatas.clear();
         mLWFs.clear();
+        mDatas.clear();
     }
 }
