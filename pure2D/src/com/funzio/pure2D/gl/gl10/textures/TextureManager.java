@@ -212,6 +212,7 @@ public class TextureManager {
     /**
      * Can be used after the Surface reloaded.
      */
+    @Deprecated
     public void reloadAllTextures() {
         Log.v(TAG, "reloadAllTextures()");
 

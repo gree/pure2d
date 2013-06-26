@@ -22,8 +22,10 @@ public class RectPacker {
     private int mHeight = 0;
 
     // for sorting the lines
-    private TreeSet<Integer> mHLines = new TreeSet<Integer>();
-    private TreeSet<Integer> mVLines = new TreeSet<Integer>();
+    private final TreeSet<Integer> mHLines = new TreeSet<Integer>();
+    private final TreeSet<Integer> mVLines = new TreeSet<Integer>();
+    private final Rect mTempRect = new Rect();
+    private final Rect mTempBounds = new Rect();
 
     public RectPacker(final int maxWidth, final boolean forcePO2) {
         mMaxWidth = maxWidth;
@@ -65,8 +67,6 @@ public class RectPacker {
     }
 
     private Rect getNextRect(final int rectWidth, final int rectHeight) {
-        final Rect newRect = new Rect();
-        final Rect newBounds = new Rect();
         int newArea;
         int minArea = Integer.MAX_VALUE;
         final Rect minRect = new Rect();
@@ -74,36 +74,36 @@ public class RectPacker {
         for (Integer vline : mVLines) {
             for (Integer hline : mHLines) {
                 // rotate
-                newRect.set(hline, vline, hline + rectHeight, vline + rectWidth);
-                if (!intersect(newRect)) {
-                    newBounds.set(mBounds);
-                    newBounds.union(newRect);
-                    if (newBounds.width() <= mMaxWidth) {
+                mTempRect.set(hline, vline, hline + rectHeight, vline + rectWidth);
+                if (!intersect(mTempRect)) {
+                    mTempBounds.set(mBounds);
+                    mTempBounds.union(mTempRect);
+                    if (mTempBounds.width() <= mMaxWidth && mTempBounds.height() <= mMaxWidth) {
                         if (mForcePO2) {
-                            newArea = Pure2DUtils.getNextPO2(newBounds.width()) * Pure2DUtils.getNextPO2(newBounds.height());
+                            newArea = Pure2DUtils.getNextPO2(mTempBounds.width()) * Pure2DUtils.getNextPO2(mTempBounds.height());
                         } else {
-                            newArea = newBounds.width() * newBounds.height();
+                            newArea = mTempBounds.width() * mTempBounds.height();
                         }
                         if (newArea < minArea) { // || (newArea == minArea && (hline < minRect.left || vline < minRect.top))
                             minArea = newArea;
-                            minRect.set(newRect);
+                            minRect.set(mTempRect);
                         }
                     }
                 }
 
-                newRect.set(hline, vline, hline + rectWidth, vline + rectHeight);
-                if (!intersect(newRect)) {
-                    newBounds.set(mBounds);
-                    newBounds.union(newRect);
-                    if (newBounds.width() <= mMaxWidth) {
+                mTempRect.set(hline, vline, hline + rectWidth, vline + rectHeight);
+                if (!intersect(mTempRect)) {
+                    mTempBounds.set(mBounds);
+                    mTempBounds.union(mTempRect);
+                    if (mTempBounds.width() <= mMaxWidth && mTempBounds.height() <= mMaxWidth) {
                         if (mForcePO2) {
-                            newArea = Pure2DUtils.getNextPO2(newBounds.width()) * Pure2DUtils.getNextPO2(newBounds.height());
+                            newArea = Pure2DUtils.getNextPO2(mTempBounds.width()) * Pure2DUtils.getNextPO2(mTempBounds.height());
                         } else {
-                            newArea = newBounds.width() * newBounds.height();
+                            newArea = mTempBounds.width() * mTempBounds.height();
                         }
                         if (newArea < minArea) { // || (newArea == minArea && (hline < minRect.left || vline < minRect.top))
                             minArea = newArea;
-                            minRect.set(newRect);
+                            minRect.set(mTempRect);
                         }
                     }
                 }
