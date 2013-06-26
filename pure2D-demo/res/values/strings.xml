@@ -158,5 +158,6 @@
     <string name="anticipate">Anticipate</string>
     <string name="motion_trail_dots">Motion Trail Dots</string>
     <string name="motion_trail_plot">Motion Trail Plot</string>
+    <string name="bounds_wireframe">Bounds &amp; Wireframe</string>
 
 </resources>

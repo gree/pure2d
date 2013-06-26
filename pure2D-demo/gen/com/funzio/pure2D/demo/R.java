@@ -267,6 +267,7 @@ public final class R {
         public static final int blue=0x7f050078;
         public static final int bounce=0x7f05004b;
         public static final int bouncing_objects=0x7f050008;
+        public static final int bounds_wireframe=0x7f05008b;
         public static final int buffers=0x7f05005b;
         public static final int button=0x7f05007c;
         /**  camera 
