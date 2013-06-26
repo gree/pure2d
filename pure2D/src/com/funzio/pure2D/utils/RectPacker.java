@@ -16,7 +16,8 @@ public class RectPacker {
 
     private List<Rect> mRects = new ArrayList<Rect>();
     private Rect mBounds = new Rect();
-    private int mMaxWidth = 0;
+    private final int mMaxWidth;
+    private final boolean mForcePO2;
     private int mWidth = 0;
     private int mHeight = 0;
 
@@ -24,8 +25,9 @@ public class RectPacker {
     private TreeSet<Integer> mHLines = new TreeSet<Integer>();
     private TreeSet<Integer> mVLines = new TreeSet<Integer>();
 
-    public RectPacker(final int maxWidth) {
+    public RectPacker(final int maxWidth, final boolean forcePO2) {
         mMaxWidth = maxWidth;
+        mForcePO2 = forcePO2;
     }
 
     public Rect occupy(final int rectWidth, final int rectHeight) {
@@ -33,7 +35,7 @@ public class RectPacker {
         if (mWidth == 0) {
             mHLines.add(0);
             mVLines.add(0);
-            newRect = new Rect(0, 0, rectWidth - 1, rectHeight - 1);
+            newRect = new Rect(0, 0, rectWidth, rectHeight);
         } else {
             newRect = getNextRect(rectWidth, rectHeight);
         }
@@ -44,12 +46,12 @@ public class RectPacker {
         mRects.add(newRect);
 
         // add the lines
-        mHLines.add(newRect.right + 1);
-        mVLines.add(newRect.bottom + 1);
+        mHLines.add(newRect.right);
+        mVLines.add(newRect.bottom);
 
         // find the size
-        mWidth = Pure2DUtils.getNextPO2(mBounds.width());
-        mHeight = Pure2DUtils.getNextPO2(mBounds.height());
+        mWidth = mForcePO2 ? Pure2DUtils.getNextPO2(mBounds.width()) : mBounds.width();
+        mHeight = mForcePO2 ? Pure2DUtils.getNextPO2(mBounds.height()) : mBounds.height();
 
         return newRect;
     }
@@ -71,12 +73,34 @@ public class RectPacker {
 
         for (Integer vline : mVLines) {
             for (Integer hline : mHLines) {
-                newRect.set(hline, vline, hline + rectWidth - 1, vline + rectHeight - 1);
+                // rotate
+                newRect.set(hline, vline, hline + rectHeight, vline + rectWidth);
                 if (!intersect(newRect)) {
                     newBounds.set(mBounds);
                     newBounds.union(newRect);
                     if (newBounds.width() <= mMaxWidth) {
-                        newArea = Pure2DUtils.getNextPO2(newBounds.width()) * Pure2DUtils.getNextPO2(newBounds.height());
+                        if (mForcePO2) {
+                            newArea = Pure2DUtils.getNextPO2(newBounds.width()) * Pure2DUtils.getNextPO2(newBounds.height());
+                        } else {
+                            newArea = newBounds.width() * newBounds.height();
+                        }
+                        if (newArea < minArea) { // || (newArea == minArea && (hline < minRect.left || vline < minRect.top))
+                            minArea = newArea;
+                            minRect.set(newRect);
+                        }
+                    }
+                }
+
+                newRect.set(hline, vline, hline + rectWidth, vline + rectHeight);
+                if (!intersect(newRect)) {
+                    newBounds.set(mBounds);
+                    newBounds.union(newRect);
+                    if (newBounds.width() <= mMaxWidth) {
+                        if (mForcePO2) {
+                            newArea = Pure2DUtils.getNextPO2(newBounds.width()) * Pure2DUtils.getNextPO2(newBounds.height());
+                        } else {
+                            newArea = newBounds.width() * newBounds.height();
+                        }
                         if (newArea < minArea) { // || (newArea == minArea && (hline < minRect.left || vline < minRect.top))
                             minArea = newArea;
                             minRect.set(newRect);
