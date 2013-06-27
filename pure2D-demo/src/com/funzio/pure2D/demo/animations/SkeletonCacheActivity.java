@@ -45,7 +45,7 @@ public class SkeletonCacheActivity extends StageActivity {
                 // addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
 
                 final AniSkeleton skeleton = new AniSkeleton(mAniFile);
-                // skeleton.setDebugging(true);
+                skeleton.setDebugging(true);
                 mCacheAtlas = new CacheAtlas(mScene.getGLState(), skeleton, 512);
 
                 mAtlasSprite = new Sprite();

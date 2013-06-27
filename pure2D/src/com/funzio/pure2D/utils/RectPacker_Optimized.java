@@ -4,8 +4,6 @@
 package com.funzio.pure2D.utils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.TreeSet;
 
 import android.graphics.Point;
@@ -15,35 +13,27 @@ import android.util.Log;
 /**
  * @author long
  */
-public class RectPacker {
-    private static final String TAG = RectPackerPointTree.class.getSimpleName();
+public class RectPacker_Optimized {
+    private static final String TAG = RectPacker_Optimized.class.getSimpleName();
 
-    private static final Comparator<Point> COMPARATOR = new Comparator<Point>() {
-        public int compare(final Point left, final Point right) {
-            return (left.x + 1) * (left.y + 1) - (right.x + 1) * (right.y + 1);
-            // return (left.x) + (left.y * 1000) - (right.x) + (right.y * 1000);
-        }
-    };
-
-    private final List<Rect> mRects = new ArrayList<Rect>();
+    private ArrayList<Rect> mRects = new ArrayList<Rect>();
     private int mRectNum = 0;
     private Rect mBounds = new Rect();
     private final int mMaxWidth;
     private final boolean mForcePO2;
     private boolean mRotationEnabled = true;
-    private boolean mQuickMode = false;
+    private boolean mQuickMode = true;
     private int mWidth = 0;
     private int mHeight = 0;
 
     // for sorting the lines
     private final TreeSet<Integer> mHLines = new TreeSet<Integer>();
     private final TreeSet<Integer> mVLines = new TreeSet<Integer>();
-    private final TreeSet<Point> mHotPoints = new TreeSet<Point>(COMPARATOR);
-    private final ArrayList<Point> mPoints2Remove = new ArrayList<Point>();
+    private final ArrayList<Point> mHotPoints = new ArrayList<Point>();
     private final Rect mTempRect = new Rect();
     private final Rect mTempBounds = new Rect();
 
-    public RectPacker(final int maxWidth, final boolean forcePO2) {
+    public RectPacker_Optimized(final int maxWidth, final boolean forcePO2) {
         mMaxWidth = maxWidth;
         mForcePO2 = forcePO2;
     }
@@ -80,13 +70,19 @@ public class RectPacker {
             // find the new points
             for (Integer hline : mHLines) {
                 if (hline < newRect.bottom && !isOccupied(newRect.right, hline)) {
-                    mHotPoints.add(new Point(newRect.right, hline));
+                    final Point p = new Point(newRect.right, hline);
+                    if (!mHotPoints.contains(p)) {
+                        mHotPoints.add(p);
+                    }
                     // break; // wrong
                 }
             }
             for (Integer vline : mVLines) {
                 if (vline < newRect.right && !isOccupied(vline, newRect.bottom)) {
-                    mHotPoints.add(new Point(vline, newRect.bottom));
+                    final Point p = new Point(vline, newRect.bottom);
+                    if (!mHotPoints.contains(p)) {
+                        mHotPoints.add(p);
+                    }
                     // break; // wrong
                 }
             }
@@ -119,26 +115,26 @@ public class RectPacker {
         mRects.clear();
         mRectNum = 0;
 
-        mHotPoints.clear();
         mVLines.clear();
         mHLines.clear();
-
-        mPoints2Remove.clear();
         mWidth = mHeight = 0;
     }
 
     private Rect getNextRect(final int rectWidth, final int rectHeight) {
-        int newArea, minArea = Integer.MAX_VALUE;
+        int newArea, minIndex = -1, minArea = Integer.MAX_VALUE;
         final Rect minRect = new Rect();
-        Point newPoint = null;
 
-        for (Point point : mHotPoints) {
-            // Log.e("long", " >>> point " + ": " + point.x + " " + point.y);
+        int index = 0, size = mHotPoints.size();
+        Point point = null;
+        for (index = 0; index < size; index++) {
+            point = mHotPoints.get(index);
+            // Log.e("long", " >>> point " + index + ": " + point.x + " " + point.y);
 
             // quick point test
             if (isOccupied(point.x, point.y)) {
-                // mHotPoints.remove(point);
-                mPoints2Remove.add(point);
+                mHotPoints.remove(index);
+                index--;
+                size--;
 
                 continue;
             }
@@ -157,8 +153,8 @@ public class RectPacker {
                         }
                         if (newArea < minArea) {
                             minArea = newArea;
+                            minIndex = index;
                             minRect.set(mTempRect);
-                            newPoint = point;
                         }
                     }
                 }
@@ -176,8 +172,8 @@ public class RectPacker {
                     }
                     if (newArea < minArea) {
                         minArea = newArea;
+                        minIndex = index;
                         minRect.set(mTempRect);
-                        newPoint = point;
                     }
                 }
             }
@@ -187,15 +183,9 @@ public class RectPacker {
             }
         }
 
-        for (Point p : mPoints2Remove) {
-            mHotPoints.remove(p);
-        }
-        mHotPoints.remove(newPoint);
-        mPoints2Remove.clear();
-
         // remove the points
-        if (minArea < Integer.MAX_VALUE) {
-            // mHotPoints.remove(minIndex);
+        if (minIndex >= 0) {
+            mHotPoints.remove(minIndex);
             return minRect;
         } else {
             // uh oh, no point found!
@@ -243,7 +233,7 @@ public class RectPacker {
         return mHeight;
     }
 
-    public TreeSet<Point> getHotPoints() {
+    public ArrayList<Point> getHotPoints() {
         return mHotPoints;
     }
 }
