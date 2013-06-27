@@ -65,7 +65,7 @@ public class RectPacker {
     }
 
     public Rect occupy(final int rectWidth, final int rectHeight) {
-        Log.e("long", "occupy() " + rectWidth + " x " + rectHeight);
+        // Log.e("long", "occupy() " + rectWidth + " x " + rectHeight);
 
         Rect newRect;
         if (mWidth == 0) {

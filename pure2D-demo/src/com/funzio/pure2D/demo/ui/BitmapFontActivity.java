@@ -16,6 +16,7 @@ import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.Characters;
+import com.funzio.pure2D.text.Text;
 import com.funzio.pure2D.text.TextOptions;
 
 public class BitmapFontActivity extends StageActivity {
@@ -67,10 +68,25 @@ public class BitmapFontActivity extends StageActivity {
         mBitmapFont.load(mScene.getGLState());
     }
 
-    private Sprite addObject(final float x, final float y) {
+    // private Sprite addObject(final float x, final float y) {
+    // // create object
+    // final Sprite obj = new Sprite();
+    // obj.setAtlasFrame(mBitmapFont.getCharFrame(mBitmapFont.getCharacters().charAt(RANDOM.nextInt(26 * 2))));
+    //
+    // // random positions
+    // obj.setPosition(x, y);
+    //
+    // // add to scene
+    // mScene.addChild(obj);
+    //
+    // return obj;
+    // }
+
+    private Text addObject(final float x, final float y) {
         // create object
-        final Sprite obj = new Sprite();
-        obj.setAtlasFrame(mBitmapFont.getCharFrame(mBitmapFont.getCharacters().charAt(RANDOM.nextInt(26 * 2))));
+        final Text obj = new Text();
+        obj.setBitmapFont(mBitmapFont);
+        obj.setText("Hello World!");
 
         // random positions
         obj.setPosition(x, y);
