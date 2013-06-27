@@ -16,7 +16,7 @@ import android.util.Log;
  * @author long
  */
 public class RectPacker {
-    private static final String TAG = RectPackerPointTree.class.getSimpleName();
+    private static final String TAG = RectPacker.class.getSimpleName();
 
     private static final Comparator<Point> COMPARATOR = new Comparator<Point>() {
         public int compare(final Point left, final Point right) {
