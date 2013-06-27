@@ -65,7 +65,7 @@ public class RectPacker {
     }
 
     public Rect occupy(final int rectWidth, final int rectHeight) {
-        // Log.e("long", "occupy() " + rectWidth + " x " + rectHeight);
+        Log.e("long", "occupy() " + rectWidth + " x " + rectHeight);
 
         Rect newRect;
         if (mWidth == 0) {
@@ -130,7 +130,7 @@ public class RectPacker {
     private Rect getNextRect(final int rectWidth, final int rectHeight) {
         int newArea, minArea = Integer.MAX_VALUE;
         final Rect minRect = new Rect();
-        Point newPoint = null;
+        Point destPoint = null;
 
         for (Point point : mHotPoints) {
             // Log.e("long", " >>> point " + ": " + point.x + " " + point.y);
@@ -158,7 +158,7 @@ public class RectPacker {
                         if (newArea < minArea) {
                             minArea = newArea;
                             minRect.set(mTempRect);
-                            newPoint = point;
+                            destPoint = point;
                         }
                     }
                 }
@@ -177,7 +177,7 @@ public class RectPacker {
                     if (newArea < minArea) {
                         minArea = newArea;
                         minRect.set(mTempRect);
-                        newPoint = point;
+                        destPoint = point;
                     }
                 }
             }
@@ -187,15 +187,18 @@ public class RectPacker {
             }
         }
 
-        for (Point p : mPoints2Remove) {
-            mHotPoints.remove(p);
+        // remove occupied points
+        if (mPoints2Remove.size() > 0) {
+            for (Point p : mPoints2Remove) {
+                mHotPoints.remove(p);
+            }
+            mPoints2Remove.clear();
         }
-        mHotPoints.remove(newPoint);
-        mPoints2Remove.clear();
+        if (destPoint != null) {
+            mHotPoints.remove(destPoint);
+        }
 
-        // remove the points
         if (minArea < Integer.MAX_VALUE) {
-            // mHotPoints.remove(minIndex);
             return minRect;
         } else {
             // uh oh, no point found!

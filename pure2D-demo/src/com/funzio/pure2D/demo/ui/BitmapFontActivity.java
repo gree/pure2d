@@ -53,6 +53,7 @@ public class BitmapFontActivity extends StageActivity {
 
     private void loadTexture() {
         final TextOptions options = TextOptions.getDefault();
+        // options.inScaleX = options.inScaleY = 0.75f;
         options.inTextPaint.setColor(Color.DKGRAY);
         options.inTextPaint.setTextSize(40);
         // options.inTextPaint.setTypeface(FontManager.getInstance().getFont("HelveticaRoundedLTStd-Bd.otf"));
@@ -66,36 +67,36 @@ public class BitmapFontActivity extends StageActivity {
         mBitmapFont.load(mScene.getGLState());
     }
 
-    // private Clip addObject(final float x, final float y) {
-    // // create object
-    // final Clip obj = new Clip();
-    // obj.setTexture(mCacheAtlas.getTexture());
-    // obj.setAtlasFrameSet(mCacheAtlas.getMasterFrameSet());
-    // // obj.setFps(30);
-    //
-    // // random positions
-    // obj.setPosition(x, y);
-    //
-    // // add to scene
-    // mScene.addChild(obj);
-    //
-    // return obj;
-    // }
+    private Sprite addObject(final float x, final float y) {
+        // create object
+        final Sprite obj = new Sprite();
+        obj.setAtlasFrame(mBitmapFont.getCharFrame(mBitmapFont.getCharacters().charAt(RANDOM.nextInt(26 * 2))));
+
+        // random positions
+        obj.setPosition(x, y);
+
+        // add to scene
+        mScene.addChild(obj);
+
+        return obj;
+    }
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         final int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            mStage.queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    int len = event.getPointerCount();
-                    for (int i = 0; i < len; i++) {
-                        // addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+            if (mBitmapFont.getTexture() != null) {
+                mStage.queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                        int len = event.getPointerCount();
+                        for (int i = 0; i < len; i++) {
+                            addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         return true;

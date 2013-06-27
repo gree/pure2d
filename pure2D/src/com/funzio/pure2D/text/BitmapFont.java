@@ -3,13 +3,18 @@
  */
 package com.funzio.pure2D.text;
 
+import java.util.HashMap;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint.FontMetrics;
+import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.utils.RectPacker;
@@ -23,9 +28,17 @@ public class BitmapFont {
     private final String mCharacters;
     private Texture mTexture;
 
+    private HashMap<Character, AtlasFrame> mCharFrames = new HashMap<Character, AtlasFrame>();
+    private RectPacker mRectPacker;
+    private PointF[] mOffsets;
+
     public BitmapFont(final String characters, final TextOptions textOptions) {
         mTextOptions = (textOptions == null) ? TextOptions.getDefault() : textOptions;
         mCharacters = characters;
+
+        mRectPacker = new RectPacker(512, mTextOptions.inPo2);
+        mRectPacker.setQuickMode(false);
+        mRectPacker.setRotationEnabled(false);
     }
 
     /**
@@ -40,20 +53,36 @@ public class BitmapFont {
             final Bitmap bitmap = createBitmap(dimensions);
             mTexture = new Texture(glState);
             mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
+
+            AtlasFrame frame;
+            final int length = mCharacters.length();
+            for (int i = 0; i < length; i++) {
+                final char ch = mCharacters.charAt(i);
+
+                frame = new AtlasFrame(mTexture, i, String.valueOf(ch), new RectF(mRectPacker.getRect(i)));
+                frame.mOffset = mOffsets[i];
+                mCharFrames.put(ch, frame);
+            }
         }
 
         return mTexture;
+    }
+
+    public String getCharacters() {
+        return mCharacters;
     }
 
     public Texture getTexture() {
         return mTexture;
     }
 
+    public AtlasFrame getCharFrame(final char ch) {
+        return mCharFrames.get(ch);
+    }
+
+    @SuppressWarnings("deprecation")
     protected Bitmap createBitmap(final int[] outDimensions) {
         final Rect bounds = new Rect();
-        final RectPacker packer = new RectPacker(512, mTextOptions.inPo2);
-        packer.setQuickMode(false);
-        packer.setRotationEnabled(false);
         final FontMetrics metrics = new FontMetrics();
         mTextOptions.inTextPaint.getFontMetrics(metrics);
 
@@ -61,33 +90,51 @@ public class BitmapFont {
         // find the bounds
         final int length = mCharacters.length();
         float[] positions = new float[length * 2];
-        Rect rect;
+        mOffsets = new PointF[length];
+        // float totalOffsetX = (mTextOptions.inOffsetX) * mTextOptions.inScaleX;
+        // float totalOffsetY = (mTextOptions.inOffsetY) * mTextOptions.inScaleY;
+        Rect charRect;
         for (int i = 0; i < length; i++) {
             final String ch = mCharacters.substring(i, i + 1);
+
+            // find text bounds
             mTextOptions.inTextPaint.getTextBounds(ch, 0, 1, bounds);
+            // inflate by padding
             bounds.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
 
-            rect = packer.occupy(Math.round((bounds.width() + metrics.descent) * mTextOptions.inScaleX), Math.round((bounds.height() + metrics.descent) * mTextOptions.inScaleY));
+            // occupy
+            charRect = mRectPacker.occupy(Math.round((bounds.width()) * mTextOptions.inScaleX), Math.round((bounds.height()) * mTextOptions.inScaleY));
 
-            positions[i * 2] = rect.left + (mTextOptions.inPaddingX + mTextOptions.inOffsetX) * mTextOptions.inScaleX - bounds.left;
-            positions[i * 2 + 1] = rect.top + (mTextOptions.inPaddingY + mTextOptions.inOffsetY) * mTextOptions.inScaleY - bounds.top;
-            // Log.e("long", ch + " " + bounds.left + " " + bounds.top);
+            // find positions
+            positions[i * 2] = charRect.left / mTextOptions.inScaleX - bounds.left;
+            positions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
+            mOffsets[i] = new PointF(bounds.left, bounds.top);
         }
         long time = SystemClock.elapsedRealtime() - start;
         start = SystemClock.elapsedRealtime();
-        Log.e("long", "=> " + packer.getWidth() + " " + packer.getHeight() + " " + time + "ms");
+        Log.e("long", "=> " + mRectPacker.getWidth() + " " + mRectPacker.getHeight() + " " + time + "ms");
 
         // create a new bitmap
-        final Bitmap bitmap = Bitmap.createBitmap(packer.getWidth(), packer.getHeight(), mTextOptions.inPreferredConfig);
+        final Bitmap bitmap = Bitmap.createBitmap(mRectPacker.getWidth(), mRectPacker.getHeight(), mTextOptions.inPreferredConfig);
 
         // use a canvas to draw the text
         final Canvas canvas = new Canvas(bitmap);
-        canvas.scale(mTextOptions.inScaleX, mTextOptions.inScaleY);
+        // apply scale
+        if (mTextOptions.inScaleX != 1 || mTextOptions.inScaleY != 1) {
+            canvas.scale(mTextOptions.inScaleX, mTextOptions.inScaleY);
+        }
         if (mTextOptions.inBackground != null) {
             canvas.drawBitmap(mTextOptions.inBackground, 0, 0, mTextOptions.inTextPaint);
         }
 
-        Rect charRect;
+        // draw all chars at once
+        if (mTextOptions.inStrokePaint != null) {
+            canvas.drawPosText(mCharacters, positions, mTextOptions.inStrokePaint);
+        }
+        // draw the text
+        canvas.drawPosText(mCharacters, positions, mTextOptions.inTextPaint);
+
+        // manually draw 1 by 1 char
         // for (int i = 0; i < length; i++) {
         // charRect = packer.getRect(i);
         // final float textX = charRect.left + (mTextOptions.inPaddingX + mTextOptions.inOffsetX) * mTextOptions.inScaleX;
@@ -101,12 +148,6 @@ public class BitmapFont {
         // canvas.drawText(ch, textX, textY, mTextOptions.inTextPaint);
         // }
 
-        if (mTextOptions.inStrokePaint != null) {
-            canvas.drawPosText(mCharacters, positions, mTextOptions.inStrokePaint);
-        }
-        // draw the text
-        canvas.drawPosText(mCharacters, positions, mTextOptions.inTextPaint);
-
         time = SystemClock.elapsedRealtime() - start;
         Log.e("long", "draw time: " + time + "ms");
 
@@ -114,23 +155,6 @@ public class BitmapFont {
             outDimensions[0] = bitmap.getWidth();
             outDimensions[1] = bitmap.getHeight();
         }
-
-        // // resize to the specified size
-        // if (mTextOptions.inScaleX != 1 || mTextOptions.inScaleY != 1) {
-        // final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * mTextOptions.inScaleX), Math.round(bitmap.getHeight() * mTextOptions.inScaleY), true);
-        // bitmap.recycle();
-        // bitmap = newBitmap;
-        // }
-        //
-        // if (mTextOptions.inPo2) {
-        // bitmap = Pure2DUtils.scaleBitmapToPo2(bitmap, outDimensions);
-        // } else {
-        // // also output the original width and height
-        // if (outDimensions != null) {
-        // outDimensions[0] = bitmap.getWidth();
-        // outDimensions[1] = bitmap.getHeight();
-        // }
-        // }
 
         return bitmap;
     }
