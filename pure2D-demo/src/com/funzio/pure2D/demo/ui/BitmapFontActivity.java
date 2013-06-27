@@ -5,7 +5,9 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -20,8 +22,12 @@ import com.funzio.pure2D.text.Text;
 import com.funzio.pure2D.text.TextOptions;
 
 public class BitmapFontActivity extends StageActivity {
+    private static final String TAG = BitmapFontActivity.class.getSimpleName();
+    private static final String FONT_PATH = "fonts/PUSAB___.TTF";
+
     private Sprite mAtlasSprite;
     private BitmapFont mBitmapFont;
+    private Typeface mTypeface;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -32,6 +38,8 @@ public class BitmapFontActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GL10 gl) {
+
+                mScene.setColor(COLOR_GREEN);
 
                 // load the textures
                 loadTexture();
@@ -53,14 +61,25 @@ public class BitmapFontActivity extends StageActivity {
     }
 
     private void loadTexture() {
+        try {
+            // find in assets folder
+            mTypeface = Typeface.createFromAsset(getAssets(), FONT_PATH);
+        } catch (Exception e) {
+            Log.e(TAG, "Error creating font: " + FONT_PATH, e);
+            return;
+        }
+
         final TextOptions options = TextOptions.getDefault();
+        options.inTextPaint.setTypeface(mTypeface);
         // options.inScaleX = options.inScaleY = 0.75f;
-        options.inTextPaint.setColor(Color.DKGRAY);
+        options.inTextPaint.setColor(Color.BLUE);
         options.inTextPaint.setTextSize(40);
+        // options.inTextPaint.setShader(shader)
+        // options.inTextPaint.setShadowLayer(45, 2, 2, Color.MAGENTA);
         // options.inTextPaint.setTypeface(FontManager.getInstance().getFont("HelveticaRoundedLTStd-Bd.otf"));
         options.inPaddingX = options.inPaddingY = 2;
         options.inStrokePaint = new Paint(options.inTextPaint);
-        options.inStrokePaint.setStrokeWidth(options.inTextPaint.getTextSize() / 7);
+        options.inStrokePaint.setStrokeWidth(options.inTextPaint.getTextSize() / 5);
         options.inStrokePaint.setStyle(Style.STROKE);
         options.inStrokePaint.setColor(Color.CYAN);
 
