@@ -20,9 +20,8 @@ public class RectPacker {
 
     private static final Comparator<Point> COMPARATOR = new Comparator<Point>() {
         public int compare(final Point left, final Point right) {
-            return (left.x * left.x + left.y + left.y) - (right.x * right.x + right.y * right.y);
+            return (left.x * left.x + left.y + left.y) - (right.x * right.x + right.y * right.y); // square
             // return (left.x + 1) * (left.y + 1) - (right.x + 1) * (right.y + 1);
-            // return (left.x) + (left.y * 1000) - (right.x) + (right.y * 1000);
         }
     };
 
@@ -129,6 +128,7 @@ public class RectPacker {
     }
 
     private Rect getNextRect(final int rectWidth, final int rectHeight) {
+        int w, h;
         int newArea, minArea = Integer.MAX_VALUE;
         final Rect minRect = new Rect();
         Point destPoint = null;
@@ -144,6 +144,32 @@ public class RectPacker {
                 continue;
             }
 
+            mTempRect.set(point.x, point.y, point.x + rectWidth, point.y + rectHeight);
+            if (!isOccupied(mTempRect)) {
+                mTempBounds.set(mBounds);
+                mTempBounds.union(mTempRect);
+                if (mTempBounds.width() <= mMaxWidth && mTempBounds.height() <= mMaxWidth) {// && mTempBounds.height() <= mMaxWidth
+
+                    w = mTempBounds.width();
+                    h = mTempBounds.height();
+                    if (mForcePO2) {
+                        w = Pure2DUtils.getNextPO2(w);
+                        h = Pure2DUtils.getNextPO2(h);
+                    }
+                    newArea = w * w + h * h;
+                    // if (mForcePO2) {
+                    // newArea = Pure2DUtils.getNextPO2(mTempBounds.width()) * Pure2DUtils.getNextPO2(mTempBounds.height());
+                    // } else {
+                    // newArea = mTempBounds.width() * mTempBounds.height();
+                    // }
+                    if (newArea < minArea) {
+                        minArea = newArea;
+                        minRect.set(mTempRect);
+                        destPoint = point;
+                    }
+                }
+            }
+
             // rotate
             if (mRotationEnabled) {
                 mTempRect.set(point.x, point.y, point.x + rectHeight, point.y + rectWidth);
@@ -151,34 +177,24 @@ public class RectPacker {
                     mTempBounds.set(mBounds);
                     mTempBounds.union(mTempRect);
                     if (mTempBounds.width() <= mMaxWidth && mTempBounds.height() <= mMaxWidth) {// && mTempBounds.height() <= mMaxWidth
+
+                        w = mTempBounds.width();
+                        h = mTempBounds.height();
                         if (mForcePO2) {
-                            newArea = Pure2DUtils.getNextPO2(mTempBounds.width()) * Pure2DUtils.getNextPO2(mTempBounds.height());
-                        } else {
-                            newArea = mTempBounds.width() * mTempBounds.height();
+                            w = Pure2DUtils.getNextPO2(w);
+                            h = Pure2DUtils.getNextPO2(h);
                         }
+                        newArea = w * w + h * h;
+                        // if (mForcePO2) {
+                        // newArea = Pure2DUtils.getNextPO2(mTempBounds.width()) * Pure2DUtils.getNextPO2(mTempBounds.height());
+                        // } else {
+                        // newArea = mTempBounds.width() * mTempBounds.height();
+                        // }
                         if (newArea < minArea) {
                             minArea = newArea;
                             minRect.set(mTempRect);
                             destPoint = point;
                         }
-                    }
-                }
-            }
-
-            mTempRect.set(point.x, point.y, point.x + rectWidth, point.y + rectHeight);
-            if (!isOccupied(mTempRect)) {
-                mTempBounds.set(mBounds);
-                mTempBounds.union(mTempRect);
-                if (mTempBounds.width() <= mMaxWidth && mTempBounds.height() <= mMaxWidth) {// && mTempBounds.height() <= mMaxWidth
-                    if (mForcePO2) {
-                        newArea = Pure2DUtils.getNextPO2(mTempBounds.width()) * Pure2DUtils.getNextPO2(mTempBounds.height());
-                    } else {
-                        newArea = mTempBounds.width() * mTempBounds.height();
-                    }
-                    if (newArea < minArea) {
-                        minArea = newArea;
-                        minRect.set(mTempRect);
-                        destPoint = point;
                     }
                 }
             }

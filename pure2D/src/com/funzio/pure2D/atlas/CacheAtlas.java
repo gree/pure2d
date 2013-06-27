@@ -44,7 +44,7 @@ public class CacheAtlas extends Atlas {
      */
     private void initBuffer(final int maxWidth) {
         mPacker = new RectPacker(maxWidth, !Pure2D.GL_NPOT_TEXTURE_SUPPORTED); // !Pure2D.GL_NPOT_TEXTURE_SUPPORTED
-        mPacker.setQuickMode(false);
+        mPacker.setQuickMode(true);
         final int frames = mTarget.getNumFrames();
         for (int i = 0; i < frames; i++) {
             final RectF frameRect = mTarget.getFrameRect(i);
