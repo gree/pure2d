@@ -37,7 +37,7 @@ public class BitmapFont {
         mCharacters = characters;
 
         mRectPacker = new RectPacker(512, mTextOptions.inPo2);
-        mRectPacker.setQuickMode(false);
+        mRectPacker.setQuickMode(true);
         mRectPacker.setRotationEnabled(false);
     }
 

@@ -20,7 +20,8 @@ public class RectPacker {
 
     private static final Comparator<Point> COMPARATOR = new Comparator<Point>() {
         public int compare(final Point left, final Point right) {
-            return (left.x + 1) * (left.y + 1) - (right.x + 1) * (right.y + 1);
+            return (left.x * left.x + left.y + left.y) - (right.x * right.x + right.y * right.y);
+            // return (left.x + 1) * (left.y + 1) - (right.x + 1) * (right.y + 1);
             // return (left.x) + (left.y * 1000) - (right.x) + (right.y * 1000);
         }
     };
@@ -31,7 +32,7 @@ public class RectPacker {
     private final int mMaxWidth;
     private final boolean mForcePO2;
     private boolean mRotationEnabled = true;
-    private boolean mQuickMode = false;
+    private boolean mQuickMode = true;
     private int mWidth = 0;
     private int mHeight = 0;
 

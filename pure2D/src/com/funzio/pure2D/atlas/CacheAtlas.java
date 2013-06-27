@@ -3,9 +3,6 @@
  */
 package com.funzio.pure2D.atlas;
 
-import java.util.TreeSet;
-
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
@@ -13,11 +10,9 @@ import android.util.Log;
 import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.BufferTexture;
-import com.funzio.pure2D.shapes.Rectangular;
 import com.funzio.pure2D.utils.RectPacker;
 
 /**
@@ -49,6 +44,7 @@ public class CacheAtlas extends Atlas {
      */
     private void initBuffer(final int maxWidth) {
         mPacker = new RectPacker(maxWidth, !Pure2D.GL_NPOT_TEXTURE_SUPPORTED); // !Pure2D.GL_NPOT_TEXTURE_SUPPORTED
+        mPacker.setQuickMode(false);
         final int frames = mTarget.getNumFrames();
         for (int i = 0; i < frames; i++) {
             final RectF frameRect = mTarget.getFrameRect(i);
@@ -73,10 +69,10 @@ public class CacheAtlas extends Atlas {
         mFrameBuffer.bind(Scene.AXIS_TOP_LEFT); // invert
 
         // debug: draw bg
-        final Rectangular debugRect = new Rectangular();
-        debugRect.setSize(mWidth, mHeight);
-        debugRect.setColor(new GLColor(0, 0.3f, 0, 1f));
-        debugRect.draw(mGLState);
+        // final Rectangular debugRect = new Rectangular();
+        // debugRect.setSize(mWidth, mHeight);
+        // debugRect.setColor(new GLColor(0, 0.3f, 0, 1f));
+        // debugRect.draw(mGLState);
 
         final RectF posRect = new RectF();
         final int frames = mTarget.getNumFrames();
@@ -107,15 +103,15 @@ public class CacheAtlas extends Atlas {
             }
         }
 
-        // draw debug dots
-        final int pixelWidth = 2;
-        final Rectangular r = new Rectangular();
-        r.setSize(pixelWidth, pixelWidth);
-        final TreeSet<Point> hots = mPacker.getHotPoints();
-        for (Point p : hots) {
-            r.setPosition(p.x, mHeight - p.y - pixelWidth);
-            r.draw(mGLState);
-        }
+        // debug: draw dots
+        // final int pixelWidth = 2;
+        // final Rectangular r = new Rectangular();
+        // r.setSize(pixelWidth, pixelWidth);
+        // final TreeSet<Point> hots = mPacker.getHotPoints();
+        // for (Point p : hots) {
+        // r.setPosition(p.x, mHeight - p.y - pixelWidth);
+        // r.draw(mGLState);
+        // }
 
         // done
         mFrameBuffer.unbind();
