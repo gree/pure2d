@@ -18,12 +18,12 @@ import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.Characters;
-import com.funzio.pure2D.text.Text;
+import com.funzio.pure2D.text.TextBmf;
 import com.funzio.pure2D.text.TextOptions;
 
 public class BitmapFontActivity extends StageActivity {
     private static final String TAG = BitmapFontActivity.class.getSimpleName();
-    private static final String FONT_PATH = "fonts/PUSAB___.TTF";
+    private static final String FONT_PATH = "fonts/foo.ttf";
 
     private Sprite mAtlasSprite;
     private BitmapFont mBitmapFont;
@@ -101,11 +101,11 @@ public class BitmapFontActivity extends StageActivity {
     // return obj;
     // }
 
-    private Text addObject(final float x, final float y) {
+    private TextBmf addObject(final float x, final float y) {
         // create object
-        final Text obj = new Text();
+        final TextBmf obj = new TextBmf();
         obj.setBitmapFont(mBitmapFont);
-        obj.setText("Hello World!");
+        obj.setText("Hello World!\nWoo Hoo!");
 
         // random positions
         obj.setPosition(x, y);

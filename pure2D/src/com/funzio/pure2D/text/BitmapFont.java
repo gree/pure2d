@@ -31,10 +31,14 @@ public class BitmapFont {
     private HashMap<Character, AtlasFrame> mCharFrames = new HashMap<Character, AtlasFrame>();
     private RectPacker mRectPacker;
     private PointF[] mOffsets;
+    private FontMetrics mFontMetrics;
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
         mTextOptions = (textOptions == null) ? TextOptions.getDefault() : textOptions;
         mCharacters = characters;
+
+        mFontMetrics = new FontMetrics();
+        mTextOptions.inTextPaint.getFontMetrics(mFontMetrics);
 
         mRectPacker = new RectPacker(512, mTextOptions.inPo2);
         mRectPacker.setQuickMode(true);
@@ -72,6 +76,14 @@ public class BitmapFont {
         return mCharacters;
     }
 
+    public TextOptions getTextOptions() {
+        return mTextOptions;
+    }
+
+    public FontMetrics getFontMetrics() {
+        return mFontMetrics;
+    }
+
     public Texture getTexture() {
         return mTexture;
     }
@@ -83,8 +95,6 @@ public class BitmapFont {
     @SuppressWarnings("deprecation")
     protected Bitmap createBitmap(final int[] outDimensions) {
         final Rect bounds = new Rect();
-        final FontMetrics metrics = new FontMetrics();
-        mTextOptions.inTextPaint.getFontMetrics(metrics);
 
         long start = SystemClock.elapsedRealtime();
         // find the bounds
@@ -95,10 +105,10 @@ public class BitmapFont {
         // float totalOffsetY = (mTextOptions.inOffsetY) * mTextOptions.inScaleY;
         Rect charRect;
         for (int i = 0; i < length; i++) {
-            final String ch = mCharacters.substring(i, i + 1);
+            final char ch = mCharacters.charAt(i);
 
             // find text bounds
-            mTextOptions.inTextPaint.getTextBounds(ch, 0, 1, bounds);
+            mTextOptions.inTextPaint.getTextBounds(String.valueOf(ch), 0, 1, bounds);
             // inflate by padding
             bounds.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
 
