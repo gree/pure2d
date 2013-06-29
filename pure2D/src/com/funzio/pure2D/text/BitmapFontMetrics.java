@@ -28,7 +28,7 @@ public class BitmapFontMetrics extends FontMetrics {
         leading = metrics.leading;
 
         // implicitly set whitespace
-        whitespace = -ascent * 0.5f;
+        whitespace = -ascent;// * 0.5f;
     }
 
     public void applyScale(final float sx, final float sy) {

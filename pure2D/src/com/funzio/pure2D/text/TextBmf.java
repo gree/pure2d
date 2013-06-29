@@ -29,9 +29,8 @@ public class TextBmf extends BaseDisplayObject {
     protected QuadBuffer mQuadBuffer = new QuadBuffer();
 
     protected String mText = "";
-    protected float mWhitespaceWidth;
     protected RectF mTextBounds = new RectF();
-    protected Rect mTempBounds = new Rect();
+    protected Rect mTempRect = new Rect();
 
     private TextureCoordBuffer mTextureCoordBufferScaled;
     private boolean mTextureFlippedForAxis = false;
@@ -74,53 +73,40 @@ public class TextBmf extends BaseDisplayObject {
     }
 
     protected void updateTextBounds() {
+        final int length = mText.length();
         int start = 0;
         int end = mText.indexOf(Characters.NEW_LINE);
-        final int length = mText.length();
+        if (end < 0) {
+            end = length - 1;
+        }
         int lineChars = end - start + 1;
         float baseline = 0;
 
-        // mTextOptions.inTextPaint.getTextBounds(WHITESPACE, 0, 1, mTempBounds); // FIXME this always returns 0
-        // mWhitespaceWidth = mTempBounds.width() * mTextOptions.inScaleX;
-        // Log.e("long", "mWhitespaceWidth " + mWhitespaceWidth);
-
         mTextBounds.setEmpty();
-        if (end > 0) {
-            // multi lines
-            do {
-                mTextOptions.inTextPaint.getTextBounds(mText, start, end - 1, mTempBounds);
-                // apply scale
-                mTempBounds.left *= mTextOptions.inScaleX;
-                mTempBounds.right *= mTextOptions.inScaleX;
-                mTempBounds.top *= mTextOptions.inScaleY;
-                mTempBounds.bottom *= mTextOptions.inScaleY;
-                // inflate by padding * lineChars
-                mTempBounds.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX * lineChars), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
-                mTempBounds.offset(0, Math.round(baseline));
-                mTextBounds.union(mTempBounds.left, mTempBounds.top, mTempBounds.right, mTempBounds.bottom);
-
-                start = end + 1;
-                end = mText.indexOf(Characters.NEW_LINE, start);
-                if (end < 0) {
-                    end = length;
-                }
-                lineChars = end - start;
-                baseline += mFontMetrics.bottom - mFontMetrics.top;
-            } while (start < length);
-        } else {
-            // single line
-            mTextOptions.inTextPaint.getTextBounds(mText, start, end - 1, mTempBounds);
+        // multi lines
+        do {
+            mTextOptions.inTextPaint.getTextBounds(mText, start, end, mTempRect);
             // apply scale
-            mTempBounds.left *= mTextOptions.inScaleX;
-            mTempBounds.right *= mTextOptions.inScaleX;
-            mTempBounds.top *= mTextOptions.inScaleY;
-            mTempBounds.bottom *= mTextOptions.inScaleY;
+            mTempRect.left *= mTextOptions.inScaleX;
+            mTempRect.right *= mTextOptions.inScaleX;
+            mTempRect.top *= mTextOptions.inScaleY;
+            mTempRect.bottom *= mTextOptions.inScaleY;
             // inflate by padding * lineChars
-            mTempBounds.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX * lineChars), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
-            mTextBounds.union(mTempBounds.left, mTempBounds.top, mTempBounds.right, mTempBounds.bottom);
-        }
+            mTempRect.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX * lineChars), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
+            mTempRect.offset(0, Math.round(baseline));
+            // merge to bounds
+            mTextBounds.union(mTempRect.left, mTempRect.top, mTempRect.right, mTempRect.bottom);
 
-        // update size
+            start = end + 2; // skip newline
+            end = mText.indexOf(Characters.NEW_LINE, start);
+            if (end < 0) {
+                end = length - 1;
+            }
+            lineChars = end - start + 1;
+            baseline += mFontMetrics.bottom - mFontMetrics.top;
+        } while (start < length);
+
+        // auto update size
         mSize.x = mTextBounds.right - mTextBounds.left + 1;
         mSize.y = mTextBounds.bottom - mTextBounds.top + 1;
     }
@@ -160,7 +146,7 @@ public class TextBmf extends BaseDisplayObject {
             mTexture.bind();
 
             final int length = mText.length();
-            float nextX = 0, nextY = mTextBounds.bottom - mTextOptions.inPaddingY * mTextOptions.inScaleY;
+            float nextX = 0, nextY = mTextBounds.bottom;
             char ch;
             AtlasFrame frame;
             for (int i = 0; i < length; i++) {
@@ -179,7 +165,7 @@ public class TextBmf extends BaseDisplayObject {
                     mTextureCoordBufferScaled.apply(glState);
 
                     // set position and size
-                    mQuadBuffer.setRect(nextX + frame.mOffset.x, nextY - frame.mOffset.y, frame.getSize().x, frame.getSize().y);
+                    mQuadBuffer.setRect(nextX, nextY - (frame.getSize().y - frame.mOffset.y), frame.getSize().x, frame.getSize().y);
                     // draw
                     mQuadBuffer.draw(glState);
 
