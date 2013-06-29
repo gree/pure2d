@@ -44,9 +44,11 @@ public class BitmapFontActivity extends StageActivity {
                 // load the textures
                 loadTexture();
 
-                mAtlasSprite = new Sprite();
-                mAtlasSprite.setTexture(mBitmapFont.getTexture());
-                mScene.addChild(mAtlasSprite);
+                if (mBitmapFont != null) {
+                    mAtlasSprite = new Sprite();
+                    mAtlasSprite.setTexture(mBitmapFont.getTexture());
+                    mScene.addChild(mAtlasSprite);
+                }
             }
         });
     }
@@ -105,7 +107,7 @@ public class BitmapFontActivity extends StageActivity {
         // create object
         final TextBmf obj = new TextBmf();
         obj.setBitmapFont(mBitmapFont);
-        obj.setText("Hello World!\nWoo Hoo!");
+        obj.setText("\"Hello World!\"\nWoo hoo!\nxyz,...");
 
         // random positions
         obj.setPosition(x, y);

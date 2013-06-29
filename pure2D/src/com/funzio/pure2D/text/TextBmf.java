@@ -80,8 +80,8 @@ public class TextBmf extends BaseDisplayObject {
         int lineChars = end - start + 1;
         float baseline = 0;
 
-        mTextOptions.inTextPaint.getTextBounds(WHITESPACE, 0, 1, mTempBounds); // FIXME this always returns 0
-        mWhitespaceWidth = mTempBounds.width() * mTextOptions.inScaleX;
+        // mTextOptions.inTextPaint.getTextBounds(WHITESPACE, 0, 1, mTempBounds); // FIXME this always returns 0
+        // mWhitespaceWidth = mTempBounds.width() * mTextOptions.inScaleX;
         // Log.e("long", "mWhitespaceWidth " + mWhitespaceWidth);
 
         mTextBounds.setEmpty();
@@ -160,7 +160,7 @@ public class TextBmf extends BaseDisplayObject {
             mTexture.bind();
 
             final int length = mText.length();
-            float nextX = 0, nextY = 0;// -mTextBounds.top;
+            float nextX = 0, nextY = mTextBounds.bottom - mTextOptions.inPaddingY * mTextOptions.inScaleY;
             char ch;
             AtlasFrame frame;
             for (int i = 0; i < length; i++) {
@@ -179,7 +179,7 @@ public class TextBmf extends BaseDisplayObject {
                     mTextureCoordBufferScaled.apply(glState);
 
                     // set position and size
-                    mQuadBuffer.setRect(nextX, nextY, frame.getSize().x, frame.getSize().y);
+                    mQuadBuffer.setRect(nextX + frame.mOffset.x, nextY - frame.mOffset.y, frame.getSize().x, frame.getSize().y);
                     // draw
                     mQuadBuffer.draw(glState);
 

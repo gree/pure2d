@@ -118,7 +118,7 @@ public class BitmapFont {
             // find positions
             positions[i * 2] = charRect.left / mTextOptions.inScaleX - bounds.left;
             positions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
-            mOffsets[i] = new PointF(bounds.left, bounds.top);
+            mOffsets[i] = new PointF(-bounds.left, -bounds.top);
         }
         long time = SystemClock.elapsedRealtime() - start;
         start = SystemClock.elapsedRealtime();
