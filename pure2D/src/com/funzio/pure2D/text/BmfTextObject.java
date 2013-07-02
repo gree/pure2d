@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.containers.Alignment;
@@ -22,7 +23,7 @@ import com.funzio.pure2D.shapes.Sprite;
 /**
  * @author long
  */
-public class BmfTextObject extends BaseDisplayObject {
+public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     protected BitmapFont mBitmapFont;
     protected TextOptions mTextOptions;
     protected BitmapFontMetrics mFontMetrics;

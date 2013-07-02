@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
@@ -21,7 +22,7 @@ import com.funzio.pure2D.shapes.Sprite;
 /**
  * @author long
  */
-public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
+public class DisplayGroup extends BaseDisplayObject implements Container, Cacheable, Touchable {
 
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
