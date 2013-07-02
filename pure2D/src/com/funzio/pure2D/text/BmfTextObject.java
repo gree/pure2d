@@ -28,7 +28,7 @@ public class BmfTextObject extends BaseDisplayObject {
     protected BitmapFontMetrics mFontMetrics;
 
     protected Texture mTexture;
-    protected QuadBuffer mQuadBuffer = new QuadBuffer();
+    protected QuadBuffer mQuadBuffer;
 
     protected String mText = "";
     protected int mTextAlignment = Alignment.LEFT;
@@ -36,7 +36,7 @@ public class BmfTextObject extends BaseDisplayObject {
 
     private int mSceneAxis = -1;
     private TextureCoordBuffer mTextureCoordBuffer;
-    private ArrayList<Float> mLineWidths = new ArrayList<Float>();
+    private ArrayList<Float> mLineWidths;
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
@@ -90,6 +90,11 @@ public class BmfTextObject extends BaseDisplayObject {
     public void updateTextBounds() {
         mFontMetrics.getTextBounds(mText, mTextBounds);
 
+        // init line with
+        if (mLineWidths == null) {
+            mLineWidths = new ArrayList<Float>();
+        }
+
         // NOTE: there is a floating error in the native logic. So we need this for precision
         final int length = mText.length();
         float nextX = 0;
@@ -128,7 +133,7 @@ public class BmfTextObject extends BaseDisplayObject {
             mLineWidths.set(lineIndex, lineWidth);
         }
 
-        // fix the right
+        // fix the right for better precision
         mTextBounds.right = mTextBounds.left + width - 1;
 
         // auto update size
@@ -221,8 +226,14 @@ public class BmfTextObject extends BaseDisplayObject {
 
     @Override
     protected boolean drawChildren(final GLState glState) {
+        // sanity check
         if (mBitmapFont == null || mTexture == null) {
             return false;
+        }
+
+        // init quad buffer
+        if (mQuadBuffer == null) {
+            mQuadBuffer = new QuadBuffer();
         }
 
         // bind the texture
@@ -324,6 +335,21 @@ public class BmfTextObject extends BaseDisplayObject {
     @Override
     public void dispose() {
         super.dispose();
+
+        if (mQuadBuffer != null) {
+            mQuadBuffer.dispose();
+            mQuadBuffer = null;
+        }
+
+        if (mTextureCoordBuffer != null) {
+            mTextureCoordBuffer.dispose();
+            mTextureCoordBuffer = null;
+        }
+
+        if (mLineWidths != null) {
+            mLineWidths.clear();
+            mLineWidths = null;
+        }
 
         clearCache();
     }

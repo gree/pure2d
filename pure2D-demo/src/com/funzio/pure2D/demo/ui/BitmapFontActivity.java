@@ -116,7 +116,7 @@ public class BitmapFontActivity extends StageActivity {
         obj.setCacheEnabled(true); // for perf on large text
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
-        obj.setText("Hello World! #" + RANDOM.nextInt(999999) + "\nHope you're listening...\n\"Come home\"");
+        obj.setText("Hello World!\nHope you're listening...\n\"Come home\"\n#" + RANDOM.nextInt(999999));
         obj.setColor(new GLColor(1, RANDOM.nextFloat(), RANDOM.nextFloat(), 1f));
 
         // set positions
