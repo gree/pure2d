@@ -12,10 +12,12 @@ import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.containers.Alignment;
+import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.shapes.Sprite;
 
 /**
  * @author long
@@ -36,6 +38,13 @@ public class BmfTextObject extends BaseDisplayObject {
     private TextureCoordBuffer mTextureCoordBuffer;
     private ArrayList<Float> mLineWidths = new ArrayList<Float>();
 
+    // cache
+    protected FrameBuffer mCacheFrameBuffer;
+    protected Sprite mCacheSprite;
+    protected boolean mCacheEnabled = false;
+
+    // protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
+
     public BmfTextObject() {
         super();
     }
@@ -45,7 +54,7 @@ public class BmfTextObject extends BaseDisplayObject {
      */
     public void setText(final String text) {
         mText = text;
-        invalidate(CHILDREN | BOUNDS);
+        invalidate(CHILDREN);
     }
 
     /**
@@ -62,7 +71,7 @@ public class BmfTextObject extends BaseDisplayObject {
     public void setTextAlignment(final int alignment) {
         mTextAlignment = alignment;
 
-        invalidate();
+        invalidate(CACHE);
     }
 
     public BitmapFont getBitmapFont() {
@@ -75,10 +84,10 @@ public class BmfTextObject extends BaseDisplayObject {
         mFontMetrics = mBitmapFont.getFontMetrics();
 
         mTexture = bitmapFont.getTexture();
-        invalidate(TEXTURE | TEXTURE_COORDS);
+        invalidate(TEXTURE | CHILDREN);
     }
 
-    protected void updateTextBounds() {
+    public void updateTextBounds() {
         mFontMetrics.getTextBounds(mText, mTextBounds);
 
         // NOTE: there is a floating error in the native logic. So we need this for precision
@@ -118,12 +127,12 @@ public class BmfTextObject extends BaseDisplayObject {
         } else {
             mLineWidths.set(lineIndex, lineWidth);
         }
+
         // fix the right
         mTextBounds.right = mTextBounds.left + width - 1;
 
         // auto update size
-        mSize.x = mTextBounds.right - mTextBounds.left + 1;
-        mSize.y = mTextBounds.bottom - mTextBounds.top + 1;
+        setSize(mTextBounds.right - mTextBounds.left + 1, mTextBounds.bottom - mTextBounds.top + 1);
     }
 
     /*
@@ -132,6 +141,11 @@ public class BmfTextObject extends BaseDisplayObject {
      */
     @Override
     public boolean update(final int deltaTime) {
+        // find axis system
+        if (mSceneAxis < 0) {
+            mSceneAxis = getScene().getAxisSystem();
+        }
+
         // update text bounds
         if ((mInvalidateFlags & CHILDREN) != 0) {
             updateTextBounds();
@@ -140,93 +154,159 @@ public class BmfTextObject extends BaseDisplayObject {
         return super.update(deltaTime);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.IDisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
+     */
     @Override
-    protected boolean drawChildren(final GLState glState) {
-        if (mBitmapFont == null || mTexture == null) {
-            return false;
-        }
-
-        // find axis system
-        if (mSceneAxis < 0) {
-            mSceneAxis = getScene().getAxisSystem();
-        }
-        final boolean axisFlipped = mSceneAxis == Scene.AXIS_TOP_LEFT;
+    public boolean draw(final GLState glState) {
+        drawStart(glState);
 
         // blend mode
         glState.setBlendFunc(mBlendFunc);
         // color and alpha
         glState.setColor(getBlendColor());
 
-        // texture
-        if (mTexture != null) {
-            // bind the texture
-            mTexture.bind();
+        // check cache enabled, only refresh when children stop changing
+        if (mCacheEnabled && (mInvalidateFlags & CHILDREN) == 0) {
+            // check invalidate flags
+            if ((mInvalidateFlags & CACHE) != 0) {
 
-            final int length = mText.length();
-            float nextX, nextY = mTextBounds.bottom;
-            char ch;
-            AtlasFrame frame;
-            PointF frameSize;
-
-            // alignment
-            int lineIndex = 0;
-            if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
-            } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                nextX = (mSize.x - mLineWidths.get(lineIndex));
-            } else {
-                nextX = 0;
-            }
-
-            for (int i = 0; i < length; i++) {
-                ch = mText.charAt(i);
-
-                if (ch == Characters.SPACE) {
-                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
-                } else if (ch == Characters.NEW_LINE) {
-
-                    // alignment
-                    lineIndex++;
-                    if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                        nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
-                    } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                        nextX = (mSize.x - mLineWidths.get(lineIndex));
-                    } else {
-                        nextX = 0;
+                // init frame buffer
+                if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
+                    if (mCacheFrameBuffer != null) {
+                        mCacheFrameBuffer.unload();
+                        mCacheFrameBuffer.getTexture().unload();
                     }
+                    mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
 
-                    nextY -= (mFontMetrics.bottom - mFontMetrics.top);
-                } else {
-                    frame = mBitmapFont.getCharFrame(ch);
-                    frameSize = frame.getSize();
-
-                    // apply the coordinates
-                    if (mTextureCoordBuffer == null) {
-                        mTextureCoordBuffer = new TextureCoordBuffer(frame.getTextureCoords());
-                    } else {
-                        mTextureCoordBuffer.setValues(frame.getTextureCoords());
+                    // init sprite
+                    if (mCacheSprite == null) {
+                        mCacheSprite = new Sprite();
+                        // framebuffer is inverted
+                        if (mSceneAxis == Scene.AXIS_BOTTOM_LEFT) {
+                            mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
+                        }
                     }
-                    mTextureCoordBuffer.apply(glState);
-
-                    // set position and size
-                    if (axisFlipped) {
-                        mQuadBuffer.setRectFlipVertical(nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
-                    } else {
-                        mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
-                    }
-                    // draw
-                    mQuadBuffer.draw(glState);
-
-                    nextX += frameSize.x + mFontMetrics.letterSpacing;
+                    mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
                 }
+
+                // cache to framebuffer
+                mCacheFrameBuffer.bind(mSceneAxis);
+                mCacheFrameBuffer.clear();
+                drawChildren(glState);
+                mCacheFrameBuffer.unbind();
+
+                // validate cache
+                mInvalidateFlags &= ~CACHE;
             }
 
+            // now draw the cache
+            mCacheSprite.draw(glState);
         } else {
-            // unbind the texture
-            glState.unbindTexture();
+            // draw the children directly
+            drawChildren(glState);
+
+            // invalidate cache
+            invalidate(CACHE);
+        }
+
+        drawEnd(glState);
+
+        // validate visual and children, NOT bounds
+        mInvalidateFlags &= ~(VISUAL | CHILDREN);
+
+        return true;
+    }
+
+    @Override
+    protected boolean drawChildren(final GLState glState) {
+        if (mBitmapFont == null || mTexture == null) {
+            return false;
+        }
+
+        // bind the texture
+        mTexture.bind();
+
+        final boolean axisFlipped = (mSceneAxis == Scene.AXIS_TOP_LEFT);
+        final int length = mText.length();
+        float nextX, nextY = mTextBounds.bottom;
+        char ch;
+        AtlasFrame frame;
+        PointF frameSize;
+
+        // alignment
+        int lineIndex = 0;
+        if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+            nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+        } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+            nextX = (mSize.x - mLineWidths.get(lineIndex));
+        } else {
+            nextX = 0;
+        }
+
+        for (int i = 0; i < length; i++) {
+            ch = mText.charAt(i);
+
+            if (ch == Characters.SPACE) {
+                nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
+            } else if (ch == Characters.NEW_LINE) {
+
+                // alignment
+                lineIndex++;
+                if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                    nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                    nextX = (mSize.x - mLineWidths.get(lineIndex));
+                } else {
+                    nextX = 0;
+                }
+
+                // next y
+                nextY -= (mFontMetrics.bottom - mFontMetrics.top);
+            } else {
+                // get the current atlas frame
+                frame = mBitmapFont.getCharFrame(ch);
+                frameSize = frame.getSize();
+
+                // apply the coordinates
+                if (mTextureCoordBuffer == null) {
+                    mTextureCoordBuffer = new TextureCoordBuffer(frame.getTextureCoords());
+                } else {
+                    mTextureCoordBuffer.setValues(frame.getTextureCoords());
+                }
+                mTextureCoordBuffer.apply(glState);
+
+                // set position and size
+                if (axisFlipped) {
+                    mQuadBuffer.setRectFlipVertical(nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
+                } else {
+                    mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
+                }
+                // draw
+                mQuadBuffer.draw(glState);
+
+                // find next x
+                nextX += frameSize.x + mFontMetrics.letterSpacing;
+            }
         }
 
         return true;
+    }
+
+    public boolean isCacheEnabled() {
+        return mCacheEnabled;
+    }
+
+    /**
+     * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
+     * 
+     * @param cacheEnabled
+     */
+    public void setCacheEnabled(final boolean cacheEnabled) {
+        mCacheEnabled = cacheEnabled;
+
+        invalidate(CACHE);
     }
 
     protected float convertY(final float y, final float size) {

@@ -13,9 +13,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.animators.MoveAnimator;
+import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -41,8 +45,8 @@ public class BitmapFontActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GL10 gl) {
 
-                mScene.setColor(COLOR_GREEN);
-                mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
+                // mScene.setColor(COLOR_GREEN);
+                // mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
 
                 // load the textures
                 loadTexture();
@@ -77,13 +81,13 @@ public class BitmapFontActivity extends StageActivity {
         final TextOptions options = TextOptions.getDefault();
         options.inTextPaint.setTypeface(mTypeface);
         // options.inScaleX = options.inScaleY = 0.75f;
-        options.inTextPaint.setColor(Color.BLUE);
-        options.inTextPaint.setTextSize(40);
+        options.inTextPaint.setColor(Color.BLACK);
+        options.inTextPaint.setTextSize(30);
         options.inPaddingX = options.inPaddingY = 4;
         options.inStrokePaint = new Paint(options.inTextPaint);
         options.inStrokePaint.setStrokeWidth(options.inTextPaint.getTextSize() / 5);
         options.inStrokePaint.setStyle(Style.STROKE);
-        options.inStrokePaint.setColor(Color.CYAN);
+        options.inStrokePaint.setColor(Color.WHITE);
 
         mBitmapFont = new BitmapFont(Characters.BASIC_SET, options);
         mBitmapFont.load(mScene.getGLState());
@@ -108,15 +112,28 @@ public class BitmapFontActivity extends StageActivity {
 
         // create object
         final BmfTextObject obj = new BmfTextObject();
+        obj.setTextAlignment(Alignment.HORIZONTAL_CENTER);
+        obj.setCacheEnabled(true); // for perf on large text
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
-        obj.setText("Hello World!\nHope you're listening...\n\"Come home\"");
+        obj.setText("Hello World! #" + RANDOM.nextInt(999999) + "\nHope you're listening...\n\"Come home\"");
+        obj.setColor(new GLColor(1, RANDOM.nextFloat(), RANDOM.nextFloat(), 1f));
 
-        // random positions
+        // set positions
         obj.setPosition(mTempPoint);
 
         // add to scene
         mScene.addChild(obj);
+
+        // some animator
+        final MoveAnimator animator = new MoveAnimator(null);
+        obj.addManipulator(animator);
+        animator.setLoop(LoopModes.LOOP_REVERSE);
+        animator.setDuration(2000);
+        // NOTE: it is NOT ideal to call updateTextBounds() manually
+        obj.updateTextBounds();
+        // obj.setOriginAtCenter();
+        animator.start(0, mTempPoint.y, mDisplaySize.x - obj.getWidth(), mTempPoint.y);
 
         return obj;
     }

@@ -29,6 +29,7 @@ public interface InvalidateFlags {
 
     // container related
     public static final int CHILDREN = 1 << 20;
+    public static final int CACHE = 1 << 21;
 
     // combined flags
     public static final int TRANSFORM_MATRIX = SKEW;
