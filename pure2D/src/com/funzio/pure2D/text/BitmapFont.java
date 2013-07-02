@@ -56,8 +56,9 @@ public class BitmapFont {
 
             AtlasFrame frame;
             final int length = mCharacters.length();
+            char ch;
             for (int i = 0; i < length; i++) {
-                final char ch = mCharacters.charAt(i);
+                ch = mCharacters.charAt(i);
 
                 frame = new AtlasFrame(mTexture, i, String.valueOf(ch), new RectF(mRectPacker.getRect(i)));
                 frame.mOffset = mOffsets[i];
@@ -107,15 +108,16 @@ public class BitmapFont {
             // find text bounds
             mTextOptions.inTextPaint.getTextBounds(String.valueOf(ch), 0, 1, bounds);
             // inflate by padding
-            bounds.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
+            bounds.inset(-Math.round(mFontMetrics.letterPaddingX), -Math.round(mFontMetrics.letterPaddingY));
 
             // occupy
-            charRect = mRectPacker.occupy(Math.round((bounds.width()) * mTextOptions.inScaleX), Math.round((bounds.height()) * mTextOptions.inScaleY));
+            charRect = mRectPacker.occupy(Math.round((bounds.width() + 1) * mTextOptions.inScaleX), Math.round((bounds.height() + 1) * mTextOptions.inScaleY));
 
             // find positions
             positions[i * 2] = charRect.left / mTextOptions.inScaleX - bounds.left;
             positions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
-            mOffsets[i] = new PointF(-bounds.left, -bounds.top);
+            // save offset
+            mOffsets[i] = new PointF(-bounds.left * mTextOptions.inScaleX, -bounds.top * mTextOptions.inScaleY);
         }
 
         // long time = SystemClock.elapsedRealtime() - start;

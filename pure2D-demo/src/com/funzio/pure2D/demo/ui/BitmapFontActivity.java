@@ -73,10 +73,10 @@ public class BitmapFontActivity extends StageActivity {
 
         final TextOptions options = TextOptions.getDefault();
         options.inTextPaint.setTypeface(mTypeface);
-        // options.inScaleX = options.inScaleY = 0.75f;
+        options.inScaleX = options.inScaleY = 0.5f;
         options.inTextPaint.setColor(Color.BLUE);
         options.inTextPaint.setTextSize(40);
-        options.inPaddingX = options.inPaddingY = 2;
+        options.inPaddingX = options.inPaddingY = 4;
         options.inStrokePaint = new Paint(options.inTextPaint);
         options.inStrokePaint.setStrokeWidth(options.inTextPaint.getTextSize() / 5);
         options.inStrokePaint.setStyle(Style.STROKE);

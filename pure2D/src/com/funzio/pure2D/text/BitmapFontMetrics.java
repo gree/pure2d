@@ -72,7 +72,7 @@ public class BitmapFontMetrics extends FontMetrics {
             mTempRect.top *= mTextOptions.inScaleY;
             mTempRect.bottom *= mTextOptions.inScaleY;
             // inflate by padding * lineChars
-            mTempRect.inset(-Math.round(letterPaddingX * 2 * lineLength + letterSpacing * (lineLength - 1) * 0.5f), -Math.round(letterPaddingY * 2));
+            mTempRect.inset(-Math.round(letterPaddingX * lineLength + letterSpacing * (lineLength - 1) * 0.5f), -Math.round(letterPaddingY));
             mTempRect.offset(0, Math.round(baseline));
             // merge to bounds
             textBounds.union(mTempRect.left, mTempRect.top, mTempRect.right, mTempRect.bottom);
@@ -85,7 +85,7 @@ public class BitmapFontMetrics extends FontMetrics {
                 end -= 1; // don't count the new-line
             }
             lineLength = end - start + 1;
-            baseline += bottom - top;
+            baseline += (bottom - top);
         } while (start < length);
     }
 }

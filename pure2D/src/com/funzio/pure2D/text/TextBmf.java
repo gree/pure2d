@@ -114,7 +114,7 @@ public class TextBmf extends BaseDisplayObject {
                 ch = mText.charAt(i);
 
                 if (ch == Characters.SPACE) {
-                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing + 1;
+                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
                 } else if (ch == Characters.NEW_LINE) {
                     nextX = 0;
                     nextY -= (mFontMetrics.bottom - mFontMetrics.top);
@@ -130,7 +130,7 @@ public class TextBmf extends BaseDisplayObject {
                     // draw
                     mQuadBuffer.draw(glState);
 
-                    nextX += frame.getSize().x + mFontMetrics.letterSpacing + 1;
+                    nextX += frame.getSize().x + mFontMetrics.letterSpacing;
                 }
             }
 
@@ -160,16 +160,16 @@ public class TextBmf extends BaseDisplayObject {
         }
 
         // scale to match with the Texture scale, for optimization
-        if (mTexture != null) {
-            // diff check
-            if ((mTexture.mCoordScaleX != mTextureScaleX || mTexture.mCoordScaleY != mTextureScaleY)) {
-                // apply scale
-                mTextureCoordBufferScaled.scale(mTexture.mCoordScaleX / mTextureScaleX, mTexture.mCoordScaleY / mTextureScaleY);
-                // store for ref
-                mTextureScaleX = mTexture.mCoordScaleX;
-                mTextureScaleY = mTexture.mCoordScaleY;
-            }
-        }
+        // if (mTexture != null) {
+        // // diff check
+        // if ((mTexture.mCoordScaleX != mTextureScaleX || mTexture.mCoordScaleY != mTextureScaleY)) {
+        // // apply scale
+        // mTextureCoordBufferScaled.scale(mTexture.mCoordScaleX / mTextureScaleX, mTexture.mCoordScaleY / mTextureScaleY);
+        // // store for ref
+        // mTextureScaleX = mTexture.mCoordScaleX;
+        // mTextureScaleY = mTexture.mCoordScaleY;
+        // }
+        // }
 
         // clear flag: texture coords
         validate(TEXTURE_COORDS);
