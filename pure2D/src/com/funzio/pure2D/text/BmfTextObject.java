@@ -309,6 +309,25 @@ public class BmfTextObject extends BaseDisplayObject {
         invalidate(CACHE);
     }
 
+    public void clearCache() {
+        if (mCacheFrameBuffer != null) {
+            mCacheFrameBuffer.getTexture().unload();
+            mCacheFrameBuffer.unload();
+            mCacheFrameBuffer = null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.IDisplayObject#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        clearCache();
+    }
+
     protected float convertY(final float y, final float size) {
         return mSceneAxis == Scene.AXIS_BOTTOM_LEFT ? y : mSize.y - y - size;
     }

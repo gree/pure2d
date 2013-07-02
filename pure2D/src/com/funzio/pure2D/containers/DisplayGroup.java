@@ -248,6 +248,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 || ((pos.x >= 0 && pos.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y)); // BL
     }
 
+    public void clearCache() {
+        if (mCacheFrameBuffer != null) {
+            mCacheFrameBuffer.getTexture().unload();
+            mCacheFrameBuffer.unload();
+            mCacheFrameBuffer = null;
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.IDisplayObject#dispose()
@@ -256,11 +264,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void dispose() {
         super.dispose();
 
-        if (mCacheFrameBuffer != null) {
-            mCacheFrameBuffer.getTexture().unload();
-            mCacheFrameBuffer.unload();
-            mCacheFrameBuffer = null;
-        }
+        clearCache();
     }
 
     public boolean addChild(final DisplayObject child) {
