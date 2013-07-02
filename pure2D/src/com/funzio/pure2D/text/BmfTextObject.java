@@ -3,12 +3,15 @@
  */
 package com.funzio.pure2D.text;
 
+import java.util.ArrayList;
+
 import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrame;
+import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
@@ -26,10 +29,12 @@ public class BmfTextObject extends BaseDisplayObject {
     protected QuadBuffer mQuadBuffer = new QuadBuffer();
 
     protected String mText = "";
+    protected int mTextAlignment = Alignment.LEFT;
     protected RectF mTextBounds = new RectF();
 
     private int mSceneAxis = -1;
     private TextureCoordBuffer mTextureCoordBuffer;
+    private ArrayList<Float> mLineWidths = new ArrayList<Float>();
 
     public BmfTextObject() {
         super();
@@ -48,6 +53,16 @@ public class BmfTextObject extends BaseDisplayObject {
      */
     public String getText() {
         return mText;
+    }
+
+    public int getTextAlignment() {
+        return mTextAlignment;
+    }
+
+    public void setTextAlignment(final int alignment) {
+        mTextAlignment = alignment;
+
+        invalidate();
     }
 
     public BitmapFont getBitmapFont() {
@@ -70,6 +85,8 @@ public class BmfTextObject extends BaseDisplayObject {
         final int length = mText.length();
         float nextX = 0;
         float width = 0;
+        int lineIndex = 0;
+        float lineWidth = 0;
         char ch;
         for (int i = 0; i < length; i++) {
             ch = mText.charAt(i);
@@ -78,13 +95,28 @@ public class BmfTextObject extends BaseDisplayObject {
                 nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
             } else if (ch == Characters.NEW_LINE) {
                 nextX = 0;
+
+                // calculate line width
+                if (lineIndex > mLineWidths.size() - 1) {
+                    mLineWidths.add(lineWidth);
+                } else {
+                    mLineWidths.set(lineIndex, lineWidth);
+                }
+                lineIndex++;
+                lineWidth = 0;
             } else {
                 nextX += mBitmapFont.getCharFrame(ch).getSize().x + mFontMetrics.letterSpacing;
             }
 
+            lineWidth = nextX;
             if (nextX > width) {
                 width = nextX;
             }
+        }
+        if (lineIndex > mLineWidths.size() - 1) {
+            mLineWidths.add(lineWidth);
+        } else {
+            mLineWidths.set(lineIndex, lineWidth);
         }
         // fix the right
         mTextBounds.right = mTextBounds.left + width - 1;
@@ -131,10 +163,20 @@ public class BmfTextObject extends BaseDisplayObject {
             mTexture.bind();
 
             final int length = mText.length();
-            float nextX = 0, nextY = mTextBounds.bottom;
+            float nextX, nextY = mTextBounds.bottom;
             char ch;
             AtlasFrame frame;
             PointF frameSize;
+
+            // alignment
+            int lineIndex = 0;
+            if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+            } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                nextX = (mSize.x - mLineWidths.get(lineIndex));
+            } else {
+                nextX = 0;
+            }
 
             for (int i = 0; i < length; i++) {
                 ch = mText.charAt(i);
@@ -142,7 +184,17 @@ public class BmfTextObject extends BaseDisplayObject {
                 if (ch == Characters.SPACE) {
                     nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
                 } else if (ch == Characters.NEW_LINE) {
-                    nextX = 0;
+
+                    // alignment
+                    lineIndex++;
+                    if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                        nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                    } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                        nextX = (mSize.x - mLineWidths.get(lineIndex));
+                    } else {
+                        nextX = 0;
+                    }
+
                     nextY -= (mFontMetrics.bottom - mFontMetrics.top);
                 } else {
                     frame = mBitmapFont.getCharFrame(ch);
