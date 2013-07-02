@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
@@ -103,6 +104,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         int lineIndex = 0;
         float lineWidth = 0;
         char ch;
+        AtlasFrame frame;
         for (int i = 0; i < length; i++) {
             ch = mText.charAt(i);
 
@@ -120,7 +122,12 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                 lineIndex++;
                 lineWidth = 0;
             } else {
-                nextX += mBitmapFont.getCharFrame(ch).getSize().x + mFontMetrics.letterSpacing;
+                frame = mBitmapFont.getCharFrame(ch);
+                if (frame != null) {
+                    nextX += frame.getSize().x + mFontMetrics.letterSpacing;
+                } else {
+                    Log.e(TAG, "Missing Text Frame: " + ch, new Exception());
+                }
             }
 
             lineWidth = nextX;
@@ -279,27 +286,29 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             } else {
                 // get the current atlas frame
                 frame = mBitmapFont.getCharFrame(ch);
-                frameSize = frame.getSize();
+                if (frame != null) {
+                    frameSize = frame.getSize();
 
-                // apply the coordinates
-                if (mTextureCoordBuffer == null) {
-                    mTextureCoordBuffer = new TextureCoordBuffer(frame.getTextureCoords());
-                } else {
-                    mTextureCoordBuffer.setValues(frame.getTextureCoords());
+                    // apply the coordinates
+                    if (mTextureCoordBuffer == null) {
+                        mTextureCoordBuffer = new TextureCoordBuffer(frame.getTextureCoords());
+                    } else {
+                        mTextureCoordBuffer.setValues(frame.getTextureCoords());
+                    }
+                    mTextureCoordBuffer.apply(glState);
+
+                    // set position and size
+                    if (axisFlipped) {
+                        mQuadBuffer.setRectFlipVertical(nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
+                    } else {
+                        mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
+                    }
+                    // draw
+                    mQuadBuffer.draw(glState);
+
+                    // find next x
+                    nextX += frameSize.x + mFontMetrics.letterSpacing;
                 }
-                mTextureCoordBuffer.apply(glState);
-
-                // set position and size
-                if (axisFlipped) {
-                    mQuadBuffer.setRectFlipVertical(nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
-                } else {
-                    mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
-                }
-                // draw
-                mQuadBuffer.draw(glState);
-
-                // find next x
-                nextX += frameSize.x + mFontMetrics.letterSpacing;
             }
         }
 

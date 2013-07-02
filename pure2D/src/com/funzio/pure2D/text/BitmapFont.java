@@ -11,6 +11,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
@@ -36,7 +37,7 @@ public class BitmapFont {
 
         mFontMetrics = new BitmapFontMetrics(mTextOptions);
 
-        mRectPacker = new RectPacker(512, mTextOptions.inPo2);
+        mRectPacker = new RectPacker(Math.min(512, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
         mRectPacker.setQuickMode(true);
         mRectPacker.setRotationEnabled(false);
     }
