@@ -34,7 +34,6 @@ public class BmfTextObject extends BaseDisplayObject {
 
     public BmfTextObject() {
         super();
-        mAutoUpdateBounds = true; // XXX remove me
     }
 
     /**
@@ -103,7 +102,7 @@ public class BmfTextObject extends BaseDisplayObject {
     @Override
     public boolean update(final int deltaTime) {
         // update text bounds
-        if ((mInvalidateFlags & BOUNDS) != 0) {
+        if ((mInvalidateFlags & CHILDREN) != 0) {
             updateTextBounds();
         }
 
