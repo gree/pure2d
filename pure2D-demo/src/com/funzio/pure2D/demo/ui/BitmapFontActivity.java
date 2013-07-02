@@ -76,9 +76,6 @@ public class BitmapFontActivity extends StageActivity {
         // options.inScaleX = options.inScaleY = 0.75f;
         options.inTextPaint.setColor(Color.BLUE);
         options.inTextPaint.setTextSize(40);
-        // options.inTextPaint.setShader(shader)
-        // options.inTextPaint.setShadowLayer(45, 2, 2, Color.MAGENTA);
-        // options.inTextPaint.setTypeface(FontManager.getInstance().getFont("HelveticaRoundedLTStd-Bd.otf"));
         options.inPaddingX = options.inPaddingY = 2;
         options.inStrokePaint = new Paint(options.inTextPaint);
         options.inStrokePaint.setStrokeWidth(options.inTextPaint.getTextSize() / 5);
@@ -107,7 +104,8 @@ public class BitmapFontActivity extends StageActivity {
         // create object
         final TextBmf obj = new TextBmf();
         obj.setBitmapFont(mBitmapFont);
-        obj.setText("\"Hello World!\"\nHope you're listening...");
+        // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
+        obj.setText("\nHello World!\nHope you're listening...\n\"Come home\"");
 
         // random positions
         obj.setPosition(x, y);

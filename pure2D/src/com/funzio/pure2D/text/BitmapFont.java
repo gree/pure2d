@@ -7,12 +7,9 @@ import java.util.HashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint.FontMetrics;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.SystemClock;
-import android.util.Log;
 
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -31,14 +28,13 @@ public class BitmapFont {
     private HashMap<Character, AtlasFrame> mCharFrames = new HashMap<Character, AtlasFrame>();
     private RectPacker mRectPacker;
     private PointF[] mOffsets;
-    private FontMetrics mFontMetrics;
+    private BitmapFontMetrics mFontMetrics;
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
         mTextOptions = (textOptions == null) ? TextOptions.getDefault() : textOptions;
         mCharacters = characters;
 
-        mFontMetrics = new FontMetrics();
-        mTextOptions.inTextPaint.getFontMetrics(mFontMetrics);
+        mFontMetrics = new BitmapFontMetrics(mTextOptions);
 
         mRectPacker = new RectPacker(512, mTextOptions.inPo2);
         mRectPacker.setQuickMode(true);
@@ -80,7 +76,7 @@ public class BitmapFont {
         return mTextOptions;
     }
 
-    public FontMetrics getFontMetrics() {
+    public BitmapFontMetrics getFontMetrics() {
         return mFontMetrics;
     }
 
@@ -96,7 +92,8 @@ public class BitmapFont {
     protected Bitmap createBitmap(final int[] outDimensions) {
         final Rect bounds = new Rect();
 
-        long start = SystemClock.elapsedRealtime();
+        // long start = SystemClock.elapsedRealtime();
+
         // find the bounds
         final int length = mCharacters.length();
         float[] positions = new float[length * 2];
@@ -120,9 +117,10 @@ public class BitmapFont {
             positions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
             mOffsets[i] = new PointF(-bounds.left, -bounds.top);
         }
-        long time = SystemClock.elapsedRealtime() - start;
-        start = SystemClock.elapsedRealtime();
-        Log.e("long", "=> " + mRectPacker.getWidth() + " " + mRectPacker.getHeight() + " " + time + "ms");
+
+        // long time = SystemClock.elapsedRealtime() - start;
+        // start = SystemClock.elapsedRealtime();
+        // Log.e("long", "=> " + mRectPacker.getWidth() + " " + mRectPacker.getHeight() + " " + time + "ms");
 
         // create a new bitmap
         final Bitmap bitmap = Bitmap.createBitmap(mRectPacker.getWidth(), mRectPacker.getHeight(), mTextOptions.inPreferredConfig);
@@ -158,8 +156,8 @@ public class BitmapFont {
         // canvas.drawText(ch, textX, textY, mTextOptions.inTextPaint);
         // }
 
-        time = SystemClock.elapsedRealtime() - start;
-        Log.e("long", "draw time: " + time + "ms");
+        // time = SystemClock.elapsedRealtime() - start;
+        // Log.e("long", "draw time: " + time + "ms");
 
         if (outDimensions != null) {
             outDimensions[0] = bitmap.getWidth();

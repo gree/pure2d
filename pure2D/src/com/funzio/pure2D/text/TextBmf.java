@@ -3,7 +3,6 @@
  */
 package com.funzio.pure2D.text;
 
-import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.BaseDisplayObject;
@@ -18,9 +17,6 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  * @author long
  */
 public class TextBmf extends BaseDisplayObject {
-
-    protected static final String WHITESPACE = " ";
-
     protected BitmapFont mBitmapFont;
     protected TextOptions mTextOptions;
     protected BitmapFontMetrics mFontMetrics;
@@ -30,7 +26,6 @@ public class TextBmf extends BaseDisplayObject {
 
     protected String mText = "";
     protected RectF mTextBounds = new RectF();
-    protected Rect mTempRect = new Rect();
 
     private TextureCoordBuffer mTextureCoordBufferScaled;
     private boolean mTextureFlippedForAxis = false;
@@ -63,48 +58,14 @@ public class TextBmf extends BaseDisplayObject {
     public void setBitmapFont(final BitmapFont bitmapFont) {
         mBitmapFont = bitmapFont;
         mTextOptions = bitmapFont.getTextOptions();
-
-        // create font metrics with scale applied
-        mFontMetrics = new BitmapFontMetrics(bitmapFont.getFontMetrics());
-        mFontMetrics.applyScale(mTextOptions.inScaleX, mTextOptions.inScaleY);
+        mFontMetrics = mBitmapFont.getFontMetrics();
 
         mTexture = bitmapFont.getTexture();
         invalidate(TEXTURE | TEXTURE_COORDS);
     }
 
     protected void updateTextBounds() {
-        final int length = mText.length();
-        int start = 0;
-        int end = mText.indexOf(Characters.NEW_LINE);
-        if (end < 0) {
-            end = length - 1;
-        }
-        int lineChars = end - start + 1;
-        float baseline = 0;
-
-        mTextBounds.setEmpty();
-        // multi lines
-        do {
-            mTextOptions.inTextPaint.getTextBounds(mText, start, end, mTempRect);
-            // apply scale
-            mTempRect.left *= mTextOptions.inScaleX;
-            mTempRect.right *= mTextOptions.inScaleX;
-            mTempRect.top *= mTextOptions.inScaleY;
-            mTempRect.bottom *= mTextOptions.inScaleY;
-            // inflate by padding * lineChars
-            mTempRect.inset(-Math.round(mTextOptions.inPaddingX * 2 * mTextOptions.inScaleX * lineChars), -Math.round(mTextOptions.inPaddingY * 2 * mTextOptions.inScaleY));
-            mTempRect.offset(0, Math.round(baseline));
-            // merge to bounds
-            mTextBounds.union(mTempRect.left, mTempRect.top, mTempRect.right, mTempRect.bottom);
-
-            start = end + 2; // skip newline
-            end = mText.indexOf(Characters.NEW_LINE, start);
-            if (end < 0) {
-                end = length - 1;
-            }
-            lineChars = end - start + 1;
-            baseline += mFontMetrics.bottom - mFontMetrics.top;
-        } while (start < length);
+        mFontMetrics.getTextBounds(mText, mTextBounds);
 
         // auto update size
         mSize.x = mTextBounds.right - mTextBounds.left + 1;
@@ -153,7 +114,7 @@ public class TextBmf extends BaseDisplayObject {
                 ch = mText.charAt(i);
 
                 if (ch == Characters.SPACE) {
-                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing; // mWhitespaceWidth
+                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
                 } else if (ch == Characters.NEW_LINE) {
                     nextX = 0;
                     nextY -= (mFontMetrics.bottom - mFontMetrics.top);
