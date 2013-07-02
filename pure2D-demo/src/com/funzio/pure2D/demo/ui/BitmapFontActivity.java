@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class BitmapFontActivity extends StageActivity {
     private Sprite mAtlasSprite;
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
+    private PointF mTempPoint = new PointF();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class BitmapFontActivity extends StageActivity {
             public void onSurfaceCreated(final GL10 gl) {
 
                 mScene.setColor(COLOR_GREEN);
+                mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
 
                 // load the textures
                 loadTexture();
@@ -101,6 +104,8 @@ public class BitmapFontActivity extends StageActivity {
     // }
 
     private BmfTextObject addObject(final float x, final float y) {
+        mScene.screenToGlobal(x, y, mTempPoint);
+
         // create object
         final BmfTextObject obj = new BmfTextObject();
         obj.setBitmapFont(mBitmapFont);
@@ -108,7 +113,7 @@ public class BitmapFontActivity extends StageActivity {
         obj.setText("Hello World!\nHope you're listening...\n\"Come home\"");
 
         // random positions
-        obj.setPosition(x, y);
+        obj.setPosition(mTempPoint);
 
         // add to scene
         mScene.addChild(obj);
@@ -127,7 +132,7 @@ public class BitmapFontActivity extends StageActivity {
                     public void run() {
                         int len = event.getPointerCount();
                         for (int i = 0; i < len; i++) {
-                            addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                            addObject(event.getX(i), event.getY(i));
                         }
                     }
                 });

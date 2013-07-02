@@ -28,9 +28,8 @@ public class BmfTextObject extends BaseDisplayObject {
     protected String mText = "";
     protected RectF mTextBounds = new RectF();
 
-    private TextureCoordBuffer mTextureCoordBufferScaled;
-    private boolean mTextureFlippedForAxis = false;
-    protected float mTextureScaleX = 1, mTextureScaleY = 1;
+    private int mSceneAxis = -1;
+    private TextureCoordBuffer mTextureCoordBuffer;
 
     public BmfTextObject() {
         super();
@@ -115,9 +114,11 @@ public class BmfTextObject extends BaseDisplayObject {
             return false;
         }
 
-        if ((mInvalidateFlags & TEXTURE_COORDS) != 0) {
-            validateTextureCoordBuffer();
+        // find axis system
+        if (mSceneAxis < 0) {
+            mSceneAxis = getScene().getAxisSystem();
         }
+        final boolean axisFlipped = mSceneAxis == Scene.AXIS_TOP_LEFT;
 
         // blend mode
         glState.setBlendFunc(mBlendFunc);
@@ -134,6 +135,7 @@ public class BmfTextObject extends BaseDisplayObject {
             char ch;
             AtlasFrame frame;
             PointF frameSize;
+
             for (int i = 0; i < length; i++) {
                 ch = mText.charAt(i);
 
@@ -147,11 +149,19 @@ public class BmfTextObject extends BaseDisplayObject {
                     frameSize = frame.getSize();
 
                     // apply the coordinates
-                    mTextureCoordBufferScaled.setValues(frame.getTextureCoords());
-                    mTextureCoordBufferScaled.apply(glState);
+                    if (mTextureCoordBuffer == null) {
+                        mTextureCoordBuffer = new TextureCoordBuffer(frame.getTextureCoords());
+                    } else {
+                        mTextureCoordBuffer.setValues(frame.getTextureCoords());
+                    }
+                    mTextureCoordBuffer.apply(glState);
 
                     // set position and size
-                    mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
+                    if (axisFlipped) {
+                        mQuadBuffer.setRectFlipVertical(nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
+                    } else {
+                        mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
+                    }
                     // draw
                     mQuadBuffer.draw(glState);
 
@@ -167,37 +177,8 @@ public class BmfTextObject extends BaseDisplayObject {
         return true;
     }
 
-    /**
-     * validate texture coords
-     */
-    protected void validateTextureCoordBuffer() {
-        if (mTextureCoordBufferScaled == null) {
-            mTextureCoordBufferScaled = TextureCoordBuffer.getDefault();
-            mTextureFlippedForAxis = false;
-        }
-
-        // match texture coordinates with the Axis system
-        final Scene scene = getScene();
-        if (scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
-            // flip vertically
-            mTextureCoordBufferScaled.flipVertical();
-            mTextureFlippedForAxis = true;
-        }
-
-        // scale to match with the Texture scale, for optimization
-        // if (mTexture != null) {
-        // // diff check
-        // if ((mTexture.mCoordScaleX != mTextureScaleX || mTexture.mCoordScaleY != mTextureScaleY)) {
-        // // apply scale
-        // mTextureCoordBufferScaled.scale(mTexture.mCoordScaleX / mTextureScaleX, mTexture.mCoordScaleY / mTextureScaleY);
-        // // store for ref
-        // mTextureScaleX = mTexture.mCoordScaleX;
-        // mTextureScaleY = mTexture.mCoordScaleY;
-        // }
-        // }
-
-        // clear flag: texture coords
-        validate(TEXTURE_COORDS);
+    protected float convertY(final float y, final float size) {
+        return mSceneAxis == Scene.AXIS_BOTTOM_LEFT ? y : mSize.y - y - size;
     }
 
 }
