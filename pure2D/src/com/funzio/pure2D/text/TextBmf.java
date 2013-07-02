@@ -114,7 +114,7 @@ public class TextBmf extends BaseDisplayObject {
                 ch = mText.charAt(i);
 
                 if (ch == Characters.SPACE) {
-                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
+                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing + 1;
                 } else if (ch == Characters.NEW_LINE) {
                     nextX = 0;
                     nextY -= (mFontMetrics.bottom - mFontMetrics.top);
@@ -130,7 +130,7 @@ public class TextBmf extends BaseDisplayObject {
                     // draw
                     mQuadBuffer.draw(glState);
 
-                    nextX += frame.getSize().x + mFontMetrics.letterSpacing;
+                    nextX += frame.getSize().x + mFontMetrics.letterSpacing + 1;
                 }
             }
 
