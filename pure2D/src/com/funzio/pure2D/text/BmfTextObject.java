@@ -68,6 +68,29 @@ public class BmfTextObject extends BaseDisplayObject {
     protected void updateTextBounds() {
         mFontMetrics.getTextBounds(mText, mTextBounds);
 
+        // NOTE: there is a floating error in the native logic. So we need this for precision
+        final int length = mText.length();
+        float nextX = 0;
+        float width = 0;
+        char ch;
+        for (int i = 0; i < length; i++) {
+            ch = mText.charAt(i);
+
+            if (ch == Characters.SPACE) {
+                nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
+            } else if (ch == Characters.NEW_LINE) {
+                nextX = 0;
+            } else {
+                nextX += mBitmapFont.getCharFrame(ch).getSize().x + mFontMetrics.letterSpacing;
+            }
+
+            if (nextX > width) {
+                width = nextX;
+            }
+        }
+        // fix the right
+        mTextBounds.right = mTextBounds.left + width - 1;
+
         // auto update size
         mSize.x = mTextBounds.right - mTextBounds.left + 1;
         mSize.y = mTextBounds.bottom - mTextBounds.top + 1;

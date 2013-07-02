@@ -17,8 +17,8 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
-import com.funzio.pure2D.text.Characters;
 import com.funzio.pure2D.text.BmfTextObject;
+import com.funzio.pure2D.text.Characters;
 import com.funzio.pure2D.text.TextOptions;
 
 public class BitmapFontActivity extends StageActivity {
