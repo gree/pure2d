@@ -28,7 +28,7 @@ public class BitmapFontMetrics extends FontMetrics {
         setTextOptions(options);
     }
 
-    public void setTextOptions(final TextOptions options) {
+    protected void setTextOptions(final TextOptions options) {
         mTextOptions = options;
         options.inTextPaint.getFontMetrics(this);
 
@@ -41,6 +41,7 @@ public class BitmapFontMetrics extends FontMetrics {
 
         letterPaddingX = options.inPaddingX * options.inScaleX;
         letterPaddingY = options.inPaddingY * options.inScaleY;
+        letterSpacing *= options.inScaleX;
         whitespace = options.inTextPaint.measureText(String.valueOf(Characters.SPACE)) * options.inScaleX + letterPaddingX * 2;
     }
 
@@ -71,7 +72,7 @@ public class BitmapFontMetrics extends FontMetrics {
             mTempRect.top *= mTextOptions.inScaleY;
             mTempRect.bottom *= mTextOptions.inScaleY;
             // inflate by padding * lineChars
-            mTempRect.inset(-Math.round(letterPaddingX * 2 * lineLength), -Math.round(letterPaddingY * 2));
+            mTempRect.inset(-Math.round(letterPaddingX * 2 * lineLength + letterSpacing * (lineLength - 1) * 0.5f), -Math.round(letterPaddingY * 2));
             mTempRect.offset(0, Math.round(baseline));
             // merge to bounds
             textBounds.union(mTempRect.left, mTempRect.top, mTempRect.right, mTempRect.bottom);

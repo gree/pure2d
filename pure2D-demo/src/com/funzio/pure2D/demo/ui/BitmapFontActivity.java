@@ -105,7 +105,7 @@ public class BitmapFontActivity extends StageActivity {
         final TextBmf obj = new TextBmf();
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
-        obj.setText("\nHello World!\nHope you're listening...\n\"Come home\"");
+        obj.setText("Hello World!\nHope you're listening...\n\"Come home\"");
 
         // random positions
         obj.setPosition(x, y);
