@@ -72,8 +72,8 @@ public class BitmapFontMetrics extends FontMetrics {
             mTempRect.top *= mTextOptions.inScaleY;
             mTempRect.bottom *= mTextOptions.inScaleY;
             // inflate by padding * lineChars
-            mTempRect.inset(-Math.round(letterPaddingX * lineLength + letterSpacing * (lineLength - 1) * 0.5f), -Math.round(letterPaddingY));
-            mTempRect.offset(0, Math.round(baseline));
+            mTempRect.inset(-(int) Math.ceil(letterPaddingX * lineLength + letterSpacing * (lineLength - 1) * 0.5f), -(int) Math.ceil(letterPaddingY));
+            mTempRect.offset(0, (int) Math.ceil(baseline));
             // merge to bounds
             textBounds.union(mTempRect.left, mTempRect.top, mTempRect.right, mTempRect.bottom);
 

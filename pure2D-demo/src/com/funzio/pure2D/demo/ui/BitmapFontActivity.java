@@ -18,7 +18,7 @@ import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.Characters;
-import com.funzio.pure2D.text.TextBmf;
+import com.funzio.pure2D.text.BmfTextObject;
 import com.funzio.pure2D.text.TextOptions;
 
 public class BitmapFontActivity extends StageActivity {
@@ -73,7 +73,7 @@ public class BitmapFontActivity extends StageActivity {
 
         final TextOptions options = TextOptions.getDefault();
         options.inTextPaint.setTypeface(mTypeface);
-        options.inScaleX = options.inScaleY = 0.5f;
+        // options.inScaleX = options.inScaleY = 0.75f;
         options.inTextPaint.setColor(Color.BLUE);
         options.inTextPaint.setTextSize(40);
         options.inPaddingX = options.inPaddingY = 4;
@@ -100,9 +100,9 @@ public class BitmapFontActivity extends StageActivity {
     // return obj;
     // }
 
-    private TextBmf addObject(final float x, final float y) {
+    private BmfTextObject addObject(final float x, final float y) {
         // create object
-        final TextBmf obj = new TextBmf();
+        final BmfTextObject obj = new BmfTextObject();
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
         obj.setText("Hello World!\nHope you're listening...\n\"Come home\"");

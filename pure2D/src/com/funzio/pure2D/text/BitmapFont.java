@@ -111,13 +111,13 @@ public class BitmapFont {
             bounds.inset(-Math.round(mFontMetrics.letterPaddingX), -Math.round(mFontMetrics.letterPaddingY));
 
             // occupy
-            charRect = mRectPacker.occupy(Math.round((bounds.width() + 1) * mTextOptions.inScaleX), Math.round((bounds.height() + 1) * mTextOptions.inScaleY));
+            charRect = mRectPacker.occupy(Math.round((bounds.right - bounds.left + 1) * mTextOptions.inScaleX), Math.round((bounds.bottom - bounds.top + 1) * mTextOptions.inScaleY));
 
             // find positions
             positions[i * 2] = charRect.left / mTextOptions.inScaleX - bounds.left;
             positions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
             // save offset
-            mOffsets[i] = new PointF(-bounds.left * mTextOptions.inScaleX, -bounds.top * mTextOptions.inScaleY);
+            mOffsets[i] = new PointF(-Math.round(bounds.left * mTextOptions.inScaleX), -Math.round(bounds.top * mTextOptions.inScaleY));
         }
 
         // long time = SystemClock.elapsedRealtime() - start;

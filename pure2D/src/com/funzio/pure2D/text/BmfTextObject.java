@@ -3,6 +3,7 @@
  */
 package com.funzio.pure2D.text;
 
+import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.BaseDisplayObject;
@@ -16,7 +17,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 /**
  * @author long
  */
-public class TextBmf extends BaseDisplayObject {
+public class BmfTextObject extends BaseDisplayObject {
     protected BitmapFont mBitmapFont;
     protected TextOptions mTextOptions;
     protected BitmapFontMetrics mFontMetrics;
@@ -31,7 +32,7 @@ public class TextBmf extends BaseDisplayObject {
     private boolean mTextureFlippedForAxis = false;
     protected float mTextureScaleX = 1, mTextureScaleY = 1;
 
-    public TextBmf() {
+    public BmfTextObject() {
         super();
         mAutoUpdateBounds = true; // XXX remove me
     }
@@ -110,6 +111,7 @@ public class TextBmf extends BaseDisplayObject {
             float nextX = 0, nextY = mTextBounds.bottom;
             char ch;
             AtlasFrame frame;
+            PointF frameSize;
             for (int i = 0; i < length; i++) {
                 ch = mText.charAt(i);
 
@@ -120,17 +122,18 @@ public class TextBmf extends BaseDisplayObject {
                     nextY -= (mFontMetrics.bottom - mFontMetrics.top);
                 } else {
                     frame = mBitmapFont.getCharFrame(ch);
+                    frameSize = frame.getSize();
 
                     // apply the coordinates
                     mTextureCoordBufferScaled.setValues(frame.getTextureCoords());
                     mTextureCoordBufferScaled.apply(glState);
 
                     // set position and size
-                    mQuadBuffer.setRect(nextX, nextY - (frame.getSize().y - frame.mOffset.y), frame.getSize().x, frame.getSize().y);
+                    mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
                     // draw
                     mQuadBuffer.draw(glState);
 
-                    nextX += frame.getSize().x + mFontMetrics.letterSpacing;
+                    nextX += frameSize.x + mFontMetrics.letterSpacing;
                 }
             }
 
