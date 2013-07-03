@@ -37,6 +37,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     protected Sprite mCacheSprite;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
+    protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
 
     // clipping
     private boolean mClippingEnabled = false;
@@ -136,9 +137,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         }
 
         // check cache enabled
-        if (mCacheEnabled) {
+        if (mCacheEnabled && ((mInvalidateFlags & CHILDREN) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
             // check invalidate flags
-            if ((mInvalidateFlags & CHILDREN) != 0) {
+            if ((mInvalidateFlags & (CACHE | CHILDREN)) != 0) {
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -164,6 +165,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 mCacheFrameBuffer.clear();
                 drawChildren(glState);
                 mCacheFrameBuffer.unbind();
+
+                // validate cache
+                validate(CACHE);
             }
 
             // now draw the cache
@@ -171,6 +175,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         } else {
             // draw the children directly
             drawChildren(glState);
+
+            // invalidate cache
+            invalidate(CACHE);
         }
 
         if (mClippingEnabled) {
@@ -556,7 +563,23 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     public void setCacheEnabled(final boolean cacheEnabled) {
         mCacheEnabled = cacheEnabled;
 
-        invalidate(CHILDREN);
+        invalidate(CACHE);
+    }
+
+    public int getCachePolicy() {
+        return mCachePolicy;
+    }
+
+    /**
+     * Set how to you want to cache
+     * 
+     * @param cachePolicy
+     * @see #Cacheable
+     */
+    public void setCachePolicy(final int cachePolicy) {
+        mCachePolicy = cachePolicy;
+
+        invalidate(CACHE);
     }
 
     public int getCacheProjection() {
@@ -566,7 +589,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     public void setCacheProjection(final int cacheProjection) {
         mCacheProjection = cacheProjection;
 
-        invalidate(CHILDREN);
+        invalidate(CACHE);
     }
 
     // public ArrayList<DisplayObject> getChildrenDisplayOrder() {
