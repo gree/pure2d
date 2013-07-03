@@ -117,8 +117,8 @@ public class BaseScene implements Scene {
 
         // size
         final Rect stageRect = mStage.getRect();
-        mSize.x = stageRect.width();
-        mSize.y = stageRect.height();
+        mSize.x = stageRect.right - stageRect.left + 1;
+        mSize.y = stageRect.bottom - stageRect.top + 1;
     }
 
     public void setAxisSystem(final int value) {
@@ -787,9 +787,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             screen = mCamera.globalToLocal(globalX, globalY);
 
-            final RectF cameraRect = mCamera.getRect();
-            screen.x /= cameraRect.width() / stageRect.width();
-            screen.y /= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            screen.x /= cameraSize.x / mSize.x;
+            screen.y /= cameraSize.y / mSize.y;
         } else {
             screen = new PointF(globalX, globalY);
         }
@@ -818,9 +818,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             mCamera.globalToLocal(globalX, globalY, result);
 
-            final RectF cameraRect = mCamera.getRect();
-            result.x /= cameraRect.width() / stageRect.width();
-            result.y /= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            result.x /= cameraSize.x / mSize.x;
+            result.y /= cameraSize.y / mSize.y;
         } else {
             result.x = globalX;
             result.y = globalY;
@@ -866,9 +866,9 @@ public class BaseScene implements Scene {
 
         // check the camera
         if (mCamera != null) {
-            final RectF cameraRect = mCamera.getRect();
-            localX *= cameraRect.width() / stageRect.width();
-            localY *= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            localX *= cameraSize.x / mSize.x;
+            localY *= cameraSize.y / mSize.y;
             return mCamera.localToGlobal(localX, localY);
         } else {
             return new PointF(localX, localY);
@@ -894,9 +894,9 @@ public class BaseScene implements Scene {
 
         // check the camera
         if (mCamera != null) {
-            final RectF cameraRect = mCamera.getRect();
-            localX *= cameraRect.width() / stageRect.width();
-            localY *= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            localX *= cameraSize.x / mSize.x;
+            localY *= cameraSize.y / mSize.y;
             mCamera.localToGlobal(localX, localY, result);
         } else {
             result.x = localX;
@@ -935,13 +935,16 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             mCamera.globalToLocal(globalX, globalY, result);
 
-            final Rect stageRect = mStage.getRect();
-            final RectF cameraRect = mCamera.getRect();
-            result.x /= cameraRect.width() / stageRect.width();
-            result.y /= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            result.x /= cameraSize.x / mSize.x;
+            result.y /= cameraSize.y / mSize.y;
         } else {
             result.x = globalX;
             result.y = globalY;
+        }
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            result.y = mSize.y - result.y;
         }
     }
 
@@ -956,10 +959,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             mCamera.globalToLocal(globalRect, result);
 
-            final Rect stageRect = mStage.getRect();
-            final RectF cameraRect = mCamera.getRect();
-            final float scaleX = cameraRect.width() / stageRect.width();
-            final float scaleY = cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            final float scaleX = cameraSize.x / mSize.x;
+            final float scaleY = cameraSize.y / mSize.y;
             result.left /= scaleX;
             result.top /= scaleY;
             result.right /= scaleX;
@@ -970,6 +972,23 @@ public class BaseScene implements Scene {
             result.right = globalRect.right;
             result.bottom = globalRect.bottom;
         }
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            final float height = result.bottom - result.top + 1;
+            result.top = convertY(result.top, height);
+            result.bottom = result.top + height - 1;
+        }
+    }
+
+    /**
+     * Convert y based on the Axis system
+     * 
+     * @param y
+     * @param size
+     * @return
+     */
+    protected float convertY(final float y, final float size) {
+        return mAxisSystem == Scene.AXIS_TOP_LEFT ? mSize.y - y - size : y;
     }
 
     /**

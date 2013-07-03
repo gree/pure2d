@@ -63,10 +63,11 @@ public final class R {
         public static final int btn_air_attackers=0x7f080040;
         public static final int btn_animations=0x7f080038;
         public static final int btn_bezier_animation=0x7f080017;
+        public static final int btn_bitmap_font=0x7f080085;
         public static final int btn_blending=0x7f080082;
         public static final int btn_bouncing_objects=0x7f080048;
         public static final int btn_buffers=0x7f080032;
-        public static final int btn_button=0x7f080085;
+        public static final int btn_button=0x7f080086;
         public static final int btn_camera=0x7f080034;
         public static final int btn_casino=0x7f08003d;
         public static final int btn_code=0x7f080066;
@@ -90,7 +91,7 @@ public final class R {
         public static final int btn_image_sequence=0x7f080013;
         public static final int btn_json_atlas=0x7f080012;
         public static final int btn_jumping_objects=0x7f080047;
-        public static final int btn_lists=0x7f080086;
+        public static final int btn_lists=0x7f080087;
         public static final int btn_load=0x7f08004f;
         public static final int btn_loader_async=0x7f08002e;
         public static final int btn_loader_service=0x7f08002d;
@@ -142,9 +143,9 @@ public final class R {
         public static final int cb_textures=0x7f08007c;
         public static final int col1=0x7f080043;
         public static final int col2=0x7f080044;
-        public static final int debug=0x7f080088;
+        public static final int debug=0x7f080089;
         public static final int nova_menu_layout=0x7f080042;
-        public static final int pause=0x7f080087;
+        public static final int pause=0x7f080088;
         public static final int radio_1=0x7f08006d;
         public static final int radio_2=0x7f08006e;
         public static final int radio_3=0x7f08006f;
@@ -261,6 +262,7 @@ public final class R {
         public static final int b52=0x7f050029;
         public static final int background=0x7f050076;
         public static final int bezier_animation=0x7f050067;
+        public static final int bitmap_font=0x7f05008c;
         public static final int black=0x7f050073;
         public static final int black_explosion=0x7f05001b;
         public static final int blending=0x7f050033;

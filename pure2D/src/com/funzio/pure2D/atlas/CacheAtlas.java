@@ -44,6 +44,7 @@ public class CacheAtlas extends Atlas {
      */
     private void initBuffer(final int maxWidth) {
         mPacker = new RectPacker(maxWidth, !Pure2D.GL_NPOT_TEXTURE_SUPPORTED); // !Pure2D.GL_NPOT_TEXTURE_SUPPORTED
+        mPacker.setQuickMode(true);
         final int frames = mTarget.getNumFrames();
         for (int i = 0; i < frames; i++) {
             final RectF frameRect = mTarget.getFrameRect(i);
@@ -101,6 +102,16 @@ public class CacheAtlas extends Atlas {
                 frame.rotateCW();
             }
         }
+
+        // debug: draw dots
+        // final int pixelWidth = 2;
+        // final Rectangular r = new Rectangular();
+        // r.setSize(pixelWidth, pixelWidth);
+        // final TreeSet<Point> hots = mPacker.getHotPoints();
+        // for (Point p : hots) {
+        // r.setPosition(p.x, mHeight - p.y - pixelWidth);
+        // r.draw(mGLState);
+        // }
 
         // done
         mFrameBuffer.unbind();

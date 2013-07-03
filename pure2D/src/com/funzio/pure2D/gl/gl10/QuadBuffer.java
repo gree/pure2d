@@ -45,6 +45,24 @@ public class QuadBuffer extends VertexBuffer {
         setValues(mValues);
     }
 
+    public void setRectFlipVertical(final float x, final float y, final float width, final float height) {
+        mX = x;
+        mY = y;
+        mWidth = width;
+        mHeight = height;
+
+        mValues[2] = x;
+        mValues[3] = y + height;
+        mValues[0] = x;
+        mValues[1] = y;
+        mValues[6] = x + width;
+        mValues[7] = y + height;
+        mValues[4] = x + width;
+        mValues[5] = y;
+
+        setValues(mValues);
+    }
+
     public void setSize(final float width, final float height) {
         mWidth = width;
         mHeight = height;

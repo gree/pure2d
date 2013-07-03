@@ -29,5 +29,6 @@ public class UIMenuActivity extends MenuActivity {
         addMenu(R.id.btn_vwheel, VWheelActivity.class);
         addMenu(R.id.btn_hwheel, HWheelActivity.class);
         addMenu(R.id.btn_lists, ListActivity.class);
+        addMenu(R.id.btn_bitmap_font, BitmapFontActivity.class);
     }
 }
