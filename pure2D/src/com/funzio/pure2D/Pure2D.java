@@ -95,7 +95,7 @@ public class Pure2D {
      * @param color
      * @hide
      */
-    protected static void drawDebugRect(final GLState glState, final float x1, final float y1, final float x2, final float y2, final int flag) {
+    public static void drawDebugRect(final GLState glState, final float x1, final float y1, final float x2, final float y2, final int flag) {
         DEBUG_VERTICES[0] = x1;
         DEBUG_VERTICES[1] = y1;
         DEBUG_VERTICES[2] = x1;

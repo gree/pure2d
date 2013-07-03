@@ -131,7 +131,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             }
 
             // set the new scissor rect, only take position and scale into account!
-            glState.setScissor(Math.round(mClipStageRect.left), Math.round(mClipStageRect.top), Math.round(mClipStageRect.width()), Math.round(mClipStageRect.height()));
+            glState.setScissor(Math.round(mClipStageRect.left), Math.round(mClipStageRect.top), Math.round(mClipStageRect.right - mClipStageRect.left + 1),
+                    Math.round(mClipStageRect.bottom - mClipStageRect.top + 1));
         }
 
         // check cache enabled
