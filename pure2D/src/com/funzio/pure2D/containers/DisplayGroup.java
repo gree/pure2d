@@ -136,9 +136,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                     Math.round(mClipStageRect.bottom - mClipStageRect.top + 1));
         }
 
-        // check cache enabled
+        // check cache enabled, only draw cache when Children stop changing or the policy equals CACHE_WHEN_CHILDREN_CHANGED
         if (mCacheEnabled && ((mInvalidateFlags & CHILDREN) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
-            // check invalidate flags
+            // check invalidate flags, either CACHE or CHILDREN
             if ((mInvalidateFlags & (CACHE | CHILDREN)) != 0) {
 
                 // init frame buffer
