@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.MoveAnimator;
@@ -34,12 +35,14 @@ public class BitmapFontActivity extends StageActivity {
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
     private PointF mTempPoint = new PointF();
+    private boolean mCacheEnabled = true;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // need to get the GL reference first
+        // mScene.setRenderContinueously(true);
         mScene.setListener(new Scene.Listener() {
 
             @Override
@@ -66,7 +69,7 @@ public class BitmapFontActivity extends StageActivity {
      */
     @Override
     protected int getLayout() {
-        return R.layout.stage_atlas;
+        return R.layout.stage_bmf;
     }
 
     private void loadTexture() {
@@ -113,7 +116,7 @@ public class BitmapFontActivity extends StageActivity {
         // create object
         final BmfTextObject obj = new BmfTextObject();
         obj.setTextAlignment(Alignment.HORIZONTAL_CENTER);
-        obj.setCacheEnabled(true); // for perf on large text
+        obj.setCacheEnabled(mCacheEnabled); // for perf on large text
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
         obj.setText("Hello World!\nHope you're listening...\n\"Come home\"\n#" + RANDOM.nextInt(999999));
@@ -160,10 +163,27 @@ public class BitmapFontActivity extends StageActivity {
     }
 
     public void onClickAtlas(final View view) {
-        if (view.getId() == R.id.cb_show_atlas) {
-            if (mAtlasSprite != null) {
-                mAtlasSprite.setVisible(((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked());
-            }
+        if (mAtlasSprite != null) {
+            mAtlasSprite.setVisible(((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked());
         }
+    }
+
+    public void onClickCache(final View view) {
+        mCacheEnabled = ((CheckBox) view).isChecked();
+
+        mScene.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                final int size = mScene.getNumChildren();
+                for (int i = 0; i < size; i++) {
+                    final DisplayObject child = mScene.getChildAt(i);
+                    if (child instanceof BmfTextObject) {
+                        ((BmfTextObject) child).setCacheEnabled(mCacheEnabled);
+                    }
+                }
+            }
+        });
+
     }
 }

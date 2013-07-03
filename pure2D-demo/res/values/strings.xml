@@ -160,5 +160,6 @@
     <string name="motion_trail_plot">Motion Trail Plot</string>
     <string name="bounds_wireframe">Bounds &amp; Wireframe</string>
     <string name="bitmap_font">Bitmap Font</string>
+    <string name="cache">Cache</string>
 
 </resources>
