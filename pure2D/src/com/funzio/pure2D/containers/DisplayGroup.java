@@ -151,7 +151,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                     // init sprite
                     if (mCacheSprite == null) {
                         mCacheSprite = new Sprite();
-                        mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
+                        // framebuffer is inverted
+                        if (glState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                            mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
+                        }
                     }
                     mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
                 }
