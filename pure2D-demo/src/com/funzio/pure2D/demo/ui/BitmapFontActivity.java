@@ -60,7 +60,7 @@ public class BitmapFontActivity extends StageActivity {
                     mScene.addChild(mAtlasSprite);
 
                     addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                    // for (int i = 0; i < 500; i++) {
+                    // for (int i = 0; i < 300; i++) {
                     // addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
                     // }
                 }
