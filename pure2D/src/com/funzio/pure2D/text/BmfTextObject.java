@@ -5,6 +5,8 @@ package com.funzio.pure2D.text;
 
 import java.util.ArrayList;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
@@ -192,7 +194,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                         mCacheFrameBuffer.getTexture().unload();
                     }
                     mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
-
+                    mCacheFrameBuffer.getTexture().setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output
                     // init sprite
                     if (mCacheSprite == null) {
                         mCacheSprite = new Sprite();

@@ -41,8 +41,8 @@ public class BitmapFontActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mScene.setRenderContinueously(true);
         // need to get the GL reference first
-        // mScene.setRenderContinueously(true);
         mScene.setListener(new Scene.Listener() {
 
             @Override
@@ -58,6 +58,11 @@ public class BitmapFontActivity extends StageActivity {
                     mAtlasSprite = new Sprite();
                     mAtlasSprite.setTexture(mBitmapFont.getTexture());
                     mScene.addChild(mAtlasSprite);
+
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // for (int i = 0; i < 500; i++) {
+                    // addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                    // }
                 }
             }
         });
