@@ -5,6 +5,8 @@ package com.funzio.pure2D.text;
 
 import java.util.HashMap;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
@@ -54,6 +56,7 @@ public class BitmapFont {
             final Bitmap bitmap = createBitmap(dimensions);
             mTexture = new Texture(glState);
             mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
+            mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output
 
             AtlasFrame frame;
             final int length = mCharacters.length();

@@ -25,8 +25,8 @@ public class Texture {
     protected GLState mGLState;
     protected GL10 mGL;
 
-    private int mMinFilter;
-    private int mMagFilter;
+    private int mMinFilter = GL10.GL_NEAREST;
+    private int mMagFilter = GL10.GL_NEAREST;
     private int mRepeatS;
     private int mRepeatT;
     private boolean mHasMipmaps = false;
@@ -103,7 +103,7 @@ public class Texture {
             if (mHasMipmaps) {
                 mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
             } else {
-                setFilters(GL10.GL_NEAREST, GL10.GL_NEAREST);
+                setFilters(mMinFilter, mMagFilter);
             }
 
             // mGL.glBindTexture(GL10.GL_TEXTURE_2D, 0);
@@ -137,8 +137,8 @@ public class Texture {
 
         if (mTextureID != 0) {
             mGLState.bindTexture(this);
-            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, mMinFilter);
-            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, mMagFilter);
+            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, minFilter);
+            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, magFilter);
         }
     }
 
