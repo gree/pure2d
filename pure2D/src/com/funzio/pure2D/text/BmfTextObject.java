@@ -211,7 +211,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                 mCacheFrameBuffer.unbind();
 
                 // validate cache
-                mInvalidateFlags &= ~CACHE;
+                validate(CACHE);
             }
 
             // now draw the cache
