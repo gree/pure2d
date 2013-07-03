@@ -17,6 +17,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.shapes.DummyDrawer;
 import com.funzio.pure2D.shapes.Sprite;
 
 /**
@@ -34,7 +35,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
-    protected Sprite mCacheSprite;
+    protected Sprite mCacheDrawer;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
     protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
@@ -149,15 +150,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                     }
                     mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
 
-                    // init sprite
-                    if (mCacheSprite == null) {
-                        mCacheSprite = new Sprite();
+                    // init drawer
+                    if (mCacheDrawer == null) {
+                        mCacheDrawer = new DummyDrawer();
                         // framebuffer is inverted
                         if (glState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
-                            mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
+                            mCacheDrawer.flipTextureCoordBuffer(FLIP_Y);
                         }
                     }
-                    mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
+                    mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
                 }
 
                 // cache to framebuffer
@@ -171,7 +172,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             }
 
             // now draw the cache
-            mCacheSprite.draw(glState);
+            mCacheDrawer.draw(glState);
         } else {
             // draw the children directly
             drawChildren(glState);
@@ -276,7 +277,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     public void dispose() {
         super.dispose();
 
+        // clear cache
         clearCache();
+
+        if (mCacheDrawer != null) {
+            mCacheDrawer.dispose();
+            mCacheDrawer = null;
+        }
     }
 
     public boolean addChild(final DisplayObject child) {

@@ -21,6 +21,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.shapes.DummyDrawer;
 import com.funzio.pure2D.shapes.Sprite;
 
 /**
@@ -44,7 +45,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
-    protected Sprite mCacheSprite;
+    protected Sprite mCacheDrawer;
     protected boolean mCacheEnabled = false;
 
     // protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
@@ -92,6 +93,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     }
 
     public void updateTextBounds() {
+        // find the bounds, this is not 100% precised, so we need the below logic
         mFontMetrics.getTextBounds(mText, mTextBounds);
 
         // init line with
@@ -99,7 +101,6 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             mLineWidths = new ArrayList<Float>();
         }
 
-        // NOTE: there is a floating error in the native logic. So we need this for precision
         final int length = mText.length();
         float nextX = 0;
         float width = 0;
@@ -143,7 +144,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             mLineWidths.set(lineIndex, lineWidth);
         }
 
-        // fix the right for better precision
+        // NOTE: there is a floating error in the native logic. So we need this for precision
         mTextBounds.right = mTextBounds.left + width - 1;
 
         // auto update size
@@ -195,15 +196,15 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                     }
                     mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
                     mCacheFrameBuffer.getTexture().setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output
-                    // init sprite
-                    if (mCacheSprite == null) {
-                        mCacheSprite = new Sprite();
+                    // init drawer
+                    if (mCacheDrawer == null) {
+                        mCacheDrawer = new DummyDrawer();
                         // framebuffer is inverted
                         if (mSceneAxis == Scene.AXIS_BOTTOM_LEFT) {
-                            mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
+                            mCacheDrawer.flipTextureCoordBuffer(FLIP_Y);
                         }
                     }
-                    mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
+                    mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
                 }
 
                 // cache to framebuffer
@@ -217,7 +218,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             }
 
             // now draw the cache
-            mCacheSprite.draw(glState);
+            mCacheDrawer.draw(glState);
         } else {
             // draw the children directly
             drawChildren(glState);
@@ -363,7 +364,13 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             mLineWidths = null;
         }
 
+        // clear cache
         clearCache();
+
+        if (mCacheDrawer != null) {
+            mCacheDrawer.dispose();
+            mCacheDrawer = null;
+        }
     }
 
     protected float convertY(final float y, final float size) {
