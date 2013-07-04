@@ -14,13 +14,18 @@ public class DummyDrawer extends Sprite {
 
     @Override
     /**
-     * This only draws the children without applying any transformation, color..., for drawing cache purpose
+     * This only draws the children without applying any transformations, for drawing cache purpose
      */
     public boolean draw(final GLState glState) {
         // texture coordinates changed?
         if ((mInvalidateFlags & InvalidateFlags.TEXTURE_COORDS) != 0) {
             validateTextureCoordBuffer();
         }
+
+        // blend mode
+        glState.setBlendFunc(mBlendFunc);
+        // color and alpha
+        glState.setColor(getBlendColor());
 
         // texture
         if (mTexture != null) {
