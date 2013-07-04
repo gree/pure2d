@@ -27,6 +27,14 @@ public class DummyDrawer extends Sprite {
         // color and alpha
         glState.setColor(getBlendColor());
 
+        // color buffer
+        if (mColorBuffer == null) {
+            glState.setColorArrayEnabled(false);
+        } else {
+            // apply color buffer
+            mColorBuffer.apply(glState);
+        }
+
         // texture
         if (mTexture != null) {
             // bind the texture
