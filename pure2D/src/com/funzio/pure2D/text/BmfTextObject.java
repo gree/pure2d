@@ -341,6 +341,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
      * @param cacheEnabled
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
+        // diff check
+        if (mCacheEnabled == cacheEnabled) {
+            return;
+        }
+
         mCacheEnabled = cacheEnabled;
 
         invalidate(CACHE);
