@@ -18,7 +18,6 @@ import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.DummyDrawer;
-import com.funzio.pure2D.shapes.Sprite;
 
 /**
  * @author long
@@ -35,7 +34,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
-    protected Sprite mCacheDrawer;
+    protected DummyDrawer mCacheDrawer;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
     protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
@@ -138,9 +137,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         }
 
         // check cache enabled, only draw cache when Children stop changing or the policy equals CACHE_WHEN_CHILDREN_CHANGED
-        if (mCacheEnabled && ((mInvalidateFlags & CHILDREN) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
+        if (mCacheEnabled && ((mInvalidateFlags & (CHILDREN | VISUAL)) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
             // check invalidate flags, either CACHE or CHILDREN
-            if ((mInvalidateFlags & (CACHE | CHILDREN)) != 0) {
+            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0) {
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -161,7 +160,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                     mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
                 }
 
-                // cache to framebuffer
+                // cache to FBO
                 mCacheFrameBuffer.bind(mCacheProjection);
                 mCacheFrameBuffer.clear();
                 drawChildren(glState);
@@ -171,6 +170,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 validate(CACHE);
             }
 
+            // no color buffer supported
+            glState.setColorArrayEnabled(false);
+            // clear color
+            glState.setColor(null);
+            // clear blending
+            glState.setBlendFunc(null);
             // now draw the cache
             mCacheDrawer.draw(glState);
         } else {

@@ -177,9 +177,9 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         }
 
         // blend mode
-        glState.setBlendFunc(mBlendFunc);
+        glState.setBlendFunc(getInheritedBlendFunc());
         // color and alpha
-        glState.setColor(getBlendColor());
+        glState.setColor(getInheritedColor());
 
         // texture
         if (mTexture != null) {
@@ -207,7 +207,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
             // alpha interpolation. This can be slow!
             if (alphaStep != 0) {
                 mAlpha -= alphaStep;
-                glState.setColor(getBlendColor());
+                glState.setColor(getInheritedColor());
             }
 
             // scale interpolation
