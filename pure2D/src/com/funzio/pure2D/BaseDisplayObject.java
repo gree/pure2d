@@ -112,9 +112,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         drawStart(glState);
 
         // blend mode
-        glState.setBlendFunc(mBlendFunc);
+        glState.setBlendFunc(getInheritedBlendFunc());
         // color and alpha
-        glState.setColor(getBlendColor());
+        glState.setColor(getInheritedColor());
 
         // draw the content
         drawChildren(glState);
@@ -643,7 +643,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    final protected GLColor getBlendColor() {
+    final protected GLColor getInheritedColor() {
         if (BlendModes.isInterpolate(mBlendFunc)) {
             if (mBlendColor == null) {
                 // init
@@ -673,13 +673,23 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // multiply by parent's attributes
         if (mParent != null && mParent instanceof BaseDisplayObject) {
             final BaseDisplayObject parent = (BaseDisplayObject) mParent;
-            final GLColor parentColor = parent.getBlendColor();
+            final GLColor parentColor = parent.getInheritedColor();
             if (parentColor != null) {
                 mBlendColor.multiply(parentColor);
             }
         }
 
         return mBlendColor;
+    }
+
+    final protected BlendFunc getInheritedBlendFunc() {
+        if (mBlendFunc != null) {
+            return mBlendFunc;
+        } else if (mParent != null && mParent instanceof DisplayObject) {
+            return ((DisplayObject) mParent).getBlendFunc();
+        } else {
+            return null;
+        }
     }
 
     /**

@@ -101,20 +101,6 @@ public class BitmapFontActivity extends StageActivity {
         mBitmapFont.load(mScene.getGLState());
     }
 
-    // private Sprite addObject(final float x, final float y) {
-    // // create object
-    // final Sprite obj = new Sprite();
-    // obj.setAtlasFrame(mBitmapFont.getCharFrame(mBitmapFont.getCharacters().charAt(RANDOM.nextInt(26 * 2))));
-    //
-    // // random positions
-    // obj.setPosition(x, y);
-    //
-    // // add to scene
-    // mScene.addChild(obj);
-    //
-    // return obj;
-    // }
-
     private BmfTextObject addObject(final float x, final float y) {
         mScene.screenToGlobal(x, y, mTempPoint);
 
@@ -126,6 +112,8 @@ public class BitmapFontActivity extends StageActivity {
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
         obj.setText("Hello World!\nHope you're listening...\n\"Come home\"\n#" + RANDOM.nextInt(999999));
         obj.setColor(new GLColor(1, RANDOM.nextFloat(), RANDOM.nextFloat(), 1f));
+        // obj.setAlpha(0.5f);
+        // obj.setBlendFunc(BlendModes.SCREEN_FUNC);
 
         // set positions
         obj.setPosition(mTempPoint);

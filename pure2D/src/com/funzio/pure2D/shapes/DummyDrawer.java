@@ -14,7 +14,7 @@ public class DummyDrawer extends Sprite {
 
     @Override
     /**
-     * This only draws the children without applying any transformations, for drawing cache purpose
+     * This only draws the children without applying any transformations, colors, for drawing cache purpose
      */
     public boolean draw(final GLState glState) {
         // texture coordinates changed?
@@ -22,18 +22,18 @@ public class DummyDrawer extends Sprite {
             validateTextureCoordBuffer();
         }
 
-        // blend mode
-        glState.setBlendFunc(mBlendFunc);
-        // color and alpha
-        glState.setColor(getBlendColor());
-
-        // color buffer
-        if (mColorBuffer == null) {
-            glState.setColorArrayEnabled(false);
-        } else {
-            // apply color buffer
-            mColorBuffer.apply(glState);
-        }
+        // // blend mode
+        // glState.setBlendFunc(mBlendFunc);
+        // // color and alpha
+        // glState.setColor(getBlendColor());
+        //
+        // // color buffer
+        // if (mColorBuffer == null) {
+        // glState.setColorArrayEnabled(false);
+        // } else {
+        // // apply color buffer
+        // mColorBuffer.apply(glState);
+        // }
 
         // texture
         if (mTexture != null) {

@@ -16,13 +16,13 @@ import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.containers.Alignment;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.DummyDrawer;
-import com.funzio.pure2D.shapes.Sprite;
 
 /**
  * @author long
@@ -45,7 +45,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
-    protected Sprite mCacheDrawer;
+    protected DummyDrawer mCacheDrawer;
     protected boolean mCacheEnabled = false;
 
     // protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
@@ -178,10 +178,8 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     public boolean draw(final GLState glState) {
         drawStart(glState);
 
-        // blend mode
-        glState.setBlendFunc(mBlendFunc);
-        // color and alpha
-        glState.setColor(getBlendColor());
+        // no color buffer supported
+        glState.setColorArrayEnabled(false);
 
         // check cache enabled, only refresh when children stop changing
         if (mCacheEnabled && (mInvalidateFlags & CHILDREN) == 0) {
@@ -207,19 +205,34 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                     mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
                 }
 
-                // cache to framebuffer
+                // cache to FBO
                 mCacheFrameBuffer.bind(mSceneAxis);
                 mCacheFrameBuffer.clear();
+
+                // this helps fix the FBO's alpha blending, not 100% though
+                glState.setBlendFunc(BlendModes.PREMULTIPLIED_ALPHA_FUNC);
+                // clear the color
+                glState.setColor(null);
+                // draw now
                 drawChildren(glState);
+
                 mCacheFrameBuffer.unbind();
 
                 // validate cache
                 validate(CACHE);
             }
 
+            // now the real blend mode
+            glState.setBlendFunc(getInheritedBlendFunc());
+            // color and alpha
+            glState.setColor(getInheritedColor());
             // now draw the cache
             mCacheDrawer.draw(glState);
         } else {
+            // blend mode
+            glState.setBlendFunc(getInheritedBlendFunc());
+            // color and alpha
+            glState.setColor(getInheritedColor());
             // draw the children directly
             drawChildren(glState);
 
