@@ -573,6 +573,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
      * @param cacheEnabled
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
+        // diff check
+        if (mCacheEnabled == cacheEnabled) {
+            return;
+        }
+
         mCacheEnabled = cacheEnabled;
 
         invalidate(CACHE);
@@ -589,6 +594,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
      * @see #Cacheable
      */
     public void setCachePolicy(final int cachePolicy) {
+        // diff check
+        if (mCachePolicy == cachePolicy) {
+            return;
+        }
+
         mCachePolicy = cachePolicy;
 
         invalidate(CACHE);
@@ -599,6 +609,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     }
 
     public void setCacheProjection(final int cacheProjection) {
+        // diff check
+        if (mCacheProjection == cacheProjection) {
+            return;
+        }
+
         mCacheProjection = cacheProjection;
 
         invalidate(CACHE);
