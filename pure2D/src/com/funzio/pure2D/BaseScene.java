@@ -1015,8 +1015,10 @@ public class BaseScene implements Scene {
             removeAllChildren();
             mChildren = null;
 
-            mTextureManager.removeAllTextures();
-            mTextureManager = null;
+            if (mTextureManager != null) {
+                mTextureManager.removeAllTextures();
+                mTextureManager = null;
+            }
 
             mColor = null;
             mSize = null;
