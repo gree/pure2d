@@ -65,6 +65,7 @@ public class NovaLoader {
                 }
 
             }
+
         });
 
         // start loading

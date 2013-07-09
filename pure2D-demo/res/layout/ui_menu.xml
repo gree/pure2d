@@ -13,12 +13,27 @@
         android:onClick="onClickButton"
         android:text="@string/hello_text" />
 
-    <Button
-        android:id="@+id/btn_bitmap_font"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/bitmap_font" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_bitmap_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickButton"
+            android:text="@string/bitmap_font" />
+
+        <Button
+            android:id="@+id/btn_alternate_charset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickButton"
+            android:text="@string/alt_charset" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_sprite_9"
