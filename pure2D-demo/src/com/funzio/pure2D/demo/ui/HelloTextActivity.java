@@ -2,6 +2,7 @@ package com.funzio.pure2D.demo.ui;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextTexture;
 
 public class HelloTextActivity extends StageActivity {
     private TextTexture mTexture;
+    private PointF mTempPoint = new PointF();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class HelloTextActivity extends StageActivity {
     }
 
     private void addObject(final float x, final float y) {
+        // convert from screen to scene's coordinates
+        mScene.screenToGlobal(x, y, mTempPoint);
+
         // create object
         Bouncer obj = new Bouncer();
         obj.setTexture(mTexture);
@@ -43,7 +48,7 @@ public class HelloTextActivity extends StageActivity {
         // obj.setOriginAtCenter();
 
         // random positions
-        obj.setPosition(x, y);
+        obj.setPosition(mTempPoint.x, mTempPoint.y);
 
         // add to scene
         mScene.addChild(obj);
@@ -59,7 +64,7 @@ public class HelloTextActivity extends StageActivity {
                 public void run() {
                     int len = event.getPointerCount();
                     for (int i = 0; i < len; i++) {
-                        addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+                        addObject(event.getX(i), event.getY(i));
                     }
                 }
             });

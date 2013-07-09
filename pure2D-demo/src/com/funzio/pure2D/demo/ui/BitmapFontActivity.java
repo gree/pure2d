@@ -102,6 +102,7 @@ public class BitmapFontActivity extends StageActivity {
     }
 
     private BmfTextObject addObject(final float x, final float y) {
+        // convert from screen to scene's coordinates
         mScene.screenToGlobal(x, y, mTempPoint);
 
         // create object
