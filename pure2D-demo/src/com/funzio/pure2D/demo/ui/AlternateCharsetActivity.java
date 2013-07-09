@@ -23,10 +23,12 @@ import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.AlphaAnimator;
+import com.funzio.pure2D.animators.ColorAnimator;
 import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -39,6 +41,7 @@ import com.funzio.pure2D.text.TextOptions;
 public class AlternateCharsetActivity extends StageActivity {
     private static final String FONT_PATH = "fonts/handwriting_korean.ttf";
     private static final Interpolator INTERPOLATOR = new AccelerateDecelerateInterpolator();
+    private static final BlendFunc BLEND_FUNC = BlendFunc.getAdd();
 
     private Sprite mAtlasSprite;
     private BitmapFont mBitmapFont;
@@ -127,19 +130,24 @@ public class AlternateCharsetActivity extends StageActivity {
         obj.setBitmapFont(mBitmapFont);
         obj.setText(mSayings[RANDOM.nextInt(mNumSayings)]);
         obj.setColor(GLColor.WHITE);
+        obj.setBlendFunc(BLEND_FUNC);
 
-        // set positions
         obj.setPosition(mTempPoint);
 
-        // add to scene
         mScene.addChild(obj);
 
         // some animator
-        final AlphaAnimator animator = new AlphaAnimator(INTERPOLATOR);
-        obj.addManipulator(animator);
-        animator.setLoop(LoopModes.LOOP_REVERSE);
-        animator.setDuration(2000);
-        animator.start(1f, 0f);
+        final AlphaAnimator animator1 = new AlphaAnimator(INTERPOLATOR);
+        obj.addManipulator(animator1);
+        animator1.setLoop(LoopModes.LOOP_REVERSE);
+        animator1.setDuration(5000);
+        animator1.start(1f, 0f);
+
+        final ColorAnimator animator2 = new ColorAnimator(INTERPOLATOR);
+        obj.addManipulator(animator2);
+        animator2.setLoop(LoopModes.LOOP_REVERSE);
+        animator2.setDuration(2000);
+        animator2.start(1f, 0.5f, 0.5f, 1f, 0.5f, 0.5f, 1f, 1f);
 
         return obj;
     }
