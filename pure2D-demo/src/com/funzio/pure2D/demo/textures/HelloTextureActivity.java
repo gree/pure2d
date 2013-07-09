@@ -2,6 +2,7 @@ package com.funzio.pure2D.demo.textures;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.funzio.pure2D.shapes.Sprite;
 public class HelloTextureActivity extends StageActivity {
     private Texture mTexture;
     protected boolean mUseTexture = true;
+    private PointF mTempPoint = new PointF();
 
     @Override
     protected int getLayout() {
@@ -28,6 +30,7 @@ public class HelloTextureActivity extends StageActivity {
         super.onCreate(savedInstanceState);
 
         mScene.setColor(COLOR_GREEN);
+        mScene.setRenderContinueously(true);
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
 
@@ -45,9 +48,13 @@ public class HelloTextureActivity extends StageActivity {
     private void loadTexture() {
         // create texture
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_175, null);
+        // mTexture = new DrawableTexture(mScene.getGLState(), getResources(), R.drawable.cc_175, null, true);
     }
 
     private void addObject(final float x, final float y) {
+        // convert from screen to scene's coordinates
+        mScene.screenToGlobal(x, y, mTempPoint);
+
         // create object
         Sprite obj = new Sprite();
         if (mUseTexture) {
@@ -60,7 +67,7 @@ public class HelloTextureActivity extends StageActivity {
         obj.setOriginAtCenter();
 
         // set positions
-        obj.setPosition(x, y);
+        obj.setPosition(mTempPoint.x, mTempPoint.y);
 
         // add to scene
         mScene.addChild(obj);
@@ -90,7 +97,7 @@ public class HelloTextureActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addObject(event.getX(), mDisplaySize.y - event.getY());
+                    addObject(event.getX(), event.getY());
                 }
             });
         }
