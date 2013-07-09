@@ -64,7 +64,6 @@ public final class R {
         public static final int btn_3d=0x7f09003a;
         public static final int btn_3d_rotation=0x7f09004d;
         public static final int btn_air_attackers=0x7f090040;
-        public static final int btn_alternate_charset=0x7f090087;
         public static final int btn_animations=0x7f090038;
         public static final int btn_bezier_animation=0x7f090017;
         public static final int btn_bitmap_font=0x7f090086;
@@ -95,6 +94,7 @@ public final class R {
         public static final int btn_image_sequence=0x7f090013;
         public static final int btn_json_atlas=0x7f090012;
         public static final int btn_jumping_objects=0x7f090047;
+        public static final int btn_korean_bitmap_font=0x7f090087;
         public static final int btn_lists=0x7f090089;
         public static final int btn_load=0x7f090050;
         public static final int btn_loader_async=0x7f09002e;
@@ -326,6 +326,7 @@ public final class R {
         public static final int image_sequence=0x7f050043;
         public static final int json_atlas=0x7f050064;
         public static final int jumping_objects=0x7f050007;
+        public static final int korean_bitmap_font=0x7f05008f;
         public static final int leopard=0x7f050021;
         public static final int linear=0x7f050048;
         public static final int lists=0x7f05007d;

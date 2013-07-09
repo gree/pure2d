@@ -27,12 +27,12 @@
             android:text="@string/bitmap_font" />
 
         <Button
-            android:id="@+id/btn_alternate_charset"
+            android:id="@+id/btn_korean_bitmap_font"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onClickButton"
-            android:text="@string/alt_charset" />
+            android:text="@string/korean_bitmap_font" />
     </LinearLayout>
 
     <Button

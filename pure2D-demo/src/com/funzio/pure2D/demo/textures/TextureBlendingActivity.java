@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class TextureBlendingActivity extends StageActivity {
@@ -51,7 +51,7 @@ public class TextureBlendingActivity extends StageActivity {
         mGirl.setOriginAtCenter();
         mGirl.setScale(4, 4);
         mGirl.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-        mGirl.setBlendFunc(BlendFunc.getMultiply());
+        mGirl.setBlendFunc(BlendModes.MULTIPLY_FUNC);
         mScene.addChild(mGirl);
 
         mGuy = new Sprite();
@@ -59,7 +59,7 @@ public class TextureBlendingActivity extends StageActivity {
         mGuy.setOriginAtCenter();
         mGuy.setScale(4, 4);
         mGuy.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-        mGuy.setBlendFunc(BlendFunc.getAdd());
+        mGuy.setBlendFunc(BlendModes.ADD_FUNC);
         mScene.addChild(mGuy);
     }
 

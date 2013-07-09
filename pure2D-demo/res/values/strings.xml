@@ -171,4 +171,6 @@
         <item>사막이 아름다운 것은\n어딘가에 샘을 숨기고\n있기 때문이다</item>
     </string-array>
 
+    <string name="korean_bitmap_font">Korean Bitmap Font</string>
+
 </resources>

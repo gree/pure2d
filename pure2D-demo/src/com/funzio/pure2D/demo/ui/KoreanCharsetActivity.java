@@ -28,7 +28,7 @@ import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
-import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -38,10 +38,9 @@ import com.funzio.pure2D.text.TextOptions;
 /**
  * @author juni.kim
  */
-public class AlternateCharsetActivity extends StageActivity {
+public class KoreanCharsetActivity extends StageActivity {
     private static final String FONT_PATH = "fonts/handwriting_korean.ttf";
     private static final Interpolator INTERPOLATOR = new AccelerateDecelerateInterpolator();
-    private static final BlendFunc BLEND_FUNC = BlendFunc.getAdd();
 
     private Sprite mAtlasSprite;
     private BitmapFont mBitmapFont;
@@ -130,7 +129,7 @@ public class AlternateCharsetActivity extends StageActivity {
         obj.setBitmapFont(mBitmapFont);
         obj.setText(mSayings[RANDOM.nextInt(mNumSayings)]);
         obj.setColor(GLColor.WHITE);
-        obj.setBlendFunc(BLEND_FUNC);
+        obj.setBlendFunc(BlendModes.ADD_FUNC);
 
         obj.setPosition(mTempPoint);
 

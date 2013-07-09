@@ -164,7 +164,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.AlternateCharsetActivity"
+            android:name=".ui.KoreanCharsetActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
