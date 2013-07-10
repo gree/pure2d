@@ -40,19 +40,19 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
     protected boolean runTasks() {
         String remoteVersion = "";
         String localVersion = "";
-        URLLoadPropertiesTask remoteVersionTask = null;
-        ReadPropertiesFileTask localVersionTask = null;
+        Properties remoteVersionProperties = null;
         Properties localVersionProperties = null;
 
         if (mRemoteVersion != null) {
-            remoteVersionTask = new URLLoadPropertiesTask(mRemoteVersion);
+            final URLLoadPropertiesTask remoteVersionTask = new URLLoadPropertiesTask(mRemoteVersion);
             if (remoteVersionTask.run()) {
-                if (remoteVersionTask.getContent().containsKey(VERSION_KEY)) {
-                    remoteVersion = remoteVersionTask.getContent().getProperty(VERSION_KEY);
+                remoteVersionProperties = remoteVersionTask.getContent();
+                if (remoteVersionProperties.containsKey(VERSION_KEY)) {
+                    remoteVersion = remoteVersionProperties.getProperty(VERSION_KEY);
                 }
 
                 // now read the local version
-                localVersionTask = new ReadPropertiesFileTask(mLocalVersion);
+                final ReadPropertiesFileTask localVersionTask = new ReadPropertiesFileTask(mLocalVersion);
                 if (localVersionTask.run()) {
                     localVersionProperties = localVersionTask.getContent();
                     if (localVersionProperties.containsKey(VERSION_KEY)) {
@@ -81,12 +81,12 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
                 boolean fileHasSpecificVersion = false;
 
                 // check for specific file's version
-                if (remoteVersionTask != null && remoteVersionTask.getContent() != null) {
+                if (remoteVersionProperties != null) {
                     final String relativePathFromVersionFile = PathUtils.getRelativePath(mRemoteVersion, downloadTask.getURL());
-                    final String remoteFileVersion = remoteVersionTask.getContent().getProperty(relativePathFromVersionFile, "");
+                    final String remoteFileVersion = remoteVersionProperties.getProperty(relativePathFromVersionFile, "");
                     if (!remoteFileVersion.equals("")) {
-                        if (localVersionTask != null) {
-                            final String localFileVersion = localVersionTask.getContent().getProperty(relativePathFromVersionFile, "");
+                        if (localVersionProperties != null) {
+                            final String localFileVersion = localVersionProperties.getProperty(relativePathFromVersionFile, "");
                             // compare file versions
                             if (!remoteFileVersion.equals(localFileVersion)) {
                                 fileHasSpecificVersion = true;

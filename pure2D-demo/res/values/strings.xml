@@ -161,5 +161,16 @@
     <string name="bounds_wireframe">Bounds &amp; Wireframe</string>
     <string name="bitmap_font">Bitmap Font</string>
     <string name="cache">Cache</string>
+    <string name="alt_charset">Alternate Charset</string>
+
+    <string-array name="korean_sayings">
+        <item>음악이 있는 곳엔\n악이 있을 수 없다</item>
+        <item>친구란 다 사람의\n신체에 사는 하나의\n영혼이다</item>
+        <item>첫사랑이 아름다울 수\n있는 이유는 이루어지지\n않아서기 때문이다</item>
+        <item>견디기 힘든 고통이란\n것은 견딜 수 없는\n고통의 반대말이다</item>
+        <item>사막이 아름다운 것은\n어딘가에 샘을 숨기고\n있기 때문이다</item>
+    </string-array>
+
+    <string name="korean_bitmap_font">Korean Bitmap Font</string>
 
 </resources>
