@@ -21,13 +21,6 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
 
-        // update current frame
-        if (mCurrentFrame != mPreviousFrame) {
-            mPreviousFrame = mCurrentFrame;
-            updateFrame(mCurrentFrame);
-            invalidate(FRAME);
-        }
-
         // get next frame
         if (mNumFrames > 0 && mPlaying) {
             int frames = 1;
