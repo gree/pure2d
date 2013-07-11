@@ -251,7 +251,9 @@ public class TextureManager {
         // unload all
         for (int i = 0; i < len; i++) {
             Texture texture = mTextures.get(i);
-            texture.unload();
+            if (texture != null) {
+                texture.unload();
+            }
         }
     }
 
