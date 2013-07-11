@@ -1,0 +1,64 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "falling_stars",
+			"lifespan": 5000,
+			"particles": [
+				{
+					"sprite": "atlas/star_03_60.json",
+					"start_frame": [0, 20],
+					"animator": "fly_ani",
+					"blend_mode": ["", "screen", "add", "subtract"],
+					"motion_trail": "trail1"
+				},
+
+				{
+					"sprite": "atlas/coin_01_60.json",
+					"start_frame": [0, 20],
+					"animator": "fall_ani",
+					"motion_trail": "trail2"
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "fall_ani",
+			"type": "recursive_trajectory",
+			"velocity": [50, 100],
+			"angle": [0, 6.28]
+		},
+
+		{
+			"name": "fly_ani",
+			"type": "translate",
+			"distance": [500, 1000],
+			"degree": [0, 360],
+			"duration": 1000,
+			"interpolation": "decelerate"
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "trail1",
+			"type": "shape",
+			"stroke1": 10,
+			"easing_x": [0.25, 0.75],
+			"easing_y": [0.25, 0.75],
+			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF, 0xFF00FF00, 0xFF00FFFF, 0xFFFF00FF],
+			"color2": 0x00FFFFFF
+		},
+
+		{
+			"name": "trail2",
+			"type": "shape",
+			"stroke1": 0,
+			"stroke2": 20,
+			"color1": 0x99FFFF00,
+			"color2": 0x00FFFFFF
+		}
+	]
+}

@@ -81,7 +81,7 @@ public class AniSkeleton extends PlayableObject {
      * @see com.funzio.pure2D.animation.PlayableObject#drawChildren(com.funzio.pure2D.gl.gl10.GLState)
      */
     @Override
-    protected void drawChildren(final GLState glState) {
+    protected boolean drawChildren(final GLState glState) {
         if (mDebugging) {
             mDebugRect.setRect(mBounds[mCurrentFrame]);
             mDebugRect.setColor(new GLColor(1f, (float) Math.random(), (float) Math.random(), 0.8f));
@@ -98,6 +98,8 @@ public class AniSkeleton extends PlayableObject {
                 mVertexBuffers[i].draw(glState);
             }
         }
+
+        return true;
     }
 
     @Override

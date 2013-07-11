@@ -28,15 +28,12 @@ public class LoaderService extends IntentService {
     public static final int DEFAULT_TASK_DELAY = 0;
 
     public static final String INTENT_START = "INTENT_START";
-    // public static final String INTENT_STOP = "INTENT_STOP";
 
     public static final String INTENT_ON_STARTED = "INTENT_ON_STARTED";
-    public static final String INTENT_ON_STOPPED = "INTENT_ON_STOPPED";
     public static final String INTENT_ON_FINISHED = "INTENT_ON_FINISHED";
 
     // tasks
     private Vector<Task> mTasks = new Vector<Task>();
-    private volatile boolean mRunning = false;
     protected int mTaskDelay = DEFAULT_TASK_DELAY;
 
     // low battery handling
@@ -48,34 +45,6 @@ public class LoaderService extends IntentService {
             mBatteryLow = isBatteryLow(intent);
         }
     };
-
-    // private Handler mHandler;
-    // private Runnable mNextTaskRunnable = new Runnable() {
-    //
-    // @Override
-    // public void run() {
-    // final Task task = mTasks.remove(0);
-    // task.run();
-    //
-    // // if there is complete intent
-    // if (task instanceof IntentTask) {
-    // final Intent taskCompleteIntent = ((IntentTask) task).getCompleteIntent();
-    // if (taskCompleteIntent != null) {
-    // // broadcast task complete
-    // sendBroadcast(taskCompleteIntent);
-    // }
-    // }
-    //
-    // if (mTasks.size() > 0) {
-    // // schedule next task
-    // mHandler.postDelayed(mNextTaskRunnable, mTaskDelay);
-    // } else {
-    // mRunning = false;
-    // // broadcast finished event
-    // sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));
-    // }
-    // }
-    // };
 
     public LoaderService(final String name) {
         super(name);
@@ -115,22 +84,8 @@ public class LoaderService extends IntentService {
         }
 
         if (intent.getAction().equals(getIntentAction(INTENT_START))) {
-            runTasks(intent);
+            runTasks();
         }
-        // } else if (intent.getAction().equals(getIntentAction(INTENT_STOP))) {
-        // // flag
-        // mRunning = false;
-        //
-        // // if (mHandler != null) {
-        // // mHandler.removeCallbacksAndMessages(null);
-        // // }
-        //
-        // // // broadcast stopped event
-        // // sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
-        //
-        // // stop me
-        // stopSelf();
-        // }
     }
 
     protected boolean addTask(final Task task) {
@@ -153,26 +108,18 @@ public class LoaderService extends IntentService {
         mTasks.clear();
     }
 
-    protected boolean runTasks(final Intent intent) {
+    protected boolean runTasks() {
         final int size = mTasks.size();
-        if (size == 0 || mRunning) {
+        if (size == 0) {
             return false;
         }
 
         // flag
-        mRunning = true;
         // broadcast started event
         sendBroadcast(new Intent(getIntentAction(INTENT_ON_STARTED)));
 
         // run the tasks
         for (int i = 0; i < size; i++) {
-
-            // interrupted?
-            if (!mRunning) {
-                // broadcast stopped event
-                sendBroadcast(new Intent(getIntentAction(INTENT_ON_STOPPED)));
-                return false;
-            }
 
             final Task task = mTasks.remove(0);
             task.run();
@@ -193,11 +140,6 @@ public class LoaderService extends IntentService {
                 }
             }
         }
-
-        // if (mHandler == null) {
-        // mHandler = new Handler();
-        // }
-        // mHandler.post(mNextTaskRunnable);
 
         // broadcast finished event
         sendBroadcast(new Intent(getIntentAction(INTENT_ON_FINISHED)));

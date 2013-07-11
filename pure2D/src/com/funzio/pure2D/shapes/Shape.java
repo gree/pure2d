@@ -5,10 +5,14 @@ package com.funzio.pure2D.shapes;
 
 import java.util.Arrays;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
@@ -53,9 +57,6 @@ public class Shape extends BaseDisplayObject {
         mTexture = texture;
 
         invalidate(InvalidateFlags.TEXTURE | InvalidateFlags.TEXTURE_COORDS);
-
-        // texture coordinates might need to change
-        // validateTextureCoordBuffer();
     }
 
     /*
@@ -75,7 +76,7 @@ public class Shape extends BaseDisplayObject {
     /**
      * validate texture coords
      */
-    private void validateTextureCoordBuffer() {
+    protected void validateTextureCoordBuffer() {
         // match texture coordinates with the Axis system
         final Scene scene = getScene();
         if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
@@ -123,7 +124,6 @@ public class Shape extends BaseDisplayObject {
         mTextureFlippedForAxis = false;
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
-        // validateTextureCoordBuffer();
 
         return true;
     }
@@ -140,7 +140,6 @@ public class Shape extends BaseDisplayObject {
         mTextureFlippedForAxis = false;
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
-        // validateTextureCoordBuffer();
     }
 
     public TextureCoordBuffer getTextureCoordBuffer() {
@@ -155,23 +154,11 @@ public class Shape extends BaseDisplayObject {
         return mColorBuffer;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
-     */
     @Override
-    public boolean draw(final GLState glState) {
+    protected boolean drawChildren(final GLState glState) {
         if (mVertexBuffer == null) {
             return false;
         }
-
-        drawStart(glState);
-
-        // blend mode
-        final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
-
-        // color and alpha
-        glState.setColor(getSumColor());
 
         // color buffer
         if (mColorBuffer == null) {
@@ -181,7 +168,7 @@ public class Shape extends BaseDisplayObject {
             mColorBuffer.apply(glState);
         }
 
-        // texture and color
+        // texture
         if (mTexture != null) {
             // bind the texture
             mTexture.bind();
@@ -198,15 +185,37 @@ public class Shape extends BaseDisplayObject {
         // now draw, woo hoo!
         mVertexBuffer.draw(glState);
 
-        if (blendChanged) {
-            // recover the blending
-            glState.setBlendFunc(null);
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#drawWireframe(com.funzio.pure2D.gl.gl10.GLState)
+     */
+    @Override
+    protected void drawWireframe(final GLState glState) {
+        // null check
+        if (mVertexBuffer == null) {
+            return;
         }
 
-        // wrap up
-        drawEnd(glState);
+        // pre-draw
+        final int primitive = mVertexBuffer.getPrimitive();
+        final GLColor currentColor = glState.getColor();
+        final boolean textureEnabled = glState.isTextureEnabled();
+        final float currentLineWidth = glState.getLineWidth();
+        glState.setColor(Pure2D.DEBUG_WIREFRAME_COLOR);
+        glState.setTextureEnabled(false);
 
-        return true;
+        // draw
+        mVertexBuffer.setPrimitive(GL10.GL_LINE_STRIP);
+        mVertexBuffer.draw(glState);
+
+        // post-draw
+        glState.setTextureEnabled(textureEnabled);
+        glState.setColor(currentColor);
+        glState.setLineWidth(currentLineWidth);
+        mVertexBuffer.setPrimitive(primitive);
     }
 
     /*
@@ -215,6 +224,8 @@ public class Shape extends BaseDisplayObject {
      */
     @Override
     public void dispose() {
+        super.dispose();
+
         if (mVertexBuffer != null) {
             mVertexBuffer.dispose();
             mVertexBuffer = null;
@@ -256,7 +267,6 @@ public class Shape extends BaseDisplayObject {
 
         if (flipped) {
             invalidate(InvalidateFlags.TEXTURE_COORDS);
-            // validateTextureCoordBuffer();
         }
     }
 
@@ -269,6 +279,5 @@ public class Shape extends BaseDisplayObject {
         super.onAdded(parent);
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
-        // validateTextureCoordBuffer();
     }
 }

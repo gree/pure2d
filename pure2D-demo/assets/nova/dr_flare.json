@@ -1,0 +1,81 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_emitter",
+			"lifespan": 4000,
+			"particles": [
+				{
+					"animator": "my_ani",
+					"motion_trail": "trail1",
+					"x": [-10, 10, 0],
+					"alpha": 0,
+					"duration": 500,
+					"layer": 1,
+					"step_delay": 30
+				},
+
+				{
+					"sprite": "sprites/side_ground_flare.png",
+					"animator": "my_ani",
+					"motion_trail": "trail2",
+					"blend_mode": "premultiplied_alpha",
+					"x": [-10, 10, -10, 10],
+					"alpha": 0.75,
+					"duration": 1,
+					"step_quantity": 2
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "my_ani",
+			"type": "parallel",
+			"lifespan": 4000,
+			"animators": [
+				{
+					"type": "sin_wave",
+					"dy": 800,
+					"wave_radius1": 0,
+					"wave_radius2": 100,
+					"wave_num": [2, 3, 4],
+					"duration": 1000,
+					"interpolation": "decelerate",
+					"loop_mode": "reverse",
+					"loop_count": 2
+				},
+
+				{
+					"type": "rotate",
+					"delta": [360, -360, 360],
+					"loop_mode": "repeat",
+					"duration": [300, 1000]
+				}
+			]
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "trail1",
+			"type": "shape",
+			"stroke1": 1,
+			"stroke2": [50, 100],
+			"stroke_interpolation": "bounce",
+			"color1": ["#66FF0000", "#66FFFF00", "#66FF00FF"],
+			"color2": "#00FF0000"
+		},
+
+		{
+			"name": "trail2",
+			"type": "shape",
+			"stroke1": 50,
+			"stroke2": 1,
+			"num_points": 20,
+			"color1": "#AAFFFFFF",
+			"color2": "#00FFFFFF"
+		}
+	]
+}

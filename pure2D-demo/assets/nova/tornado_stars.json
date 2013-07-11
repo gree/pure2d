@@ -1,0 +1,54 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "falling_stars",
+			"lifespan": 5000,
+			"particles": [
+				{
+					"sprite": "atlas/star_03_60.json",
+					"start_frame": [0, 20],
+					"step_delay": 100,
+					"y": [0, 100],
+					"animator": "tornado_ani",
+					"blend_mode": "add",
+					"motion_trail": "small_trail"
+				}
+			],
+			"animator": "left_right_ani"
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "left_right_ani",
+			"type": "translate",
+			"duration": 300,
+			"dx": 50,
+			"loop_mode": "reverse",
+			"interpolation": "accelerate_decelerate"
+		},
+
+		{
+			"name": "tornado_ani",
+			"type": "tornado",
+			"dy": 700,
+			"circle_radius": [300, 400],
+			"circle_num": [18, 20],
+			"circle_multiplier": [1, 1.2],
+			"duration": 10000,
+			"interpolation": "decelerate"
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "small_trail",
+			"type": "shape",
+			"stroke1": 1,
+			"stroke2": 30,
+			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF],
+			"color2": 0x00FFFFFF
+		}
+	]
+}

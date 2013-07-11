@@ -4,28 +4,46 @@
 package com.funzio.pure2D.containers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.shapes.DummyDrawer;
 
 /**
  * @author long
  */
-public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
+public class DisplayGroup extends BaseDisplayObject implements Container, Cacheable, Touchable {
 
-    protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
     protected int mNumChildren = 0;
 
     // UI
-    protected List<Touchable> mVisibleTouchables;
+    protected ArrayList<Touchable> mVisibleTouchables;
     protected boolean mTouchable = true; // true by default
+
+    // cache
+    protected FrameBuffer mCacheFrameBuffer;
+    protected DummyDrawer mCacheDrawer;
+    protected boolean mCacheEnabled = false;
+    protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
+    protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
+
+    // clipping
+    private boolean mClippingEnabled = false;
+    private boolean mOriginalScissorEnabled = false;
+    private int[] mOriginalScissor;
+    private RectF mClipStageRect;
 
     public DisplayGroup() {
         super();
@@ -42,8 +60,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public boolean update(final int deltaTime) {
         boolean ret = super.update(deltaTime);
 
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isAlive()) {
                 // update child
                 child.update(deltaTime);
@@ -62,8 +81,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         final RectF rect = super.updateBounds();
 
         // if bounds changed, all children's bounds should also be changed
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child.isAutoUpdateBounds()) {
                 child.updateBounds();
             }
@@ -78,26 +98,118 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     @Override
     public boolean draw(final GLState glState) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
         drawStart(glState);
 
-        // final GLState glState = GLState.getInstance();
-        // blend mode
-        // boolean blendChanged = glState.setBlendFunc(mBlendFunc);
+        // NOTE: this clipping method doesn't work for Rotation!!!
+        if (mClippingEnabled) {
+            mOriginalScissorEnabled = glState.isScissorTestEnabled();
+            if (mOriginalScissorEnabled) {
+                // backup the current scissor
+                if (mOriginalScissor == null) {
+                    mOriginalScissor = new int[4];
+                }
+                glState.getScissor(mOriginalScissor);
+            } else {
+                // need to enable scissor test
+                glState.setScissorTestEnabled(true);
+            }
 
-        // draw the children
-        drawChildren(glState);
+            // instantiate the Clip rect
+            if (mClipStageRect == null) {
+                mClipStageRect = new RectF();
+            }
 
-        // if (blendChanged) {
-        // recover the blending
-        // glState.setBlendFunc(null);
-        // }
+            final Scene scene = getScene();
+            if (scene != null) {
+                // find the rect on stage, needed when there is a Camera!
+                scene.globalToStage(mBounds, mClipStageRect);
+            } else {
+                mClipStageRect.set(mBounds);
+            }
+
+            // set the new scissor rect, only take position and scale into account!
+            glState.setScissor(Math.round(mClipStageRect.left), Math.round(mClipStageRect.top), Math.round(mClipStageRect.right - mClipStageRect.left + 1),
+                    Math.round(mClipStageRect.bottom - mClipStageRect.top + 1));
+        }
+
+        // check cache enabled, only draw cache when Children stop changing or the policy equals CACHE_WHEN_CHILDREN_CHANGED
+        if (mCacheEnabled && ((mInvalidateFlags & (CHILDREN | VISUAL)) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
+            // check invalidate flags, either CACHE or CHILDREN
+            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0) {
+
+                // init frame buffer
+                if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
+                    if (mCacheFrameBuffer != null) {
+                        mCacheFrameBuffer.unload();
+                        mCacheFrameBuffer.getTexture().unload();
+                    }
+                    mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
+
+                    // init drawer
+                    if (mCacheDrawer == null) {
+                        mCacheDrawer = new DummyDrawer();
+                        // framebuffer is inverted
+                        if (glState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                            mCacheDrawer.flipTextureCoordBuffer(FLIP_Y);
+                        }
+                    }
+                    mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
+                }
+
+                // cache to FBO
+                mCacheFrameBuffer.bind(mCacheProjection);
+                mCacheFrameBuffer.clear();
+                drawChildren(glState);
+                mCacheFrameBuffer.unbind();
+
+                // validate cache
+                validate(CACHE);
+            }
+
+            // no color buffer supported
+            glState.setColorArrayEnabled(false);
+            // clear color
+            glState.setColor(null);
+            // clear blending
+            glState.setBlendFunc(null);
+            // now draw the cache
+            mCacheDrawer.draw(glState);
+        } else {
+            // draw the children directly
+            drawChildren(glState);
+
+            // invalidate cache
+            invalidate(CACHE);
+        }
+
+        if (mClippingEnabled) {
+            if (mOriginalScissorEnabled) {
+                // restore original scissor
+                glState.setScissor(mOriginalScissor);
+            } else {
+                // disable scissor test
+                glState.setScissorTestEnabled(false);
+            }
+        }
 
         drawEnd(glState);
+
+        // validate visual and children, NOT bounds
+        mInvalidateFlags &= ~(VISUAL | CHILDREN);
 
         return true;
     }
 
-    protected void drawChildren(final GLState glState) {
+    @Override
+    protected boolean drawChildren(final GLState glState) {
+        if (mNumChildren == 0) {
+            return false;
+        }
+
         if (mTouchable) {
             if (mVisibleTouchables == null) {
                 mVisibleTouchables = new ArrayList<Touchable>();
@@ -107,23 +219,31 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         }
 
         // draw the children
-        for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
+        int numVisibles = 0;
+        final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
+        DisplayObject child;
+        final int numChildren = mChildrenDisplayOrder.size();
+        for (int i = 0; i < numChildren; i++) {
+            child = mChildrenDisplayOrder.get(i);
+
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame
                 child.draw(glState);
 
                 // stack the visible child
-                if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
-                    int j = mVisibleTouchables.size();
+                    int j = numVisibles;
                     while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
+                    numVisibles++;
                 }
             }
         }
+
+        return true;
     }
 
     /**
@@ -133,6 +253,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      * @return true if at least one of the corners of the child is in this container's rect.
      */
     protected boolean isChildInBounds(final DisplayObject child) {
+        // null check
+        if (child == null) {
+            return false;
+        }
+
         final PointF pos = child.getPosition();
         final PointF size = child.getSize();
         return ((pos.x >= 0 && pos.x < mSize.x) && (pos.y >= 0 && pos.y < mSize.y)) // TL
@@ -141,23 +266,45 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 || ((pos.x >= 0 && pos.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y)); // BL
     }
 
+    public void clearCache() {
+        if (mCacheFrameBuffer != null) {
+            mCacheFrameBuffer.getTexture().unload();
+            mCacheFrameBuffer.unload();
+            mCacheFrameBuffer = null;
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.IDisplayObject#dispose()
      */
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
+        super.dispose();
 
+        // clear cache
+        clearCache();
+
+        if (mCacheDrawer != null) {
+            mCacheDrawer.dispose();
+            mCacheDrawer = null;
+        }
     }
 
     public boolean addChild(final DisplayObject child) {
         if (mChildren.indexOf(child) < 0) {
+
+            // child callback
+            // child.onPreAdded(this);
+
             mChildren.add(child);
             mNumChildren++;
-            child.onAdded(this);
-            invalidate();
 
+            // child callback
+            child.onAdded(this);
+            invalidate(CHILDREN);
+
+            // internal callback
             onAddedChild(child);
             return true;
         }
@@ -166,10 +313,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean addChild(final DisplayObject child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
+
+            // child callback
+            // child.onPreAdded(this);
+
             mChildren.add(index, child);
             mNumChildren++;
+
+            // child callback
             child.onAdded(this);
-            invalidate();
+            invalidate(CHILDREN);
 
             onAddedChild(child);
             return true;
@@ -178,10 +331,17 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public boolean removeChild(final DisplayObject child) {
-        if (mChildren.remove(child)) {
+        if (mChildren.indexOf(child) >= 0) {
+
+            // child callback
+            // child.onPreRemoved();
+
+            mChildren.remove(child);
             mNumChildren--;
+
+            // child callback
             child.onRemoved();
-            invalidate();
+            invalidate(CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -192,10 +352,17 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     public boolean removeChild(final int index) {
         if (index < mNumChildren) {
-            DisplayObject child = mChildren.remove(index);
+            final DisplayObject child = mChildren.get(index);
+
+            // child callback
+            // child.onPreRemoved();
+
+            mChildren.remove(child);
             mNumChildren--;
+
+            // child callback
             child.onRemoved();
-            invalidate();
+            invalidate(CHILDREN);
 
             onRemovedChild(child);
             return true;
@@ -205,16 +372,24 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public void removeAllChildren() {
-        // update children
+        // call children
+        // for (int i = 0; i < mNumChildren; i++) {
+        // final DisplayObject child = mChildren.get(i);
+        // // pre callback
+        // child.onPreRemoved();
+        // }
+
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
+            // callback
             child.onRemoved();
             onRemovedChild(child);
         }
 
         mChildren.clear();
         mNumChildren = 0;
-        invalidate();
+        invalidate(CHILDREN);
     }
 
     public DisplayObject getChildAt(final int index) {
@@ -246,7 +421,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate();
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -272,7 +447,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
         mChildren.set(index1, child2);
         mChildren.set(index2, child1);
-        invalidate();
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -292,7 +467,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i + 1));
         }
         mChildren.set(mNumChildren - 1, child);
-        invalidate();
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -312,7 +487,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             mChildren.set(i, mChildren.get(i - 1));
         }
         mChildren.set(0, child);
-        invalidate();
+        invalidate(CHILDREN);
 
         return true;
     }
@@ -333,8 +508,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      */
     public int getNumGrandChildren() {
         int n = mNumChildren;
+        DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
-            DisplayObject child = mChildren.get(i);
+            child = mChildren.get(i);
             if (child instanceof Container) {
                 n += ((Container) child).getNumGrandChildren();
             }
@@ -343,9 +519,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
         return n;
     }
 
+    /**
+     * Note: This is called from UI-Thread
+     */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (mVisibleTouchables != null) {
+
+        if (mNumChildren > 0 && mVisibleTouchables != null) {
             // start from front to back
             for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
                 if (mVisibleTouchables.get(i).onTouchEvent(event)) {
@@ -365,7 +545,93 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     @Override
     public boolean isTouchable() {
-        return mTouchable;
+        return mTouchable && mAlive;
+    }
+
+    public boolean isClippingEnabled() {
+        return mClippingEnabled;
+    }
+
+    /**
+     * Enable/Disable Bound-clipping. Note this does not work for rotation.
+     * 
+     * @param clippingEnabled
+     */
+    public void setClippingEnabled(final boolean clippingEnabled) {
+        mClippingEnabled = clippingEnabled;
+
+        invalidate(VISUAL);
+    }
+
+    public boolean isCacheEnabled() {
+        return mCacheEnabled;
+    }
+
+    /**
+     * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
+     * 
+     * @param cacheEnabled
+     */
+    public void setCacheEnabled(final boolean cacheEnabled) {
+        // diff check
+        if (mCacheEnabled == cacheEnabled) {
+            return;
+        }
+
+        mCacheEnabled = cacheEnabled;
+
+        invalidate(CACHE);
+    }
+
+    public int getCachePolicy() {
+        return mCachePolicy;
+    }
+
+    /**
+     * Set how to you want to cache
+     * 
+     * @param cachePolicy
+     * @see #Cacheable
+     */
+    public void setCachePolicy(final int cachePolicy) {
+        // diff check
+        if (mCachePolicy == cachePolicy) {
+            return;
+        }
+
+        mCachePolicy = cachePolicy;
+
+        invalidate(CACHE);
+    }
+
+    public int getCacheProjection() {
+        return mCacheProjection;
+    }
+
+    public void setCacheProjection(final int cacheProjection) {
+        // diff check
+        if (mCacheProjection == cacheProjection) {
+            return;
+        }
+
+        mCacheProjection = cacheProjection;
+
+        invalidate(CACHE);
+    }
+
+    // public ArrayList<DisplayObject> getChildrenDisplayOrder() {
+    // return mChildrenDisplayOrder;
+    // }
+
+    public void setChildrenDisplayOrder(final ArrayList<DisplayObject> childrenDisplayOrder) {
+        if (childrenDisplayOrder.size() != mNumChildren) {
+            Log.e(TAG, "Invalid Children array!");
+            return;
+        }
+
+        mChildrenDisplayOrder = childrenDisplayOrder;
+
+        invalidate(CHILDREN);
     }
 
     protected void onAddedChild(final DisplayObject child) {
@@ -374,5 +640,26 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     protected void onRemovedChild(final DisplayObject child) {
         // TODO
+    }
+
+    /**
+     * for Debugging
+     * 
+     * @return a string that has all the children in Tree format
+     */
+    @Override
+    public String getObjectTree(final String prefix) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(super.getObjectTree(prefix));
+        sb.append("\n");
+
+        DisplayObject child;
+        for (int i = 0; i < mNumChildren; i++) {
+            child = mChildren.get(i);
+            sb.append(child.getObjectTree(prefix + "   "));
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }

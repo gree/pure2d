@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.sounds;
 
+import java.io.File;
+
 import android.media.SoundPool;
 import android.util.Log;
 
@@ -11,6 +13,8 @@ import android.util.Log;
  */
 public class FileSound extends AbstractSound {
     protected static final String TAG = FileSound.class.getSimpleName();
+
+    public static final long BITRATE = 16L; // in kbps
 
     private final String mFilePath;
 
@@ -22,6 +26,10 @@ public class FileSound extends AbstractSound {
 
     public int load(final SoundPool soundPool) {
         Log.v(TAG, "load(" + mFilePath + ")");
+
+        File file = new File(mFilePath);
+        long fileSize = file.length();
+        mLength = fileSize / BITRATE;
 
         return mSoundID = soundPool.load(mFilePath, mPriority);
     }

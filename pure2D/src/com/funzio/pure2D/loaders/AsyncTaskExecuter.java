@@ -16,9 +16,13 @@ import com.funzio.pure2D.loaders.tasks.Task.TaskListener;
 /**
  * @author sajjadtabib
  */
-public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T>> {
+public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Float, List<T>> {
 
     private TaskListener mTaskListener;
+    protected int mNumTasks = 0;
+    protected int mNumTasksCompleted = 0;
+
+    protected boolean mStopOnTaskFailed = false;
 
     /*
      * (non-Javadoc)
@@ -26,12 +30,15 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T
      */
     @Override
     protected List<T> doInBackground(final T... taskList) {
+        mNumTasks = taskList.length;
 
         final List<T> executedTasks = new ArrayList<T>();
-        for (int i = 0; i < taskList.length; i++) {
+        for (int i = 0; i < mNumTasks; i++) {
             final T task = taskList[i];
             // execute now
-            task.run();
+            if (task.run()) {
+                mNumTasksCompleted++;
+            }
 
             // callback
             if (mTaskListener != null) {
@@ -40,6 +47,10 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T
 
             // add to the list
             executedTasks.add(task);
+
+            if (mStopOnTaskFailed && !task.isSucceeded()) {
+                break;
+            }
         }
 
         return executedTasks;
@@ -57,12 +68,24 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T
     // }
     // }
 
+    public float getProgress() {
+        return (float) mNumTasksCompleted / (float) mNumTasks;
+    }
+
     public TaskListener getTaskListener() {
         return mTaskListener;
     }
 
     public void setTaskListener(final TaskListener taskListener) {
         mTaskListener = taskListener;
+    }
+
+    public boolean isStopOnTaskFailed() {
+        return mStopOnTaskFailed;
+    }
+
+    public void setStopOnTaskFailed(final boolean stopOnTaskFailed) {
+        mStopOnTaskFailed = stopOnTaskFailed;
     }
 
     /**
@@ -72,7 +95,7 @@ public class AsyncTaskExecuter<T extends Task> extends AsyncTask<T, Void, List<T
      * @return
      */
     @SuppressLint("NewApi")
-    public AsyncTask<T, Void, List<T>> executeOnPool(final T... params) {
+    public AsyncTask<T, Float, List<T>> executeOnPool(final T... params) {
         // run now
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
             return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);

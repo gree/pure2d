@@ -3,13 +3,13 @@
  */
 package com.funzio.pure2D.animators;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * @author long
  */
 public class ActionQueue extends BaseAnimator {
-    private Vector<Action> mActions = new Vector<Action>();
+    private ArrayList<Action> mActions = new ArrayList<Action>();
     private Action mCurrentAction;
     private int mCurrentIndex = -1;
     private int mNumActions = 0;
@@ -59,11 +59,11 @@ public class ActionQueue extends BaseAnimator {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#start()
+     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
      */
     @Override
-    public void start() {
-        super.start();
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
 
         next();
     }
@@ -87,18 +87,20 @@ public class ActionQueue extends BaseAnimator {
     }
 
     public void add(final Action action) {
-        mActions.add(action);
-        mNumActions++;
+        if (mActions.add(action)) {
+            mNumActions++;
 
-        // auto start
-        if (mAutoStart && !mRunning) {
-            start();
+            // auto start
+            if (mAutoStart && !mRunning) {
+                start();
+            }
         }
     }
 
     public void remove(final Action action) {
-        mActions.remove(action);
-        mNumActions--;
+        if (mActions.remove(action)) {
+            mNumActions--;
+        }
     }
 
     public void clear() {

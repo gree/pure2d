@@ -37,7 +37,7 @@ public class RunnableTask implements IntentTask {
             mSucceeded = false;
 
             if (LOG_ENABLED) {
-                Log.v(TAG, "RUN ERROR!", e);
+                Log.e(TAG, "RUN ERROR!", e);
             }
         }
 

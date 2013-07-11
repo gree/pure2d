@@ -1,0 +1,127 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "shooter_smoke",
+			"lifespan": 2000,
+			"particles": [
+
+
+				{
+					"duration": 1000,
+
+					"sprite": ["sprites/fire.png", "sprites/fire.png", "sprites/fire.png", "sprites/smoke.png"],
+					"animator": "fire_ani",
+					"blend_mode": "add"
+				},
+
+				{
+					"start_delay": 700,
+					"step_quantity": 50,
+					"duration": 1,
+
+					"sprite": ["atlas/star_03_60.json", "atlas/coin_01_60.json"],
+					"start_frame": [0, 20],
+					"animator": "star_ani",
+					"motion_trail": "small_trail"
+				}
+			],
+
+			"animator": "shoot_ani",
+			"motion_trail": "big_trail"
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "shoot_ani",
+			"type": "trajectory",
+			"velocity": [100, 200],
+			"angle": [1.3, 1.9],
+			"lifespan": [500, 1000]
+		},
+
+		{
+			"name": "fire_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "scale",
+					"x_from": [0.3, 0.5],
+					"x_to": 0.1,
+					"y_from": [0.3, 0.5],
+					"y_to": 0.1,
+					"duration": 300,
+					"interpolation": "accelerate"
+				},
+
+				{
+					"type": "move",
+					"dx": [-50, 50],
+					"dy": [-50, 50],
+					"duration": 300,
+					"interpolation": "decelerate"
+				}
+			]
+		},
+
+		{
+			"name": "smoke_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "scale",
+					"x_from": [0.5, 1],
+					"x_to": 0.5,
+					"y_from": [0.5, 1],
+					"y_to": 0.5,
+					"duration": 800,
+					"interpolation": "accelerate"
+				},
+
+				{
+					"type": "move",
+					"dx": [-50, 50],
+					"dy": [-50, 50],
+					"duration": 800,
+					"interpolation": "decelerate"
+				},
+
+				{
+					"type": "alpha",
+					"from": 1,
+					"to": 0,
+					"duration": 800,
+					"interpolation": "decelerate"
+				}
+			]
+		},
+
+		{
+			"name": "star_ani",
+			"type": "recursive_trajectory",
+			"velocity": [20, 100],
+			"angle": [0, 6.28]
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "small_trail",
+			"type": "shape",
+			"stroke1": 10,
+			"color1": 0xFFFFFF00,
+			"color2": 0x00FF0000
+		},
+
+		{
+			"name": "big_trail",
+			"type": "shape",
+			"stroke1": 30,
+			"stroke2": 60,
+			"color1": 0xFFFF0000,
+			"color2": 0x00FFFF00,
+			"stroke_interpolation": "decelerate"
+		}
+	]
+}

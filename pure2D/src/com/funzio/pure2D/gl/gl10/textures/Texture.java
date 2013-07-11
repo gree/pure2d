@@ -13,19 +13,20 @@ import android.opengl.GLUtils;
 import android.util.Log;
 
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
  */
-public abstract class Texture {
+public class Texture {
     public static boolean LOG_ENABLED = true;
     public static final String TAG = Texture.class.getSimpleName();
 
     protected GLState mGLState;
     protected GL10 mGL;
 
-    private int mMinFilter;
-    private int mMagFilter;
+    private int mMinFilter = GL10.GL_NEAREST;
+    private int mMagFilter = GL10.GL_NEAREST;
     private int mRepeatS;
     private int mRepeatT;
     private boolean mHasMipmaps = false;
@@ -63,11 +64,7 @@ public abstract class Texture {
      * @param mipmaps
      */
     public void load(final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
-        mSize.x = actualWidth == 0 && bitmap != null ? bitmap.getWidth() : actualWidth;
-        mSize.y = actualHeight == 0 && bitmap != null ? bitmap.getHeight() : actualHeight;
-        // find the coordinates' scales
-        mCoordScaleX = bitmap == null ? 1 : mSize.x / bitmap.getWidth();
-        mCoordScaleY = bitmap == null ? 1 : mSize.y / bitmap.getHeight();
+        setBitmapSize(bitmap != null ? bitmap.getWidth() : actualWidth, bitmap != null ? bitmap.getHeight() : actualHeight, actualWidth, actualHeight);
 
         final int[] ids = new int[1];
         // clear the previous error(s), to make sure
@@ -106,7 +103,7 @@ public abstract class Texture {
             if (mHasMipmaps) {
                 mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
             } else {
-                setFilters(GL10.GL_NEAREST, GL10.GL_NEAREST);
+                setFilters(mMinFilter, mMagFilter);
             }
 
             // mGL.glBindTexture(GL10.GL_TEXTURE_2D, 0);
@@ -122,6 +119,14 @@ public abstract class Texture {
         }
     }
 
+    protected void setBitmapSize(final int bitmapWidth, final int bitmapHeight, final int actualWidth, final int actualHeight) {
+        mSize.x = actualWidth == 0 ? bitmapWidth : actualWidth;
+        mSize.y = actualHeight == 0 ? bitmapHeight : actualHeight;
+        // find the coordinates' scales
+        mCoordScaleX = mSize.x / bitmapWidth;
+        mCoordScaleY = mSize.y / bitmapHeight;
+    }
+
     public PointF getSize() {
         return mSize;
     }
@@ -132,8 +137,8 @@ public abstract class Texture {
 
         if (mTextureID != 0) {
             mGLState.bindTexture(this);
-            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, mMinFilter);
-            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, mMagFilter);
+            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, minFilter);
+            mGL.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, magFilter);
         }
     }
 
@@ -189,6 +194,9 @@ public abstract class Texture {
             mGLState.bindTexture(this);
             mGL.glDeleteTextures(1, ids, 0);
             mTextureID = 0;
+
+            // now unbind me
+            mGLState.unbindTexture();
         }
     }
 
@@ -200,6 +208,7 @@ public abstract class Texture {
         return mTextureID != 0;
     }
 
+    @Deprecated
     public void reload(final GLState glState) {
         mGLState = glState;
         mGL = mGLState.mGL;
@@ -207,7 +216,26 @@ public abstract class Texture {
         reload();
     }
 
-    public abstract void reload();
+    // @Deprecated
+    // public abstract void reload();
+
+    @Deprecated
+    public void reload() {
+        // to be overridden
+    }
+
+    public boolean isPo2() {
+        return Pure2DUtils.isPO2((int) mSize.x) && Pure2DUtils.isPO2((int) mSize.y);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Texture {id: " + mTextureID + ", size: " + mSize.x + " x " + mSize.y + "}";
+    }
 
     public Listener getListener() {
         return mListener;

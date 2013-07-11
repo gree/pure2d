@@ -20,7 +20,7 @@ public class Clip extends Sprite implements Playable {
     private int mNumFrames = 0;
     private AtlasFrameSet mFrameSet;
     private int mPendingTime = 0;
-    private int mAccumimatedFrames = 0;
+    private int mAccumulatedFrames = 0;
 
     public Clip() {
         super();
@@ -38,13 +38,14 @@ public class Clip extends Sprite implements Playable {
     public void setAtlasFrameSet(final AtlasFrameSet frameSet) {
         mFrameSet = frameSet;
 
-        if (mFrameSet != null) {
-            mNumFrames = mFrameSet.getNumFrames();
+        if (frameSet != null) {
+            mNumFrames = frameSet.getNumFrames();
+            setFps(frameSet.getFps());
 
             // start from first frame
             mCurrentFrame = 0;
 
-            setAtlasFrame(mNumFrames > 0 ? mFrameSet.getFrame(mCurrentFrame) : null);
+            setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
         } else {
             mNumFrames = 0;
         }
@@ -71,7 +72,7 @@ public class Clip extends Sprite implements Playable {
     public void setOriginAtCenter() {
         if (mFrameSet != null) {
             final PointF maxSize = mFrameSet.getFrameMaxSize();
-            super.setOrigin(maxSize.x / 2f, maxSize.y / 2f);
+            super.setOrigin(maxSize.x * 0.5f - mOffsetX, maxSize.y * 0.5f - mOffsetY);
         } else {
             super.setOriginAtCenter();
         }
@@ -83,13 +84,17 @@ public class Clip extends Sprite implements Playable {
      */
     @Override
     public boolean update(final int deltaTime) {
-        final boolean returned = super.update(deltaTime);
+        // update current frame
+        if (mCurrentFrame != mPreviousFrame && mFrameSet != null) {
+            mPreviousFrame = mCurrentFrame;
+            setAtlasFrame(mFrameSet.getFrame(mCurrentFrame));
+        }
 
         // get next frame
-        if (mNumFrames > 0 && mPlaying) {
+        if (mNumFrames > 1 && mPlaying) {
             int frames = 1;
             // if there is specific fps
-            if (mFps > 0) {
+            if (getFps() > 0) {
                 mPendingTime += deltaTime;
                 frames = mPendingTime / (int) mFrameDuration;
                 if (frames > 0) {
@@ -98,14 +103,14 @@ public class Clip extends Sprite implements Playable {
             }
 
             if (frames > 0) {
-                mAccumimatedFrames += frames;
+                mAccumulatedFrames += frames;
                 mCurrentFrame += frames;
                 if (mLoop == LOOP_REPEAT) {
                     if (mCurrentFrame >= mNumFrames) {
                         mCurrentFrame %= mNumFrames;
                     }
                 } else if (mLoop == LOOP_REVERSE) {
-                    final int trips = (mAccumimatedFrames / mNumFrames);
+                    final int trips = (mAccumulatedFrames / mNumFrames);
                     if (trips % 2 == 0) {
                         // play forward
                         if (mCurrentFrame >= mNumFrames) {
@@ -113,7 +118,7 @@ public class Clip extends Sprite implements Playable {
                         }
                     } else {
                         // play backward
-                        mCurrentFrame = mNumFrames - 1 - mAccumimatedFrames % mNumFrames;
+                        mCurrentFrame = mNumFrames - 1 - mAccumulatedFrames % mNumFrames;
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
@@ -128,13 +133,7 @@ public class Clip extends Sprite implements Playable {
             }
         }
 
-        // change frame
-        if (mCurrentFrame != mPreviousFrame && mFrameSet != null) {
-            mPreviousFrame = mCurrentFrame;
-            setAtlasFrame(mFrameSet.getFrame(mCurrentFrame));
-        }
-
-        return returned;
+        return super.update(deltaTime);
     }
 
     public void play() {

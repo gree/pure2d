@@ -5,7 +5,7 @@ package com.funzio.pure2D.animators;
 
 import android.view.animation.Interpolator;
 
-import com.funzio.pure2D.Playable;
+import com.funzio.pure2D.LoopModes;
 
 /**
  * @author long
@@ -14,9 +14,14 @@ public class TweenAnimator extends BaseAnimator {
     protected int mDuration;
     protected Interpolator mInterpolator;
 
+    protected float mLastValue = 0;
     protected float mCurrentValue = 0;
-    protected int mLoopMode = Playable.LOOP_NONE;
+    protected float mCurrentUninterpolatedValue = 0;
+    protected boolean mReversed = false;
+
+    protected int mLoopMode = LoopModes.LOOP_NONE;
     protected int mLoopCount = -1; // forever
+    protected int mTripCount = 0;
 
     public TweenAnimator() {
         super();
@@ -30,32 +35,59 @@ public class TweenAnimator extends BaseAnimator {
 
     /*
      * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
+     */
+    @Override
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
+
+        // clear the values
+        mLastValue = mCurrentValue = mCurrentUninterpolatedValue = (mReversed ? 1 : 0);
+        mTripCount = 0;
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.funzio.pure2D.animators.BaseAnimator#update(int)
      */
     @Override
     public boolean update(final int deltaTime) {
         if (mDuration > 0 && super.update(deltaTime)) {
-            final int trips = mElapsedTime / mDuration;
-            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == Playable.LOOP_NONE && mElapsedTime >= mDuration)) {
+            float timeline = (float) mElapsedTime / (float) mDuration;
+            final int trips = (int) Math.floor(timeline);
+            if ((mLoopCount >= 0 && trips > mLoopCount) || (mLoopMode == LoopModes.LOOP_NONE && mElapsedTime >= mDuration)) {
                 // end it
                 end();
             } else {
 
-                float timeLine;
-                if (mLoopMode == Playable.LOOP_REPEAT) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
-                } else if (mLoopMode == Playable.LOOP_REVERSE) {
-                    timeLine = ((float) mElapsedTime % (float) mDuration) / mDuration;
+                // detect loop
+                if (trips > mTripCount) {
+                    mTripCount = trips;
+                    if (mLoopMode != LoopModes.LOOP_NONE) {
+                        // callback
+                        onLoop();
+                    }
+                }
+
+                if (mLoopMode == LoopModes.LOOP_REPEAT) {
+                    timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
+                } else if (mLoopMode == LoopModes.LOOP_REVERSE) {
+                    timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                     if (trips % 2 == 1) {
                         // reverse
-                        timeLine = 1 - timeLine;
+                        timeline = 1 - timeline;
                     }
-                } else {
-                    timeLine = (float) mElapsedTime / (float) mDuration;
                 }
 
                 // interpolate the value
-                mCurrentValue = (mInterpolator == null) ? timeLine : mInterpolator.getInterpolation(timeLine);
+                mLastValue = mCurrentValue;
+                mCurrentUninterpolatedValue = timeline;
+                mCurrentValue = (mInterpolator == null) ? timeline : mInterpolator.getInterpolation(timeline);
+                // explicit reversed
+                if (mReversed) {
+                    mCurrentUninterpolatedValue = 1 - mCurrentUninterpolatedValue;
+                    mCurrentValue = 1 - mCurrentValue;
+                }
                 // and update
                 onUpdate(mCurrentValue);
             }
@@ -73,11 +105,19 @@ public class TweenAnimator extends BaseAnimator {
     @Override
     public void end() {
         // force end
-        if (mLoopMode == Playable.LOOP_REVERSE && mLoopCount > 0) {
-            mCurrentValue = mLoopCount % 2 == 0 ? 1 : 0;
+        if (mLoopMode == LoopModes.LOOP_REVERSE && mLoopCount > 0) {
+            mCurrentValue = mCurrentUninterpolatedValue = mLoopCount % 2 == 0 ? 1 : 0;
         } else {
-            mCurrentValue = 1;
+            mCurrentValue = mCurrentUninterpolatedValue = 1;
         }
+
+        // explicit reversed
+        if (mReversed) {
+            mCurrentUninterpolatedValue = 1 - mCurrentUninterpolatedValue;
+            mCurrentValue = 1 - mCurrentValue;
+        }
+
+        // update
         onUpdate(mCurrentValue);
 
         super.end();
@@ -95,6 +135,19 @@ public class TweenAnimator extends BaseAnimator {
      */
     public void setDuration(final int duration) {
         mDuration = duration;
+    }
+
+    public boolean isReversed() {
+        return mReversed;
+    }
+
+    /**
+     * To explicitly play in reversed direction
+     * 
+     * @param reversed
+     */
+    public void setReversed(final boolean reversed) {
+        mReversed = reversed;
     }
 
     /**
@@ -144,5 +197,9 @@ public class TweenAnimator extends BaseAnimator {
         if (mListener != null) {
             mListener.onAnimationUpdate(this, value);
         }
+    }
+
+    protected void onLoop() {
+        // TOOD
     }
 }

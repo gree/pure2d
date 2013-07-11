@@ -9,12 +9,13 @@ import android.graphics.RectF;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
  * @author long
  */
-public interface DisplayObject extends Manipulatable {
+public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public static final int FLIP_X = 1;
     public static final int FLIP_Y = 1 << 1;
 
@@ -38,6 +39,22 @@ public interface DisplayObject extends Manipulatable {
 
     public void setOrigin(final PointF origin);
 
+    public void setOrigin(final float x, final float y);
+
+    public void setOriginAtCenter();
+
+    public PointF getPivot();
+
+    public void setPivot(final PointF pivot);
+
+    public void setPivot(final float x, final float y);
+
+    public void setPivotAtCenter();
+
+    public void setSkew(final float kx, final float ky);
+
+    public PointF getSkew();
+
     public void setAlive(final boolean value);
 
     public boolean isAlive();
@@ -50,6 +67,8 @@ public interface DisplayObject extends Manipulatable {
 
     public boolean isVisible();
 
+    public boolean shouldDraw();
+
     public GLColor getColor();
 
     public void setColor(final GLColor color);
@@ -57,6 +76,10 @@ public interface DisplayObject extends Manipulatable {
     public float getAlpha();
 
     public void setAlpha(final float alpha);
+
+    public void setBlendFunc(final BlendFunc blendFunc);
+
+    public BlendFunc getBlendFunc();
 
     public void setFps(int value);
 
@@ -72,14 +95,18 @@ public interface DisplayObject extends Manipulatable {
 
     public Container getParent();
 
+    public boolean queueEvent(final Runnable r);
+
     public boolean removeFromParent();
 
     public void dispose();
 
+    @Deprecated
     public PointF localToGlobal(final PointF local);
 
     public void localToGlobal(final PointF local, final PointF result);
 
+    @Deprecated
     public PointF globalToLocal(final PointF global);
 
     public void globalToLocal(final PointF global, final PointF result);
@@ -92,7 +119,13 @@ public interface DisplayObject extends Manipulatable {
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
-    public void onAdded(Container parent);
+    public boolean isPerspectiveEnabled();
+
+    public void setPerspectiveEnabled(final boolean perspectiveEnabled);
+
+    public void onAdded(Container container);
 
     public void onRemoved();
+
+    public String getObjectTree(final String prefix);
 }

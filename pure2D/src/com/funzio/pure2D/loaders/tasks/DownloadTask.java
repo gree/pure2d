@@ -15,7 +15,7 @@ import android.util.Log;
 /**
  * @author long
  */
-public class DownloadTask extends URLTask implements Retriable {
+public class DownloadTask extends URLTask implements Retriable, Optional {
     public static boolean LOG_ENABLED = true;
     public static final String TAG = DownloadTask.class.getSimpleName();
 
@@ -24,14 +24,21 @@ public class DownloadTask extends URLTask implements Retriable {
     public static final String EXTRA_FILE_PATH = "filePath";
 
     protected final String mFilePath;
-    protected final boolean mOverriding;
+    protected boolean mOverriding = false;
     private OutputStream mOutputStream;
 
     protected boolean mSucceeded; // whether the execution was successful or not.
+    protected boolean mIsOptional; // whether we should care about whether this task failed or not
 
     private int mRetriedAlready = 0; // number of times already retried
     private int mRetryMax = 0; // max number of retries
     private int mRetryDelay = 0; // delay between retries
+
+    public DownloadTask(final String srcURL, final String dstFilePath) {
+        super(srcURL);
+
+        mFilePath = dstFilePath;
+    }
 
     public DownloadTask(final String srcURL, final String dstFilePath, final boolean overriding) {
         super(srcURL);
@@ -60,6 +67,10 @@ public class DownloadTask extends URLTask implements Retriable {
     public void reset() {
         mSucceeded = false;
         mRetriedAlready = 0;
+    }
+
+    public void setIsOptional(final boolean isOptional) {
+        mIsOptional = isOptional;
     }
 
     @Override
@@ -168,6 +179,14 @@ public class DownloadTask extends URLTask implements Retriable {
         return mFilePath;
     }
 
+    public boolean isOverriding() {
+        return mOverriding;
+    }
+
+    public void setOverriding(final boolean overriding) {
+        mOverriding = overriding;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -175,5 +194,14 @@ public class DownloadTask extends URLTask implements Retriable {
     @Override
     public String toString() {
         return "[DownloadTask " + mURL + ", " + mFilePath + " ]";
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.loaders.tasks.Optional#isOptional()
+     */
+    @Override
+    public boolean isOptional() {
+        return mIsOptional;
     }
 }

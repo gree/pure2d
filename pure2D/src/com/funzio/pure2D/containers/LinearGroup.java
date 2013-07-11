@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 
 /**
  * @author long
@@ -13,12 +14,16 @@ import com.funzio.pure2D.DisplayObject;
 public abstract class LinearGroup extends DisplayGroup {
 
     protected float mGap = 0;
+    protected float mOffsetX = 0;
+    protected float mOffsetY = 0;
+
     protected int mAlignment = Alignment.NONE;
     protected PointF mScrollPosition = new PointF();
     protected boolean mRepeating = false;
-    protected boolean mClipping = true;
+    protected boolean mBoundsCheckEnabled = true;
+    protected boolean mAutoSleepChildren = false;
 
-    private boolean mChildrenPositionInvalidated = false;
+    protected boolean mChildrenPositionInvalidated = false;
 
     /*
      * (non-Javadoc)
@@ -36,7 +41,7 @@ public abstract class LinearGroup extends DisplayGroup {
 
     protected void invalidateChildrenPosition() {
         mChildrenPositionInvalidated = true;
-        invalidate();
+        invalidate(InvalidateFlags.CHILDREN);
     }
 
     /**
@@ -51,6 +56,14 @@ public abstract class LinearGroup extends DisplayGroup {
      */
     public void setGap(final float gap) {
         mGap = gap;
+
+        // reposition the children
+        invalidateChildrenPosition();
+    }
+
+    public void setOffset(final float offsetX, final float offsetY) {
+        mOffsetX = offsetX;
+        mOffsetY = offsetY;
 
         // reposition the children
         invalidateChildrenPosition();
@@ -123,17 +136,29 @@ public abstract class LinearGroup extends DisplayGroup {
     }
 
     /**
-     * @return the clipping
+     * @return the checking bounds
      */
-    public boolean isClipping() {
-        return mClipping;
+    public boolean isBoundsCheckEnabled() {
+        return mBoundsCheckEnabled;
     }
 
     /**
-     * @param clipping the clipping to set
+     * Toggle checking bounds and draw children
+     * 
+     * @param checking the bounds to set
      */
-    public void setClipping(final boolean clipping) {
-        mClipping = clipping;
+    public void setBoundsCheckEnabled(final boolean checking) {
+        mBoundsCheckEnabled = checking;
+
+        invalidate(InvalidateFlags.CHILDREN);
+    }
+
+    public boolean isAutoSleepChildren() {
+        return mAutoSleepChildren;
+    }
+
+    public void setAutoSleepChildren(final boolean autoSleepChildren) {
+        mAutoSleepChildren = autoSleepChildren;
     }
 
     public int getAlignment() {

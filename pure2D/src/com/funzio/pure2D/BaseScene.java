@@ -4,7 +4,11 @@
 package com.funzio.pure2D;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -13,11 +17,13 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 
@@ -32,7 +38,7 @@ public class BaseScene implements Scene {
     protected GLState mGLState;
     protected Camera mCamera;
     protected TextureManager mTextureManager;
-    protected List<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     private int mNumChildren;
 
     private PointF mSize = new PointF();
@@ -54,19 +60,18 @@ public class BaseScene implements Scene {
 
     // extra
     private GLColor mColor = new GLColor(0f, 0f, 0f, 1f);
+    private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
     private Listener mListener;
 
     // axis system
     private int mAxisSystem = AXIS_BOTTOM_LEFT;
 
     // UI
+    private final Object mUILock = new Object();
     private boolean mUIEnabled = false;
-    private List<Touchable> mVisibleTouchables;
-    private MotionEvent mMotionEvent = null;
-    private PointF mTouchedPoint;
-
-    // GL extensions
-    protected boolean mNpotTextureSupported = false;
+    private ArrayList<Touchable> mVisibleTouchables;
+    private ArrayList<PointF> mTouchedPoints = new ArrayList<PointF>();
+    private int mPointerCount = 0;
 
     public BaseScene() {
     }
@@ -112,8 +117,8 @@ public class BaseScene implements Scene {
 
         // size
         final Rect stageRect = mStage.getRect();
-        mSize.x = stageRect.width();
-        mSize.y = stageRect.height();
+        mSize.x = stageRect.right - stageRect.left + 1;
+        mSize.y = stageRect.bottom - stageRect.top + 1;
     }
 
     public void setAxisSystem(final int value) {
@@ -126,6 +131,11 @@ public class BaseScene implements Scene {
         }
     }
 
+    /**
+     * @see {@link DisplayObject#setPerspectiveEnabled(boolean)}, {@link PerspectiveCamera}
+     * @param zNear
+     * @param zFar
+     */
     public void setDepthRange(final float zNear, final float zFar) {
         if (mGLState != null) {
             mGLState.mGL.glDepthRangef(zNear, zFar);
@@ -143,6 +153,7 @@ public class BaseScene implements Scene {
     /**
      * @return the target fps
      */
+    @Deprecated
     final public int getTargetFps() {
         return mTargetFps;
     }
@@ -150,6 +161,7 @@ public class BaseScene implements Scene {
     /**
      * @param fps the fps to set
      */
+    @Deprecated
     public void setTargetFps(final int fps) {
         mTargetFps = fps;
 
@@ -183,23 +195,20 @@ public class BaseScene implements Scene {
      */
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+        Log.v(TAG, "onSurfaceCreated()");
         // this might help but I have not seen any difference yet!
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        mStartTime = System.nanoTime();
+        // init GL properties, ONCE!
+        if (Pure2D.GL_MAX_TEXTURE_SIZE == 0) {
+            Pure2D.initGLProperties(gl);
+        }
+
+        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
         mDownTime = 0;
         mFrameCount = 0;
         mCurrentFps = 0;
         mFrameCountDuration = 0;
-
-        // find the extensions
-        if (Pure2D.GL_EXTENSIONS == null) {
-            Pure2D.GL_EXTENSIONS = gl.glGetString(GL10.GL_EXTENSIONS);
-            Pure2D.GL_NPOT_TEXTURE_SUPPORTED = mNpotTextureSupported = Pure2D.GL_EXTENSIONS.contains("GL_OES_texture_npot") || Pure2D.GL_EXTENSIONS.contains("GL_ARB_texture_non_power_of_two");
-            Pure2D.GL_STENCIL8_SUPPORTED = Pure2D.GL_EXTENSIONS.contains("GL_OES_stencil8");
-        }
-
-        Log.v(TAG, "onSurfaceCreated() | NPOT: " + Pure2D.GL_NPOT_TEXTURE_SUPPORTED);
 
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
@@ -227,7 +236,11 @@ public class BaseScene implements Scene {
 
         // Enable alpha blending
         gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        // gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
+        // if (gl instanceof GL11ExtensionPack) {
+        // final GL11ExtensionPack gl11 = (GL11ExtensionPack) gl;
+        // // gl11.glBlendEquationSeparate(GL11ExtensionPack.GL_FUNC_ADD, GL11ExtensionPack.GL_FUNC_ADD);
+        // }
 
         // Enable Texture, not here!
         // gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -249,6 +262,7 @@ public class BaseScene implements Scene {
 
         // init GL state
         mGLState = new GLState(gl, mStage);
+        mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
         mGLState.setCamera(mCamera);
 
         // init Texture manager with the new GL
@@ -298,10 +312,12 @@ public class BaseScene implements Scene {
         }
 
         // delta time
-        final long now = System.nanoTime();
-        final float delta = ((now - mStartTime) / 1000000f);
+        final long now = SystemClock.elapsedRealtime(); // System.nanoTime();
+        // final float delta = ((now - mStartTime) / 1000000f);
+        final long delta = now - mStartTime;
+        DisplayObject child;
 
-        if ((int) delta == 0) {
+        if (delta == 0) {
             // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
             // We need to force invalidate!
             invalidate();
@@ -351,7 +367,7 @@ public class BaseScene implements Scene {
 
             // update children
             for (int i = 0; i < mNumChildren; i++) {
-                DisplayObject child = mChildren.get(i);
+                child = mChildren.get(i);
                 if (child.isAlive()) {
                     // heart beat
                     child.update((int) delta);
@@ -373,47 +389,47 @@ public class BaseScene implements Scene {
             }
 
             if (mUIEnabled) {
-                if (mVisibleTouchables == null) {
-                    mVisibleTouchables = new ArrayList<Touchable>();
-                } else {
-                    mVisibleTouchables.clear();
-                }
-            }
+                // lock the array
+                synchronized (mUILock) {
+                    if (mVisibleTouchables == null) {
+                        mVisibleTouchables = new ArrayList<Touchable>();
+                    } else {
+                        mVisibleTouchables.clear();
+                    }
 
-            for (int i = 0; i < mNumChildren; i++) {
-                DisplayObject child = mChildren.get(i);
-                final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
-                if (visible) {
-                    // draw frame
-                    child.draw(mGLState);
+                    for (int i = 0; i < mNumChildren; i++) {
+                        child = mChildren.get(i);
+                        final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
+                        if (visible) {
+                            // draw frame, check alpha for optimization
+                            if (child.getAlpha() > 0) {
+                                child.draw(mGLState);
+                            }
 
-                    // stack the visible child
-                    if (mUIEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
-                        float childZ = child.getZ();
-                        int j = mVisibleTouchables.size();
-                        while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
-                            j--;
+                            // stack the visible child
+                            if (child instanceof Touchable && ((Touchable) child).isTouchable()) {
+                                float childZ = child.getZ();
+                                int j = mVisibleTouchables.size();
+                                while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                                    j--;
+                                }
+                                mVisibleTouchables.add(j, (Touchable) child);
+                            }
                         }
-                        mVisibleTouchables.add(j, (Touchable) child);
+                    }
+                }
+            } else {
+                for (int i = 0; i < mNumChildren; i++) {
+                    child = mChildren.get(i);
+                    if (child.shouldDraw() && ((mCamera == null) || mCamera.isViewable(child))) {
+                        // draw frame
+                        child.draw(mGLState);
                     }
                 }
             }
 
             // validated
             mInvalidated--;
-            // mStage.requestRender();
-        }
-
-        if (mUIEnabled && mMotionEvent != null) {
-            // start from front to back
-            for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
-                if (mVisibleTouchables.get(i).onTouchEvent(mMotionEvent)) {
-                    break;
-                }
-            }
-
-            // clear
-            mMotionEvent = null;
         }
     }
 
@@ -431,7 +447,7 @@ public class BaseScene implements Scene {
         }
 
         mPaused = false;
-        mStartTime = System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
     }
 
     public boolean isPaused() {
@@ -474,11 +490,41 @@ public class BaseScene implements Scene {
     }
 
     /**
-     * @param color the color to set
+     * This needs to be called on GL Thread
+     * 
+     * @param color the color to set.
      */
     public void setColor(final GLColor color) {
-        mColor = color;
-        invalidate();
+        mColor.setValues(color);
+
+        // apply
+        if (mGLState != null) {
+            mGLState.mGL.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
+
+            invalidate();
+        }
+    }
+
+    /**
+     * @return the current default Blending function
+     */
+    public BlendFunc getDefaultBlendFunc() {
+        return mDefaultBlendFunc;
+    }
+
+    /**
+     * Set the default Blending function for all child objects
+     * 
+     * @param defaultBlendFunc
+     */
+    public void setDefaultBlendFunc(final BlendFunc defaultBlendFunc) {
+        mDefaultBlendFunc.set(defaultBlendFunc);
+
+        // null check
+        if (mGLState != null) {
+            // apply to gl state
+            mGLState.setDefaultBlendFunc(defaultBlendFunc);
+        }
     }
 
     protected void clear() {
@@ -513,6 +559,21 @@ public class BaseScene implements Scene {
         return false;
     }
 
+    public boolean addChild(final DisplayObject child, final int index) {
+        if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
+
+            mChildren.add(index, child);
+            mNumChildren++;
+
+            // child callback
+            child.onAdded(this);
+            invalidate();
+
+            return true;
+        }
+        return false;
+    }
+
     public boolean removeChild(final DisplayObject child) {
         if (mChildren.remove(child)) {
             mNumChildren--;
@@ -539,6 +600,10 @@ public class BaseScene implements Scene {
 
     public DisplayObject getChildAt(final int index) {
         return index < mNumChildren ? mChildren.get(index) : null;
+    }
+
+    public int getChildIndex(final DisplayObject child) {
+        return mChildren.indexOf(child);
     }
 
     /**
@@ -652,18 +717,8 @@ public class BaseScene implements Scene {
             mGLState.mGL.glMatrixMode(GL10.GL_PROJECTION);
             // Reset the projection matrix
             mGLState.mGL.glLoadIdentity();
-
-            // default view and axis system
-            if (mAxisSystem == AXIS_TOP_LEFT) {
-                // invert the y-axis
-                mGLState.mGL.glOrthof(0, mSize.x, mSize.y, 0, -1, 1);
-            } else {
-                mGLState.mGL.glOrthof(0, mSize.x, 0, mSize.y, -1, 1);
-            }
-
-            // testing perspective
-            // GLU.gluPerspective(mGLState.mGL, 60, mSize.x / mSize.y, 0.1f, 1000f);
-            // GLU.gluLookAt(mGLState.mGL, mSize.x / 2, mSize.y / 2, 1000f, mSize.x / 2, mSize.y / 2, 0, 0, 1, 0);
+            // default axis system and projection
+            mGLState.setProjection(mAxisSystem, 0, mSize.x - 1, 0, mSize.y - 1);
 
             // back to model
             mGLState.mGL.glMatrixMode(GL10.GL_MODELVIEW);
@@ -681,6 +736,7 @@ public class BaseScene implements Scene {
      * 
      * @return the copied point of the input
      */
+    @Deprecated
     final public PointF localToGlobal(final PointF local) {
         return new PointF(local.x, local.y);
     }
@@ -723,6 +779,7 @@ public class BaseScene implements Scene {
      * @param globalY
      * @return
      */
+    @Deprecated
     final public PointF globalToScreen(final float globalX, final float globalY) {
         final Rect stageRect = mStage.getRect();
         final PointF screen;
@@ -730,9 +787,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             screen = mCamera.globalToLocal(globalX, globalY);
 
-            final RectF cameraRect = mCamera.getRect();
-            screen.x /= cameraRect.width() / stageRect.width();
-            screen.y /= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            screen.x /= cameraSize.x / mSize.x;
+            screen.y /= cameraSize.y / mSize.y;
         } else {
             screen = new PointF(globalX, globalY);
         }
@@ -747,6 +804,36 @@ public class BaseScene implements Scene {
         }
 
         return screen;
+    }
+
+    /**
+     * Get the Screen's coordinates from a global point relative to this scene
+     * 
+     * @param globalX
+     * @param globalY
+     */
+    final public void globalToScreen(final float globalX, final float globalY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalX, globalY, result);
+
+            final PointF cameraSize = mCamera.getSize();
+            result.x /= cameraSize.x / mSize.x;
+            result.y /= cameraSize.y / mSize.y;
+        } else {
+            result.x = globalX;
+            result.y = globalY;
+        }
+
+        result.x += stageRect.left;
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            result.y += stageRect.top;
+        } else {
+            // inverse y
+            result.y = stageRect.bottom - result.y;
+        }
     }
 
     /**
@@ -765,6 +852,7 @@ public class BaseScene implements Scene {
      * @param screenY
      * @return
      */
+    @Deprecated
     final public PointF screenToGlobal(final float screenX, final float screenY) {
         final Rect stageRect = mStage.getRect();
         float localX = screenX - stageRect.left;
@@ -778,12 +866,41 @@ public class BaseScene implements Scene {
 
         // check the camera
         if (mCamera != null) {
-            final RectF cameraRect = mCamera.getRect();
-            localX *= cameraRect.width() / stageRect.width();
-            localY *= cameraRect.height() / stageRect.height();
+            final PointF cameraSize = mCamera.getSize();
+            localX *= cameraSize.x / mSize.x;
+            localY *= cameraSize.y / mSize.y;
             return mCamera.localToGlobal(localX, localY);
         } else {
             return new PointF(localX, localY);
+        }
+    }
+
+    /**
+     * Get the global coordinates from the Screen's coordinates
+     * 
+     * @param screenX
+     * @param screenY
+     */
+    final public void screenToGlobal(final float screenX, final float screenY, final PointF result) {
+        final Rect stageRect = mStage.getRect();
+        float localX = screenX - stageRect.left;
+        float localY;
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            localY = screenY - stageRect.top;
+        } else {
+            // inverse y
+            localY = stageRect.bottom - screenY;
+        }
+
+        // check the camera
+        if (mCamera != null) {
+            final PointF cameraSize = mCamera.getSize();
+            localX *= cameraSize.x / mSize.x;
+            localY *= cameraSize.y / mSize.y;
+            mCamera.localToGlobal(localX, localY, result);
+        } else {
+            result.x = localX;
+            result.y = localY;
         }
     }
 
@@ -792,8 +909,86 @@ public class BaseScene implements Scene {
      * @return
      * @see BaseScene#screenToGlobal(float, float)
      */
+    @Deprecated
     final public PointF screenToGlobal(final PointF screen) {
         return screenToGlobal(screen.x, screen.y);
+    }
+
+    /**
+     * @param screen
+     * @return
+     * @see BaseScene#screenToGlobal(float, float)
+     */
+    final public void screenToGlobal(final PointF screen, final PointF result) {
+        screenToGlobal(screen.x, screen.y, result);
+    }
+
+    /**
+     * Convert a Global Point to a Pixel Point on the Stage
+     * 
+     * @param globalX
+     * @param globalY
+     * @param result
+     */
+    final public void globalToStage(final float globalX, final float globalY, final PointF result) {
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalX, globalY, result);
+
+            final PointF cameraSize = mCamera.getSize();
+            result.x /= cameraSize.x / mSize.x;
+            result.y /= cameraSize.y / mSize.y;
+        } else {
+            result.x = globalX;
+            result.y = globalY;
+        }
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            result.y = mSize.y - result.y;
+        }
+    }
+
+    /**
+     * Convert a Global Rectangle to a Pixel Rectangle on the Stage
+     * 
+     * @param globalRect
+     * @param result
+     */
+    final public void globalToStage(final RectF globalRect, final RectF result) {
+        // check the camera
+        if (mCamera != null) {
+            mCamera.globalToLocal(globalRect, result);
+
+            final PointF cameraSize = mCamera.getSize();
+            final float scaleX = cameraSize.x / mSize.x;
+            final float scaleY = cameraSize.y / mSize.y;
+            result.left /= scaleX;
+            result.top /= scaleY;
+            result.right /= scaleX;
+            result.bottom /= scaleY;
+        } else {
+            result.left = globalRect.left;
+            result.top = globalRect.top;
+            result.right = globalRect.right;
+            result.bottom = globalRect.bottom;
+        }
+
+        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
+            final float height = result.bottom - result.top + 1;
+            result.top = convertY(result.top, height);
+            result.bottom = result.top + height - 1;
+        }
+    }
+
+    /**
+     * Convert y based on the Axis system
+     * 
+     * @param y
+     * @param size
+     * @return
+     */
+    protected float convertY(final float y, final float size) {
+        return mAxisSystem == Scene.AXIS_TOP_LEFT ? mSize.y - y - size : y;
     }
 
     /**
@@ -816,15 +1011,19 @@ public class BaseScene implements Scene {
      * Dispose everything
      */
     public void dispose() {
-        removeAllChildren();
-        mChildren = null;
+        if (mChildren != null) {
+            removeAllChildren();
+            mChildren = null;
 
-        mTextureManager.removeAllTextures();
-        mTextureManager = null;
+            if (mTextureManager != null) {
+                mTextureManager.removeAllTextures();
+                mTextureManager = null;
+            }
 
-        mColor = null;
-        mSize = null;
-        mGLState = null;
+            mColor = null;
+            mSize = null;
+            mGLState = null;
+        }
     }
 
     public final boolean isUIEnabled() {
@@ -838,27 +1037,135 @@ public class BaseScene implements Scene {
         mUIEnabled = enabled;
     }
 
-    public final boolean isNpotTextureSupported() {
-        return mNpotTextureSupported;
-    }
-
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
     public PointF getTouchedPoint() {
-        return mTouchedPoint;
+        return mTouchedPoints.get(0);
     }
 
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
+    public PointF getTouchedPoint(final int pointerIndex) {
+        return mTouchedPoints.get(pointerIndex);
+    }
+
+    /**
+     * Note: only use this within onTouchEvent()
+     * 
+     * @hide
+     */
+    public int getPointerCount() {
+        return mPointerCount;
+    }
+
+    /**
+     * Note: This is called from UI-Thread
+     */
     public boolean onTouchEvent(final MotionEvent event) {
         if (mUIEnabled) {
-            // queue the touch event
-            queueEvent(new Runnable() {
-
-                @Override
-                public void run() {
-                    mTouchedPoint = screenToGlobal(event.getX(), event.getY());
-                    mMotionEvent = event;
+            // NOTE: event is NOT safe to queue because it's recycled by Android. So we do this approach...
+            // lock the array
+            synchronized (mUILock) {
+                mTouchedPoints.clear();
+                mPointerCount = event.getPointerCount();
+                for (int i = 0; i < mPointerCount; i++) {
+                    mTouchedPoints.add(screenToGlobal(event.getX(i), event.getY(i)));
                 }
-            });
+
+                if (mVisibleTouchables != null) {
+                    // start from front to back
+                    for (int i = mVisibleTouchables.size() - 1; i >= 0; i--) {
+                        if (mVisibleTouchables.get(i).onTouchEvent(event)) {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+    }
+
+    /**
+     * for Debugging.
+     * 
+     * @return a string that has all the children in Tree format
+     */
+    public String getObjectTree() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(toString());
+        sb.append("\n");
+
+        for (int i = 0; i < mNumChildren; i++) {
+            DisplayObject child = mChildren.get(i);
+            sb.append(child.getObjectTree("   "));
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * For Debugging. Group object with the same class and count
+     * 
+     * @return
+     */
+    public String getObjectCounts() {
+        final Map<String, Integer> map = new HashMap<String, Integer>();
+        getObjectCounts(this, map);
+
+        // Sort keys by values.
+        List<String> sortedKeys = new ArrayList<String>(map.keySet());
+        Collections.sort(sortedKeys, new Comparator<String>() {
+            public int compare(final String left, final String right) {
+                return map.get(right) - map.get(left);
+            }
+        });
+
+        final StringBuilder sb = new StringBuilder();
+        int total = 0;
+        for (String key : sortedKeys) {
+            final int count = map.get(key);
+            sb.append("   ");
+            sb.append(key);
+            sb.append(": ");
+            sb.append(count);
+            sb.append("\n");
+
+            total += count;
+        }
+
+        // total count
+        sb.insert(0, toString() + ": " + total + "\n");
+
+        return sb.toString();
+    }
+
+    protected void getObjectCounts(final Container container, final Map<String, Integer> map) {
+        final int num = container.getNumChildren();
+        for (int i = 0; i < num; i++) {
+            final DisplayObject child = container.getChildAt(i);
+            final String name = child.getClass().getSimpleName();
+            if (map.containsKey(name)) {
+                map.put(name, map.get(name) + 1);
+            } else {
+                map.put(name, 1);
+            }
+
+            if (child instanceof Container) {
+                getObjectCounts((Container) child, map);
+            }
+        }
     }
 }

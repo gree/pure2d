@@ -13,6 +13,8 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * @author long
  */
+
+@Deprecated
 public class VerticesOld {
     private int mVerticesNum = 0;
     private int mIndicesNum = 0;

@@ -14,11 +14,15 @@ import com.funzio.pure2D.DisplayObject;
 public interface Container {
     public boolean addChild(final DisplayObject child);
 
+    public boolean addChild(final DisplayObject child, final int index);
+
     public boolean removeChild(final DisplayObject child);
 
     public void removeAllChildren();
 
     public DisplayObject getChildAt(final int index);
+
+    public int getChildIndex(final DisplayObject child);
 
     public boolean swapChildren(final DisplayObject child1, final DisplayObject child2);
 

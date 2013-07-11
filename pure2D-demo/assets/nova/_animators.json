@@ -1,0 +1,193 @@
+{
+	"_comment": "Code snippets for animators",
+
+	"animators": [
+		{
+		     "name":"parallel1",
+		     "type": "parallel",
+		     "animators": [
+
+		     ]
+		},
+
+		{
+		     "name":"parallel2",
+		     "type": "parallel",
+		     "animators": [
+
+		     ],
+		     "loop_mode": "repeat",
+		     "lifespan": 5000
+		},
+
+		{
+		     "name":"sequence1",
+		     "type": "sequence",
+		     "animators": [
+
+		     ]
+		},
+
+		{
+			"name": "translate1",
+			"type": "translate",
+			"dx": 100,
+			"dy": 100,
+			"duration": 1000,
+			"interpolation": "accelerate"
+		},
+
+		{
+			"name": "translate2",
+			"type": "translate",
+			"distance": 100,
+			"degree": [0, 360],
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "translate3",
+			"type": "translate",
+			"distance": 100,
+			"degree": [0, 360],
+			"duration": 1000,
+			"interpolation": "accelerate_decelerate",
+			"loop_mode": "reverse",
+			"loop_count": 3
+		},
+
+		{
+			"name": "rotate1",
+			"type": "rotate",
+			"from": 90,
+			"to": 180,
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "rotate2",
+			"type": "rotate",
+			"delta": 270,
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "scale1",
+			"type": "scale",
+			"x_from": 1,
+			"x_to": 1.5,
+			"y_from": 1,
+			"y_to": 2,
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "skew1",
+			"type": "skew",
+			"x_from": 0,
+			"x_to": 1,
+			"y_from": 0,
+			"y_to": 1.5,
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "alpha1",
+			"type": "alpha",
+			"from": 1,
+			"to": 0.5,
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "color1",
+			"type": "color",
+			"from": "#FFFF0000",
+			"to": "#FF00FF00",
+			"duration": 1000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "trajectory1",
+			"type": "trajectory",
+			"velocity": [50, 100],
+			"angle": [0, 6.28],
+			"ground": 0
+		},
+
+		{
+			"name": "wave1",
+			"type": "sin_wave",
+			"distance": 500,
+			"degree": [0, 360],
+			"wave_radius2": 80,
+			"wave_num": 2,
+			"duration": 2000,
+			"interpolation": "accelerate"
+		},
+
+		{
+			"name": "wave2",
+			"type": "sin_wave",
+			"distance": 500,
+			"degree": [0, 360],
+			"reversed": true,
+			"wave_radius1": 5,
+			"wave_radius2": 80,
+			"wave_num": 2,
+			"duration": 2000,
+			"interpolation": "bounce"
+		},
+
+		{
+			"name": "whirl1",
+			"type": "whirl",
+			"radius2": 200,
+			"degree2": 3600,
+			"duration": 10000,
+			"circle_interpolation": "decelerate"
+		},
+
+		{
+			"name": "whirl2",
+			"type": "whirl",
+			"radius1": 1100,
+			"radius2": 0,
+			"degree1": [1800, 3600, 1800],
+			"degree2": [0, 360],
+			"duration": 10000,
+			"circle_ratio": [0.75, 1.25],
+			"circle_interpolation": "accelerate"
+		},
+
+		{
+			"name": "tornado1",
+			"type": "tornado",
+			"dy": 500,
+			"circle_radius": 400,
+			"circle_num": 15,
+			"duration": 8000,
+			"interpolation": "decelerate"
+		},
+
+		{
+			"name": "tornado2",
+			"type": "tornado",
+			"dy": 700,
+			"circle_radius": [300, 400],
+			"circle_num": [18, 20],
+			"circle_multiplier": [1, 1.2],
+			"duration": 10000,
+			"circle_interpolation": "accelerate",
+			"interpolation": "decelerate"
+		}
+	]
+
+}

@@ -1,0 +1,51 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_fire",
+			"lifespan": 2000,
+			"quantity": 5,
+			"particles": [
+				{
+					"layer": 1,
+
+					"sprite": "sprites/smoke.png",
+					"animator": "smoke_ani",
+					"blend_mode": "screen_alpha"
+				},
+				{
+					"sprite": ["sprites/fire.png", "sprites/fire.png", "sprites/fire.png", "sprites/smoke.png"],
+					"animator": "fire_ani",
+					"blend_mode": "add"
+				}
+			],
+			"animator": "shoot_ani"
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "shoot_ani",
+			"type": "recursive_trajectory",
+			"velocity": [50, 100],
+			"angle": [0, 6.28]
+		},
+		{
+			"name":"smoke_ani",
+			"type": "parallel",
+			"animators": [
+				{"type": "translate", "dx": [-20, 20], "dy": [300, 500], "duration": 500, "interpolation": "accelerate_decelerate"},
+				{"type": "alpha", "from": 1, "to": 0, "duration": 500},
+				{"type": "scale", "x_from": 1.5, "y_from": 1.5, "x_to": 0.5, "y_to": 0.5, "duration": 500}
+			]
+		},
+		{
+			"name":"fire_ani",
+			"type": "parallel",
+			"animators": [
+				{"type": "translate", "dx": [-20, 20], "dy": [100, 300], "duration": 500, "interpolation": "accelerate_decelerate"},
+				{"type": "scale", "x_from": 1, "y_from": 1, "x_to": 0.25, "y_to": 0.25, "duration": 500}
+			]
+		}
+	]
+}

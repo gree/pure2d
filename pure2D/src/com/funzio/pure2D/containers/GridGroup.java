@@ -6,6 +6,7 @@ package com.funzio.pure2D.containers;
 import android.graphics.Point;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.grid.Grid;
 
 /**
@@ -48,7 +49,7 @@ public class GridGroup<T extends DisplayObject> extends DisplayGroup {
             child.setPosition(mGrid.cellToPoint(cellX, cellY));
         } else {
             // force
-            invalidate();
+            invalidate(InvalidateFlags.CHILDREN);
         }
     }
 

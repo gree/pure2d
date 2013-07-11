@@ -1,0 +1,52 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_fire",
+			"lifespan": 6000,
+			"particles": [
+				{
+					"sprite": ["sprites/smoke.png"],
+					"animator": ["smoke_ani"]
+				},
+				{
+					"sprite": ["sprites/fire.png"],
+					"animator": ["fire_ani"]
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "shoot_ani",
+			"type": "trajectory",
+			"velocity": [50, 100],
+			"angle": [0, 6.28]
+		},
+		{
+			"name":"fire_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "move",
+					"dy": [500],
+					"duration": [1000]
+				}
+			]
+		},
+		{
+			"name":"smoke_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "move",
+					"dx": [500],
+					"duration": [1000]
+				},
+				{"type": "alpha", "from": [1], "to": [0], "duration": [700]}
+			]
+		}
+
+	]
+}

@@ -4,8 +4,15 @@
 package com.funzio.pure2D.gl.gl10;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11ExtensionPack;
+
+import android.opengl.GLES11Ext;
+import android.opengl.GLU;
+import android.util.Log;
 
 import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.Maskable;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Stage;
 import com.funzio.pure2D.gl.GLColor;
@@ -17,8 +24,13 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  * @category This class is used to manage and also limit the number of JNI calls, for optimization purpose.
  */
 public class GLState {
+    private static final String TAG = GLState.class.getSimpleName();
+
     public GL10 mGL;
     private Stage mStage;
+
+    // frame buffer
+    private int mFrameBuffer = 0;
 
     // texture
     private Texture mTexture = null;
@@ -28,18 +40,26 @@ public class GLState {
 
     // array toggles
     private boolean mVertexArrayEnabled = false;
+    private VertexBuffer mVertexBuffer;
+    private boolean mDepthTestEnabled = false;
+    private boolean mScissorTestEnabled = false;
 
     // colors
     private boolean mColorArrayEnabled = false;
     private boolean mAlphaTestEnabled = false;
     private GLColor mColor = new GLColor(1f, 1f, 1f, 1f);
-    private BlendFunc mBlendFunc = new BlendFunc();
+    // blending
+    private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
+    private BlendFunc mBlendFunc = new BlendFunc(0, 0);
+    // masking
+    private Maskable mMask;
 
     // viewport and camera
+    private float[] mProjection = new float[5];
     private int[] mViewport = new int[4];
-    private int mMaxTextureSize = 0;
-    private float mLineWidth = 0;
+    private int[] mScissor = new int[4];
 
+    private float mLineWidth = 0;
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     public Camera mCamera;
 
@@ -69,11 +89,6 @@ public class GLState {
         mLineWidth = 0;
 
         clearErrors();
-
-        // find the max texture size
-        int[] textureSize = new int[1];
-        gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, textureSize, 0);
-        mMaxTextureSize = textureSize[0];
     }
 
     public void queueEvent(final Runnable r) {
@@ -90,8 +105,47 @@ public class GLState {
         mAxisSystem = axisSystem;
     }
 
-    public int getMaxTextureSize() {
-        return mMaxTextureSize;
+    /**
+     * Set Projection mode
+     * 
+     * @param projection
+     * @param right
+     * @param top
+     * @see #Scene , Scene.AXIS_BOTTOM_LEFT, Scene.AXIS_TOP_LEFT
+     */
+    public void setProjection(final float projection, final float left, final float right, final float bottom, final float top) {
+        if (projection == Scene.PROJECTION_PERSPECTIVE) {
+            final float width = right - left + 1;
+            final float height = top - bottom + 1;
+            GLU.gluPerspective(mGL, Pure2D.GL_PERSPECTIVE_FOVY, width / height, 0.001f, Math.max(width, height));
+            GLU.gluLookAt(mGL, 0, 0, height, 0, 0, 0, 0, 1, 0); // always based on Screen-Y
+            mGL.glTranslatef(-width * 0.5f, -height * 0.5f, 0);
+        } else if (projection == Scene.AXIS_TOP_LEFT) {
+            // NOTE: frame-buffer has the Axis inverted
+            mGL.glOrthof(left, right, top, bottom, -1, 1);
+        } else if (projection == Scene.AXIS_BOTTOM_LEFT) {
+            mGL.glOrthof(left, right, bottom, top, -1, 1);
+        } else {
+            Log.e(TAG, "Unknown Projection mode: " + projection, new Exception());
+        }
+
+        mProjection[0] = projection;
+        mProjection[1] = left;
+        mProjection[2] = right;
+        mProjection[3] = bottom;
+        mProjection[4] = top;
+    }
+
+    public void setProjection(final float[] projection) {
+        setProjection(projection[0], projection[1], projection[2], projection[3], projection[4]);
+    }
+
+    public void getProjection(final float[] projection) {
+        projection[0] = mProjection[0];
+        projection[1] = mProjection[1];
+        projection[2] = mProjection[2];
+        projection[3] = mProjection[3];
+        projection[4] = mProjection[4];
     }
 
     public void setViewport(final int x, final int y, final int width, final int height) {
@@ -102,13 +156,15 @@ public class GLState {
         mViewport[3] = height;
     }
 
-    public int[] getViewport() {
-        int[] clone = mViewport.clone();
-        clone[0] = mViewport[0];
-        clone[1] = mViewport[1];
-        clone[2] = mViewport[2];
-        clone[3] = mViewport[3];
-        return clone;
+    public void setViewport(final int[] viewport) {
+        setViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+    }
+
+    public void getViewport(final int[] viewport) {
+        viewport[0] = mViewport[0];
+        viewport[1] = mViewport[1];
+        viewport[2] = mViewport[2];
+        viewport[3] = mViewport[3];
     }
 
     public void setLineWidth(final float width) {
@@ -123,6 +179,23 @@ public class GLState {
 
     public float getLineWidth() {
         return mLineWidth;
+    }
+
+    public boolean bindFrameBuffer(final int frameBuffer) {
+        // diff check
+        if (mFrameBuffer == frameBuffer) {
+            return false;
+        }
+        mFrameBuffer = frameBuffer;
+
+        // only works for GLES11
+        ((GL11ExtensionPack) mGL).glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, mFrameBuffer);
+
+        return true;
+    }
+
+    public int getFrameBuffer() {
+        return mFrameBuffer;
     }
 
     public boolean bindTexture(final Texture texture) {
@@ -182,6 +255,23 @@ public class GLState {
         return true;
     }
 
+    public boolean setVertexBuffer(final VertexBuffer buffer) {
+        // diff check
+        if (mVertexBuffer == buffer) {
+            return false;
+        }
+
+        // values check
+        final boolean same = mVertexBuffer instanceof QuadBuffer && buffer instanceof QuadBuffer && QuadBuffer.compare((QuadBuffer) mVertexBuffer, (QuadBuffer) buffer);
+        if (buffer != null && !same) {
+            mGL.glVertexPointer(buffer.mVertexPointerSize, GL10.GL_FLOAT, 0, buffer.mBuffer);
+        }
+
+        // now keep
+        mVertexBuffer = buffer;
+        return true;
+    }
+
     /**
      * @return the textureEnabled
      */
@@ -217,8 +307,7 @@ public class GLState {
         }
 
         // values check
-        if (buffer != null) { // && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer)
-            // apply
+        if (buffer != null && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer)) {
             mGL.glTexCoordPointer(2, GL10.GL_FLOAT, 0, buffer.mBuffer);
         }
 
@@ -348,6 +437,14 @@ public class GLState {
         return true;
     }
 
+    public BlendFunc getDefaultBlendFunc() {
+        return mDefaultBlendFunc;
+    }
+
+    public void setDefaultBlendFunc(final BlendFunc defaultBlendFunc) {
+        mDefaultBlendFunc.set(defaultBlendFunc);
+    }
+
     /**
      * @return the blendFunc
      */
@@ -361,9 +458,15 @@ public class GLState {
     public boolean setBlendFunc(final BlendFunc blendFunc) {
         // null check
         if (blendFunc == null) {
-            if (mBlendFunc.isSet()) {
-                mBlendFunc.reset();
-                mGL.glBlendFunc(mBlendFunc.src, mBlendFunc.dst);
+            if (!mBlendFunc.equals(mDefaultBlendFunc)) {
+                // set to default
+                mBlendFunc.set(mDefaultBlendFunc);
+                // apply
+                if (mBlendFunc.src_alpha < 0 || mBlendFunc.dst_alpha < 0) {
+                    mGL.glBlendFunc(mBlendFunc.src, mBlendFunc.dst);
+                } else {
+                    GLES11Ext.glBlendFuncSeparateOES(mBlendFunc.src, mBlendFunc.dst, mBlendFunc.src_alpha, mBlendFunc.dst_alpha);
+                }
                 return true;
             } else {
                 return false;
@@ -374,9 +477,12 @@ public class GLState {
         }
 
         // apply
-        mBlendFunc.src = blendFunc.src;
-        mBlendFunc.dst = blendFunc.dst;
-        mGL.glBlendFunc(blendFunc.src, blendFunc.dst);
+        mBlendFunc.set(blendFunc);
+        if (mBlendFunc.src_alpha < 0 || mBlendFunc.dst_alpha < 0) {
+            mGL.glBlendFunc(blendFunc.src, blendFunc.dst);
+        } else {
+            GLES11Ext.glBlendFuncSeparateOES(blendFunc.src, blendFunc.dst, blendFunc.src_alpha, blendFunc.dst_alpha);
+        }
 
         return true;
     }
@@ -403,5 +509,89 @@ public class GLState {
      */
     public void setCamera(final Camera camera) {
         mCamera = camera;
+    }
+
+    public Maskable getMask() {
+        return mMask;
+    }
+
+    /**
+     * This does not work like it's supposed to yet :(
+     * 
+     * @param mask
+     */
+    @Deprecated
+    public void setMask(final Maskable mask) {
+        // diff check
+        if (mMask != mask) {
+            if (mMask != null) {
+                // disable the previous mask
+                mMask.disableMask();
+            }
+
+            if (mask != null) {
+                // enable the new one
+                mask.enableMask();
+            }
+
+            mMask = mask;
+        }
+    }
+
+    public boolean isDepthTestEnabled() {
+        return mDepthTestEnabled;
+    }
+
+    public void setDepthTestEnabled(final boolean depthTestEnabled) {
+        // diff check
+        if (mDepthTestEnabled == depthTestEnabled) {
+            return;
+        }
+
+        mDepthTestEnabled = depthTestEnabled;
+
+        if (depthTestEnabled) {
+            mGL.glEnable(GL10.GL_DEPTH_TEST);
+        } else {
+            mGL.glDisable(GL10.GL_DEPTH_TEST);
+        }
+    }
+
+    public boolean isScissorTestEnabled() {
+        return mScissorTestEnabled;
+    }
+
+    public void setScissorTestEnabled(final boolean scissorEnabled) {
+        // diff check
+        if (mScissorTestEnabled == scissorEnabled) {
+            return;
+        }
+
+        mScissorTestEnabled = scissorEnabled;
+
+        if (scissorEnabled) {
+            mGL.glEnable(GL10.GL_SCISSOR_TEST);
+        } else {
+            mGL.glDisable(GL10.GL_SCISSOR_TEST);
+        }
+    }
+
+    public void setScissor(final int x, final int y, final int width, final int height) {
+        mGL.glScissor(x, y, width, height);
+        mScissor[0] = x;
+        mScissor[1] = y;
+        mScissor[2] = width;
+        mScissor[3] = height;
+    }
+
+    public void setScissor(final int[] scissor) {
+        setScissor(scissor[0], scissor[1], scissor[2], scissor[3]);
+    }
+
+    public void getScissor(final int[] scissor) {
+        scissor[0] = mScissor[0];
+        scissor[1] = mScissor[1];
+        scissor[2] = mScissor[2];
+        scissor[3] = mScissor[3];
     }
 }

@@ -2,7 +2,6 @@ package com.funzio.pure2D.animation;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
  * @author long
@@ -14,21 +13,26 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
     protected int mPreviousFrame = -1;
     protected int mNumFrames = 0;
     protected int mPendingTime = 0;
-    protected int mAccumimatedFrames = 0;
+    protected int mAccumulatedFrames = 0;
 
     abstract protected void updateFrame(final int frame);
-
-    abstract protected void drawChildren(final GLState glState);
 
     @Override
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
 
+        // update current frame
+        if (mCurrentFrame != mPreviousFrame) {
+            mPreviousFrame = mCurrentFrame;
+            updateFrame(mCurrentFrame);
+            invalidate(FRAME);
+        }
+
         // get next frame
         if (mNumFrames > 0 && mPlaying) {
             int frames = 1;
             // if there is specific fps
-            if (mFps > 0) {
+            if (getFps() > 0) {
                 mPendingTime += deltaTime;
                 frames = mPendingTime / (int) mFrameDuration;
                 if (frames > 0) {
@@ -37,14 +41,14 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
             }
 
             if (frames > 0) {
-                mAccumimatedFrames += frames;
+                mAccumulatedFrames += frames;
                 mCurrentFrame += frames;
                 if (mLoop == LOOP_REPEAT) {
                     if (mCurrentFrame >= mNumFrames) {
                         mCurrentFrame %= mNumFrames;
                     }
                 } else if (mLoop == LOOP_REVERSE) {
-                    final int trips = (mAccumimatedFrames / mNumFrames);
+                    final int trips = (mAccumulatedFrames / mNumFrames);
                     if (trips % 2 == 0) {
                         // play forward
                         if (mCurrentFrame >= mNumFrames) {
@@ -52,7 +56,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
                         }
                     } else {
                         // play backward
-                        mCurrentFrame = mNumFrames - 1 - mAccumimatedFrames % mNumFrames;
+                        mCurrentFrame = mNumFrames - 1 - mAccumulatedFrames % mNumFrames;
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
@@ -64,46 +68,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
             }
         }
 
-        // change frame
-        if (mCurrentFrame != mPreviousFrame) {
-            mPreviousFrame = mCurrentFrame;
-            updateFrame(mCurrentFrame);
-            invalidate();
-        }
-
         return mNumFrames > 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayObject#draw(com.funzio.pure2D.gl.gl10.GLState)
-     */
-    @Override
-    public boolean draw(final GLState glState) {
-        if (mNumFrames > 0) {
-            drawStart(glState);
-
-            // blend mode
-            final boolean blendChanged = glState.setBlendFunc(mBlendFunc);
-            // color and alpha
-            glState.setColor(getSumColor());
-            // color buffer
-            glState.setColorArrayEnabled(false);
-
-            // now draw the children
-            drawChildren(glState);
-
-            if (blendChanged) {
-                // recover the blending
-                glState.setBlendFunc(null);
-            }
-
-            drawEnd(glState);
-
-            return true;
-        }
-
-        return false;
     }
 
     public void play() {
@@ -126,7 +91,7 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
 
             // update the frame
             updateFrame(mCurrentFrame);
-            invalidate();
+            invalidate(FRAME);
         }
 
         stop();

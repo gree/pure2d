@@ -15,6 +15,7 @@ import android.util.Log;
  */
 public class AssetSound extends AbstractSound {
     protected static final String TAG = AssetSound.class.getSimpleName();
+    public static final double BITRATE = 16000;
 
     private final AssetManager mAssets;
     private final String mFilePath;
@@ -37,6 +38,10 @@ public class AssetSound extends AbstractSound {
             return -1;
         }
 
-        return mSoundID = soundPool.load(desc, mPriority);
+        mLength = (long) Math.floor((desc.getLength() / BITRATE) * 1000.0);
+        mSoundID = soundPool.load(desc, mPriority);
+
+        return mSoundID;
     }
+
 }

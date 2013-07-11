@@ -21,7 +21,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
 
     private float[] mValues;
 
-    public TextureCoordBuffer(final float[] textCoords) {
+    public TextureCoordBuffer(final float... textCoords) {
         super(textCoords);
     }
 
@@ -30,7 +30,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
      * @see com.funzio.pure2D.gl.GLFloatBuffer#setValues(float[])
      */
     @Override
-    public void setValues(final float[] values) {
+    public void setValues(final float... values) {
         super.setValues(values);
 
         if (mValues == null) {
@@ -44,6 +44,23 @@ public class TextureCoordBuffer extends GLFloatBuffer {
 
     public float[] getValues() {
         return mValues;
+    }
+
+    public void setRect(final float x, final float y, final float width, final float height) {
+        if (mValues == null || mValues.length < 8) {
+            mValues = new float[8];
+        }
+
+        mValues[0] = x;
+        mValues[1] = y + height;
+        mValues[2] = x;
+        mValues[3] = y;
+        mValues[4] = x + width;
+        mValues[5] = y + height;
+        mValues[6] = x + width;
+        mValues[7] = y;
+
+        super.setValues(mValues);
     }
 
     public void scale(final float sx, final float sy) {
@@ -174,16 +191,27 @@ public class TextureCoordBuffer extends GLFloatBuffer {
     public static boolean compare(final TextureCoordBuffer a, final TextureCoordBuffer b) {
         if (a == b) {
             return true;
-        }
-        if (a == null || b == null || a.mValues.length != b.mValues.length) {
+        } else if (a == null || b == null) { // || a.mValues.length != b.mValues.length
             return false;
+        } else {
+
+            final float[] aValues = a.mValues;
+            final float[] bValues = b.mValues;
+            return aValues[0] == bValues[0] //
+                    && aValues[1] == bValues[1] //
+                    && aValues[2] == bValues[2] //
+                    && aValues[3] == bValues[3] //
+                    && aValues[4] == bValues[4] //
+                    && aValues[5] == bValues[5] //
+                    && aValues[6] == bValues[6] //
+                    && aValues[7] == bValues[7];
         }
-        for (int i = 0; i < a.mValues.length; i++) {
-            if (a.mValues[i] != b.mValues[i]) {
-                return false;
-            }
-        }
-        return true;
+
+        // for (int i = 0; i < a.mValues.length; i++) {
+        // if (a.mValues[i] != b.mValues[i]) {
+        // return false;
+        // }
+        // }
     }
 
     @Override

@@ -3,21 +3,21 @@
  */
 package com.funzio.pure2D.utils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * @author long
  */
 public class ObjectPool<T extends Reusable> {
-    private List<T> mReusables = new ArrayList<T>();
+    private List<T> mReusables = new Vector<T>();
     private int mMaxSize;
 
     public ObjectPool(final int maxSize) {
         mMaxSize = maxSize;
     }
 
-    synchronized public T acquire() {
+    public T acquire() {
         if (mReusables.size() > 0) {
             return mReusables.remove(0);
         }
@@ -25,7 +25,7 @@ public class ObjectPool<T extends Reusable> {
         return null;
     }
 
-    synchronized public boolean release(final T reusable) {
+    public boolean release(final T reusable) {
         if (mReusables.size() < mMaxSize) {
             mReusables.add(reusable);
             return true;
@@ -34,7 +34,7 @@ public class ObjectPool<T extends Reusable> {
         return false;
     }
 
-    synchronized public void clear() {
+    public void clear() {
         mReusables.clear();
     }
 }

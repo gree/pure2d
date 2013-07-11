@@ -5,12 +5,16 @@ package com.funzio.pure2D.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -26,6 +30,10 @@ import com.funzio.pure2D.text.TextOptions;
  */
 
 public class Pure2DUtils {
+    public static final float PI_D2 = (float) Math.PI / 2f;
+    public static final float DEGREE_TO_RADIAN = (float) Math.PI / 180;
+    public static final float RADIAN_TO_DEGREE = 180 / (float) Math.PI;
+
     /**
      * Create a texture from an asset file
      * 
@@ -274,6 +282,60 @@ public class Pure2DUtils {
     }
 
     /**
+     * non-premultiplied alpha version of GLUtils.texImage2D(). Note: this method is Slow and should only be used when really necessary!
+     * 
+     * @param gl
+     * @param bitmap
+     * @see GLUtils.texImage2D()
+     */
+    public static void texImage2DNonPremultipliedAlpha(final GL10 gl, final Bitmap bitmap) {
+        final int[] pixels = extractPixels(bitmap);
+        final byte[] pixelComponents = new byte[pixels.length * 4];
+        int byteIndex = 0, p;
+        for (int i = 0; i < pixels.length; i++) {
+            p = pixels[i];
+            // Convert to byte representation RGBA required by gl.glTexImage2D.
+            pixelComponents[byteIndex++] = (byte) ((p >> 16) & 0xFF); // red
+            pixelComponents[byteIndex++] = (byte) ((p >> 8) & 0xFF); //
+            pixelComponents[byteIndex++] = (byte) ((p) & 0xFF); // blue
+            pixelComponents[byteIndex++] = (byte) (p >> 24); // alpha
+        }
+        gl.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA, bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ByteBuffer.wrap(pixelComponents));
+    }
+
+    // /**
+    // * non-premultiplied alpha version of GLUtils.texImage2D(). Note: this method is Slow and should only be used when really necessary!
+    // *
+    // * @param gl
+    // * @param bitmap
+    // * @see GLUtils.texImage2D()
+    // */
+    // public static void texImage2DNonPremultipliedAlpha(final GL10 gl, final Bitmap bitmap) {
+    // final int width = bitmap.getWidth();
+    // final int height = bitmap.getHeight();
+    // final int size = width * height;
+    // final byte[] pixelComponents = new byte[size * 4];
+    // int byteIndex = 0, p;
+    // for (int i = 0; i < size; i++) {
+    // p = bitmap.getPixel(i % width, i / width);
+    // // Convert to byte representation RGBA required by gl.glTexImage2D.
+    // pixelComponents[byteIndex++] = (byte) ((p >> 16) & 0xFF); // red
+    // pixelComponents[byteIndex++] = (byte) ((p >> 8) & 0xFF); //
+    // pixelComponents[byteIndex++] = (byte) ((p) & 0xFF); // blue
+    // pixelComponents[byteIndex++] = (byte) (p >> 24); // alpha
+    // }
+    // gl.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA, bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ByteBuffer.wrap(pixelComponents));
+    // }
+
+    public static int[] extractPixels(final Bitmap bitmap) {
+        final int w = bitmap.getWidth();
+        final int h = bitmap.getHeight();
+        final int[] colors = new int[w * h];
+        bitmap.getPixels(colors, 0, w, 0, 0, w, h);
+        return colors;
+    }
+
+    /**
      * Scale the specified bitmap to the size of the closest-power-of-2 of the current size
      * 
      * @param bitmap
@@ -319,6 +381,10 @@ public class Pure2DUtils {
         return n + 1;
     }
 
+    public static boolean isPO2(final int n) {
+        return (n != 0) && ((n & (n - 1)) == 0);
+    }
+
     /**
      * Find the smallest area that contains multiples rect defined by width & height
      * 
@@ -344,5 +410,36 @@ public class Pure2DUtils {
         }
 
         return new Point(minWidth, minHeight);
+    }
+
+    public static void getMatrix3DValues(final Matrix matrix2D, final float[] matrix3D) {
+        matrix2D.getValues(matrix3D);
+        // Log.e("long", matrix2D.toShortString());
+        final float v0 = matrix3D[0];
+        final float v1 = matrix3D[1];
+        final float v2 = matrix3D[2];
+        final float v3 = matrix3D[3];
+        final float v4 = matrix3D[4];
+        final float v5 = matrix3D[5];
+        final float v6 = matrix3D[6];
+        final float v7 = matrix3D[7];
+        final float v8 = matrix3D[8];
+
+        matrix3D[0] = v0;
+        matrix3D[4] = v1;
+        matrix3D[8] = v2;
+
+        matrix3D[1] = v3;
+        matrix3D[5] = v4;
+        matrix3D[9] = v5;
+
+        matrix3D[2] = v6;
+        matrix3D[6] = v7;
+        matrix3D[10] = v8;
+
+        matrix3D[3] = matrix3D[7] = matrix3D[11] = 0;
+
+        matrix3D[12] = matrix3D[13] = matrix3D[14] = 0;
+        matrix3D[15] = 1;
     }
 }

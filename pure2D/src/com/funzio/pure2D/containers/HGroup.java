@@ -6,27 +6,31 @@ package com.funzio.pure2D.containers;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.UIObject;
 
 /**
  * @author long
  */
-public class HGroup extends LinearGroup {
+public class HGroup extends LinearGroup implements UIObject {
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 
     private int mStartIndex = 0;
     private float mStartX = 0;
 
-    private boolean mSwipeEnabled = false;
-    private float mSwipeMinThreshold = 0;
-    private float mSwipeAnchor;
-    private float mAnchoredScroll;
-    private boolean mSwiping = false;
+    protected boolean mSwipeEnabled = false;
+    protected float mSwipeMinThreshold = 0;
+    protected boolean mSwiping = false;
+
+    private float mSwipeAnchor = -1;
+    private float mAnchoredScroll = -1;
+    private int mSwipePointerID = -1;
 
     public HGroup() {
         super();
@@ -110,7 +114,7 @@ public class HGroup extends LinearGroup {
      * @see com.funzio.pure2D.containers.DisplayGroup#drawChildren(javax.microedition.khronos.opengles.GL10)
      */
     @Override
-    protected void drawChildren(final GLState glState) {
+    protected boolean drawChildren(final GLState glState) {
         if (mTouchable) {
             if (mVisibleTouchables == null) {
                 mVisibleTouchables = new ArrayList<Touchable>();
@@ -120,9 +124,17 @@ public class HGroup extends LinearGroup {
         }
 
         // draw the children
-        for (int i = 0; i < mNumChildren; i++) {
-            final DisplayObject child = mChildren.get(i);
-            if (child.isVisible() && (!mClipping || isChildInBounds(child))) {
+        DisplayObject child;
+        final int numChildren = mChildrenDisplayOrder.size();
+        for (int i = 0; i < numChildren; i++) {
+            child = mChildrenDisplayOrder.get(i);
+
+            if (child.isVisible() && (!mBoundsCheckEnabled || isChildInBounds(child))) {
+                if (mAutoSleepChildren) {
+                    // wake child up
+                    child.setAlive(true);
+                }
+
                 // draw frame
                 child.draw(glState);
 
@@ -134,6 +146,11 @@ public class HGroup extends LinearGroup {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
+                }
+            } else {
+                if (mAutoSleepChildren) {
+                    // send child to slepp
+                    child.setAlive(false);
                 }
             }
         }
@@ -153,6 +170,8 @@ public class HGroup extends LinearGroup {
         // child.draw(glState);
         // child.setPosition(oldX, oldY);
         // }
+
+        return true;
     }
 
     @Override
@@ -173,7 +192,7 @@ public class HGroup extends LinearGroup {
                 } else if ((mAlignment & Alignment.TOP) != 0) {
                     alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(nextX, nextY + alignedY);
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // find nextX
                 nextX += childSize.x + mGap;
@@ -198,7 +217,7 @@ public class HGroup extends LinearGroup {
                 } else if ((mAlignment & Alignment.TOP) != 0) {
                     alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(nextX, nextY + alignedY);
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // update sizes
                 nextX += childSize.x + mGap;
@@ -307,13 +326,18 @@ public class HGroup extends LinearGroup {
         mSwiping = true;
     }
 
-    protected void stopSwipe(final float delta) {
+    protected void stopSwipe() {
         mSwipeAnchor = -1;
         mSwiping = false;
+        mSwipePointerID = -1;
     }
 
     protected void swipe(final float delta) {
         scrollTo(mAnchoredScroll - delta, 0);
+    }
+
+    public boolean isSwiping() {
+        return mSwiping;
     }
 
     @Override
@@ -322,38 +346,68 @@ public class HGroup extends LinearGroup {
             return false;
         }
 
+        final boolean controlled = super.onTouchEvent(event);
+
         // swipe enabled?
         if (mSwipeEnabled) {
-            final int action = event.getAction() & MotionEvent.ACTION_MASK;
-            final float deltaX = event.getX() - mSwipeAnchor;
+            final int action = event.getActionMasked();
+            final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 
-            if (action == MotionEvent.ACTION_DOWN) {
-                final PointF global = mScene.getTouchedPoint();
-                if (getBounds().contains(global.x, global.y)) {
-                    mSwipeAnchor = event.getX();
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                final RectF bounds = getBounds();
+                final PointF global = getScene().getTouchedPoint(pointerIndex);
+                if (bounds.contains(global.x, global.y)) {
+                    if (!mSwiping) {
+                        mSwipeAnchor = event.getX(pointerIndex);
+                        // keep pointer id
+                        mSwipePointerID = event.getPointerId(pointerIndex);
+                    }
+
+                    // callback
+                    onTouchDown(event);
                 }
-            } else if (action == MotionEvent.ACTION_MOVE) {
-                if (mSwipeAnchor >= 0) {
-                    if (Math.abs(deltaX) >= mSwipeMinThreshold || mSwiping) {
-                        if (!mSwiping) {
-                            // re-anchor
-                            mSwipeAnchor = event.getX();
 
-                            startSwipe();
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
+                if (swipePointerIndex >= 0) {
+                    final float deltaX = event.getX(swipePointerIndex) - mSwipeAnchor;
+                    if (mSwipeAnchor >= 0) {
+                        if (!mSwiping) {
+                            if (Math.abs(deltaX) >= mSwipeMinThreshold) {
+                                // re-anchor
+                                mSwipeAnchor = event.getX(swipePointerIndex);
+
+                                startSwipe();
+                            }
                         } else {
                             swipe(deltaX);
                         }
                     }
                 }
 
-            } else if (action == MotionEvent.ACTION_UP) {
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
                 if (mSwiping) {
-                    stopSwipe(deltaX);
-                    return true;
+                    // check pointer
+                    if (event.getPointerId(pointerIndex) == mSwipePointerID) {
+                        stopSwipe();
+                    }
+                } else {
+                    // clear anchor, important!
+                    mSwipeAnchor = -1;
                 }
             }
         }
 
-        return super.onTouchEvent(event);
+        return controlled;
+    }
+
+    /**
+     * This is called when a touch down
+     * 
+     * @param event
+     */
+    protected void onTouchDown(final MotionEvent event) {
+        // TODO Auto-generated method stub
+
     }
 }

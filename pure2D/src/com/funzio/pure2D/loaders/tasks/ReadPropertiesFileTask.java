@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 
 /**
  * @author long
@@ -21,6 +22,10 @@ public class ReadPropertiesFileTask extends ReadFileTask {
 
     public ReadPropertiesFileTask(final String filePath) {
         super(filePath);
+    }
+
+    public ReadPropertiesFileTask(final AssetManager assets, final String filePath) {
+        super(assets, filePath);
     }
 
     @Override

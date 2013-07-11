@@ -29,7 +29,7 @@ public class TextObject extends Rectangular {
 
         if (mText.length() > 0) {
             Scene scene = getScene();
-            if (scene != null) {
+            if (scene != null && scene.getTextureManager() != null) {
                 setTexture(scene.getTextureManager().createTextTexture(mText, mOptions));
                 // match the size with the texture
                 if (mTexture != null) {
@@ -64,7 +64,7 @@ public class TextObject extends Rectangular {
         // if there is no texture yet
         if (mTexture == null && mText.length() > 0) {
             Scene scene = getScene();
-            if (scene != null) {
+            if (scene != null && scene.getTextureManager() != null) {
                 setTexture(scene.getTextureManager().createTextTexture(mText, mOptions));
                 // match the size with the texture
                 if (mTexture != null) {

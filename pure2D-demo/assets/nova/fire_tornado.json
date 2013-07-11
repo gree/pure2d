@@ -1,0 +1,43 @@
+{
+	"version": 1,
+	"emitters": [
+		{
+			"name": "my_fire",
+			"lifespan": 10000,
+			"particles": [
+				{
+					"sprite": ["sprites/fire.png", "sprites/smoke.png"],
+					"animator": "fire_ani",
+					"blend_mode": "add"
+				}
+			],
+			"animator": "tornado_ani"
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "tornado_ani",
+			"type": "translate",
+			"duration": 1000,
+			"dx": 50,
+			"loop_mode": "reverse",
+			"interpolation": "accelerate_decelerate"
+		},
+		{
+			"name":"fire_ani",
+			"type": "parallel",
+			"animators": [
+				{
+					"type": "tornado",
+					"duration": 5000,
+					"dy": 500,
+					"circle_radius": 200,
+					"circle_num": 15,
+					"interpolation": "decelerate"
+				},
+				{"type": "scale", "x_from": 0.1, "y_from": 0.1, "x_to": 1, "y_to": 1, "duration": 5000}
+			]
+		}
+	]
+}

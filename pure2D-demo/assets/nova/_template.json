@@ -1,0 +1,40 @@
+{
+	"version": 1,
+	"pool_size": 50,
+
+	"emitters": [
+		{
+			"name": "my_emitter",
+			"lifespan": 1000,
+			"particles": [
+				{
+					"sprite": "sprites/some_file.png",
+					"animator": "my_ani",
+					"motion_trail": "my_trail"
+				}
+			]
+		}
+	],
+	
+	"animators": [
+		{
+			"name": "my_ani",
+			"type": "translate",
+			"dx": [-100, 100],
+			"dy": [-100, 100],
+			"duration": 1000,
+			"interpolation": "decelerate"
+		}
+	],
+
+	"motion_trails": [
+		{
+			"name": "my_trail",
+			"type": "shape",
+			"stroke1": 1,
+			"stroke2": 30,
+			"color1": [0xFFFF0000, 0xFFFFFF00, 0xFFFF00FF],
+			"color2": 0x00FFFFFF
+		}
+	]
+}

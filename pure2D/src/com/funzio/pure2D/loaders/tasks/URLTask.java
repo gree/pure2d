@@ -5,11 +5,13 @@ package com.funzio.pure2D.loaders.tasks;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
+import java.util.Set;
 
 import android.content.Intent;
 import android.util.Log;
@@ -29,9 +31,12 @@ public abstract class URLTask implements IntentTask {
     public static String EXTRA_URL = "url";
 
     protected int mBufferSize = DEFAULT_BUFFER;
+    protected byte[] mBuffer;
+
     protected final String mURL;
     protected int mContentLength = -1;
-    protected int mTotalBytesLoaded;
+    protected int mTotalBytesLoaded = 0;
+    protected boolean mGzipEnabled = true; // enabled by default
 
     public URLTask(final String url) {
         mURL = url;
@@ -42,11 +47,23 @@ public abstract class URLTask implements IntentTask {
         mBufferSize = bufferSize;
     }
 
+    public boolean isGzipEnabled() {
+        return mGzipEnabled;
+    }
+
+    public void setGzipEnabled(final boolean gzipEnabled) {
+        mGzipEnabled = gzipEnabled;
+    }
+
     public String getURL() {
         return mURL;
     }
 
     protected boolean openURL() {
+        return openURL(null);
+    }
+
+    protected boolean openURL(final Map<String, String> properties) {
         // Log.v(TAG, "run(), " + mURL);
 
         final URLConnection conn;
@@ -55,6 +72,22 @@ public abstract class URLTask implements IntentTask {
 
             conn = address.openConnection();
             conn.setConnectTimeout(DEFAULT_TIMEOUT);
+            if (!mGzipEnabled) {
+                // disable gzip
+                conn.setRequestProperty("Accept-Encoding", "identity");
+            }
+
+            // add properties to the post http request
+            if (properties != null) {
+                final Set<String> keys = properties.keySet();
+                for (String key : keys) {
+                    String value = properties.get(key);
+                    if (value != null) {
+                        conn.setRequestProperty(key, value);
+                    }
+                }
+            }
+
             mContentLength = conn.getContentLength();
 
         } catch (Exception e) {
@@ -64,16 +97,8 @@ public abstract class URLTask implements IntentTask {
             return false;
         }
 
-        int count = 0;
-        mTotalBytesLoaded = 0;
         try {
-            final BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            final byte[] data = new byte[mBufferSize];
-            while ((count = inputStream.read(data)) != -1) {
-                mTotalBytesLoaded += count;
-                onProgress(data, count);
-            }
-            inputStream.close();
+            mTotalBytesLoaded = readStream(conn.getInputStream());
         } catch (Exception e) {
             if (LOG_ENABLED) {
                 Log.v(TAG, "READ ERROR!", e);
@@ -81,50 +106,28 @@ public abstract class URLTask implements IntentTask {
             return false;
         }
 
-        // verify the size if it's specified
-        return mContentLength < 0 || (mContentLength == mTotalBytesLoaded);
+        // verify the size if it's specified. NOTE: this only works with gzip disabled!
+        return mContentLength < 0 || (mContentLength == mTotalBytesLoaded) || (mGzipEnabled && mTotalBytesLoaded > 0);
+    }
+
+    protected int readStream(final InputStream stream) throws Exception {
+        int count = 0;
+        int totalBytesLoaded = 0;
+        final BufferedInputStream inputStream = new BufferedInputStream(stream);
+        // only create buffer once
+        if (mBuffer == null) {
+            mBuffer = new byte[mBufferSize];
+        }
+        while ((count = inputStream.read(mBuffer)) != -1) {
+            totalBytesLoaded += count;
+            onProgress(mBuffer, count);
+        }
+        inputStream.close();
+
+        return totalBytesLoaded;
     }
 
     @Deprecated
-    protected boolean postURL(final String data) {
-        final HttpURLConnection conn;
-
-        try {
-            URL address = new URL(mURL);
-            conn = (HttpURLConnection) address.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=" + "utf-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setFixedLengthStreamingMode(data.getBytes().length);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-            return false;
-        }
-
-        // now that connection is open send data
-        try {
-            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
-            os.write(data);
-            os.close();
-            conn.getResponseCode();
-
-            // TODO: Add support to save or return http response
-
-        } catch (IOException e) {
-
-            if (LOG_ENABLED) {
-                Log.v(TAG, "WRITE ERROR!", e);
-            }
-            return false;
-        }
-
-        return true;
-    }
-
     protected boolean postURL(final String data, final Map<String, String> properties) {
         final HttpURLConnection conn;
 
@@ -135,18 +138,22 @@ public abstract class URLTask implements IntentTask {
             conn.setRequestMethod("POST");
 
             // add properties to the post http request
-            for (String key : properties.keySet()) {
-                String value = properties.get(key);
-                if (value != null) {
-                    conn.setRequestProperty(key, value);
+            if (properties != null) {
+                final Set<String> keys = properties.keySet();
+                for (String key : keys) {
+                    String value = properties.get(key);
+                    if (value != null) {
+                        conn.setRequestProperty(key, value);
+                    }
                 }
             }
 
             conn.setFixedLengthStreamingMode(data.getBytes().length);
 
         } catch (IOException e) {
-
-            e.printStackTrace();
+            if (LOG_ENABLED) {
+                Log.v(TAG, "READ ERROR!", e);
+            }
             return false;
         }
 
@@ -170,6 +177,13 @@ public abstract class URLTask implements IntentTask {
         return true;
     }
 
+    /**
+     * Internal callback when progressing
+     * 
+     * @param data
+     * @param count
+     * @throws Exception
+     */
     abstract protected void onProgress(final byte[] data, final int count) throws Exception;
 
     @Override

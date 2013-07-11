@@ -12,9 +12,10 @@ import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
  * @author long
+ * @see {@link Scene#setDepthRange(float, float)}
  */
-public class PerspectiveCamera extends Camera {
 
+public class PerspectiveCamera extends Camera {
     private float mZFar = 1000f;
 
     /**
@@ -22,7 +23,9 @@ public class PerspectiveCamera extends Camera {
      */
     public PerspectiveCamera(final PointF size) {
         super(size);
-        // TODO Auto-generated constructor stub
+
+        // update z-far
+        mZFar = size.y;
     }
 
     /**
@@ -31,7 +34,9 @@ public class PerspectiveCamera extends Camera {
      */
     public PerspectiveCamera(final PointF center, final PointF size) {
         super(center, size);
-        // TODO Auto-generated constructor stub
+
+        // update z-far
+        mZFar = size.y;
     }
 
     /**
@@ -39,7 +44,21 @@ public class PerspectiveCamera extends Camera {
      */
     public PerspectiveCamera(final Scene scene) {
         super(scene);
-        // TODO Auto-generated constructor stub
+
+        // update z-far
+        mZFar = mSize.y;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.Camera#setSize(float, float)
+     */
+    @Override
+    public void setSize(final float w, final float h) {
+        super.setSize(w, h);
+
+        // update z-far
+        mZFar = h;
     }
 
     /*
@@ -55,8 +74,8 @@ public class PerspectiveCamera extends Camera {
         gl.glLoadIdentity();
 
         // perspective projection
-        GLU.gluPerspective(gl, 60 / mZoom.x, mSize.x / mSize.y, 0.001f, mZFar);
-
+        // TODO: use glState.setProjection() instead
+        GLU.gluPerspective(gl, Pure2D.GL_PERSPECTIVE_FOVY / mZoom.x, mSize.x / mSize.y, 0.001f, mZFar);
         // camera view and axis system
         if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
             // invert the y-axis

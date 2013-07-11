@@ -28,7 +28,12 @@ public class PathAnimator extends TweenAnimator {
     public void setValues(final PointF... points) {
         mPoints = points;
 
+        // safety check
         final int n = points.length;
+        if (n < 2) {
+            return;
+        }
+
         mSin = new float[n - 1];
         mCos = new float[n - 1];
         mSegments = new float[n - 1];
@@ -48,11 +53,11 @@ public class PathAnimator extends TweenAnimator {
 
     /*
      * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#start()
+     * @see com.funzio.pure2D.animators.TweenAnimator#startElapse(int)
      */
     @Override
-    public void start() {
-        super.start();
+    public void startElapse(final int elapsedTime) {
+        super.startElapse(elapsedTime);
 
         mCurrentSegment = 0;
     }
@@ -65,7 +70,7 @@ public class PathAnimator extends TweenAnimator {
 
     @Override
     protected void onUpdate(final float value) {
-        if (mTarget != null) {
+        if (mTarget != null && mSegments != null) {
 
             if (mSnapEnabled) {
                 final int newSegment = getSegment(value);
@@ -160,6 +165,17 @@ public class PathAnimator extends TweenAnimator {
 
     public void setSnapEnabled(final boolean snapEnabled) {
         mSnapEnabled = snapEnabled;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.animators.TweenAnimator#onLoop()
+     */
+    @Override
+    protected void onLoop() {
+        super.onLoop();
+
+        mCurrentSegment = 0;
     }
 
 }
