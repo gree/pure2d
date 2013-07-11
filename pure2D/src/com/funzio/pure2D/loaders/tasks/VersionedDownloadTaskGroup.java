@@ -47,13 +47,17 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
         if (mRemoteVersion != null) {
             remoteVersionTask = new URLLoadPropertiesTask(mRemoteVersion);
             if (remoteVersionTask.run()) {
-                remoteVersion = remoteVersionTask.getContent().getProperty(VERSION_KEY);
+                if (remoteVersionTask.getContent().containsKey(VERSION_KEY)) {
+                    remoteVersion = remoteVersionTask.getContent().getProperty(VERSION_KEY);
+                }
 
                 // now read the local version
                 localVersionTask = new ReadPropertiesFileTask(mLocalVersion);
                 if (localVersionTask.run()) {
                     localVersionProperties = localVersionTask.getContent();
-                    localVersion = localVersionProperties.getProperty(VERSION_KEY);
+                    if (localVersionProperties.containsKey(VERSION_KEY)) {
+                        localVersion = localVersionProperties.getProperty(VERSION_KEY);
+                    }
                 } else {
                     localVersionProperties = new Properties();
                 }

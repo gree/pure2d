@@ -11,17 +11,18 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.BaseDisplayObject;
+import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.shapes.Sprite;
+import com.funzio.pure2D.shapes.DummyDrawer;
 
 /**
  * @author long
  */
-public class DisplayGroup extends BaseDisplayObject implements Container, Touchable {
+public class DisplayGroup extends BaseDisplayObject implements Container, Cacheable, Touchable {
 
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
@@ -33,9 +34,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
-    protected Sprite mCacheSprite;
+    protected DummyDrawer mCacheDrawer;
     protected boolean mCacheEnabled = false;
     protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
+    protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
 
     // clipping
     private boolean mClippingEnabled = false;
@@ -130,13 +132,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
             }
 
             // set the new scissor rect, only take position and scale into account!
-            glState.setScissor(Math.round(mClipStageRect.left), Math.round(mClipStageRect.top), Math.round(mClipStageRect.width()), Math.round(mClipStageRect.height()));
+            glState.setScissor(Math.round(mClipStageRect.left), Math.round(mClipStageRect.top), Math.round(mClipStageRect.right - mClipStageRect.left + 1),
+                    Math.round(mClipStageRect.bottom - mClipStageRect.top + 1));
         }
 
-        // check cache enabled
-        if (mCacheEnabled) {
-            // check invalidate flags
-            if ((mInvalidateFlags & CHILDREN) != 0) {
+        // check cache enabled, only draw cache when Children stop changing or the policy equals CACHE_WHEN_CHILDREN_CHANGED
+        if (mCacheEnabled && ((mInvalidateFlags & (CHILDREN | VISUAL)) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
+            // check invalidate flags, either CACHE or CHILDREN
+            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0) {
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -146,26 +149,41 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                     }
                     mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
 
-                    // init sprite
-                    if (mCacheSprite == null) {
-                        mCacheSprite = new Sprite();
-                        mCacheSprite.flipTextureCoordBuffer(FLIP_Y);
+                    // init drawer
+                    if (mCacheDrawer == null) {
+                        mCacheDrawer = new DummyDrawer();
+                        // framebuffer is inverted
+                        if (glState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                            mCacheDrawer.flipTextureCoordBuffer(FLIP_Y);
+                        }
                     }
-                    mCacheSprite.setTexture(mCacheFrameBuffer.getTexture());
+                    mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
                 }
 
-                // cache to framebuffer
+                // cache to FBO
                 mCacheFrameBuffer.bind(mCacheProjection);
                 mCacheFrameBuffer.clear();
                 drawChildren(glState);
                 mCacheFrameBuffer.unbind();
+
+                // validate cache
+                validate(CACHE);
             }
 
+            // no color buffer supported
+            glState.setColorArrayEnabled(false);
+            // clear color
+            glState.setColor(null);
+            // clear blending
+            glState.setBlendFunc(null);
             // now draw the cache
-            mCacheSprite.draw(glState);
+            mCacheDrawer.draw(glState);
         } else {
             // draw the children directly
             drawChildren(glState);
+
+            // invalidate cache
+            invalidate(CACHE);
         }
 
         if (mClippingEnabled) {
@@ -248,6 +266,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
                 || ((pos.x >= 0 && pos.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y)); // BL
     }
 
+    public void clearCache() {
+        if (mCacheFrameBuffer != null) {
+            mCacheFrameBuffer.getTexture().unload();
+            mCacheFrameBuffer.unload();
+            mCacheFrameBuffer = null;
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see com.funzio.pure2D.IDisplayObject#dispose()
@@ -256,10 +282,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     public void dispose() {
         super.dispose();
 
-        if (mCacheFrameBuffer != null) {
-            mCacheFrameBuffer.getTexture().unload();
-            mCacheFrameBuffer.unload();
-            mCacheFrameBuffer = null;
+        // clear cache
+        clearCache();
+
+        if (mCacheDrawer != null) {
+            mCacheDrawer.dispose();
+            mCacheDrawer = null;
         }
     }
 
@@ -545,9 +573,35 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
      * @param cacheEnabled
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
+        // diff check
+        if (mCacheEnabled == cacheEnabled) {
+            return;
+        }
+
         mCacheEnabled = cacheEnabled;
 
-        invalidate(CHILDREN);
+        invalidate(CACHE);
+    }
+
+    public int getCachePolicy() {
+        return mCachePolicy;
+    }
+
+    /**
+     * Set how to you want to cache
+     * 
+     * @param cachePolicy
+     * @see #Cacheable
+     */
+    public void setCachePolicy(final int cachePolicy) {
+        // diff check
+        if (mCachePolicy == cachePolicy) {
+            return;
+        }
+
+        mCachePolicy = cachePolicy;
+
+        invalidate(CACHE);
     }
 
     public int getCacheProjection() {
@@ -555,9 +609,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Toucha
     }
 
     public void setCacheProjection(final int cacheProjection) {
+        // diff check
+        if (mCacheProjection == cacheProjection) {
+            return;
+        }
+
         mCacheProjection = cacheProjection;
 
-        invalidate(CHILDREN);
+        invalidate(CACHE);
     }
 
     // public ArrayList<DisplayObject> getChildrenDisplayOrder() {

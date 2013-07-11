@@ -76,26 +76,6 @@ public class TextureManager {
     /**
      * Create a new Texture from a Drawable
      * 
-     * @deprecated Replaced by {@link #createDrawableTexture(int, TextureOptions)}
-     * @param drawable
-     * @param config
-     * @return
-     */
-    @Deprecated
-    public DrawableTexture createTexture(final int drawable, final TextureOptions options) {
-        Log.v(TAG, String.format("createTexture(%d, %s)", drawable, options));
-
-        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options);
-
-        // add to list
-        addTexture(texture);
-
-        return texture;
-    }
-
-    /**
-     * Create a new Texture from a Drawable
-     * 
      * @param drawable
      * @param config
      * @return
@@ -112,19 +92,16 @@ public class TextureManager {
     }
 
     /**
-     * Create a new Texture from an AssetManager
+     * Create a new Texture from a Drawable asynchronously
      * 
-     * @deprecated Replaced by {@link #createAssetTexture(String, TextureOptions)}
-     * @param assetManager
-     * @param filePath
+     * @param drawable
      * @param config
      * @return
      */
-    @Deprecated
-    public AssetTexture createTexture(final AssetManager assetManager, final String filePath, final TextureOptions options) {
-        Log.v(TAG, String.format("createTexture(%s, %s, %s)", assetManager, filePath, options));
+    public DrawableTexture createDrawableTextureAsync(final int drawable, final TextureOptions options) {
+        Log.v(TAG, String.format("createTextureAsync(%d, %s)", drawable, options));
 
-        final AssetTexture texture = new AssetTexture(mGLState, assetManager, filePath, options);
+        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
 
         // add to list
         addTexture(texture);
@@ -152,6 +129,25 @@ public class TextureManager {
     }
 
     /**
+     * Create a new Texture from an AssetManager asynchronously
+     * 
+     * @param assetManager
+     * @param filePath
+     * @param config
+     * @return
+     */
+    public AssetTexture createAssetTextureAsync(final String filePath, final TextureOptions options) {
+        Log.v(TAG, String.format("createAssetTextureAsync(%s, %s)", filePath, options));
+
+        final AssetTexture texture = new AssetTexture(mGLState, mAssets, filePath, options, true);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
      * Create a new Texture from a file
      * 
      * @param filePath
@@ -162,6 +158,24 @@ public class TextureManager {
         Log.v(TAG, String.format("createTexture( %s, %s)", filePath, options));
 
         final FileTexture texture = new FileTexture(mGLState, filePath, options);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new Texture from a file asynchronously
+     * 
+     * @param filePath
+     * @param config
+     * @return
+     */
+    public FileTexture createFileTextureAsync(final String filePath, final TextureOptions options) {
+        Log.v(TAG, String.format("createTextureAsync( %s, %s)", filePath, options));
+
+        final FileTexture texture = new FileTexture(mGLState, filePath, options, true);
 
         // add to list
         addTexture(texture);
@@ -212,6 +226,7 @@ public class TextureManager {
     /**
      * Can be used after the Surface reloaded.
      */
+    @Deprecated
     public void reloadAllTextures() {
         Log.v(TAG, "reloadAllTextures()");
 

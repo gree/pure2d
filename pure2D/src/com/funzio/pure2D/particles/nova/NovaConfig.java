@@ -20,6 +20,7 @@ import android.view.animation.OvershootInterpolator;
 import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 
 /**
  * @author long
@@ -47,25 +48,6 @@ public class NovaConfig {
     public static final CycleInterpolator INTER_CYCLE = new CycleInterpolator(1);
     public static final DecelerateInterpolator INTER_DECELERATE = new DecelerateInterpolator();
     public static final OvershootInterpolator INTER_OVERSHOOT = new OvershootInterpolator();
-
-    // blend modes and functions
-    public static final String BF_ST_ADD = "add";
-    public static final String BF_ST_SCREEN = "screen";
-    public static final String BF_ST_SCREEN_ALPHA = "screen_alpha";
-    public static final String BF_ST_MULTIPLY = "multiply";
-    public static final String BF_ST_INTERPOLATE = "interpolate";
-    public static final String BF_ST_INTERPOLATE2 = "interpolate2"; // with additive alpha (separate)
-    public static final String BF_ST_PREMULTIPLIED_ALPHA = "premultiplied_alpha";
-    public static final String BF_ST_INTERPOLATE_COLOR = "interpolate_color";
-
-    public static final BlendFunc BF_ADD = BlendFunc.getAdd();
-    public static final BlendFunc BF_SCREEN = BlendFunc.getScreen();
-    public static final BlendFunc BF_SCREEN_ALPHA = BlendFunc.getScreenAlpha();
-    public static final BlendFunc BF_MULTIPLY = BlendFunc.getMultiply();
-    public static final BlendFunc BF_INTERPOLATE = BlendFunc.getInterpolate();
-    public static final BlendFunc BF_INTERPOLATE2 = BlendFunc.getInterpolate2();
-    public static final BlendFunc BF_PREMULTIPLIED_ALPHA = BlendFunc.getPremultipliedAlpha();
-    public static final BlendFunc BF_INTERPOLATE_COLOR = BlendFunc.getInterpolateColor();
 
     // loop modes
     public static final String LOOP_REPEAT = "repeat";
@@ -163,22 +145,22 @@ public class NovaConfig {
     }
 
     public static BlendFunc getBlendFunc(final String mode) {
-        if (BF_ST_ADD.equalsIgnoreCase(mode)) {
-            return BF_ADD;
-        } else if (BF_ST_SCREEN.equalsIgnoreCase(mode)) {
-            return BF_SCREEN;
-        } else if (BF_ST_SCREEN_ALPHA.equalsIgnoreCase(mode)) {
-            return BF_SCREEN_ALPHA;
-        } else if (BF_ST_MULTIPLY.equalsIgnoreCase(mode)) {
-            return BF_MULTIPLY;
-        } else if (BF_ST_INTERPOLATE.equalsIgnoreCase(mode)) {
-            return BF_INTERPOLATE;
-        } else if (BF_ST_INTERPOLATE2.equalsIgnoreCase(mode)) {
-            return BF_INTERPOLATE2;
-        } else if (BF_ST_INTERPOLATE_COLOR.equalsIgnoreCase(mode)) {
-            return BF_INTERPOLATE_COLOR;
-        } else if (BF_ST_PREMULTIPLIED_ALPHA.equalsIgnoreCase(mode)) {
-            return BF_PREMULTIPLIED_ALPHA;
+        if (BlendModes.ADD.equalsIgnoreCase(mode)) {
+            return BlendModes.ADD_FUNC;
+        } else if (BlendModes.SCREEN.equalsIgnoreCase(mode)) {
+            return BlendModes.SCREEN_FUNC;
+        } else if (BlendModes.SCREEN_ALPHA.equalsIgnoreCase(mode)) {
+            return BlendModes.SCREEN_ALPHA_FUNC;
+        } else if (BlendModes.MULTIPLY.equalsIgnoreCase(mode)) {
+            return BlendModes.MULTIPLY_FUNC;
+        } else if (BlendModes.INTERPOLATE.equalsIgnoreCase(mode)) {
+            return BlendModes.INTERPOLATE_FUNC;
+        } else if (BlendModes.INTERPOLATE2.equalsIgnoreCase(mode)) {
+            return BlendModes.INTERPOLATE2_FUNC;
+        } else if (BlendModes.INTERPOLATE_COLOR.equalsIgnoreCase(mode)) {
+            return BlendModes.INTERPOLATE_COLOR_FUNC;
+        } else if (BlendModes.PREMULTIPLIED_ALPHA.equalsIgnoreCase(mode)) {
+            return BlendModes.PREMULTIPLIED_ALPHA_FUNC;
         }
 
         return null;

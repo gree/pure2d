@@ -57,6 +57,7 @@ public class FrameBuffer {
         final int roundedWidth = Math.round(width);
         final int roundedHeight = Math.round(height);
         final BufferTexture texture = new BufferTexture(mGLState, roundedWidth, roundedHeight, checkPo2);
+        // texture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output, but don't set it here
         if (!attachTexture(texture) && !texture.isPo2()) {
             // NOTE: most of 2.2 devices have problem with NPOT texture (even thought it's supported) when attached to a FrameBuffer
             // so this is a work-around

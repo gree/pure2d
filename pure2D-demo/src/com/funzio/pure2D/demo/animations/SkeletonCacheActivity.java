@@ -11,11 +11,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animation.skeleton.AniFile;
 import com.funzio.pure2D.animation.skeleton.AniSkeleton;
 import com.funzio.pure2D.atlas.CacheAtlas;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
@@ -41,7 +41,7 @@ public class SkeletonCacheActivity extends StageActivity {
                 // load the textures
                 loadTexture();
 
-                // generate a lot of squares
+                // initial object
                 // addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
 
                 final AniSkeleton skeleton = new AniSkeleton(mAniFile);

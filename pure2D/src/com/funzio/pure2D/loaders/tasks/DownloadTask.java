@@ -15,7 +15,7 @@ import android.util.Log;
 /**
  * @author long
  */
-public class DownloadTask extends URLTask implements Retriable {
+public class DownloadTask extends URLTask implements Retriable, Optional {
     public static boolean LOG_ENABLED = true;
     public static final String TAG = DownloadTask.class.getSimpleName();
 
@@ -28,6 +28,7 @@ public class DownloadTask extends URLTask implements Retriable {
     private OutputStream mOutputStream;
 
     protected boolean mSucceeded; // whether the execution was successful or not.
+    protected boolean mIsOptional; // whether we should care about whether this task failed or not
 
     private int mRetriedAlready = 0; // number of times already retried
     private int mRetryMax = 0; // max number of retries
@@ -66,6 +67,10 @@ public class DownloadTask extends URLTask implements Retriable {
     public void reset() {
         mSucceeded = false;
         mRetriedAlready = 0;
+    }
+
+    public void setIsOptional(final boolean isOptional) {
+        mIsOptional = isOptional;
     }
 
     @Override
@@ -189,5 +194,14 @@ public class DownloadTask extends URLTask implements Retriable {
     @Override
     public String toString() {
         return "[DownloadTask " + mURL + ", " + mFilePath + " ]";
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.loaders.tasks.Optional#isOptional()
+     */
+    @Override
+    public boolean isOptional() {
+        return mIsOptional;
     }
 }

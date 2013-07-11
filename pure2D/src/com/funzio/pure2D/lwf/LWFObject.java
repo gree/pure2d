@@ -54,6 +54,7 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         glState.setVertexArrayEnabled(false);
         glState.setTextureCoordArrayEnabled(false);
         glState.setColorArrayEnabled(false);
+        glState.setVertexBuffer(null);
         glState.setTextureCoordBuffer(null);
         return true;
     }

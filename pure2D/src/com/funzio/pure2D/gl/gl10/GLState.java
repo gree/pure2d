@@ -40,6 +40,7 @@ public class GLState {
 
     // array toggles
     private boolean mVertexArrayEnabled = false;
+    private VertexBuffer mVertexBuffer;
     private boolean mDepthTestEnabled = false;
     private boolean mScissorTestEnabled = false;
 
@@ -254,6 +255,23 @@ public class GLState {
         return true;
     }
 
+    public boolean setVertexBuffer(final VertexBuffer buffer) {
+        // diff check
+        if (mVertexBuffer == buffer) {
+            return false;
+        }
+
+        // values check
+        final boolean same = mVertexBuffer instanceof QuadBuffer && buffer instanceof QuadBuffer && QuadBuffer.compare((QuadBuffer) mVertexBuffer, (QuadBuffer) buffer);
+        if (buffer != null && !same) {
+            mGL.glVertexPointer(buffer.mVertexPointerSize, GL10.GL_FLOAT, 0, buffer.mBuffer);
+        }
+
+        // now keep
+        mVertexBuffer = buffer;
+        return true;
+    }
+
     /**
      * @return the textureEnabled
      */
@@ -289,8 +307,7 @@ public class GLState {
         }
 
         // values check
-        if (buffer != null) { // && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer)
-            // apply
+        if (buffer != null && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer)) {
             mGL.glTexCoordPointer(2, GL10.GL_FLOAT, 0, buffer.mBuffer);
         }
 
