@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Set;
 
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -69,6 +70,17 @@ public class ImageSequenceAtlas extends Atlas {
      * @param gl
      */
     public void loadDir(final AssetManager assetManager, final String assetDir, final TextureOptions options) {
+        loadDir(assetManager, assetDir, options, null);
+    }
+
+    /**
+     * This loads all of the images in included from a specific Assets's directory and draws them into the frame buffer, and blocks GL Thread. If included is null all images are loaded
+     * 
+     * @param assetManager
+     * @param assetDir
+     * @param gl
+     */
+    public void loadDir(final AssetManager assetManager, final String assetDir, final TextureOptions options, final Set<String> included) {
         Log.d(TAG, "loadDir() | " + assetDir);
 
         mImageDir = assetDir;
@@ -86,6 +98,10 @@ public class ImageSequenceAtlas extends Atlas {
         }
 
         for (int i = 0; i < filenames.length; i++) {
+            if (included != null && !included.contains(filenames[i])) {
+                continue;
+            }
+
             // create a temp texture for the image
             final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, false);
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
@@ -145,6 +161,15 @@ public class ImageSequenceAtlas extends Atlas {
      * @param files
      */
     public void loadDir(final String dir, final TextureOptions options) {
+        loadDir(dir, options, null);
+    }
+
+    /**
+     * This loads all images in included from a specific file system's directory and draws them into the frame buffer. If included is null all images are loaded
+     * 
+     * @param files
+     */
+    public void loadDir(final String dir, final TextureOptions options, final Set<String> included) {
         Log.d(TAG, "loadDir() | " + dir);
 
         mImageDir = dir;
@@ -159,6 +184,10 @@ public class ImageSequenceAtlas extends Atlas {
         Arrays.sort(files, mFileComparator);
 
         for (int i = 0; i < files.length; i++) {
+            if (included != null && !included.contains(files[i].getName())) {
+                continue;
+            }
+
             // create a temp texture for the image
             final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, false);
 

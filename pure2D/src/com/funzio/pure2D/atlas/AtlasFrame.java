@@ -94,26 +94,49 @@ public class AtlasFrame {
     }
 
     protected void rotateCCW() {
-        float x0 = mTextureCoords[0];
-        float y0 = mTextureCoords[1];
-        float x1 = mTextureCoords[2];
-        float y1 = mTextureCoords[3];
+        // start from TL
+        final float x0 = mTextureCoords[0];
+        final float y0 = mTextureCoords[1];
 
-        // TR
+        // TL -> TR
         mTextureCoords[0] = mTextureCoords[4];
         mTextureCoords[1] = mTextureCoords[5];
-        // TL
-        mTextureCoords[2] = x0;
-        mTextureCoords[3] = y0;
-        // BR
+        // TR -> BR
         mTextureCoords[4] = mTextureCoords[6];
         mTextureCoords[5] = mTextureCoords[7];
-        // BL
-        mTextureCoords[6] = x1;
-        mTextureCoords[7] = y1;
+        // BR -> BL
+        mTextureCoords[6] = mTextureCoords[2];
+        mTextureCoords[7] = mTextureCoords[3];
+        // BL -> TL
+        mTextureCoords[2] = x0;
+        mTextureCoords[3] = y0;
 
         // also flip the size
-        float temp = mSize.x;
+        final float temp = mSize.x;
+        mSize.x = mSize.y;
+        mSize.y = temp;
+    }
+
+    protected void rotateCW() {
+        // start from TR
+        final float x2 = mTextureCoords[4];
+        final float y2 = mTextureCoords[5];
+
+        // TR -> TL
+        mTextureCoords[4] = mTextureCoords[0];
+        mTextureCoords[5] = mTextureCoords[1];
+        // TL -> BL
+        mTextureCoords[0] = mTextureCoords[2];
+        mTextureCoords[1] = mTextureCoords[3];
+        // BL -> BR
+        mTextureCoords[2] = mTextureCoords[6];
+        mTextureCoords[3] = mTextureCoords[7];
+        // BR -> TR
+        mTextureCoords[6] = x2;
+        mTextureCoords[7] = y2;
+
+        // also flip the size
+        final float temp = mSize.x;
         mSize.x = mSize.y;
         mSize.y = temp;
     }

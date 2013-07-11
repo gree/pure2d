@@ -29,7 +29,7 @@ public class Pure2D {
     public static int GL_MAX_TEXTURE_SIZE = 0;
     public static int GL_MAX_MODELVIEW_STACK_DEPTH = 0;
     public static int GL_MAX_PROJECTION_STACK_DEPTH = 0;
-    public static final float GL_PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection
+    public static final float GL_PERSPECTIVE_FOVY = 53.125f; // this perfectly matches the ortho projection, try 53.075f
 
     // for non-pure2d engine to plug in
     public static Adapter ADAPTER = null;
@@ -95,7 +95,7 @@ public class Pure2D {
      * @param color
      * @hide
      */
-    protected static void drawDebugRect(final GLState glState, final float x1, final float y1, final float x2, final float y2, final int flag) {
+    public static void drawDebugRect(final GLState glState, final float x1, final float y1, final float x2, final float y2, final int flag) {
         DEBUG_VERTICES[0] = x1;
         DEBUG_VERTICES[1] = y1;
         DEBUG_VERTICES[2] = x1;

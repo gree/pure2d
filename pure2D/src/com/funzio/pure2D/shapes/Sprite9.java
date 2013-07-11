@@ -150,13 +150,13 @@ public class Sprite9 extends Rectangular {
                 float tw = scaleX[col];
 
                 // set the quad values
-                mQuadBuffers[index].setXYWH(vx, vy, vw, vh);
+                mQuadBuffers[index].setRect(vx, vy, vw, vh);
 
                 // set the coordinates
                 if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-                    mCoordBuffers[index].setXYWH(tx * tsx, tyInverted * tsy, tw * tsx, th * tsy);
+                    mCoordBuffers[index].setRect(tx * tsx, tyInverted * tsy, tw * tsx, th * tsy);
                 } else {
-                    mCoordBuffers[index].setXYWH(tx * tsx, ty * tsy, tw * tsx, -th * tsy);
+                    mCoordBuffers[index].setRect(tx * tsx, ty * tsy, tw * tsx, -th * tsy);
                 }
 
                 vx += vw;
@@ -204,7 +204,7 @@ public class Sprite9 extends Rectangular {
         for (int i = 0; i < NUM_PATCHES; i++) {
             quad = mQuadBuffers[i];
             // only draw when the quad is set
-            if (quad.isSet()) {
+            if (quad.hasSize()) {
                 // now draw, woo hoo!
                 mCoordBuffers[i].apply(glState);
                 quad.draw(glState);

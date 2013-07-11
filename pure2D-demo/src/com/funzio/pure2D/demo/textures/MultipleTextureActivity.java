@@ -10,8 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.gl.GLColor;
@@ -46,9 +46,9 @@ public class MultipleTextureActivity extends StageActivity {
 
     private void loadTextures() {
         final int[] ids = {
-                R.drawable.cc_32, // cc
-                R.drawable.mw_32, // mw
-                R.drawable.ka_32, // ka
+                // R.drawable.cc_32, // cc
+                // R.drawable.mw_32, // mw
+                // R.drawable.ka_32, // ka
                 R.drawable.cc_128, // cc
                 R.drawable.mw_128, // mw
                 R.drawable.ka_128, // ka
@@ -75,9 +75,9 @@ public class MultipleTextureActivity extends StageActivity {
                 Texture texture = mTextures.get(random);
                 sq.setTexture(texture);
                 // add some alpha for fun
-                if (random >= 3) {
-                    sq.setAlpha(0.7f);
-                }
+                // if (random >= 3) {
+                // sq.setAlpha(0.7f);
+                // }
             } else {
                 sq.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
                 int size = mRandom.nextFloat() > 0.5 ? 32 : 128;
