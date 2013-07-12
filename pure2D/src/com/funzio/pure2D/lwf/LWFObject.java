@@ -46,6 +46,7 @@ public class LWFObject extends BaseDisplayObject implements Playable {
             return false;
 
         BlendFunc blendFunc = glState.getBlendFunc();
+        glState.setBlendFunc(BlendFunc.getPremultipliedAlpha());
 
         mLWF.draw();
 
