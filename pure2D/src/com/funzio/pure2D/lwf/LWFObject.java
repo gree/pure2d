@@ -45,10 +45,13 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         if (mLWF == null)
             return false;
 
+        BlendFunc blendFunc = glState.getBlendFunc();
+        glState.setBlendFunc(BlendFunc.getPremultipliedAlpha());
+
         mLWF.draw();
 
         glState.unbindTexture();
-        glState.setBlendFunc(BlendFunc.getPremultipliedAlpha());
+        glState.setBlendFunc(blendFunc);
         glState.setVertexArrayEnabled(false);
         glState.setTextureCoordArrayEnabled(false);
         glState.setColorArrayEnabled(false);
