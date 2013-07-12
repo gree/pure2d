@@ -21,6 +21,13 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
 
+        // update current frame
+        if (mCurrentFrame != mPreviousFrame) {
+            updateFrame(mCurrentFrame);
+            mPreviousFrame = mCurrentFrame;
+            invalidate(FRAME);
+        }
+
         // get next frame
         if (mNumFrames > 0 && mPlaying) {
             int frames = 1;
@@ -59,13 +66,6 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
                     }
                 }
             }
-        }
-
-        // update current frame
-        if (mCurrentFrame != mPreviousFrame) {
-            updateFrame(mCurrentFrame);
-            mPreviousFrame = mCurrentFrame;
-            invalidate(FRAME);
         }
 
         return mNumFrames > 0;
