@@ -81,7 +81,8 @@ public class Pure2D {
 
         Log.i(TAG, "initGLProperties():\n" //
                 + GL_EXTENSIONS + "\n" //
-                + "NPOT Texture: " + GL_NPOT_TEXTURE_SUPPORTED);
+                + "NPOT Texture: " + GL_NPOT_TEXTURE_SUPPORTED + "\n" //
+                + "GL_MAX_TEXTURE_SIZE: " + GL_MAX_TEXTURE_SIZE);
     }
 
     /**

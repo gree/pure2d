@@ -787,9 +787,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             screen = mCamera.globalToLocal(globalX, globalY);
 
-            final PointF cameraSize = mCamera.getSize();
-            screen.x /= cameraSize.x / mSize.x;
-            screen.y /= cameraSize.y / mSize.y;
+            final RectF cameraRect = mCamera.mZoomRect;
+            screen.x /= cameraRect.width() / mSize.x;
+            screen.y /= cameraRect.height() / mSize.y;
         } else {
             screen = new PointF(globalX, globalY);
         }
@@ -818,9 +818,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             mCamera.globalToLocal(globalX, globalY, result);
 
-            final PointF cameraSize = mCamera.getSize();
-            result.x /= cameraSize.x / mSize.x;
-            result.y /= cameraSize.y / mSize.y;
+            final RectF cameraRect = mCamera.mZoomRect;
+            result.x /= cameraRect.width() / mSize.x;
+            result.y /= cameraRect.height() / mSize.y;
         } else {
             result.x = globalX;
             result.y = globalY;
@@ -866,9 +866,9 @@ public class BaseScene implements Scene {
 
         // check the camera
         if (mCamera != null) {
-            final PointF cameraSize = mCamera.getSize();
-            localX *= cameraSize.x / mSize.x;
-            localY *= cameraSize.y / mSize.y;
+            final RectF cameraRect = mCamera.mZoomRect;
+            localX *= cameraRect.width() / mSize.x;
+            localY *= cameraRect.height() / mSize.y;
             return mCamera.localToGlobal(localX, localY);
         } else {
             return new PointF(localX, localY);
@@ -894,9 +894,9 @@ public class BaseScene implements Scene {
 
         // check the camera
         if (mCamera != null) {
-            final PointF cameraSize = mCamera.getSize();
-            localX *= cameraSize.x / mSize.x;
-            localY *= cameraSize.y / mSize.y;
+            final RectF cameraRect = mCamera.mZoomRect;
+            localX *= cameraRect.width() / mSize.x;
+            localY *= cameraRect.height() / mSize.y;
             mCamera.localToGlobal(localX, localY, result);
         } else {
             result.x = localX;
@@ -935,9 +935,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             mCamera.globalToLocal(globalX, globalY, result);
 
-            final PointF cameraSize = mCamera.getSize();
-            result.x /= cameraSize.x / mSize.x;
-            result.y /= cameraSize.y / mSize.y;
+            final RectF cameraRect = mCamera.mZoomRect;
+            result.x /= cameraRect.width() / mSize.x;
+            result.y /= cameraRect.height() / mSize.y;
         } else {
             result.x = globalX;
             result.y = globalY;
@@ -959,9 +959,9 @@ public class BaseScene implements Scene {
         if (mCamera != null) {
             mCamera.globalToLocal(globalRect, result);
 
-            final PointF cameraSize = mCamera.getSize();
-            final float scaleX = cameraSize.x / mSize.x;
-            final float scaleY = cameraSize.y / mSize.y;
+            final RectF cameraRect = mCamera.mZoomRect;
+            final float scaleX = cameraRect.width() / mSize.x;
+            final float scaleY = cameraRect.height() / mSize.y;
             result.left /= scaleX;
             result.top /= scaleY;
             result.right /= scaleX;
