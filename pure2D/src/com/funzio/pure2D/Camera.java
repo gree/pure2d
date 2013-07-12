@@ -26,7 +26,7 @@ public class Camera implements Manipulatable {
     protected Scene mScene;
     protected int mAxisSystem;
 
-    private RectF mRect = new RectF();
+    protected RectF mZoomRect = new RectF();
     private PointF mHalfSize = new PointF(0, 0);
     private boolean mInvalidated;
 
@@ -39,10 +39,14 @@ public class Camera implements Manipulatable {
     private static final float[] mScratch = new float[4];
 
     public Camera(final PointF size) {
-        mSize.x = size.x;
-        mSize.y = size.y;
-        mCenter.x = size.x / 2;
-        mCenter.y = size.y / 2;
+        this(size.x, size.y);
+    }
+
+    public Camera(final float width, final float height) {
+        mSize.x = width;
+        mSize.y = height;
+        mCenter.x = width / 2;
+        mCenter.y = height / 2;
         // pre-cal
         mHalfSize.x = mSize.x / 2;
         mHalfSize.y = mSize.y / 2;
@@ -200,10 +204,10 @@ public class Camera implements Manipulatable {
     }
 
     /**
-     * @return the rect
+     * @return the zoom rect
      */
-    public RectF getRect() {
-        return mRect;
+    public RectF getZoomRect() {
+        return mZoomRect;
     }
 
     /**
@@ -249,17 +253,17 @@ public class Camera implements Manipulatable {
 
     public void validate(final GLState glState) {
         // prepare the rect
-        mRect.left = mCenter.x - mHalfSize.x / mZoom.x;
-        mRect.top = mCenter.y - mHalfSize.y / mZoom.y;
-        mRect.right = mCenter.x + mHalfSize.x / mZoom.x;
-        mRect.bottom = mCenter.y + mHalfSize.y / mZoom.y;
+        mZoomRect.left = mCenter.x - mHalfSize.x / mZoom.x;
+        mZoomRect.top = mCenter.y - mHalfSize.y / mZoom.y;
+        mZoomRect.right = mCenter.x + mHalfSize.x / mZoom.x;
+        mZoomRect.bottom = mCenter.y + mHalfSize.y / mZoom.y;
 
         // re-cal the bounds
         if (mRotation != 0) {
             mMatrix.setRotate(mRotation, mCenter.x, mCenter.y);
-            mMatrix.mapRect(mBounds, mRect);
+            mMatrix.mapRect(mBounds, mZoomRect);
         } else {
-            mBounds.set(mRect);
+            mBounds.set(mZoomRect);
         }
 
         // projection
@@ -275,7 +279,7 @@ public class Camera implements Manipulatable {
         // Reset the projection matrix
         gl.glLoadIdentity();
         // camera view and axis system
-        glState.setProjection(mAxisSystem, mRect.left, mRect.right, mRect.top, mRect.bottom);
+        glState.setProjection(mAxisSystem, mZoomRect.left, mZoomRect.right, mZoomRect.top, mZoomRect.bottom);
 
         // camera rotation
         if (mRotation != 0) {
@@ -335,8 +339,8 @@ public class Camera implements Manipulatable {
      */
     @Deprecated
     public PointF localToGlobal(final float cameraX, final float cameraY) {
-        mScratch[0] = mRect.left + cameraX;
-        mScratch[1] = mRect.top + cameraY;
+        mScratch[0] = mZoomRect.left + cameraX;
+        mScratch[1] = mZoomRect.top + cameraY;
 
         if (mRotation != 0) {
             mMatrix.mapPoints(mScratch);
@@ -353,8 +357,8 @@ public class Camera implements Manipulatable {
      * @param result
      */
     public void localToGlobal(final float cameraX, final float cameraY, final PointF result) {
-        mScratch[0] = mRect.left + cameraX;
-        mScratch[1] = mRect.top + cameraY;
+        mScratch[0] = mZoomRect.left + cameraX;
+        mScratch[1] = mZoomRect.top + cameraY;
 
         if (mRotation != 0) {
             mMatrix.mapPoints(mScratch);
@@ -383,7 +387,7 @@ public class Camera implements Manipulatable {
             inverse.mapPoints(mScratch);
         }
 
-        return new PointF(mScratch[0] - mRect.left, mScratch[1] - mRect.top);
+        return new PointF(mScratch[0] - mZoomRect.left, mScratch[1] - mZoomRect.top);
     }
 
     /**
@@ -403,8 +407,8 @@ public class Camera implements Manipulatable {
             inverse.mapPoints(mScratch);
         }
 
-        result.x = mScratch[0] - mRect.left;
-        result.y = mScratch[1] - mRect.top;
+        result.x = mScratch[0] - mZoomRect.left;
+        result.y = mScratch[1] - mZoomRect.top;
     }
 
     /**
@@ -425,10 +429,10 @@ public class Camera implements Manipulatable {
             inverse.mapPoints(mScratch);
         }
 
-        result.left = mScratch[0] - mRect.left;
-        result.top = mScratch[1] - mRect.top;
-        result.right = mScratch[2] - mRect.left;
-        result.bottom = mScratch[3] - mRect.top;
+        result.left = mScratch[0] - mZoomRect.left;
+        result.top = mScratch[1] - mZoomRect.top;
+        result.right = mScratch[2] - mZoomRect.left;
+        result.bottom = mScratch[3] - mZoomRect.top;
     }
 
     public boolean addManipulator(final Manipulator manipulator) {
