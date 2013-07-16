@@ -23,8 +23,8 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
 
         // update current frame
         if (mCurrentFrame != mPreviousFrame) {
-            mPreviousFrame = mCurrentFrame;
             updateFrame(mCurrentFrame);
+            mPreviousFrame = mCurrentFrame;
             invalidate(FRAME);
         }
 

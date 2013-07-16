@@ -40,7 +40,8 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         });
 
         try {
-            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_01_60.json", 1);
+            mAtlas = new JsonAtlas(mScene.getAxisSystem());
+            mAtlas.load(getAssets(), "atlas/coin_01_60.json", 1);
         } catch (Exception e) {
             Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
         }
