@@ -173,7 +173,8 @@ public class NovaActivity extends StageActivity {
             if (file.contains(".json")) {
                 // load json atlas and texture
                 try {
-                    final JsonAtlas atlas = new JsonAtlas(getAssets(), file, 1);
+                    final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
+                    atlas.load(getAssets(), file, 1);
                     atlas.getMasterFrameSet().setTexture(mScene.getTextureManager().createAssetTexture(file.replace(".json", ".png"), options));
 
                     // map it

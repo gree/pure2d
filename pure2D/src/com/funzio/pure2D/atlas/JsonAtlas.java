@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.loaders.AsyncTaskExecuter;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.loaders.tasks.Task;
@@ -28,12 +29,41 @@ import com.funzio.pure2D.loaders.tasks.Task;
 public class JsonAtlas extends Atlas {
     protected static final String TAG = JsonAtlas.class.getSimpleName();
 
+    protected int mAxisSystem = Scene.AXIS_TOP_LEFT; // TOP-LEFT is TexturePacker's default
+
     public JsonAtlas() {
         super();
     }
 
+    public JsonAtlas(final int axisSystem) {
+        super();
+
+        mAxisSystem = axisSystem;
+    }
+
+    @Deprecated
     public JsonAtlas(final InputStream stream, final float scale) throws IOException, JSONException {
         super();
+
+        load(stream, scale);
+    }
+
+    @Deprecated
+    public JsonAtlas(final AssetManager assets, final String filePath, final float scale) throws IOException, JSONException {
+        super();
+
+        load(assets.open(filePath), scale);
+    }
+
+    @Deprecated
+    public JsonAtlas(final String filePath, final float scale) throws IOException, JSONException {
+        super();
+
+        load(new FileInputStream(new File(filePath)), scale);
+    }
+
+    public void load(final InputStream stream, final float scale) throws IOException, JSONException {
+        Log.v(TAG, "load()");
 
         final StringBuilder sb = new StringBuilder();
         while (stream.available() > 0) {
@@ -46,12 +76,14 @@ public class JsonAtlas extends Atlas {
         parse(sb.toString(), scale);
     }
 
-    public JsonAtlas(final AssetManager asset, final String filePath, final float scale) throws IOException, JSONException {
-        this(asset.open(filePath), scale);
-    }
+    public void load(final AssetManager assets, final String filePath, final float scale) throws IOException, JSONException {
+        Log.v(TAG, "load(): " + filePath);
 
-    public JsonAtlas(final String filePath, final float scale) throws IOException, JSONException {
-        this(new FileInputStream(new File(filePath)), scale);
+        if (assets == null) {
+            load(new FileInputStream(new File(filePath)), scale);
+        } else {
+            load(assets.open(filePath), scale);
+        }
     }
 
     public void loadAsync(final AssetManager assets, final String filePath, final float scale) {
@@ -124,9 +156,17 @@ public class JsonAtlas extends Atlas {
 
         final AtlasFrame atlasFrame = new AtlasFrame(this, index, frameJson.getString("filename"), new RectF(left * scale, top * scale, right * scale, bottom * scale));
         if (trimmed) {
+
             final JSONObject spriteSourceSize = frameJson.getJSONObject("spriteSourceSize");
             final int offsetX = spriteSourceSize.getInt("x");
-            final int offsetY = spriteSourceSize.getInt("y");
+            int offsetY = spriteSourceSize.getInt("y");
+            // check axis
+            if (mAxisSystem == Scene.AXIS_BOTTOM_LEFT) {
+                final JSONObject sourceSize = frameJson.getJSONObject("sourceSize");
+                // flip for axis
+                offsetY = sourceSize.getInt("h") - (spriteSourceSize.getInt("y") + spriteSourceSize.getInt("h"));
+            }
+
             if (offsetX != 0 || offsetY != 0) {
                 atlasFrame.mOffset = new PointF(offsetX * scale, offsetY * scale);
             }
