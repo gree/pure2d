@@ -41,7 +41,7 @@ public class BitmapFontMetrics extends FontMetrics {
 
         letterPaddingX = options.inPaddingX * options.inScaleX;
         letterPaddingY = options.inPaddingY * options.inScaleY;
-        letterSpacing *= options.inScaleX;
+        letterSpacing = -letterPaddingX * 2; // explicitly set letter spacing
         whitespace = options.inTextPaint.measureText(String.valueOf(Characters.SPACE)) * options.inScaleX + letterPaddingX * 2;
     }
 
