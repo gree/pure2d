@@ -176,6 +176,10 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
      */
     @Override
     public boolean draw(final GLState glState) {
+        if (mText == null || mText.length() == 0) {
+            return false;
+        }
+
         drawStart(glState);
 
         // no color buffer supported
