@@ -173,4 +173,8 @@
 
     <string name="korean_bitmap_font">Korean Bitmap Font</string>
 
+    <string name="grid_group">Grid Group</string>
+
+    <string name="flip_orientation">Flip Orientation</string>
+
 </resources>

@@ -55,4 +55,11 @@
         android:onClick="onClickButton"
         android:text="@string/horizontal_wheel_3d" />
 
+    <Button
+        android:id="@+id/btn_grid_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/grid_group" />
+
 </LinearLayout>

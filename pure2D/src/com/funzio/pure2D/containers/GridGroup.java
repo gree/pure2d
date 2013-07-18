@@ -4,6 +4,8 @@
 package com.funzio.pure2D.containers;
 
 import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.RectF;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
@@ -15,6 +17,7 @@ import com.funzio.pure2D.grid.Grid;
 public class GridGroup<T extends DisplayObject> extends DisplayGroup {
 
     protected Grid<T> mGrid;
+    protected PointF mTempPoint = new PointF();
 
     public GridGroup(final Grid<T> grid) {
         setGrid(grid);
@@ -22,6 +25,10 @@ public class GridGroup<T extends DisplayObject> extends DisplayGroup {
 
     protected void setGrid(final Grid<T> grid) {
         mGrid = grid;
+
+        // match the bound size
+        final RectF bounds = mGrid.getBounds();
+        setSize(bounds.width() + 1, bounds.height() + 1);
     }
 
     public void addChildAt(final T child, final int cellX, final int cellY) {
@@ -46,7 +53,8 @@ public class GridGroup<T extends DisplayObject> extends DisplayGroup {
 
         // set position
         if (child != null && updatePosition) {
-            child.setPosition(mGrid.cellToPoint(cellX, cellY));
+            mGrid.cellToPoint(cellX, cellY, mTempPoint);
+            child.setPosition(mTempPoint);
         } else {
             // force
             invalidate(InvalidateFlags.CHILDREN);
