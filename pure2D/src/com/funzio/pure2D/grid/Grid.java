@@ -5,6 +5,7 @@ package com.funzio.pure2D.grid;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 /**
  * @author long
@@ -14,19 +15,19 @@ public interface Grid<T> {
 
     public Point getSize();
 
-    public Point pointToCell(float x, float y);
+    public void pointToCell(float px, float py, final Point cell);
 
-    public Point pointToCell(PointF p);
+    public void pointToCell(PointF point, final Point cell);
 
-    public PointF cellToPoint(final int cellX, final int cellY);
+    public void cellToPoint(final int cellX, final int cellY, PointF point);
 
-    public PointF cellToPoint(Point cell);
+    public void cellToPoint(Point cell, PointF point);
 
     public T getDataAt(final int cellX, final int cellY);
 
     public void setDataAt(final int cellX, final int cellY, final T data);
 
-    public PointF getBoundSize();
+    public RectF getBounds();
 
     public void dispose();
 }

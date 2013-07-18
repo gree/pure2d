@@ -29,6 +29,7 @@ public class GridGroupActivity extends StageActivity {
     private RectGrid<DisplayObject> mRectGrid;
     private GridGroup<DisplayObject> mContainer;
     private PointF mTempPoint = new PointF();
+    private Point mTempCell = new Point();
 
     // @Override
     // protected int getLayout() {
@@ -69,7 +70,7 @@ public class GridGroupActivity extends StageActivity {
 
     private void addGroup(final float x, final float y) {
         mRectGrid = new RectGrid<DisplayObject>(GRID_WIDTH, GRID_HEIGHT);
-        mRectGrid.flipVertical(true);
+        mRectGrid.flipVertical(true); // flip the y-orientation
         mRectGrid.setCellSize(GRID_CELL, GRID_CELL);
 
         mContainer = new GridGroup<DisplayObject>(mRectGrid);
@@ -111,9 +112,9 @@ public class GridGroupActivity extends StageActivity {
         if (action == MotionEvent.ACTION_DOWN) { // || action == MotionEvent.ACTION_POINTER_DOWN
             mContainer.globalToLocal(mScene.getTouchedPoint(), mTempPoint);
             if (mTempPoint.x > 0 && mTempPoint.y > 0) {
-                final Point cell = mRectGrid.pointToCell(mTempPoint);
+                mRectGrid.pointToCell(mTempPoint, mTempCell);
 
-                final DisplayObject child = mContainer.getChildAt(cell.x, cell.y);
+                final DisplayObject child = mContainer.getChildAt(mTempCell.x, mTempCell.y);
                 if (child != null) {
                     child.setAlpha(1.25f - child.getAlpha());
                 }

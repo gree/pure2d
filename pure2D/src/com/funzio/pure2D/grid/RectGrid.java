@@ -31,41 +31,39 @@ public class RectGrid<T> extends AbstractGrid<T> {
 
         mCellHaftSize.x = cellWidth / 2;
         mCellHaftSize.y = cellHeight / 2;
+
+        // update the bounds
+        updateBounds();
     }
 
     public PointF getCellSize() {
         return mCellSize;
     }
 
-    public PointF getBoundSize() {
-        return new PointF(mSize.x * mCellSize.x, mSize.y * mCellSize.y);
+    @Override
+    protected void updateBounds() {
+        if (mCellSize != null) {
+            mBounds.right = mSize.x * mCellSize.x;
+            mBounds.bottom = mSize.y * mCellSize.y;
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.grid.Grid#pointToCell(float, float)
-     */
     @Override
-    public Point pointToCell(final float x, final float y) {
-        return new Point((int) (x / mCellSize.x), convertVertical((int) (y / mCellSize.y)));
+    public void pointToCell(final float x, final float y, final Point cell) {
+        cell.x = (int) (x / mCellSize.x);
+        cell.y = convertVertical((int) (y / mCellSize.y));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.grid.Grid#pointToCell(android.graphics.PointF)
-     */
     @Override
-    public Point pointToCell(final PointF p) {
-        return new Point((int) (p.x / mCellSize.x), convertVertical((int) (p.y / mCellSize.y)));
+    public void pointToCell(final PointF p, final Point cell) {
+        cell.x = (int) (p.x / mCellSize.x);
+        cell.y = convertVertical((int) (p.y / mCellSize.y));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.grid.Grid#cellToPoint(int, int)
-     */
     @Override
-    public PointF cellToPoint(final int cellX, final int cellY) {
-        return new PointF(cellX * mCellSize.x + (mUseCellCenter ? mCellHaftSize.x : 0), convertVertical(cellY) * mCellSize.y + (mUseCellCenter ? mCellHaftSize.y : 0));
+    public void cellToPoint(final int cellX, final int cellY, final PointF point) {
+        point.x = cellX * mCellSize.x + (mUseCellCenter ? mCellHaftSize.x : 0);
+        point.y = convertVertical(cellY) * mCellSize.y + (mUseCellCenter ? mCellHaftSize.y : 0);
     }
 
     /*
@@ -73,8 +71,9 @@ public class RectGrid<T> extends AbstractGrid<T> {
      * @see com.funzio.pure2D.grid.Grid#cellToPoint(android.graphics.Point)
      */
     @Override
-    public PointF cellToPoint(final Point cell) {
-        return new PointF(cell.x * mCellSize.x + (mUseCellCenter ? mCellHaftSize.x : 0), convertVertical(cell.y) * mCellSize.y + (mUseCellCenter ? mCellHaftSize.y : 0));
+    public void cellToPoint(final Point cell, final PointF point) {
+        point.x = cell.x * mCellSize.x + (mUseCellCenter ? mCellHaftSize.x : 0);
+        point.y = convertVertical(cell.y) * mCellSize.y + (mUseCellCenter ? mCellHaftSize.y : 0);
     }
 
     public int getCellX(final float x) {
