@@ -4,6 +4,7 @@
 package com.funzio.pure2D.grid;
 
 import android.graphics.Point;
+import android.graphics.RectF;
 
 /**
  * @author long
@@ -13,10 +14,13 @@ public abstract class AbstractGrid<T> implements Grid<T> {
     protected T[][] mData;
     protected Point mSize = new Point();
     protected boolean mUseCellCenter = true;
+    protected RectF mBounds = new RectF();
 
     public AbstractGrid(final int width, final int height) {
         setSize(width, height);
     }
+
+    abstract protected void updateBounds();
 
     /*
      * (non-Javadoc)
@@ -29,6 +33,8 @@ public abstract class AbstractGrid<T> implements Grid<T> {
         mSize.y = h;
 
         mData = (T[][]) new Object[h][w];
+
+        updateBounds();
     }
 
     /*
@@ -61,5 +67,9 @@ public abstract class AbstractGrid<T> implements Grid<T> {
     public void dispose() {
         mSize = null;
         mData = null;
+    }
+
+    public RectF getBounds() {
+        return mBounds;
     }
 }

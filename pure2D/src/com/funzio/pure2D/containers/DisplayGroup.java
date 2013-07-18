@@ -143,21 +143,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
-                    if (mCacheFrameBuffer != null) {
-                        mCacheFrameBuffer.unload();
-                        mCacheFrameBuffer.getTexture().unload();
-                    }
-                    mCacheFrameBuffer = new FrameBuffer(glState, mSize.x, mSize.y, true);
-
-                    // init drawer
-                    if (mCacheDrawer == null) {
-                        mCacheDrawer = new DummyDrawer();
-                        // framebuffer is inverted
-                        if (glState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
-                            mCacheDrawer.flipTextureCoordBuffer(FLIP_Y);
-                        }
-                    }
-                    mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
+                    initCache(glState, mSize);
                 }
 
                 // cache to FBO
@@ -264,6 +250,25 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 || ((pos.x + size.x >= 0 && pos.x + size.x < mSize.x) && (pos.y >= 0 && pos.y < mSize.y)) // TR
                 || ((pos.x + size.x >= 0 && pos.x + size.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y))// BR
                 || ((pos.x >= 0 && pos.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y)); // BL
+    }
+
+    protected void initCache(final GLState glState, final PointF size) {
+        if (mCacheFrameBuffer != null) {
+            mCacheFrameBuffer.unload();
+            mCacheFrameBuffer.getTexture().unload();
+        }
+        mCacheFrameBuffer = new FrameBuffer(glState, size.x, size.y, true);
+
+        // init drawer
+        if (mCacheDrawer == null) {
+            mCacheDrawer = new DummyDrawer();
+            // framebuffer is inverted
+            if (glState.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                mCacheDrawer.flipTextureCoordBuffer(FLIP_Y);
+            }
+        }
+        // set texture for drawer
+        mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
     }
 
     public void clearCache() {
