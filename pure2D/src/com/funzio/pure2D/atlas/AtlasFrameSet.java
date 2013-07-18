@@ -162,4 +162,14 @@ public class AtlasFrameSet {
     public void setFps(final int fps) {
         mFps = fps;
     }
+
+    public static AtlasFrameSet createReversedFrameSet(final AtlasFrameSet frameSet) {
+        final AtlasFrameSet reversed = new AtlasFrameSet(frameSet.mName);
+        reversed.setTexture(frameSet.getTexture());
+        for (int i = frameSet.getNumFrames() - 1; i >= 0; i--) {
+            reversed.addFrame(frameSet.getFrame(i));
+        }
+
+        return reversed;
+    }
 }
