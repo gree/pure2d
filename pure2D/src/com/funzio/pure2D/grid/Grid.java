@@ -18,13 +18,15 @@ public interface Grid<T> {
 
     public Point pointToCell(PointF p);
 
-    public PointF cellToPoint(int x, int y);
+    public PointF cellToPoint(final int cellX, final int cellY);
 
     public PointF cellToPoint(Point cell);
 
     public T getDataAt(final int cellX, final int cellY);
 
     public void setDataAt(final int cellX, final int cellY, final T data);
+
+    public PointF getBoundSize();
 
     public void dispose();
 }

@@ -1,38 +1,25 @@
 package com.funzio.pure2D.demo.containers;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager.LayoutParams;
-
 import com.funzio.pure2D.demo.R;
+import com.funzio.pure2D.demo.activities.MenuActivity;
 
-public class ContainerMenuActivity extends Activity {
+public class ContainerMenuActivity extends MenuActivity {
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.container_menu);
-
-        getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
+    protected int getLayout() {
+        return R.layout.container_menu;
     }
 
-    public void onClickButton(final View view) {
-        if (view.getId() == R.id.btn_display_groups) {
-            startActivity(new Intent(this, DisplayGroupActivity.class));
-        } else if (view.getId() == R.id.btn_vgroup) {
-            startActivity(new Intent(this, VGroupActivity.class));
-        } else if (view.getId() == R.id.btn_hgroup) {
-            startActivity(new Intent(this, HGroupActivity.class));
-        } else if (view.getId() == R.id.btn_vwheel) {
-            startActivity(new Intent(this, VWheelActivity.class));
-        } else if (view.getId() == R.id.btn_hwheel) {
-            startActivity(new Intent(this, HWheelActivity.class));
-        } else if (view.getId() == R.id.btn_vwheel_3d) {
-            startActivity(new Intent(this, VWheel3DActivity.class));
-        } else if (view.getId() == R.id.btn_hwheel_3d) {
-            startActivity(new Intent(this, HWheel3DActivity.class));
-        }
+    @Override
+    protected void createMenus() {
+        addMenu(R.id.btn_display_groups, DisplayGroupActivity.class);
+        addMenu(R.id.btn_vgroup, VGroupActivity.class);
+        addMenu(R.id.btn_hgroup, HGroupActivity.class);
+        addMenu(R.id.btn_vwheel, VWheelActivity.class);
+        addMenu(R.id.btn_hwheel, HWheelActivity.class);
+        addMenu(R.id.btn_vwheel_3d, VWheel3DActivity.class);
+        addMenu(R.id.btn_hwheel_3d, HWheel3DActivity.class);
+        addMenu(R.id.btn_grid_group, GridGroupActivity.class);
     }
+
 }
