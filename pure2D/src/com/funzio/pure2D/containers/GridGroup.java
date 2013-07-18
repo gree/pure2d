@@ -27,8 +27,10 @@ public class GridGroup<T extends DisplayObject> extends DisplayGroup {
         mGrid = grid;
 
         // match the bound size
-        final RectF bounds = mGrid.getBounds();
-        setSize(bounds.width() + 1, bounds.height() + 1);
+        if (grid != null) {
+            final RectF bounds = grid.getBounds();
+            setSize(bounds.width() + 1, bounds.height() + 1);
+        }
     }
 
     public void addChildAt(final T child, final int cellX, final int cellY) {
