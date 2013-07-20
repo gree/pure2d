@@ -10,7 +10,7 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 public class LWFData {
     static {
-        System.loadLibrary("lwf-pure2d");
+        LWF.loadLibrary();
     }
 
     public static boolean LOG_ENABLED = true;
