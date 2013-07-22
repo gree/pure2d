@@ -9,7 +9,20 @@ import android.graphics.PointF;
 
 public class LWF {
     static {
-        System.loadLibrary("lwf-pure2d");
+        loadLibrary();
+    }
+
+    private static boolean mLoaded = false;
+
+    public static boolean loadLibrary() {
+        if (!mLoaded) {
+            try {
+                System.loadLibrary("lwf-pure2d");
+                mLoaded = true;
+            } catch (UnsatisfiedLinkError e) {
+            }
+        }
+        return mLoaded;
     }
 
     public interface Handler {

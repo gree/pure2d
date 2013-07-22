@@ -27,6 +27,9 @@ public class LWFCharacterActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!LWF.loadLibrary())
+            Log.e("LWFCharacterActivity", "ERROR: loadLibrary");
+
         mLWFManager = new LWFManager();
 
         mLWFObject = new LWFObject();

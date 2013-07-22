@@ -29,6 +29,9 @@ public class LWFCinematicActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!LWF.loadLibrary())
+            Log.e(TAG, "ERROR: loadLibrary");
+
         mLWFManager = new LWFManager();
 
         mLWFObject = new LWFObject();
@@ -42,7 +45,7 @@ public class LWFCinematicActivity extends StageActivity {
                     InputStream stream = getAssets().open("lwf/evolve/evolve.lwf");
                     mLWFData = mLWFManager.createLWFData(stream);
                 } catch (Exception e) {
-                    Log.e("LWFCharacterActivity", "ERROR: " + e);
+                    Log.e(TAG, "ERROR: " + e);
                 }
 
                 int textureNum = mLWFData.getTextureNum();
