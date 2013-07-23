@@ -53,6 +53,9 @@ public class LoaderService extends IntentService {
     }
 
     @Override
+    /**
+     * Note: this gets called on the Main thread
+     */
     public void onCreate() {
         Log.v(TAG, "onCreate(), " + mName);
 
@@ -74,9 +77,17 @@ public class LoaderService extends IntentService {
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        Log.v(TAG, "onHandleIntent(), " + intent.getAction());
-        // This is the background thread uncaught exception handler. Do not move to UI thread.
-        Thread.currentThread().setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
+        if (!(Thread.currentThread().getUncaughtExceptionHandler() instanceof DefaultUncaughtExceptionHandler)) {
+            // This is the background thread's uncaught exception handler; should happen in background thread!
+            Thread.currentThread().setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
+        }
+
+        if (intent == null) {
+            Log.e(TAG, "onHandleIntent() with NULL intent!", new Exception());
+            return;
+        } else {
+            Log.v(TAG, "onHandleIntent(), " + intent.getAction());
+        }
 
         if (mBatteryLow) {
             stopSelf();

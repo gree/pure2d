@@ -8,9 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.JsonAtlas;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
@@ -40,7 +40,8 @@ public class JsonAtlasActivity extends StageActivity {
         });
 
         try {
-            mAtlas = new JsonAtlas(getAssets(), "atlas/coin_01_60.json", 1);
+            mAtlas = new JsonAtlas(mScene.getAxisSystem());
+            mAtlas.load(getAssets(), "atlas/coin_01_60.json", 1);
         } catch (Exception e) {
             Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
         }

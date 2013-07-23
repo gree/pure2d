@@ -109,6 +109,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".containers.GridGroupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".ui.ListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
