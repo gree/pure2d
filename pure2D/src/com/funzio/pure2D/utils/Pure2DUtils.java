@@ -393,14 +393,14 @@ public class Pure2DUtils {
      * @param num
      * @return
      */
-    public static Point getSmallestTextureSize(final int width, final int height, final int num, final int maxTextureSize) {
+    public static Point getSmallestTextureSize(final int width, final int height, final int num, final int maxTextureSize, final boolean forcePo2) {
         int minWidth = 0;
         int minHeight = 0;
         int minArea = Integer.MAX_VALUE;
         for (int row = 1; row <= num; row++) {
             int col = (int) FloatMath.ceil((float) num / (float) row);
-            int po2Width = getNextPO2(col * width);
-            int po2Height = getNextPO2(row * height);
+            int po2Width = forcePo2 ? getNextPO2(col * width) : col * width;
+            int po2Height = forcePo2 ? getNextPO2(row * height) : row * height;
             int area = po2Width * po2Height;
             if (area < minArea && po2Width <= maxTextureSize) {
                 minArea = area;

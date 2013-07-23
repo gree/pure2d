@@ -268,6 +268,8 @@ public class BaseScene implements Scene {
         // init Texture manager with the new GL
         if (mTextureManager == null) {
             mTextureManager = createDefaultTextureManager();
+            // assign to GLState
+            mGLState.setTextureManager(mTextureManager);
         } else {
             mTextureManager.reload(mGLState, mStage.getResources());
         }
