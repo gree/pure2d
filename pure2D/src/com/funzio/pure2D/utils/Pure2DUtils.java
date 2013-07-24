@@ -35,6 +35,39 @@ public class Pure2DUtils {
     public static final float RADIAN_TO_DEGREE = 180 / (float) Math.PI;
 
     /**
+     * Check and convert the bitmap to (Power of 2) if required
+     * 
+     * @param bitmap
+     * @param options
+     * @param outDimensions
+     * @return
+     */
+    public static Bitmap convertBitmap(Bitmap bitmap, TextureOptions options, final int[] outDimensions) {
+        if (options == null) {
+            options = TextureOptions.getDefault();
+        }
+
+        // resize to the specified size
+        if (options.inScaleX != 1 || options.inScaleY != 1) {
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
+            bitmap.recycle();
+            bitmap = newBitmap;
+        }
+
+        if (options.inPo2) {
+            bitmap = scaleBitmapToPo2(bitmap, outDimensions);
+        } else {
+            // also output the original width and height
+            if (outDimensions != null) {
+                outDimensions[0] = bitmap.getWidth();
+                outDimensions[1] = bitmap.getHeight();
+            }
+        }
+
+        return bitmap;
+    }
+
+    /**
      * Create a texture from an asset file
      * 
      * @param assetManager
