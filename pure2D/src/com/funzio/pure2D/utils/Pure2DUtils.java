@@ -272,10 +272,16 @@ public class Pure2DUtils {
                 }
             }
 
-            final Canvas canvas = new Canvas(po2Bitmap);
-            canvas.drawBitmap(bitmap, 0, 0, null);
-            bitmap.recycle();
-            return po2Bitmap;
+            // wtf? po2Bitmap can be null on Huawei U9200?
+            if (po2Bitmap == null) {
+                Log.e(Pure2D.TAG, "BITMAP NULL ERROR: " + powWidth + " x " + powHeight, new Exception());
+                return null;
+            } else {
+                final Canvas canvas = new Canvas(po2Bitmap);
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                bitmap.recycle();
+                return po2Bitmap;
+            }
         }
     }
 
