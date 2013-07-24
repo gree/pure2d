@@ -103,7 +103,7 @@ public class ImageSequenceAtlas extends Atlas {
             }
 
             // create a temp texture for the image
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, false);
+            final AssetTexture texture = mGLState.getTextureManager().createAssetTexture(assetDir + "/" + filenames[i], options);
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             createFrame(texture, filenames[i].split("\\.")[0]);
         }
@@ -146,7 +146,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < filenames.length; i++) {
             // load the texture asynchronously
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true); // async
+            final AssetTexture texture = mGLState.getTextureManager().createAssetTextureAsync(assetDir + "/" + filenames[i], options); // async
             // listen to it
             texture.setListener(mTextureListener);
 
@@ -189,7 +189,7 @@ public class ImageSequenceAtlas extends Atlas {
             }
 
             // create a temp texture for the image
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, false);
+            final FileTexture texture = mGLState.getTextureManager().createFileTexture(files[i].getAbsolutePath(), options);
 
             // draw to the frame buffer and create a frame. The frame's name is the filename without the extension such as .png, .jpg
             createFrame(texture, files[i].getName().split("\\.")[0]);
@@ -230,7 +230,7 @@ public class ImageSequenceAtlas extends Atlas {
 
         for (int i = 0; i < files.length; i++) {
             // load the texture asynchronously
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true); // async
+            final FileTexture texture = mGLState.getTextureManager().createFileTextureAsync(files[i].getAbsolutePath(), options);// async
             // listen to it
             texture.setListener(mTextureListener);
 

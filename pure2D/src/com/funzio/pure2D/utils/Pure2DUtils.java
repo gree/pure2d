@@ -252,8 +252,6 @@ public class Pure2DUtils {
                 po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
             } catch (OutOfMemoryError e) {
                 try {
-                    // try again with GC, not a good way but...
-                    System.gc(); // FIXME this is not practical
                     po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
                 } catch (OutOfMemoryError e1) {
                     if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
@@ -274,10 +272,16 @@ public class Pure2DUtils {
                 }
             }
 
-            final Canvas canvas = new Canvas(po2Bitmap);
-            canvas.drawBitmap(bitmap, 0, 0, null);
-            bitmap.recycle();
-            return po2Bitmap;
+            // wtf? po2Bitmap can be null on Huawei U9200?
+            if (po2Bitmap == null) {
+                Log.e(Pure2D.TAG, "BITMAP NULL ERROR: " + powWidth + " x " + powHeight, new Exception());
+                return null;
+            } else {
+                final Canvas canvas = new Canvas(po2Bitmap);
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                bitmap.recycle();
+                return po2Bitmap;
+            }
         }
     }
 
@@ -393,14 +397,14 @@ public class Pure2DUtils {
      * @param num
      * @return
      */
-    public static Point getSmallestTextureSize(final int width, final int height, final int num, final int maxTextureSize) {
+    public static Point getSmallestTextureSize(final int width, final int height, final int num, final int maxTextureSize, final boolean forcePo2) {
         int minWidth = 0;
         int minHeight = 0;
         int minArea = Integer.MAX_VALUE;
         for (int row = 1; row <= num; row++) {
             int col = (int) FloatMath.ceil((float) num / (float) row);
-            int po2Width = getNextPO2(col * width);
-            int po2Height = getNextPO2(row * height);
+            int po2Width = forcePo2 ? getNextPO2(col * width) : col * width;
+            int po2Height = forcePo2 ? getNextPO2(row * height) : row * height;
             int area = po2Width * po2Height;
             if (area < minArea && po2Width <= maxTextureSize) {
                 minArea = area;
