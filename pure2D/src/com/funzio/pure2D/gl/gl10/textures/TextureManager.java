@@ -81,7 +81,7 @@ public class TextureManager {
      * @return
      */
     public DrawableTexture createDrawableTexture(final int drawable, final TextureOptions options) {
-        Log.v(TAG, String.format("createTexture(%d, %s)", drawable, options));
+        Log.v(TAG, String.format("createDrawableTexture(%d, %s)", drawable, options));
 
         final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options);
 
@@ -99,7 +99,7 @@ public class TextureManager {
      * @return
      */
     public DrawableTexture createDrawableTextureAsync(final int drawable, final TextureOptions options) {
-        Log.v(TAG, String.format("createTextureAsync(%d, %s)", drawable, options));
+        Log.v(TAG, String.format("createDrawableTextureAsync(%d, %s)", drawable, options));
 
         final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
 
@@ -155,7 +155,7 @@ public class TextureManager {
      * @return
      */
     public FileTexture createFileTexture(final String filePath, final TextureOptions options) {
-        Log.v(TAG, String.format("createTexture( %s, %s)", filePath, options));
+        Log.v(TAG, String.format("createFileTexture( %s, %s)", filePath, options));
 
         final FileTexture texture = new FileTexture(mGLState, filePath, options);
 
@@ -173,9 +173,45 @@ public class TextureManager {
      * @return
      */
     public FileTexture createFileTextureAsync(final String filePath, final TextureOptions options) {
-        Log.v(TAG, String.format("createTextureAsync( %s, %s)", filePath, options));
+        Log.v(TAG, String.format("createFileTextureAsync( %s, %s)", filePath, options));
 
         final FileTexture texture = new FileTexture(mGLState, filePath, options, true);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new Texture from a URL
+     * 
+     * @param url
+     * @param options
+     * @return
+     */
+    public URLTexture createURLTexture(final String url, final TextureOptions options) {
+        Log.v(TAG, String.format("createURLTexture(%s, %s)", url, options));
+
+        final URLTexture texture = new URLTexture(mGLState, url, options);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new Texture from a URL asynchronously
+     * 
+     * @param url
+     * @param options
+     * @return
+     */
+    public URLTexture createURLTextureAsync(final String url, final TextureOptions options) {
+        Log.v(TAG, String.format("createURLTextureAsync(%s, %s)", url, options));
+
+        final URLTexture texture = new URLTexture(mGLState, url, options, true);
 
         // add to list
         addTexture(texture);
@@ -191,7 +227,7 @@ public class TextureManager {
      * @return
      */
     public TextTexture createTextTexture(final String text, final TextOptions options) {
-        Log.v(TAG, String.format("createTexture( %s, %s)", text, options));
+        Log.v(TAG, String.format("createTextTexture( %s, %s)", text, options));
 
         final TextTexture texture = new TextTexture(mGLState, text, options);
 

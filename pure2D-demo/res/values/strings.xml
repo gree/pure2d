@@ -177,4 +177,6 @@
 
     <string name="flip_orientation">Flip Orientation</string>
 
+    <string name="url_texture">URL Texture</string>
+
 </resources>

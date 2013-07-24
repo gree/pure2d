@@ -23,6 +23,7 @@ public class TextureMenuActivity extends MenuActivity {
         addMenu(R.id.btn_sprite_9, Sprite9Activity.class);
         addMenu(R.id.btn_repeating_texture, RepeatingTextureActivity.class);
         addMenu(R.id.btn_multiple_texture, MultipleTextureActivity.class);
+        addMenu(R.id.btn_url_texture, URLTextureActivity.class);
 
         addMenu(R.id.btn_blending, TextureBlendingActivity.class);
         addMenu(R.id.btn_masking, StencilBufferActivity.class);
