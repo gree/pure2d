@@ -252,8 +252,6 @@ public class Pure2DUtils {
                 po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
             } catch (OutOfMemoryError e) {
                 try {
-                    // try again with GC, not a good way but...
-                    System.gc(); // FIXME this is not practical
                     po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
                 } catch (OutOfMemoryError e1) {
                     if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
