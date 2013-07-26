@@ -613,4 +613,8 @@ public class GLState {
     public void setTextureManager(final TextureManager textureManager) {
         mTextureManager = textureManager;
     }
+
+    public Stage getStage() {
+        return mStage;
+    }
 }

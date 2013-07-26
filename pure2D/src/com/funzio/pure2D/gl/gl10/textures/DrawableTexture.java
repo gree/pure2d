@@ -76,12 +76,18 @@ public class DrawableTexture extends Texture {
         mDrawable = drawable;
         mOptions = options;
 
-        final AsyncLoader loader = new AsyncLoader();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-            loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            loader.execute();
-        }
+        // AsyncTask can only be initialized on UI Thread, especially on Android 2.2
+        mGLState.getStage().getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                final AsyncLoader loader = new AsyncLoader();
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+                    loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    loader.execute();
+                }
+            }
+        });
     }
 
     private class AsyncLoader extends AsyncTask<Void, Void, Void> {
