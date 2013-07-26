@@ -10,7 +10,6 @@ import android.os.Build;
 import android.util.Log;
 
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.loaders.tasks.URLLoadBitmapTask;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
@@ -44,7 +43,7 @@ public class URLTexture extends Texture {
 
         int[] dimensions = new int[2];
 
-        final Bitmap bitmap = loadURL(url, options, dimensions);
+        final Bitmap bitmap = Pure2DUtils.getURLBitmap(url, options, dimensions);
         if (bitmap != null) {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
@@ -79,19 +78,26 @@ public class URLTexture extends Texture {
         mURL = filePath;
         mOptions = options;
 
-        final AsyncLoader loader = new AsyncLoader();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-            loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            loader.execute();
-        }
+        // AsyncTask can only be initialized on UI Thread, especially on Android 2.2
+        mGLState.getStage().getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                final AsyncLoader loader = new AsyncLoader();
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+                    loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    loader.execute();
+                }
+            }
+        });
+
     }
 
     private class AsyncLoader extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(final Void... params) {
             final int[] dimensions = new int[2];
-            final Bitmap bitmap = loadURL(mURL, mOptions, dimensions);
+            final Bitmap bitmap = Pure2DUtils.getURLBitmap(mURL, mOptions, dimensions);
             mGLState.queueEvent(new Runnable() {
 
                 @Override
@@ -109,18 +115,6 @@ public class URLTexture extends Texture {
                 }
             });
 
-            return null;
-        }
-    }
-
-    private static Bitmap loadURL(final String url, final TextureOptions options, final int[] outDimensions) {
-        final URLLoadBitmapTask task = new URLLoadBitmapTask(url, options);
-        if (task.run()) {
-            Bitmap bitmap = task.getContent();
-            bitmap = bitmap != null ? Pure2DUtils.convertBitmap(bitmap, options, outDimensions) : null;
-
-            return bitmap;
-        } else {
             return null;
         }
     }
