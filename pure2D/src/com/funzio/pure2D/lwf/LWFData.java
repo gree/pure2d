@@ -97,7 +97,8 @@ public class LWFData {
             }
             destroy(mId);
             mId = -1;
-            mManager.removeLWFData(this);
+            if (mManager != null)
+                mManager.removeLWFData(this);
             mManager = null;
         }
     }
