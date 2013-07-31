@@ -255,6 +255,7 @@ public class LWF {
             if (LOG_ENABLED) {
                 Log.e(TAG, "dispose()");
             }
+            mHandlers.clear();
             for (LWF lwf : mLWFs)
                 lwf.dispose();
             destroy(mId);
