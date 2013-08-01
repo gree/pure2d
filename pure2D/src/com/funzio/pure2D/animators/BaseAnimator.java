@@ -16,6 +16,9 @@ public class BaseAnimator implements Animator {
     protected Object mData; // extra data
     // no accumulating by default
     protected boolean mAccumulating = false;
+
+    // time values
+    protected int mStartDelay = 0;
     protected int mLifespan = 0; // <=0 ~ unlimited
 
     // state values
@@ -23,6 +26,7 @@ public class BaseAnimator implements Animator {
     protected int mLastDeltaTime = 0;
     protected boolean mRunning = false;
     protected boolean mLifeEnded = false;
+    private boolean mStartDelayPassed = false;
 
     /*
      * (non-Javadoc)
@@ -46,6 +50,14 @@ public class BaseAnimator implements Animator {
         return mTarget;
     }
 
+    public int getStartDelay() {
+        return mStartDelay;
+    }
+
+    public void setStartDelay(final int startDelay) {
+        mStartDelay = startDelay;
+    }
+
     @Override
     public boolean update(final int deltaTime) {
         if (mRunning) {
@@ -58,6 +70,19 @@ public class BaseAnimator implements Animator {
 
             mLastDeltaTime = deltaTime;
             mElapsedTime += deltaTime;
+
+            // check start delay
+            if (!mStartDelayPassed) {
+                if (mElapsedTime < mStartDelay) {
+                    return false;
+                } else {
+                    // officially start now
+                    mStartDelayPassed = true;
+                    // reset elapsed time
+                    mElapsedTime -= mStartDelay;
+                    mLastDeltaTime = mElapsedTime;
+                }
+            }
 
             // has lifespan? check it
             if (mLifespan > 0 && mElapsedTime >= mLifespan) {
@@ -94,6 +119,7 @@ public class BaseAnimator implements Animator {
         mElapsedTime = elapsedTime;
         mLastDeltaTime = 0;
         mRunning = true;
+        mStartDelayPassed = false;
         mLifeEnded = false;
     }
 

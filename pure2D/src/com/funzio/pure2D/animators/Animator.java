@@ -17,6 +17,10 @@ public interface Animator extends Manipulator, Reusable {
 
     public boolean isRunning();
 
+    public void setStartDelay(int startDelay);
+
+    public int getStartDelay();
+
     public void setLifespan(int lifespan);
 
     public int getLifespan();
