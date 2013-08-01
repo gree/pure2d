@@ -100,13 +100,27 @@ public class LoaderService extends IntentService {
     }
 
     protected boolean addTask(final Task task) {
-        Log.v(TAG, "addTask(), " + task.toString());
+        Log.v(TAG, "addTask(): " + task);
 
         return mTasks.add(task);
     }
 
+    protected boolean addTasks(final Task... tasks) {
+        Log.v(TAG, "addTasks(): " + tasks);
+        if (tasks == null) {
+            return false;
+        }
+
+        boolean success = true;
+        for (final Task task : tasks) {
+            success &= mTasks.add(task);
+        }
+
+        return success;
+    }
+
     protected boolean addTasks(final List<Task> tasks) {
-        Log.v(TAG, "addTasks(), " + tasks.size());
+        Log.v(TAG, "addTasks(): " + tasks.size());
 
         return mTasks.addAll(tasks);
     }

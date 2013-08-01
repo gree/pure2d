@@ -48,6 +48,23 @@ public class TaskGroup implements Task, Retriable {
         mTasks.add(task);
     }
 
+    public void addTasks(final Task... tasks) {
+        Log.v(TAG, "addTasks(): " + tasks);
+        if (tasks == null) {
+            return;
+        }
+
+        for (final Task task : tasks) {
+            mTasks.add(task);
+        }
+    }
+
+    public boolean addTasks(final List<Task> tasks) {
+        Log.v(TAG, "addTasks(): " + tasks.size());
+
+        return mTasks.addAll(tasks);
+    }
+
     public void removeTask(final Task task) {
         mTasks.remove(task);
     }
@@ -159,12 +176,6 @@ public class TaskGroup implements Task, Retriable {
 
     public List<Task> getTasks() {
         return mTasks;
-    }
-
-    protected boolean addTasks(final List<Task> tasks) {
-        Log.v(TAG, "addTasks(), " + tasks.size());
-
-        return mTasks.addAll(tasks);
     }
 
     public long getTaskDelay() {
