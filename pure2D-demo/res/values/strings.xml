@@ -177,4 +177,6 @@
     <string name="grid_group">Grid Group</string>
     <string name="flip_orientation">Flip Orientation</string>
 
+    <string name="url_texture">URL Texture</string>
+
 </resources>

@@ -18,6 +18,7 @@ import com.funzio.pure2D.Stage;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 
 /**
  * @author long
@@ -59,6 +60,7 @@ public class GLState {
     private int[] mViewport = new int[4];
     private int[] mScissor = new int[4];
 
+    private TextureManager mTextureManager;
     private float mLineWidth = 0;
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     public Camera mCamera;
@@ -505,6 +507,9 @@ public class GLState {
     }
 
     /**
+     * For internal use only
+     * 
+     * @hide
      * @param camera the camera to set
      */
     public void setCamera(final Camera camera) {
@@ -593,5 +598,23 @@ public class GLState {
         scissor[1] = mScissor[1];
         scissor[2] = mScissor[2];
         scissor[3] = mScissor[3];
+    }
+
+    public TextureManager getTextureManager() {
+        return mTextureManager;
+    }
+
+    /**
+     * For internal use only
+     * 
+     * @hide
+     * @param textureManager
+     */
+    public void setTextureManager(final TextureManager textureManager) {
+        mTextureManager = textureManager;
+    }
+
+    public Stage getStage() {
+        return mStage;
     }
 }

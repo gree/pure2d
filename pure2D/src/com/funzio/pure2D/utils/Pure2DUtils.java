@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+import com.funzio.pure2D.loaders.tasks.URLLoadBitmapTask;
 import com.funzio.pure2D.text.TextOptions;
 
 /**
@@ -65,23 +66,11 @@ public class Pure2DUtils {
         if (options == null) {
             options = TextureOptions.getDefault();
         }
+
         Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceID, options);
-
-        // resize to the specified size
-        if (options.inScaleX != 1 || options.inScaleY != 1) {
-            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
-            bitmap.recycle();
-            bitmap = newBitmap;
-        }
-
-        if (options.inPo2) {
-            bitmap = scaleBitmapToPo2(bitmap, outDimensions);
-        } else {
-            // also output the original width and height
-            if (outDimensions != null) {
-                outDimensions[0] = bitmap.getWidth();
-                outDimensions[1] = bitmap.getHeight();
-            }
+        if (bitmap != null) {
+            // resize to the specified scale
+            bitmap = convertBitmap(bitmap, options, outDimensions);
         }
 
         return bitmap;
@@ -99,27 +88,11 @@ public class Pure2DUtils {
         if (options == null) {
             options = TextureOptions.getDefault();
         }
+
         Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
-
-        if (bitmap == null) {
-            return null;
-        }
-
-        // resize to the specified size
-        if (options.inScaleX != 1 || options.inScaleY != 1) {
-            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
-            bitmap.recycle();
-            bitmap = newBitmap;
-        }
-
-        if (options.inPo2) {
-            bitmap = scaleBitmapToPo2(bitmap, outDimensions);
-        } else {
-            // also output the original width and height
-            if (outDimensions != null) {
-                outDimensions[0] = bitmap.getWidth();
-                outDimensions[1] = bitmap.getHeight();
-            }
+        if (bitmap != null) {
+            // resize to the specified scale
+            bitmap = convertBitmap(bitmap, options, outDimensions);
         }
 
         return bitmap;
@@ -137,30 +110,37 @@ public class Pure2DUtils {
         if (options == null) {
             options = TextureOptions.getDefault();
         }
+
         Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
-
-        if (bitmap == null) {
-            return null;
-        }
-
-        // resize to the specified size
-        if (options.inScaleX != 1 || options.inScaleY != 1) {
-            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
-            bitmap.recycle();
-            bitmap = newBitmap;
-        }
-
-        if (options.inPo2) {
-            bitmap = scaleBitmapToPo2(bitmap, outDimensions);
-        } else {
-            // also output the original width and height
-            if (outDimensions != null) {
-                outDimensions[0] = bitmap.getWidth();
-                outDimensions[1] = bitmap.getHeight();
-            }
+        if (bitmap != null) {
+            // resize to the specified scale
+            bitmap = convertBitmap(bitmap, options, outDimensions);
         }
 
         return bitmap;
+    }
+
+    /**
+     * Create a bitmap from a URL
+     * 
+     * @param url
+     * @param options
+     * @param outDimensions
+     * @return
+     */
+    public static Bitmap getURLBitmap(final String url, final TextureOptions options, final int[] outDimensions) {
+        final URLLoadBitmapTask task = new URLLoadBitmapTask(url, options);
+        if (task.run()) {
+            Bitmap bitmap = task.getContent();
+            if (bitmap != null) {
+                // resize to the specified scale
+                bitmap = convertBitmap(bitmap, options, outDimensions);
+            }
+
+            return bitmap;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -204,14 +184,33 @@ public class Pure2DUtils {
         // draw the text
         canvas.drawText(text, textX, textY, textOptions.inTextPaint);
 
-        // resize to the specified size
-        if (textOptions.inScaleX != 1 || textOptions.inScaleY != 1) {
-            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * textOptions.inScaleX), Math.round(bitmap.getHeight() * textOptions.inScaleY), true);
+        // resize to the specified scale
+        bitmap = convertBitmap(bitmap, textOptions, outDimensions);
+
+        return bitmap;
+    }
+
+    /**
+     * Check and convert the bitmap to (Power of 2) if required
+     * 
+     * @param bitmap
+     * @param options
+     * @param outDimensions
+     * @return
+     */
+    public static Bitmap convertBitmap(Bitmap bitmap, TextureOptions options, final int[] outDimensions) {
+        if (options == null) {
+            options = TextureOptions.getDefault();
+        }
+
+        // resize to the specified scale
+        if (options.inScaleX != 1 || options.inScaleY != 1) {
+            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
             bitmap.recycle();
             bitmap = newBitmap;
         }
 
-        if (textOptions.inPo2) {
+        if (options.inPo2) {
             bitmap = scaleBitmapToPo2(bitmap, outDimensions);
         } else {
             // also output the original width and height
@@ -252,8 +251,6 @@ public class Pure2DUtils {
                 po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
             } catch (OutOfMemoryError e) {
                 try {
-                    // try again with GC, not a good way but...
-                    System.gc(); // FIXME this is not practical
                     po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
                 } catch (OutOfMemoryError e1) {
                     if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
@@ -274,10 +271,16 @@ public class Pure2DUtils {
                 }
             }
 
-            final Canvas canvas = new Canvas(po2Bitmap);
-            canvas.drawBitmap(bitmap, 0, 0, null);
-            bitmap.recycle();
-            return po2Bitmap;
+            // wtf? po2Bitmap can be null on Huawei U9200?
+            if (po2Bitmap == null) {
+                Log.e(Pure2D.TAG, "BITMAP NULL ERROR: " + powWidth + " x " + powHeight, new Exception());
+                return null;
+            } else {
+                final Canvas canvas = new Canvas(po2Bitmap);
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                bitmap.recycle();
+                return po2Bitmap;
+            }
         }
     }
 
@@ -393,14 +396,14 @@ public class Pure2DUtils {
      * @param num
      * @return
      */
-    public static Point getSmallestTextureSize(final int width, final int height, final int num, final int maxTextureSize) {
+    public static Point getSmallestTextureSize(final int width, final int height, final int num, final int maxTextureSize, final boolean forcePo2) {
         int minWidth = 0;
         int minHeight = 0;
         int minArea = Integer.MAX_VALUE;
         for (int row = 1; row <= num; row++) {
             int col = (int) FloatMath.ceil((float) num / (float) row);
-            int po2Width = getNextPO2(col * width);
-            int po2Height = getNextPO2(row * height);
+            int po2Width = forcePo2 ? getNextPO2(col * width) : col * width;
+            int po2Height = forcePo2 ? getNextPO2(row * height) : row * height;
             int area = po2Width * po2Height;
             if (area < minArea && po2Width <= maxTextureSize) {
                 minArea = area;

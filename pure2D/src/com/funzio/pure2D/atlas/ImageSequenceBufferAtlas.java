@@ -123,19 +123,18 @@ public class ImageSequenceBufferAtlas extends Atlas {
     private void initBuffer(final int width, final int height) {
         Log.v(TAG, String.format("initBuffer(%d, %d)", width, height));
 
-        // make sure the size is power of 2
-        mWidth = Pure2DUtils.getNextPO2(width);
-        mHeight = Pure2DUtils.getNextPO2(height);
+        mWidth = width;
+        mHeight = height;
 
         // create a new texture
-        mFrameBuffer = new FrameBuffer(mGLState, mWidth, mHeight, false);
+        mFrameBuffer = new FrameBuffer(mGLState, mWidth, mHeight, true);
         mTexture = (BufferTexture) mFrameBuffer.getTexture();
     }
 
     private void initBuffer(final Texture firstTexture, final int numFrames) {
         // find the atlas texture size that fits all the frames, assuming all the images have the same dimensions
         final PointF size = firstTexture.getSize();
-        final Point textureSize = Pure2DUtils.getSmallestTextureSize((int) size.x, (int) size.y, numFrames, Pure2D.GL_MAX_TEXTURE_SIZE);
+        final Point textureSize = Pure2DUtils.getSmallestTextureSize((int) size.x, (int) size.y, numFrames, Math.min(1024, Pure2D.GL_MAX_TEXTURE_SIZE), !Pure2D.GL_NPOT_TEXTURE_SUPPORTED);
 
         // init texture and frame buffer
         initBuffer(textureSize.x, textureSize.y);

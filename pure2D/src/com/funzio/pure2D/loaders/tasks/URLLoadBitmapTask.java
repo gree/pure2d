@@ -4,28 +4,37 @@
 package com.funzio.pure2D.loaders.tasks;
 
 import java.io.InputStream;
-import java.util.Properties;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 
 /**
  * @author long
  */
-public class URLLoadPropertiesTask extends URLRetriableTask {
+public class URLLoadBitmapTask extends URLRetriableTask {
 
-    protected Properties mContent;
+    protected Bitmap mContent;
+    protected TextureOptions mOptions;
 
     /**
      * @param srcURL
      */
-    public URLLoadPropertiesTask(final String srcURL) {
+    public URLLoadBitmapTask(final String srcURL, final TextureOptions options) {
         super(srcURL);
+
+        mOptions = options;
     }
 
     /**
      * @param srcURL
      * @param retryMax
      */
-    public URLLoadPropertiesTask(final String srcURL, final int retryMax) {
+    public URLLoadBitmapTask(final String srcURL, final TextureOptions options, final int retryMax) {
         super(srcURL, retryMax);
+
+        mOptions = options;
     }
 
     /**
@@ -33,8 +42,10 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
      * @param retryMax
      * @param retryDelay
      */
-    public URLLoadPropertiesTask(final String srcURL, final int retryMax, final int retryDelay) {
+    public URLLoadBitmapTask(final String srcURL, final TextureOptions options, final int retryMax, final int retryDelay) {
         super(srcURL, retryMax, retryDelay);
+
+        mOptions = options;
     }
 
     /*
@@ -43,10 +54,7 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
      */
     @Override
     protected int readStream(final InputStream stream) throws Exception {
-        if (mContent == null) {
-            mContent = new Properties();
-        }
-        mContent.load(stream);
+        mContent = BitmapFactory.decodeStream(stream, null, mOptions);
         stream.close();
 
         // always true
@@ -62,7 +70,7 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
         // nothing
     }
 
-    public Properties getContent() {
+    public Bitmap getContent() {
         return mContent;
     }
 }
