@@ -84,12 +84,8 @@
 				},
 
 				{
-					"type": "delay",
-					"duration": 50
-				},
-
-				{
 					"type": "parallel",
+					"start_delay": 50,
 					"animators": [
 						{
 							"type": "rotate",
@@ -133,12 +129,8 @@
 				},
 
 				{
-					"type": "delay",
-					"duration": 50
-				},
-
-				{
 					"type": "parallel",
+					"start_delay": 50,
 					"animators": [
 						{
 							"type": "scale",

@@ -53,6 +53,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
     // looping
     public String loop_mode;
     public ArrayList<Integer> loop_count;
+    public ArrayList<Integer> start_delay;
     public ArrayList<Integer> lifespan;
 
     public abstract Animator createAnimator(int emitIndex, Manipulatable target, Animator... animators);
@@ -69,6 +70,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
 
         loop_mode = json.optString("loop_mode");
         loop_count = NovaVO.getListInt(json, "loop_count");
+        start_delay = NovaVO.getListInt(json, "start_delay");
         lifespan = NovaVO.getListInt(json, "lifespan");
     }
 
@@ -96,6 +98,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
     public void resetAnimator(final int emitIndex, final Manipulatable target, final Animator animator) {
         // if (animator != null) {
         animator.reset();
+        animator.setStartDelay(NovaConfig.getInt(start_delay, emitIndex, 0));
         animator.setLifespan(NovaConfig.getInt(lifespan, emitIndex, 0));
         // }
     }
