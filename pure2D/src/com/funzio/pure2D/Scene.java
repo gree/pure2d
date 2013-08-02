@@ -89,6 +89,10 @@ public interface Scene extends Renderer, Container {
 
     public boolean onTouchEvent(final MotionEvent event);
 
+    public void onSurfacePaused();
+
+    public void onSurfaceResumed();
+
     public interface Listener {
         void onSurfaceCreated(GL10 gl);
     }

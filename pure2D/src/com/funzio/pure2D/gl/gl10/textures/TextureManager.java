@@ -244,8 +244,18 @@ public class TextureManager {
      * @param height
      * @return
      */
-    public BufferTexture createBufferTexture(final int width, final int height) {
-        return new BufferTexture(mGLState, width, height);
+    public BufferTexture createBufferTexture(final int width, final int height, final boolean checkPo2) {
+        return new BufferTexture(mGLState, width, height, checkPo2);
+    }
+
+    /**
+     * Add a new texture which created outside this manager
+     * 
+     * @param texture
+     * @return
+     */
+    public boolean addTexture(final Texture texture) {
+        return mTextures.add(texture);
     }
 
     /**
@@ -262,7 +272,6 @@ public class TextureManager {
     /**
      * Can be used after the Surface reloaded.
      */
-    @Deprecated
     public void reloadAllTextures() {
         Log.v(TAG, "reloadAllTextures()");
 
@@ -304,7 +313,4 @@ public class TextureManager {
         mTextures.clear();
     }
 
-    protected void addTexture(final Texture texture) {
-        mTextures.add(texture);
-    }
 }
