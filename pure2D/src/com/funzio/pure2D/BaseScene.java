@@ -302,6 +302,16 @@ public class BaseScene implements Scene {
         gl.glLoadIdentity();
     }
 
+    @Override
+    public void onSurfacePaused() {
+        Log.v(TAG, "onSurfacePaused()");
+    }
+
+    @Override
+    public void onSurfaceResumed() {
+        Log.v(TAG, "onSurfaceResumed()");
+    }
+
     /*
      * (non-Javadoc)
      * @see android.opengl.GLSurfaceView.Renderer#onDrawFrame(javax.microedition.khronos.opengles.GL10)

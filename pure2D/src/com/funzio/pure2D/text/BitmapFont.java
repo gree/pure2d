@@ -52,10 +52,16 @@ public class BitmapFont {
      */
     public Texture load(final GLState glState) {
         if (mTexture == null) {
-            int[] dimensions = new int[2];
-            final Bitmap bitmap = createBitmap(dimensions);
-            mTexture = new Texture(glState);
-            mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
+            mTexture = new Texture(glState) {
+                @Override
+                public void reload() {
+                    final int[] dimensions = new int[2];
+                    final Bitmap bitmap = createBitmap(dimensions);
+                    load(bitmap, dimensions[0], dimensions[1], 0);
+                };
+            };
+            glState.getTextureManager().addTexture(mTexture); // managed my Texture Manager
+            mTexture.reload();
             mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output
 
             AtlasFrame frame;
