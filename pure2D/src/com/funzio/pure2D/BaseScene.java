@@ -261,9 +261,11 @@ public class BaseScene implements Scene {
         }
 
         // init GL state
-        mGLState = new GLState(gl, mStage);
-        mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
-        mGLState.setCamera(mCamera);
+        if (mGLState == null) {
+            mGLState = new GLState(gl, mStage);
+            mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
+            mGLState.setCamera(mCamera);
+        }
 
         // init Texture manager with the new GL
         if (mTextureManager == null) {
