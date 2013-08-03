@@ -37,8 +37,8 @@ public class GLState {
     private boolean mTextureCoordArrayEnabled = false;
 
     // array toggles
-    private boolean mVertexArrayEnabled = false;
     private VertexBuffer mVertexBuffer;
+    private boolean mVertexArrayEnabled = false;
     private boolean mDepthTestEnabled = false;
     private boolean mScissorTestEnabled = false;
 
@@ -81,8 +81,8 @@ public class GLState {
         mTextureCoordBuffer = null;
         mTextureCoordArrayEnabled = false;
 
-        mVertexArrayEnabled = false;
         mVertexBuffer = null;
+        mVertexArrayEnabled = false;
         mDepthTestEnabled = false;
         mScissorTestEnabled = false;
 
