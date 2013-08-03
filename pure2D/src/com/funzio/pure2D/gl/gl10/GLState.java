@@ -30,9 +30,6 @@ public class GLState {
     public GL10 mGL;
     private Stage mStage;
 
-    // frame buffer
-    private int mFrameBuffer = 0;
-
     // texture
     private Texture mTexture = null;
     private boolean mTextureEnabled = false;
@@ -48,12 +45,15 @@ public class GLState {
     // colors
     private boolean mColorArrayEnabled = false;
     private boolean mAlphaTestEnabled = false;
-    private GLColor mColor = new GLColor(1f, 1f, 1f, 1f);
+    private GLColor mColor;
     // blending
     private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
-    private BlendFunc mBlendFunc = new BlendFunc(0, 0);
+    private BlendFunc mBlendFunc;
     // masking
     private Maskable mMask;
+    private float mLineWidth = 0;
+    // frame buffer
+    private int mFrameBuffer = 0;
 
     // viewport and camera
     private float[] mProjection = new float[5];
@@ -61,7 +61,6 @@ public class GLState {
     private int[] mScissor = new int[4];
 
     private TextureManager mTextureManager;
-    private float mLineWidth = 0;
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     public Camera mCamera;
 
@@ -70,8 +69,8 @@ public class GLState {
     }
 
     public GLState(final GL10 gl, final Stage stage) {
-        reset(gl);
         mStage = stage;
+        reset(gl);
     }
 
     public void reset(final GL10 gl) {
@@ -83,12 +82,19 @@ public class GLState {
         mTextureCoordArrayEnabled = false;
 
         mVertexArrayEnabled = false;
+        mVertexBuffer = null;
+        mDepthTestEnabled = false;
+        mScissorTestEnabled = false;
 
         mColorArrayEnabled = false;
         mAlphaTestEnabled = false;
         mColor = new GLColor(1f, 1f, 1f, 1f);
 
+        mBlendFunc = new BlendFunc(0, 0);
+
+        mMask = null;
         mLineWidth = 0;
+        mFrameBuffer = 0;
 
         clearErrors();
     }
