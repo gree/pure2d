@@ -22,8 +22,10 @@ public class FrameBuffer {
     private static final String TAG = FrameBuffer.class.getSimpleName();
 
     private GLState mGLState;
-    private GL10 mGL;
-    private GL11ExtensionPack mGL11Ex;
+    @Deprecated
+    private GL10 mGL; // XXX remove me because it changes when surface resumes
+    @Deprecated
+    private GL11ExtensionPack mGL11Ex; // XXX remove me it changes when surface resumes
     private Texture mTexture;
     private int mFrameBuffer = 0;
     private int mDepthBuffer = 0;
@@ -67,25 +69,6 @@ public class FrameBuffer {
             // re-attach it
             attachTexture(texture);
         }
-    }
-
-    @Deprecated
-    /**
-     * This method somehow does not work for some certain devices such as Samsung S2
-     * @param gl
-     * @param texture
-     */
-    public FrameBuffer(final GL10 gl, final Texture texture) {
-        mGL = gl;
-        mGL11Ex = (GL11ExtensionPack) gl;
-        mDepthEnabled = false;
-        mWidth = (int) texture.getSize().x;
-        mHeight = (int) texture.getSize().y;
-
-        init();
-
-        // attach the texture
-        attachTexture(texture);
     }
 
     private void init() {
