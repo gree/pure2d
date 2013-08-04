@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
+import com.funzio.pure2D.atlas.ImageSequenceAtlas;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
@@ -38,7 +38,7 @@ public class CasinoTextureManager extends TextureManager {
     public final float mTextureScaleY;
 
     public final TextureOptions mTextureOptions;
-    public ImageSequenceBufferAtlas[] mMajorSymbols;
+    public ImageSequenceAtlas[] mMajorSymbols;
 
     public CasinoTextureManager(final Scene scene, final Resources resources) throws UnsupportedOperationException {
         super(scene, resources);
@@ -92,9 +92,9 @@ public class CasinoTextureManager extends TextureManager {
         try {
             String dir = getSymbolsMajorsDir();
             String files[] = mAssets.list(dir);
-            mMajorSymbols = new ImageSequenceBufferAtlas[files.length];
+            mMajorSymbols = new ImageSequenceAtlas[files.length];
             for (int i = 0; i < files.length; i++) {
-                mMajorSymbols[i] = new ImageSequenceBufferAtlas(mScene.getGLState());
+                mMajorSymbols[i] = new ImageSequenceAtlas(mScene.getGLState());
                 mMajorSymbols[i].loadDir(mAssets, dir + "/" + files[i], mTextureOptions);
             }
         } catch (IOException e) {

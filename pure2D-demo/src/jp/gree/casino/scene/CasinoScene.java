@@ -36,16 +36,19 @@ public class CasinoScene extends BaseScene {
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
         super.onSurfaceCreated(gl, config);
 
-        // load some textures
-        mTextureManager.loadTextures();
+        // only create once
+        if (mCamera == null) {
+            // load some textures
+            mTextureManager.loadTextures();
 
-        // zoom the camero to fit the screen
-        mCamera = new Camera(mTextureManager.mFrontTexture.getSize());
-        setCamera(mCamera);
+            // zoom the camero to fit the screen
+            mCamera = new Camera(mTextureManager.mFrontTexture.getSize());
+            setCamera(mCamera);
 
-        // add to scene
-        mMachine = new SlotMachine(this, 5);
-        addChild(mMachine);
+            // add to scene
+            mMachine = new SlotMachine(this, 5);
+            addChild(mMachine);
+        }
     }
 
     public SlotMachine getMachine() {

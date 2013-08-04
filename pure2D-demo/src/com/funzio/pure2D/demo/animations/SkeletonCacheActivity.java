@@ -41,9 +41,6 @@ public class SkeletonCacheActivity extends StageActivity {
                     // load the textures
                     loadTexture();
 
-                    // initial object
-                    // addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-
                     final AniSkeleton skeleton = new AniSkeleton(mAniFile);
                     // skeleton.setDebugging(true);
                     mCacheAtlas = new CacheAtlas(mScene.getGLState(), skeleton, 512);
@@ -51,6 +48,13 @@ public class SkeletonCacheActivity extends StageActivity {
                     mAtlasSprite = new Sprite();
                     mAtlasSprite.setTexture(mCacheAtlas.getTexture());
                     mScene.addChild(mAtlasSprite);
+
+                    // initial object
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                } else {
+                    // re-create texture
+                    mCacheAtlas.reload();
+                    mAtlasSprite.setTexture(mCacheAtlas.getTexture());
                 }
             }
         });
@@ -58,10 +62,6 @@ public class SkeletonCacheActivity extends StageActivity {
         mAniFile = new AniFile(getAssets(), ANI_FILE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.samples.activities.StageActivity#getLayout()
-     */
     @Override
     protected int getLayout() {
         return R.layout.stage_atlas;
@@ -82,7 +82,6 @@ public class SkeletonCacheActivity extends StageActivity {
     private Clip addObject(final float x, final float y) {
         // create object
         final Clip obj = new Clip();
-        obj.setTexture(mCacheAtlas.getTexture());
         obj.setAtlasFrameSet(mCacheAtlas.getMasterFrameSet());
         // obj.setFps(30);
 
