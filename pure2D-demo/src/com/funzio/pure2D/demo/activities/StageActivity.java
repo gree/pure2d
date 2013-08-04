@@ -43,6 +43,7 @@ public class StageActivity extends Activity implements OnTouchListener {
     // views
     protected TextView mFrameRate;
     protected TextView mObjects;
+    protected boolean mUserPaused;
 
     private Handler mHandler = new Handler();
     private Runnable mFrameRateUpdater = new Runnable() {
@@ -91,9 +92,11 @@ public class StageActivity extends Activity implements OnTouchListener {
         switch (item.getItemId()) {
             case R.id.pause:
                 if (mScene.isPaused()) {
+                    mUserPaused = false;
                     mScene.resume();
                     item.setTitle(getResources().getString(R.string.pause));
                 } else {
+                    mUserPaused = true;
                     mScene.pause();
                     item.setTitle(getResources().getString(R.string.resume));
                 }
@@ -157,7 +160,7 @@ public class StageActivity extends Activity implements OnTouchListener {
 
         // pause the stage
         if (mStage != null && mScene != null) {
-            // mStage.onPause();
+            mStage.onPause();
             mScene.pause();
         }
     }
@@ -168,8 +171,10 @@ public class StageActivity extends Activity implements OnTouchListener {
 
         // resume the stage
         if (mStage != null && mScene != null) {
-            // mStage.onResume();
-            mScene.resume();
+            mStage.onResume();
+            if (!mUserPaused) {
+                mScene.resume();
+            }
         }
 
         // start recording frame rate
