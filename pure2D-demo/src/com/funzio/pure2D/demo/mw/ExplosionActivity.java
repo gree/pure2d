@@ -33,9 +33,10 @@ public class ExplosionActivity extends StageActivity {
 
             @Override
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                ParticleAdapter.getInstance().setSurface(mStage);
+                ParticleAdapter.getInstance().onSurfaceCreated(glState.mGL, null);
+
                 if (firstTime) {
-                    ParticleAdapter.getInstance().setSurface(mStage);
-                    ParticleAdapter.getInstance().onSurfaceCreated(glState.mGL, null);
                     addEmitter(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
                 }
             }
