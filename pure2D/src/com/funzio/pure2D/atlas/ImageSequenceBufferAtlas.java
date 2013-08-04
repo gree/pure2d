@@ -30,7 +30,9 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
+ * @category This works but does not handle GLSurface's lifecycle automatically.
  */
+@Deprecated
 public class ImageSequenceBufferAtlas extends Atlas {
 
     public static final String TAG = ImageSequenceBufferAtlas.class.getSimpleName();

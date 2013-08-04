@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.textures;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +10,7 @@ import com.funzio.pure2D.atlas.Atlas;
 import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
@@ -48,12 +47,14 @@ public class ImageSequenceActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // turn on debug
-                // GLDebugHelper.wrap(mGL, GLDebugHelper.CONFIG_CHECK_GL_ERROR | GLDebugHelper.CONFIG_LOG_ARGUMENT_NAMES | GLDebugHelper.ERROR_WRONG_THREAD, new PrintWriter(System.out));
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // turn on debug
+                    // GLDebugHelper.wrap(mGL, GLDebugHelper.CONFIG_CHECK_GL_ERROR | GLDebugHelper.CONFIG_LOG_ARGUMENT_NAMES | GLDebugHelper.ERROR_WRONG_THREAD, new PrintWriter(System.out));
 
-                createAtlas();
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    createAtlas();
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
     }

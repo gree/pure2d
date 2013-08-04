@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -29,6 +27,7 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendModes;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -62,16 +61,18 @@ public class KoreanCharsetActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTexture();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTexture();
 
-                if (mBitmapFont != null) {
-                    mAtlasSprite = new Sprite();
-                    mAtlasSprite.setTexture(mBitmapFont.getTexture());
-                    mScene.addChild(mAtlasSprite);
+                    if (mBitmapFont != null) {
+                        mAtlasSprite = new Sprite();
+                        mAtlasSprite.setTexture(mBitmapFont.getTexture());
+                        mScene.addChild(mAtlasSprite);
 
-                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    }
                 }
             }
         });

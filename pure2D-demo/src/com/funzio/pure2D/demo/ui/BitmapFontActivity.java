@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.ui;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -21,6 +19,7 @@ import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -46,23 +45,26 @@ public class BitmapFontActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
 
-                // mScene.setColor(COLOR_GREEN);
-                // mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
+                if (firstTime) {
 
-                // load the textures
-                loadTexture();
+                    // mScene.setColor(COLOR_GREEN);
+                    // mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
 
-                if (mBitmapFont != null) {
-                    mAtlasSprite = new Sprite();
-                    mAtlasSprite.setTexture(mBitmapFont.getTexture());
-                    mScene.addChild(mAtlasSprite);
+                    // load the textures
+                    loadTexture();
 
-                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                    // for (int i = 0; i < 300; i++) {
-                    // addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
-                    // }
+                    if (mBitmapFont != null) {
+                        mAtlasSprite = new Sprite();
+                        mAtlasSprite.setTexture(mBitmapFont.getTexture());
+                        mScene.addChild(mAtlasSprite);
+
+                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                        // for (int i = 0; i < 300; i++) {
+                        // addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                        // }
+                    }
                 }
             }
         });

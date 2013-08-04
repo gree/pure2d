@@ -30,8 +30,8 @@ public class CasinoTextureManager extends TextureManager {
     // XXX remove me
     private String mTheme = "mayan";
 
-    public final Texture mFrontTexture;
-    public final Texture mBackTexture;
+    public Texture mFrontTexture;
+    public Texture mBackTexture;
 
     public final DisplayMetrics mDisplayMetrics;
     public final float mTextureScaleX;
@@ -69,7 +69,9 @@ public class CasinoTextureManager extends TextureManager {
         mTextureOptions = TextureOptions.getDefault();
         mTextureOptions.inScaleX = mTextureScaleX;
         mTextureOptions.inScaleY = mTextureScaleY;
+    }
 
+    public void loadTextures() {
         // load the textures and atlas
         mBackTexture = createAssetTexture(mTheme + "/" + "mayan_machine_back.jpg", mTextureOptions);
         mFrontTexture = createAssetTexture(mTheme + "/" + "mayan_machine_front.png", mTextureOptions);

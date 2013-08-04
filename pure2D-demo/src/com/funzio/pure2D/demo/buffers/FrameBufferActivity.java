@@ -3,8 +3,6 @@ package com.funzio.pure2D.demo.buffers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,6 +13,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
@@ -34,10 +33,12 @@ public class FrameBufferActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                loadTextures();
-                createBufferTexture();
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    loadTextures();
+                    createBufferTexture();
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
     }

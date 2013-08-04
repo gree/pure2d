@@ -79,10 +79,6 @@ public class StageActivity extends Activity implements OnTouchListener {
         mDisplaySizeDiv2.y = mDisplaySize.y / 2;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -147,31 +143,34 @@ public class StageActivity extends Activity implements OnTouchListener {
         return mScene.getNumChildren();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
     @Override
     protected void onStop() {
         super.onStop();
-
-        // pause the scene
-        mScene.pause();
 
         // stop tracing
         mHandler.removeCallbacks(mFrameRateUpdater);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onResume()
-     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // pause the stage
+        if (mStage != null && mScene != null) {
+            // mStage.onPause();
+            mScene.pause();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        // resume the scene
-        mScene.resume();
+        // resume the stage
+        if (mStage != null && mScene != null) {
+            // mStage.onResume();
+            mScene.resume();
+        }
 
         // start recording frame rate
         startFrameRate();

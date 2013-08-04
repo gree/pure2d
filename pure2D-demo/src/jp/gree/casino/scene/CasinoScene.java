@@ -3,6 +3,11 @@
  */
 package jp.gree.casino.scene;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+import jp.gree.casino.machine.SlotMachine;
+
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
@@ -12,6 +17,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureManager;
  */
 public class CasinoScene extends BaseScene {
     private Camera mCamera;
+    private CasinoTextureManager mTextureManager;
+    private SlotMachine mMachine;
 
     public CasinoScene() {
         super();
@@ -20,18 +27,28 @@ public class CasinoScene extends BaseScene {
         // setAutoClear(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseScene#createDefaultTextureManager(javax.microedition.khronos.opengles.GL10)
-     */
     @Override
     protected TextureManager createDefaultTextureManager() {
-        CasinoTextureManager manager = new CasinoTextureManager(this, mStage.getResources());
+        return mTextureManager = new CasinoTextureManager(this, mStage.getResources());
+    }
+
+    @Override
+    public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+        super.onSurfaceCreated(gl, config);
+
+        // load some textures
+        mTextureManager.loadTextures();
 
         // zoom the camero to fit the screen
-        mCamera = new Camera(manager.mFrontTexture.getSize());
+        mCamera = new Camera(mTextureManager.mFrontTexture.getSize());
         setCamera(mCamera);
 
-        return manager;
+        // add to scene
+        mMachine = new SlotMachine(this, 5);
+        addChild(mMachine);
+    }
+
+    public SlotMachine getMachine() {
+        return mMachine;
     }
 }

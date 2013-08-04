@@ -245,7 +245,14 @@ public class TextureManager {
      * @return
      */
     public BufferTexture createBufferTexture(final int width, final int height, final boolean checkPo2) {
-        return new BufferTexture(mGLState, width, height, checkPo2);
+        Log.v(TAG, String.format("createBufferTexture( %d, %d)", width, height));
+
+        final BufferTexture texture = new BufferTexture(mGLState, width, height, checkPo2);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
     }
 
     /**

@@ -139,7 +139,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         // check cache enabled, only draw cache when Children stop changing or the policy equals CACHE_WHEN_CHILDREN_CHANGED
         if (mCacheEnabled && ((mInvalidateFlags & (CHILDREN | VISUAL)) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
             // check invalidate flags, either CACHE or CHILDREN
-            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0) {
+            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0 || glState.isInvalidated(SURFACE)) {
+
+                // when surface got reset, the old framebuffer and texture need to be re-created!
+                if (glState.isInvalidated(SURFACE) && mCacheFrameBuffer != null) {
+                    // unload and remove the old texture
+                    glState.getTextureManager().removeTexture(mCacheFrameBuffer.getTexture());
+                    // flag for a new frame buffer
+                    mCacheFrameBuffer = null;
+                }
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {

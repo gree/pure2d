@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +12,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animation.skeleton.AniFile;
 import com.funzio.pure2D.animation.skeleton.AniSkeleton;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 public class SkeletonActivity extends StageActivity {
@@ -29,13 +28,15 @@ public class SkeletonActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
 
-                // load the textures
-                loadTexture();
+                    // load the textures
+                    loadTexture();
 
-                // generate a lot of squares
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // generate a lot of squares
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
 

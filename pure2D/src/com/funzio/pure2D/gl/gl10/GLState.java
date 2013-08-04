@@ -11,6 +11,7 @@ import android.opengl.GLU;
 import android.util.Log;
 
 import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Maskable;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
@@ -64,6 +65,8 @@ public class GLState {
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     public Camera mCamera;
 
+    private int mInvalidateFlags = 0;
+
     public GLState(final GL10 gl) {
         reset(gl);
     }
@@ -75,6 +78,9 @@ public class GLState {
 
     public void reset(final GL10 gl) {
         mGL = gl;
+
+        // invalidate surface
+        mInvalidateFlags = InvalidateFlags.SURFACE;
 
         mTexture = null;
         mTextureEnabled = false;
@@ -97,6 +103,14 @@ public class GLState {
         mFrameBuffer = 0;
 
         clearErrors();
+    }
+
+    public void validate() {
+        mInvalidateFlags = 0;
+    }
+
+    public boolean isInvalidated(final int flags) {
+        return (mInvalidateFlags & flags) == flags;
     }
 
     public void queueEvent(final Runnable r) {

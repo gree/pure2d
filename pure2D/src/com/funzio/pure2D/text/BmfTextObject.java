@@ -41,7 +41,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     private int mSceneAxis = -1;
     private TextureCoordBuffer mTextureCoordBuffer;
-    private ArrayList<Float> mLineWidths;
+    private ArrayList<Float> mLineWidths = new ArrayList<Float>();
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
@@ -95,11 +95,6 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     public void updateTextBounds() {
         // find the bounds, this is not 100% precised, so we need the below logic
         mFontMetrics.getTextBounds(mText, mTextBounds);
-
-        // init line with
-        if (mLineWidths == null) {
-            mLineWidths = new ArrayList<Float>();
-        }
 
         final int length = mText.length();
         float nextX = 0;
@@ -176,7 +171,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
      */
     @Override
     public boolean draw(final GLState glState) {
-        if (mText == null) {
+        if (mText == null || mLineWidths.size() == 0) {
             return false;
         }
 
@@ -188,7 +183,15 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         // check cache enabled, only refresh when children stop changing
         if (mCacheEnabled && (mInvalidateFlags & CHILDREN) == 0 && (mSize.x > 0 && mSize.y > 0)) {
             // check invalidate flags
-            if ((mInvalidateFlags & CACHE) != 0) {
+            if ((mInvalidateFlags & CACHE) != 0 || glState.isInvalidated(SURFACE)) {
+
+                // when surface got reset, the old framebuffer and texture need to be re-created!
+                if (glState.isInvalidated(SURFACE) && mCacheFrameBuffer != null) {
+                    // unload and remove the old texture
+                    glState.getTextureManager().removeTexture(mCacheFrameBuffer.getTexture());
+                    // flag for a new frame buffer
+                    mCacheFrameBuffer = null;
+                }
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {

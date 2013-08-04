@@ -3,8 +3,6 @@
  */
 package com.funzio.pure2D;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.opengl.GLSurfaceView.Renderer;
@@ -94,6 +92,6 @@ public interface Scene extends Renderer, Container {
     public void onSurfaceResumed();
 
     public interface Listener {
-        void onSurfaceCreated(GL10 gl);
+        void onSurfaceCreated(final GLState glState, final boolean firstTime);
     }
 }

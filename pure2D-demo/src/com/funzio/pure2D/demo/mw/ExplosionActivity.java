@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.mw;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +15,7 @@ import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.particles.ParticleEmitter;
 
 public class ExplosionActivity extends StageActivity {
@@ -33,10 +32,12 @@ public class ExplosionActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                ParticleAdapter.getInstance().setSurface(mStage);
-                ParticleAdapter.getInstance().onSurfaceCreated(gl, null);
-                addEmitter(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    ParticleAdapter.getInstance().setSurface(mStage);
+                    ParticleAdapter.getInstance().onSurfaceCreated(glState.mGL, null);
+                    addEmitter(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
     }
