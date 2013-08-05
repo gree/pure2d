@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.containers;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -12,6 +10,7 @@ import com.funzio.pure2D.atlas.FunzioAtlas;
 import com.funzio.pure2D.containers.Wheel3D;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 
@@ -35,13 +34,15 @@ public class HWheel3DActivity extends StageActivity {
         mScene.setListener(new BaseScene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // mScene.setDepthRange(-100, 100);
-                // load the textures
-                loadTextures();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // mScene.setDepthRange(-100, 100);
+                    // load the textures
+                    loadTextures();
 
-                // generate a lot of squares
-                addWheels(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                    // generate a lot of squares
+                    addWheels(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                }
             }
         });
 

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +21,7 @@ import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
 import com.funzio.pure2D.particles.nova.NovaDelegator;
@@ -84,55 +83,57 @@ public class NovaActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
 
-                final NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
+                    final NovaLoader loader = new NovaLoader(new NovaLoader.Listener() {
 
-                    @Override
-                    public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
-                        Log.d(TAG, vo.toString());
-                        mNovaFactory = new NovaFactory(vo, mNovaDelegator, 500);
+                        @Override
+                        public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
+                            Log.d(TAG, vo.toString());
+                            mNovaFactory = new NovaFactory(vo, mNovaDelegator, 500);
 
-                        // display the code
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    mTextView.setText(vo.getSource().toString(3));
-                                } catch (JSONException e) {
+                            // display the code
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        mTextView.setText(vo.getSource().toString(3));
+                                    } catch (JSONException e) {
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        // load textures on GL thread
-                        mScene.queueEvent(new Runnable() {
+                            // load textures on GL thread
+                            mScene.queueEvent(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                // load the textures
-                                loadTextures();
+                                @Override
+                                public void run() {
+                                    // load the textures
+                                    loadTextures();
 
-                                // sample object
-                                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                            }
-                        });
-                    }
+                                    // sample object
+                                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onError(final NovaLoader loader, final String filePath) {
-                        Log.e(TAG, "Nova Loading Error! " + filePath);
-                    }
-                });
+                        @Override
+                        public void onError(final NovaLoader loader, final String filePath) {
+                            Log.e(TAG, "Nova Loading Error! " + filePath);
+                        }
+                    });
 
-                // load asynchronously the json file, some old Android requires this to run on UI Thread
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString(MenuActivity.EXTRA_TAG));
-                    }
-                });
+                    // load asynchronously the json file, some old Android requires this to run on UI Thread
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            loader.loadAsync(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString(MenuActivity.EXTRA_TAG));
+                        }
+                    });
 
-                // Or load synchronously
-                // loader.load(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
+                    // Or load synchronously
+                    // loader.load(getAssets(), NOVA_DIR + "/" + getIntent().getExtras().getString("text"));
+                }
             }
         });
     }
