@@ -22,10 +22,8 @@ public class FrameBuffer {
     private static final String TAG = FrameBuffer.class.getSimpleName();
 
     private GLState mGLState;
-    @Deprecated
-    private GL10 mGL; // XXX remove me because it changes when surface resumes
-    @Deprecated
-    private GL11ExtensionPack mGL11Ex; // XXX remove me it changes when surface resumes
+    private GL10 mGL;
+    private GL11ExtensionPack mGL11Ex;
     private Texture mTexture;
     private int mFrameBuffer = 0;
     private int mDepthBuffer = 0;
@@ -132,14 +130,15 @@ public class FrameBuffer {
         return mTextureAttached;
     }
 
-    // public void bind() {
-    // bind(Scene.AXIS_BOTTOM_LEFT);
-    // }
+    public boolean verifyGLState(final GLState glState) {
+        return glState.mGL == mGL;
+    }
 
     /**
      * Bind this frame buffer
      */
     public boolean bind(final int projection) {
+        Log.v(TAG, "bind(): " + mFrameBuffer + ", " + projection);
         if (!mTextureAttached || mBinded) {
             return false;
         }
@@ -187,6 +186,7 @@ public class FrameBuffer {
      * Unbind this frame buffer and switch back to the original buffer
      */
     public boolean unbind() {
+        Log.v(TAG, "unbind(): " + mFrameBuffer);
         if (!mTextureAttached || !mBinded) {
             return false;
         }
@@ -220,6 +220,7 @@ public class FrameBuffer {
     }
 
     public void clear() {
+        Log.v(TAG, "clear(): " + mFrameBuffer);
         if (!mBinded) {
             return;
         }

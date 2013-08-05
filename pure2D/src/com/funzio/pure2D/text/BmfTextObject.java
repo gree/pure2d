@@ -183,10 +183,10 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         // check cache enabled, only refresh when children stop changing
         if (mCacheEnabled && (mInvalidateFlags & CHILDREN) == 0 && (mSize.x > 0 && mSize.y > 0)) {
             // check invalidate flags
-            if ((mInvalidateFlags & CACHE) != 0 || glState.isInvalidated(SURFACE)) {
+            if ((mInvalidateFlags & CACHE) != 0 || (mCacheFrameBuffer != null && !mCacheFrameBuffer.verifyGLState(glState))) {
 
                 // when surface got reset, the old framebuffer and texture need to be re-created!
-                if (glState.isInvalidated(SURFACE) && mCacheFrameBuffer != null) {
+                if (mCacheFrameBuffer != null && !mCacheFrameBuffer.verifyGLState(glState)) {
                     // unload and remove the old texture
                     glState.getTextureManager().removeTexture(mCacheFrameBuffer.getTexture());
                     // flag for a new frame buffer

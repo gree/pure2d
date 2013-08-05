@@ -454,7 +454,8 @@ public class BaseScene implements Scene {
             }
 
             // validate state
-            mGLState.validate();
+            // mGLState.validate();
+
             // validate scene
             mInvalidated--;
         }
