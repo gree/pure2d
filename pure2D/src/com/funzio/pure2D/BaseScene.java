@@ -328,6 +328,10 @@ public class BaseScene implements Scene {
      */
     @Override
     public void onDrawFrame(final GL10 gl) {
+        // state check
+        if (mGLState == null) {
+            return;
+        }
         DisplayObject child;
 
         // pause check
@@ -449,8 +453,9 @@ public class BaseScene implements Scene {
                 }
             }
 
-            // validated
+            // validate state
             mGLState.validate();
+            // validate scene
             mInvalidated--;
         }
     }
