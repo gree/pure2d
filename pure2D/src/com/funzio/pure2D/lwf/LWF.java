@@ -251,9 +251,12 @@ public class LWF {
     }
 
     public void dispose() {
+        if (LOG_ENABLED && !Thread.currentThread().getName().startsWith("GLThread")) {
+            Log.e(TAG, "LWF.dispose() was called from " + Thread.currentThread().getName());
+        }
         if (mId != -1) {
             if (LOG_ENABLED) {
-                Log.e(TAG, "dispose()");
+                Log.i(TAG, "dispose()");
             }
             mHandlers.clear();
             for (LWF lwf : mLWFs)

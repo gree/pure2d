@@ -173,7 +173,7 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         super.dispose();
         if (mLWF != null) {
             if (LOG_ENABLED) {
-                Log.e(TAG, "dispose()");
+                Log.i(TAG, "dispose()");
             }
             mLWF.dispose();
             mLWF = null;
