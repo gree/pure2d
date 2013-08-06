@@ -72,6 +72,8 @@ public abstract class URLTask implements IntentTask {
 
             conn = address.openConnection();
             conn.setConnectTimeout(DEFAULT_TIMEOUT);
+            conn.setReadTimeout(DEFAULT_TIMEOUT);
+
             if (!mGzipEnabled) {
                 // disable gzip
                 conn.setRequestProperty("Accept-Encoding", "identity");
