@@ -31,6 +31,9 @@ public interface InvalidateFlags {
     public static final int CHILDREN = 1 << 20;
     public static final int CACHE = 1 << 21;
 
+    // glsurface related
+    // public static final int SURFACE = 1 << 30;
+
     // combined flags
     public static final int TRANSFORM_MATRIX = SKEW;
     public static final int BOUNDS = ORIGIN | POSITION | ROTATION | SCALE | SIZE | PIVOT | TRANSFORM_MATRIX;

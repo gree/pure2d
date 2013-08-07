@@ -18,7 +18,7 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 /**
  * @author long
  */
-public class Texture {
+public abstract class Texture {
     public static boolean LOG_ENABLED = true;
     public static final String TAG = Texture.class.getSimpleName();
 
@@ -208,7 +208,6 @@ public class Texture {
         return mTextureID != 0;
     }
 
-    @Deprecated
     public void reload(final GLState glState) {
         mGLState = glState;
         mGL = mGLState.mGL;
@@ -216,13 +215,7 @@ public class Texture {
         reload();
     }
 
-    // @Deprecated
-    // public abstract void reload();
-
-    @Deprecated
-    public void reload() {
-        // to be overridden
-    }
+    public abstract void reload();
 
     public boolean isPo2() {
         return Pure2DUtils.isPO2((int) mSize.x) && Pure2DUtils.isPO2((int) mSize.y);

@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.effects;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +13,7 @@ import com.funzio.pure2D.demo.animations.AnimationActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 public class MotionTrailShapeActivity extends StageActivity {
@@ -31,11 +30,13 @@ public class MotionTrailShapeActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                loadTexture();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    loadTexture();
 
-                for (int i = 0; i < 50; i++) {
-                    addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                    for (int i = 0; i < 50; i++) {
+                        addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                    }
                 }
             }
         });

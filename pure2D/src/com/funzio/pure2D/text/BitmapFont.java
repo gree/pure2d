@@ -30,7 +30,8 @@ public class BitmapFont {
 
     private HashMap<Character, AtlasFrame> mCharFrames = new HashMap<Character, AtlasFrame>();
     private RectPacker mRectPacker;
-    private PointF[] mOffsets;
+    private PointF[] mCharOffsets;
+    private float[] mCharPositions;
     private BitmapFontMetrics mFontMetrics;
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
@@ -52,10 +53,16 @@ public class BitmapFont {
      */
     public Texture load(final GLState glState) {
         if (mTexture == null) {
-            int[] dimensions = new int[2];
-            final Bitmap bitmap = createBitmap(dimensions);
-            mTexture = new Texture(glState);
-            mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
+            mTexture = new Texture(glState) {
+                @Override
+                public void reload() {
+                    final int[] dimensions = new int[2];
+                    final Bitmap bitmap = createBitmap(dimensions);
+                    load(bitmap, dimensions[0], dimensions[1], 0);
+                };
+            };
+            glState.getTextureManager().addTexture(mTexture); // managed my Texture Manager
+            mTexture.reload();
             mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output
 
             AtlasFrame frame;
@@ -65,7 +72,7 @@ public class BitmapFont {
                 ch = mCharacters.charAt(i);
 
                 frame = new AtlasFrame(mTexture, i, String.valueOf(ch), new RectF(mRectPacker.getRect(i)));
-                frame.mOffset = mOffsets[i];
+                frame.mOffset = mCharOffsets[i];
                 mCharFrames.put(ch, frame);
             }
         }
@@ -93,16 +100,15 @@ public class BitmapFont {
         return mCharFrames.get(ch);
     }
 
-    @SuppressWarnings("deprecation")
-    protected Bitmap createBitmap(final int[] outDimensions) {
+    protected void findCharOffsets() {
         final Rect bounds = new Rect();
 
         // long start = SystemClock.elapsedRealtime();
 
         // find the bounds
         final int length = mCharacters.length();
-        float[] positions = new float[length * 2];
-        mOffsets = new PointF[length];
+        mCharPositions = new float[length * 2];
+        mCharOffsets = new PointF[length];
         // float totalOffsetX = (mTextOptions.inOffsetX) * mTextOptions.inScaleX;
         // float totalOffsetY = (mTextOptions.inOffsetY) * mTextOptions.inScaleY;
         Rect charRect;
@@ -118,15 +124,22 @@ public class BitmapFont {
             charRect = mRectPacker.occupy(Math.round((bounds.right - bounds.left + 1) * mTextOptions.inScaleX), Math.round((bounds.bottom - bounds.top + 1) * mTextOptions.inScaleY));
 
             // find positions
-            positions[i * 2] = charRect.left / mTextOptions.inScaleX - bounds.left;
-            positions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
+            mCharPositions[i * 2] = charRect.left / mTextOptions.inScaleX - bounds.left;
+            mCharPositions[i * 2 + 1] = charRect.top / mTextOptions.inScaleY - bounds.top;
             // save offset
-            mOffsets[i] = new PointF(bounds.left * mTextOptions.inScaleX, -bounds.top * mTextOptions.inScaleY);
+            mCharOffsets[i] = new PointF(bounds.left * mTextOptions.inScaleX, -bounds.top * mTextOptions.inScaleY);
         }
 
         // long time = SystemClock.elapsedRealtime() - start;
         // start = SystemClock.elapsedRealtime();
         // Log.e("long", "=> " + mRectPacker.getWidth() + " " + mRectPacker.getHeight() + " " + time + "ms");
+    }
+
+    @SuppressWarnings("deprecation")
+    protected Bitmap createBitmap(final int[] outDimensions) {
+        if (mCharOffsets == null) {
+            findCharOffsets();
+        }
 
         // create a new bitmap
         final Bitmap bitmap = Bitmap.createBitmap(mRectPacker.getWidth(), mRectPacker.getHeight(), mTextOptions.inPreferredConfig);
@@ -143,10 +156,10 @@ public class BitmapFont {
 
         // draw all chars at once
         if (mTextOptions.inStrokePaint != null) {
-            canvas.drawPosText(mCharacters, positions, mTextOptions.inStrokePaint);
+            canvas.drawPosText(mCharacters, mCharPositions, mTextOptions.inStrokePaint);
         }
         // draw the text
-        canvas.drawPosText(mCharacters, positions, mTextOptions.inTextPaint);
+        canvas.drawPosText(mCharacters, mCharPositions, mTextOptions.inTextPaint);
 
         // manually draw 1 by 1 char
         // for (int i = 0; i < length; i++) {

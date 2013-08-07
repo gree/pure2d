@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.ui;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -11,6 +9,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextTexture;
 
 public class HelloTextActivity extends StageActivity {
@@ -24,9 +23,11 @@ public class HelloTextActivity extends StageActivity {
         // mScene.setColor(new GLColor(0, .8f, 0, 1f));
         mScene.setListener(new Scene.Listener() {
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                createTexture();
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    createTexture();
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
     }
