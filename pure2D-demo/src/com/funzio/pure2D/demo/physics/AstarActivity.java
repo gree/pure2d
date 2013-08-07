@@ -46,6 +46,10 @@ public class AstarActivity extends StageActivity {
     private MotionTrailShape mMotionTrail;
 
     private Astar mAstar = new Astar(new AstarAdapter() {
+        @Override
+        public int getNodeMaxNeighbors() {
+            return 4;
+        }
 
         @Override
         public void getNodeNeighbors(final AstarNode node, final AstarNodeSet openNodes, final AstarNodeSet closedNodes, final AstarNode[] neighbors) {
@@ -82,13 +86,8 @@ public class AstarActivity extends StageActivity {
         }
 
         @Override
-        public int getNodeMaxNeighbors() {
-            return 4;
-        }
-
-        @Override
-        public int getHeuristic(final Point point1, final Point point2) {
-            return Math.abs(point2.x - point1.x) + Math.abs(point2.y - point1.y);
+        public int getHeuristic(final AstarNode node1, final AstarNode node2) {
+            return Math.abs(node2.x - node1.x) + Math.abs(node2.y - node1.y);
         }
     });
 

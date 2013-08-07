@@ -9,8 +9,8 @@ import android.graphics.Point;
  */
 public class AstarNode extends Point {
     public AstarNode parent = null;
-    public int h = 1;
-    public int g = 1;
+    public int h = 0; // heuristic
+    public int g = 1; // cost
 
     protected final int key;
 

@@ -3,7 +3,6 @@
  */
 package com.funzio.pure2D.astar;
 
-import android.graphics.Point;
 
 /**
  * @author long.ngo
@@ -11,8 +10,8 @@ import android.graphics.Point;
 public interface AstarAdapter {
     public int getNodeMaxNeighbors();
 
-    public void getNodeNeighbors(final AstarNode node, AstarNodeSet openNodes, AstarNodeSet closedNodes, final AstarNode[] neighbors);
+    public void getNodeNeighbors(final AstarNode node, final AstarNodeSet openNodes, final AstarNodeSet closedNodes, final AstarNode[] neighbors);
 
-    public int getHeuristic(final Point point1, final Point point2);
+    public int getHeuristic(final AstarNode node1, final AstarNode node2);
 
 }
