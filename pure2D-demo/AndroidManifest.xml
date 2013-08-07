@@ -275,8 +275,8 @@
         </activity>
         <activity
             android:name=".physics.AstarActivity"
-            android:label="@string/physics"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
             android:name=".physics.HelloPhysicsActivity"

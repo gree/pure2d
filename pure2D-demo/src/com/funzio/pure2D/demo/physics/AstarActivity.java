@@ -30,9 +30,9 @@ import com.funzio.pure2D.grid.RectGrid;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class AstarActivity extends StageActivity {
-    private static final int GRID_WIDTH = 20;
-    private static final int GRID_HEIGHT = 20;
     private static final int GRID_CELL = 64;
+    private int GRID_WIDTH;
+    private int GRID_HEIGHT;
 
     private List<Texture> mTextures = new ArrayList<Texture>();
     private RectGrid<DisplayObject> mRectGrid;
@@ -94,6 +94,10 @@ public class AstarActivity extends StageActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // define the grid dimensions based on the screen size
+        GRID_WIDTH = mDisplaySize.x / GRID_CELL;
+        GRID_HEIGHT = mDisplaySize.y / GRID_CELL;
 
         // to allow touching
         mScene.setUIEnabled(true);
