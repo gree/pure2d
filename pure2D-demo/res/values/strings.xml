@@ -179,4 +179,6 @@
 
     <string name="url_texture">URL Texture</string>
 
+    <string name="astar">Astar</string>
+
 </resources>

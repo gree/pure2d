@@ -274,6 +274,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".physics.AstarActivity"
+            android:label="@string/physics"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".physics.HelloPhysicsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >

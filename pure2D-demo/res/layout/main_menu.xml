@@ -89,26 +89,51 @@
             android:text="@string/simple_particles" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_effects"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/effects" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
 
-    <Button
-        android:id="@+id/btn_animations"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/animations" />
+        <Button
+            android:id="@+id/btn_animations"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/animations" />
 
-    <Button
-        android:id="@+id/btn_physics"
+        <Button
+            android:id="@+id/btn_effects"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/effects" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/physics" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_physics"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/physics" />
+
+        <Button
+            android:id="@+id/btn_astar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/astar" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_3d"
