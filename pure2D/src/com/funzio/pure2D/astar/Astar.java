@@ -36,8 +36,8 @@ public class Astar {
      * @param optimizePath
      * @return
      */
-    public List<AstarNode> findPath(final AstarNode start, final AstarNode end, final int maxCost, final boolean optimizePath) {
-        return findPath(start, end, maxCost, optimizePath, null, null);
+    public List<AstarNode> findPath(final AstarNode start, final AstarNode end, final int maxCost, final boolean compressPath) {
+        return findPath(start, end, maxCost, compressPath, null, null);
     }
 
     /**
@@ -214,7 +214,7 @@ public class Astar {
         return returnSet;
     }
 
-    protected List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
+    protected static List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
         Log.v(TAG, "extractPath(): " + fromNode + ", " + fromNode.parent);
         final ArrayList<AstarNode> path = new ArrayList<AstarNode>();
         AstarNode node = fromNode;
@@ -227,7 +227,7 @@ public class Astar {
                 newPoint = node;
                 newAngle = (lastPoint != null) ? new Point(newPoint.x - lastPoint.x, newPoint.y - lastPoint.y) : null;
                 // same angle?
-                if (lastAngle != null && newAngle.equals(lastAngle)) {
+                if (lastAngle != null && lastAngle.equals(newAngle)) {
                     // override the node
                     path.set(0, node);
                 } else {
@@ -238,6 +238,7 @@ public class Astar {
                 lastPoint = newPoint;
                 lastAngle = newAngle;
 
+                // upper node
                 node = node.parent;
             } while (node != null);
         } else {
@@ -245,6 +246,7 @@ public class Astar {
             do {
                 path.add(0, node);
 
+                // upper node
                 node = node.parent;
             } while (node != null);
         }

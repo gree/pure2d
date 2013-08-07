@@ -187,13 +187,14 @@ public class AstarActivity extends StageActivity {
      */
     private void moveObject(final DisplayObject object, final Point dest) {
         long time = SystemClock.elapsedRealtime();
-        Log.e("long", "before: " + time);
         final List<AstarNode> path = mAstar.findPath(new AstarNode(mSelectedCell), new AstarNode(dest), 0, true);
-        Log.e("long", "after: " + SystemClock.elapsedRealtime() + " " + (SystemClock.elapsedRealtime() - time));
+        Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
             // convert grid points to pixel points
             final PointF[] points = new PointF[path.size()];
             for (int i = 0; i < points.length; i++) {
+                Log.e("long", i + ": " + path.get(i));
+
                 PointF point = new PointF();
                 mRectGrid.cellToPoint(path.get(i), point);
                 points[i] = point;
