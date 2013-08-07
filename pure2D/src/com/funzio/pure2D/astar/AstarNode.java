@@ -9,8 +9,8 @@ import android.graphics.Point;
  */
 public class AstarNode extends Point {
     public AstarNode parent = null;
-    public int h;
-    public int g;
+    public int h = 1;
+    public int g = 1;
 
     protected final int key;
 

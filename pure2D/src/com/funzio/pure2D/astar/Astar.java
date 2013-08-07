@@ -214,12 +214,12 @@ public class Astar {
         return returnSet;
     }
 
-    protected List<AstarNode> extractPath(final AstarNode fromNode, final boolean compressPath) {
+    protected List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
         Log.v(TAG, "extractPath(): " + fromNode + ", " + fromNode.parent);
         final ArrayList<AstarNode> path = new ArrayList<AstarNode>();
         AstarNode node = fromNode;
 
-        if (compressPath) {
+        if (compression) {
             // optimize the path
             Point lastPoint = null, newPoint;
             Point lastAngle = null, newAngle;
