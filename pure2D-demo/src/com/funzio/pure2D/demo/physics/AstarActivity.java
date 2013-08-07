@@ -165,9 +165,9 @@ public class AstarActivity extends StageActivity {
 
         // motion trail
         mMotionTrail = new MotionTrailShape();
-        mMotionTrail.setMotionEasing(0.98f);
+        mMotionTrail.setMotionEasing(0.95f);
         mMotionTrail.setNumPoints(30);
-        mMotionTrail.setStrokeRange(10, 1);
+        mMotionTrail.setStrokeRange(20, 5);
         mMotionTrail.setStrokeColors(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
         mContainer.addChild(mMotionTrail);
     }
@@ -208,10 +208,9 @@ public class AstarActivity extends StageActivity {
                 @Override
                 public void run() {
                     // clear the current pos
-                    mContainer.setChildAt(null, mSelectedCell, false);
-                    mSelectedCell = path.get(path.size() - 1);
-                    // move to the new position
-                    mContainer.setChildAt(mSelectedObject, mSelectedCell, true);
+                    final AstarNode destCell = path.get(path.size() - 1);
+                    mContainer.swapChildren(mSelectedCell, destCell);
+                    mSelectedCell = destCell;
 
                     // end the other object
                     if (mPathAnimator.getTarget() != null) {
