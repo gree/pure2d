@@ -174,7 +174,7 @@ public class AstarActivity extends StageActivity {
                 final MotionTrailShape trail = new MotionTrailShape();
                 trail.setMotionEasing(0.95f);
                 trail.setNumPoints(30);
-                trail.setStrokeRange(GRID_CELL / 2f, GRID_CELL / 3f);
+                trail.setStrokeRange(GRID_CELL / 2f, GRID_CELL / 4f);
                 trail.setStrokeColors(color1, color2);
                 trail.setTarget(sprite);
                 mGridGroup.addChild(trail, 0);
@@ -273,6 +273,13 @@ public class AstarActivity extends StageActivity {
     @Override
     protected int getNumObjects() {
         return mScene.getNumGrandChildren();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+        mHandler.removeCallbacks(mShowOffRunnable);
     }
 
     @Override
