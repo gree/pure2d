@@ -45,7 +45,7 @@ public class StageActivity extends Activity implements OnTouchListener {
     protected TextView mObjects;
     protected boolean mUserPaused;
 
-    private Handler mHandler = new Handler();
+    protected Handler mHandler = new Handler();
     private Runnable mFrameRateUpdater = new Runnable() {
         @Override
         public void run() {

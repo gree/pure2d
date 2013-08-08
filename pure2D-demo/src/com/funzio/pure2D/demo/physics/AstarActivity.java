@@ -10,6 +10,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.DisplayObject;
@@ -42,8 +43,6 @@ public class AstarActivity extends StageActivity {
 
     private DisplayObject mSelectedObject;
     private Point mSelectedCell = new Point();
-    private PathAnimator mPathAnimator = new PathAnimator(null);
-    private MotionTrailShape mMotionTrail;
 
     private Astar mAstar = new Astar(new AstarAdapter() {
         @Override
@@ -90,6 +89,20 @@ public class AstarActivity extends StageActivity {
             return Math.abs(node2.x - node1.x) + Math.abs(node2.y - node1.y);
         }
     });
+
+    private boolean mShowOffMode = true;
+    private Runnable mShowOffRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            showOff();
+        }
+    };
+
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_astar;
+    };
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -153,6 +166,18 @@ public class AstarActivity extends StageActivity {
                 sprite.setOriginAtCenter();
                 sprite.setScale(0.5f);
 
+                // motion trail
+                final GLColor color1 = new GLColor(mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat(), 1f);
+                final GLColor color2 = new GLColor(color1);
+                color2.a = 0.5f;
+                final MotionTrailShape trail = new MotionTrailShape();
+                trail.setMotionEasing(0.95f);
+                trail.setNumPoints(30);
+                trail.setStrokeRange(GRID_CELL / 2f, GRID_CELL / 3f);
+                trail.setStrokeColors(color1, color2);
+                trail.setTarget(sprite);
+                mContainer.addChild(trail, 0);
+
                 // add to container
                 mContainer.addChildAt(sprite, col, row);
             }
@@ -162,14 +187,6 @@ public class AstarActivity extends StageActivity {
 
         // add to scene
         mScene.addChild(mContainer);
-
-        // motion trail
-        mMotionTrail = new MotionTrailShape();
-        mMotionTrail.setMotionEasing(0.95f);
-        mMotionTrail.setNumPoints(30);
-        mMotionTrail.setStrokeRange(20, 5);
-        mMotionTrail.setStrokeColors(new GLColor(1f, 0, 0, 1f), new GLColor(1f, 0, 0, 0.5f));
-        mContainer.addChild(mMotionTrail);
     }
 
     private void selectObjectAt(final Point cell) {
@@ -212,21 +229,44 @@ public class AstarActivity extends StageActivity {
                     mContainer.swapChildren(mSelectedCell, destCell);
                     mSelectedCell = destCell;
 
-                    // end the other object
-                    if (mPathAnimator.getTarget() != null) {
-                        mPathAnimator.end();
-                        ((DisplayObject) mPathAnimator.getTarget()).removeAllManipulators();
-                    }
-                    mPathAnimator.setValues(points);
-                    mPathAnimator.setDuration((int) mPathAnimator.getTotalLength());
-                    mPathAnimator.start();
-                    mSelectedObject.addManipulator(mPathAnimator);
-                    mMotionTrail.setTarget(mSelectedObject);
+                    object.removeAllManipulators();
+                    PathAnimator animator = new PathAnimator(null);
+                    animator.setValues(points);
+                    animator.setDuration((int) animator.getTotalLength());
+                    animator.start();
+                    object.addManipulator(animator);
                 }
             });
 
         }
 
+    }
+
+    private void showOff() {
+        Point dest = null;
+        DisplayObject obj = null;
+        do {
+            int cellX = mRandom.nextInt(GRID_WIDTH);
+            int cellY = mRandom.nextInt(GRID_HEIGHT);
+
+            if (mContainer.getChildAt(cellX, cellY) != null) {
+                if (obj == null) {
+                    mSelectedCell.set(cellX, cellY);
+                    obj = mContainer.getChildAt(cellX, cellY);
+                }
+            } else if (dest == null) {
+                dest = new Point(cellX, cellY);
+            }
+
+        } while (obj == null || dest == null);
+
+        // move now
+        moveObject(obj, dest);
+
+        // next
+        if (mShowOffMode) {
+            mHandler.postDelayed(mShowOffRunnable, 1000);
+        }
     }
 
     @Override
@@ -256,6 +296,16 @@ public class AstarActivity extends StageActivity {
         }
 
         return true;
+    }
+
+    public void onClickShowOff(final View view) {
+        final CheckBox cb = (CheckBox) view;
+        mShowOffMode = cb.isChecked();
+
+        mHandler.removeCallbacks(mShowOffRunnable);
+        if (mShowOffMode) {
+            showOff();
+        }
     }
 
 }
