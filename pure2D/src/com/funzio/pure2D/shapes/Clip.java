@@ -41,6 +41,11 @@ public class Clip extends Sprite implements Playable {
         if (frameSet != null) {
             mNumFrames = frameSet.getNumFrames();
             setFps(frameSet.getFps());
+            // if there is a loop mode
+            final int loopMode = frameSet.getLoopMode();
+            if (loopMode >= 0) {
+                setLoop(loopMode);
+            }
 
             // start from first frame
             mCurrentFrame = 0;
