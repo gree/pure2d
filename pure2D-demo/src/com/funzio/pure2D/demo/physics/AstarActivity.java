@@ -37,7 +37,7 @@ public class AstarActivity extends StageActivity {
 
     private List<Texture> mTextures = new ArrayList<Texture>();
     private RectGrid<DisplayObject> mRectGrid;
-    private GridGroup<DisplayObject> mContainer;
+    private GridGroup<DisplayObject> mGridGroup;
     private PointF mTempPoint = new PointF();
     private Point mTempCell = new Point();
 
@@ -149,12 +149,12 @@ public class AstarActivity extends StageActivity {
         mRectGrid.flipVertical(true); // flip the y-orientation
         mRectGrid.setCellSize(GRID_CELL, GRID_CELL);
 
-        mContainer = new GridGroup<DisplayObject>(mRectGrid);
+        mGridGroup = new GridGroup<DisplayObject>(mRectGrid);
 
         // create children
         for (int row = 0; row < GRID_HEIGHT; row++) {
             for (int col = 0; col < GRID_WIDTH; col++) {
-                if (mRandom.nextInt(3) > 0) {
+                if (mRandom.nextInt(4) > 0) {
                     continue;
                 }
 
@@ -165,9 +165,10 @@ public class AstarActivity extends StageActivity {
                 sprite.setTexture(texture);
                 sprite.setOriginAtCenter();
                 sprite.setScale(0.5f);
+                mGridGroup.addChildAt(sprite, col, row);
 
                 // motion trail
-                final GLColor color1 = new GLColor(mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat(), 1f);
+                final GLColor color1 = new GLColor(mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, 1f);
                 final GLColor color2 = new GLColor(color1);
                 color2.a = 0.5f;
                 final MotionTrailShape trail = new MotionTrailShape();
@@ -176,17 +177,15 @@ public class AstarActivity extends StageActivity {
                 trail.setStrokeRange(GRID_CELL / 2f, GRID_CELL / 3f);
                 trail.setStrokeColors(color1, color2);
                 trail.setTarget(sprite);
-                mContainer.addChild(trail, 0);
+                mGridGroup.addChild(trail, 0);
 
-                // add to container
-                mContainer.addChildAt(sprite, col, row);
             }
         }
         // center on screen
-        mContainer.setPosition(mDisplaySizeDiv2.x - mContainer.getWidth() / 2, mDisplaySizeDiv2.y - mContainer.getHeight() / 2);
+        mGridGroup.setPosition(mDisplaySizeDiv2.x - mGridGroup.getWidth() / 2, mDisplaySizeDiv2.y - mGridGroup.getHeight() / 2);
 
         // add to scene
-        mScene.addChild(mContainer);
+        mScene.addChild(mGridGroup);
     }
 
     private void selectObjectAt(final Point cell) {
@@ -195,7 +194,7 @@ public class AstarActivity extends StageActivity {
         }
 
         mSelectedCell.set(cell.x, cell.y);
-        mSelectedObject = mContainer.getChildAt(cell.x, cell.y);
+        mSelectedObject = mGridGroup.getChildAt(cell.x, cell.y);
         if (mSelectedObject != null) {
             mSelectedObject.setColor(COLOR_GREEN);
         }
@@ -205,7 +204,7 @@ public class AstarActivity extends StageActivity {
      * @param selectedObject
      * @param tempCell
      */
-    private void moveObject(final DisplayObject object, final Point dest) {
+    private boolean moveObject(final DisplayObject object, final Point dest) {
         long time = SystemClock.elapsedRealtime();
         final List<AstarNode> path = mAstar.findPath(new AstarNode(mSelectedCell), new AstarNode(dest), 0, true);
         Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
@@ -226,7 +225,7 @@ public class AstarActivity extends StageActivity {
                 public void run() {
                     // clear the current pos
                     final AstarNode destCell = path.get(path.size() - 1);
-                    mContainer.swapChildren(mSelectedCell, destCell);
+                    mGridGroup.swapChildren(mSelectedCell, destCell, false);
                     mSelectedCell = destCell;
 
                     object.removeAllManipulators();
@@ -238,8 +237,10 @@ public class AstarActivity extends StageActivity {
                 }
             });
 
+            return true;
         }
 
+        return false;
     }
 
     private void showOff() {
@@ -249,10 +250,10 @@ public class AstarActivity extends StageActivity {
             int cellX = mRandom.nextInt(GRID_WIDTH);
             int cellY = mRandom.nextInt(GRID_HEIGHT);
 
-            if (mContainer.getChildAt(cellX, cellY) != null) {
+            if (mGridGroup.getChildAt(cellX, cellY) != null) {
                 if (obj == null) {
                     mSelectedCell.set(cellX, cellY);
-                    obj = mContainer.getChildAt(cellX, cellY);
+                    obj = mGridGroup.getChildAt(cellX, cellY);
                 }
             } else if (dest == null) {
                 dest = new Point(cellX, cellY);
@@ -265,7 +266,7 @@ public class AstarActivity extends StageActivity {
 
         // next
         if (mShowOffMode) {
-            mHandler.postDelayed(mShowOffRunnable, 1000);
+            mHandler.postDelayed(mShowOffRunnable, 500);
         }
     }
 
@@ -282,11 +283,11 @@ public class AstarActivity extends StageActivity {
         mScene.onTouchEvent(event);
 
         if (action == MotionEvent.ACTION_DOWN) {
-            mContainer.globalToLocal(mScene.getTouchedPoint(), mTempPoint);
+            mGridGroup.globalToLocal(mScene.getTouchedPoint(), mTempPoint);
             if (mTempPoint.x > 0 && mTempPoint.y > 0) {
                 mRectGrid.pointToCell(mTempPoint, mTempCell);
 
-                final DisplayObject child = mContainer.getChildAt(mTempCell.x, mTempCell.y);
+                final DisplayObject child = mGridGroup.getChildAt(mTempCell.x, mTempCell.y);
                 if (child != null) {
                     selectObjectAt(mTempCell);
                 } else if (mSelectedObject != null) {
