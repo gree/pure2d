@@ -42,7 +42,6 @@ public class AstarActivity extends StageActivity {
     private Point mTempCell = new Point();
 
     private DisplayObject mSelectedObject;
-    private Point mSelectedCell = new Point();
 
     private Astar mAstar = new Astar(new AstarAdapter() {
         @Override
@@ -170,7 +169,7 @@ public class AstarActivity extends StageActivity {
                 // motion trail
                 final GLColor color1 = new GLColor(mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, 1f);
                 final GLColor color2 = new GLColor(color1);
-                color2.a = 0.5f;
+                color2.a = 0;
                 final MotionTrailShape trail = new MotionTrailShape();
                 trail.setMotionEasing(0.95f);
                 trail.setNumPoints(30);
@@ -193,7 +192,6 @@ public class AstarActivity extends StageActivity {
             mSelectedObject.setColor(null);
         }
 
-        mSelectedCell.set(cell.x, cell.y);
         mSelectedObject = mGridGroup.getChildAt(cell.x, cell.y);
         if (mSelectedObject != null) {
             mSelectedObject.setColor(COLOR_GREEN);
@@ -206,13 +204,15 @@ public class AstarActivity extends StageActivity {
      */
     private boolean moveObject(final DisplayObject object, final Point dest) {
         long time = SystemClock.elapsedRealtime();
-        final List<AstarNode> path = mAstar.findPath(new AstarNode(mSelectedCell), new AstarNode(dest), 0, true);
+        final Point start = new Point();
+        mRectGrid.pointToCell(object.getPosition(), start);
+        final List<AstarNode> path = mAstar.findPath(new AstarNode(start), new AstarNode(dest), 0, true);
         Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
             // convert grid points to pixel points
             final PointF[] points = new PointF[path.size()];
             for (int i = 0; i < points.length; i++) {
-                Log.e("long", i + ": " + path.get(i));
+                // Log.e("long", i + ": " + path.get(i));
 
                 PointF point = new PointF();
                 mRectGrid.cellToPoint(path.get(i), point);
@@ -225,8 +225,7 @@ public class AstarActivity extends StageActivity {
                 public void run() {
                     // clear the current pos
                     final AstarNode destCell = path.get(path.size() - 1);
-                    mGridGroup.swapChildren(mSelectedCell, destCell, false);
-                    mSelectedCell = destCell;
+                    mGridGroup.swapChildren(start, destCell, false);
 
                     object.removeAllManipulators();
                     PathAnimator animator = new PathAnimator(null);
@@ -252,7 +251,6 @@ public class AstarActivity extends StageActivity {
 
             if (mGridGroup.getChildAt(cellX, cellY) != null) {
                 if (obj == null) {
-                    mSelectedCell.set(cellX, cellY);
                     obj = mGridGroup.getChildAt(cellX, cellY);
                 }
             } else if (dest == null) {
