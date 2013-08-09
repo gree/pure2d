@@ -9,10 +9,12 @@ import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.geom.Line;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
@@ -22,6 +24,7 @@ public class Polyline extends Shape {
     protected static final int VERTEX_POINTER_SIZE = 2; // xy
 
     protected PointF[] mPoints;
+    protected int mNarrowAngle = 15;
     protected float mStroke1 = 1;
     protected float mStroke2 = 1;
 
@@ -49,13 +52,12 @@ public class Polyline extends Shape {
         float angle1 = 0;
         float angleDelta = 0;
         float angleCut = 0;
-        float rx, ry;
+        float rx = 0, ry = 0, r;
         float stroke = mStroke1;
         int i, vertexIndex = 0;
-        float lastRY = 0;
-        float lastRX = 0;
-        boolean flip = false;
-        PointF currentPoint;
+        float lastUX = 0;
+        float lastUY = 0;
+        PointF lastPoint = null, currentPoint;
 
         // find total segment
         mTotalLength = 0;
@@ -72,7 +74,9 @@ public class Polyline extends Shape {
             if (i < len - 1) {
                 dx = points[i + 1].x - currentPoint.x;
                 dy = points[i + 1].y - currentPoint.y;
+
                 segment += Math.sqrt(dx * dx + dy * dy);
+
                 if (mStrokeInterpolator != null) {
                     // interpolating
                     stroke = mStroke1 + mStrokeInterpolator.getInterpolation(segment / mTotalLength) * strokeDelta;
@@ -84,38 +88,41 @@ public class Polyline extends Shape {
                 angle1 = (float) Math.atan2(dy, dx);
             }
 
+            r = stroke * 0.5f;
             if (i == 0 || i == len - 1) {
                 // beginning and closing cut
-                angleCut = angle1 + (float) Math.PI * 0.5f;
+                angleCut = angle1 + Pure2DUtils.PI_D2;
             } else {
                 angleDelta = (angle1 - angle0);
-                angleCut += angleDelta * 0.5f;
+                // check narrow/opposite angle
+                if (Math.abs(Math.abs(Math.round(angleDelta * Pure2DUtils.RADIAN_TO_DEGREE)) - 180) > mNarrowAngle) {
+                    angleCut = angle1 + Pure2DUtils.PI_D2 - angleDelta * 0.5f;
+                    r /= (float) Math.cos(angleDelta * 0.5f);
+                } else {
+                    angleCut = angle1 + Pure2DUtils.PI_D2;
+                }
             }
 
-            rx = stroke * (float) Math.cos(angleCut) * 0.5f;
-            ry = stroke * (float) Math.sin(angleCut) * 0.5f;
-            // Log.e("long", "a t r x y: " + angle1 + " " + Math.round(stroke) + " " + Math.round(radius) + " " + Math.round(rx) + " " + Math.round(ry));
-
-            if (lastRY * ry < 0 && lastRX * rx < 0) {
-                // flag for flipping the upper and lower points
-                flip = !flip;
-            }
-            lastRX = rx;
-            lastRY = ry;
-            if (flip) {
-                rx = -rx;
-                ry = -ry;
+            rx = r * (float) Math.cos(angleCut);
+            ry = r * (float) Math.sin(angleCut);
+            if (lastPoint != null) {
+                // check crossing lines
+                if (Line.linesIntersect(lastPoint.x, lastPoint.y, currentPoint.x, currentPoint.y, lastUX, lastUY, currentPoint.x + rx, currentPoint.y + ry)) {
+                    rx = -rx;
+                    ry = -ry;
+                }
             }
 
             // upper point
-            mVertices[vertexIndex] = currentPoint.x + rx;
-            mVertices[vertexIndex + 1] = currentPoint.y + ry;
+            mVertices[vertexIndex] = lastUX = currentPoint.x + rx;
+            mVertices[vertexIndex + 1] = lastUY = currentPoint.y + ry;
             // lower point
             mVertices[vertexIndex + 2] = currentPoint.x - rx;
             mVertices[vertexIndex + 3] = currentPoint.y - ry;
             vertexIndex += VERTEX_POINTER_SIZE * 2;
 
             angle0 = angle1;
+            lastPoint = currentPoint;
         }
 
         if (mVertexBuffer == null) {
@@ -129,7 +136,7 @@ public class Polyline extends Shape {
 
     @Override
     public boolean draw(final GLState glState) {
-        if (mTotalLength > 1) {
+        if (mTotalLength >= 1) {
             return super.draw(glState);
         } else {
             return false;

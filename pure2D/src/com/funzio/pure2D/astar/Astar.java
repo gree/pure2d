@@ -13,6 +13,7 @@ import android.util.Log;
  */
 public class Astar {
 
+    public static boolean LOG_ENABLED = true;
     private static final String TAG = Astar.class.getSimpleName();
 
     protected AstarAdapter mAdapter;
@@ -51,7 +52,9 @@ public class Astar {
      * @return
      */
     public List<AstarNode> findPath(final AstarNode start, final AstarNode end, final int maxCost, final boolean compressPath, final List<AstarNode> closedNodes, final List<AstarNode> openNodes) {
-        Log.v(TAG, "findPath(): " + start + ", " + end);
+        if (LOG_ENABLED) {
+            Log.v(TAG, "findPath(): " + start + ", " + end);
+        }
 
         final AstarNodeSet openSet = new AstarNodeSet(openNodes);
         final AstarNodeSet closedSet = new AstarNodeSet(closedNodes);
@@ -138,7 +141,9 @@ public class Astar {
     }
 
     public AstarNodeSet findPosibleNodes(final AstarNode start, final AstarNode end, final int maxCost, final List<AstarNode> closedNodes, final List<AstarNode> openNodes) {
-        Log.v(TAG, "findRegion(): " + start + ", " + end);
+        if (LOG_ENABLED) {
+            Log.v(TAG, "findRegion(): " + start + ", " + end);
+        }
 
         final AstarNodeSet openSet = new AstarNodeSet(openNodes);
         final AstarNodeSet closedSet = new AstarNodeSet(closedNodes);
@@ -215,7 +220,10 @@ public class Astar {
     }
 
     protected static List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
-        Log.v(TAG, "extractPath(): " + fromNode + ", " + fromNode.parent);
+        if (LOG_ENABLED) {
+            Log.v(TAG, "extractPath(): " + fromNode + ", " + fromNode.parent);
+        }
+
         final ArrayList<AstarNode> path = new ArrayList<AstarNode>();
         AstarNode node = fromNode;
 

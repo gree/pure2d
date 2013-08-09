@@ -133,15 +133,20 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
 
                 // apply
                 setPoints(mPoints);
-
-                if (mTotalLength < 1) {
-                    // flag done
-                    mFollowingHead = false;
-                }
             }
         }
 
         return super.update(deltaTime);
+    }
+
+    @Override
+    public void setPoints(final PointF... points) {
+        super.setPoints(points);
+
+        if (mTotalLength < 1) {
+            // flag done
+            mFollowingHead = false;
+        }
     }
 
     public int getNumPoints() {
@@ -168,8 +173,12 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                 }
             }
 
-            // find the
+            // find the length
             mSegmentLength = mMinLength / (numPoints - 1);
+
+            // optimize
+            mTotalLength = 0;
+            mFollowingHead = false;
         }
 
         // re-count, each point has 2 vertices
@@ -188,10 +197,10 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
             for (int i = 0; i < mNumPoints; i++) {
                 mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
             }
-        }
 
-        // apply
-        setPoints(mPoints);
+            // apply
+            setPoints(mPoints);
+        }
     }
 
     public void setPointsAt(final float x, final float y) {

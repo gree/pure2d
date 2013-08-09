@@ -165,7 +165,7 @@ public class AstarActivity extends StageActivity {
                 mGridGroup.addChildAt(sprite, col, row);
 
                 // motion trail
-                final GLColor color1 = new GLColor(mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, 0, 1f);
+                final GLColor color1 = new GLColor(1, mRandom.nextFloat(), 0, 0.5f);
                 final GLColor color2 = new GLColor(color1);
                 color2.a = 0;
                 final MotionTrailShape trail = new MotionTrailShape();
@@ -316,6 +316,7 @@ public class AstarActivity extends StageActivity {
     public void onClickShowOff(final View view) {
         final CheckBox cb = (CheckBox) view;
         mShowOffMode = cb.isChecked();
+        Astar.LOG_ENABLED = !mShowOffMode; // turn off log in Show off mode
 
         mHandler.removeCallbacks(mShowOffRunnable);
         if (mShowOffMode) {
