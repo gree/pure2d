@@ -766,6 +766,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return n;
     }
 
+    public Manipulator getManipulator(final int index) {
+        return index < mNumManipulators ? mManipulators.get(index) : null;
+    }
+
+    public int getNumManipulators() {
+        return mNumManipulators;
+    }
+
     /**
      * @return the blendFunc
      */

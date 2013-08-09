@@ -6,8 +6,6 @@ import java.util.List;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -167,7 +165,7 @@ public class AstarActivity extends StageActivity {
                 mGridGroup.addChildAt(sprite, col, row);
 
                 // motion trail
-                final GLColor color1 = new GLColor(mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, 1f);
+                final GLColor color1 = new GLColor(mRandom.nextFloat() + 0.5f, mRandom.nextFloat() + 0.5f, 0, 1f);
                 final GLColor color2 = new GLColor(color1);
                 color2.a = 0;
                 final MotionTrailShape trail = new MotionTrailShape();
@@ -203,11 +201,22 @@ public class AstarActivity extends StageActivity {
      * @param tempCell
      */
     private boolean moveObject(final DisplayObject object, final Point dest) {
-        long time = SystemClock.elapsedRealtime();
+        // end the old animator
+        PathAnimator animator = null;
+        if (object.getNumManipulators() > 0) {
+            // existing animator
+            animator = (PathAnimator) object.getManipulator(0);
+            // this object is running?
+            if (animator.isRunning()) {
+                return false;
+            }
+        }
+
+        // long time = SystemClock.elapsedRealtime();
         final Point start = new Point();
         mRectGrid.pointToCell(object.getPosition(), start);
         final List<AstarNode> path = mAstar.findPath(new AstarNode(start), new AstarNode(dest), 0, true);
-        Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
+        // Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
             // convert grid points to pixel points
             final PointF[] points = new PointF[path.size()];
@@ -219,22 +228,19 @@ public class AstarActivity extends StageActivity {
                 points[i] = point;
             }
 
-            mScene.queueEvent(new Runnable() {
+            // apply to the group
+            mGridGroup.swapChildren(start, path.get(path.size() - 1), false);
 
-                @Override
-                public void run() {
-                    // clear the current pos
-                    final AstarNode destCell = path.get(path.size() - 1);
-                    mGridGroup.swapChildren(start, destCell, false);
-
-                    object.removeAllManipulators();
-                    PathAnimator animator = new PathAnimator(null);
-                    animator.setValues(points);
-                    animator.setDuration((int) animator.getTotalLength());
-                    animator.start();
-                    object.addManipulator(animator);
-                }
-            });
+            // end the old animator
+            if (animator == null) {
+                // new animator
+                animator = new PathAnimator(null);
+                object.addManipulator(animator);
+            }
+            // apply and play
+            animator.setValues(points);
+            animator.setDuration((int) animator.getTotalLength());
+            animator.start();
 
             return true;
         }
@@ -243,28 +249,31 @@ public class AstarActivity extends StageActivity {
     }
 
     private void showOff() {
-        Point dest = null;
-        DisplayObject obj = null;
-        do {
-            int cellX = mRandom.nextInt(GRID_WIDTH);
-            int cellY = mRandom.nextInt(GRID_HEIGHT);
 
-            if (mGridGroup.getChildAt(cellX, cellY) != null) {
-                if (obj == null) {
-                    obj = mGridGroup.getChildAt(cellX, cellY);
+        for (int i = 0; i < 2; i++) {
+            Point dest = null;
+            DisplayObject obj = null;
+            do {
+                int cellX = mRandom.nextInt(GRID_WIDTH);
+                int cellY = mRandom.nextInt(GRID_HEIGHT);
+
+                if (mGridGroup.getChildAt(cellX, cellY) != null) {
+                    if (obj == null) {
+                        obj = mGridGroup.getChildAt(cellX, cellY);
+                    }
+                } else if (dest == null) {
+                    dest = new Point(cellX, cellY);
                 }
-            } else if (dest == null) {
-                dest = new Point(cellX, cellY);
-            }
 
-        } while (obj == null || dest == null);
+            } while (obj == null || dest == null);
 
-        // move now
-        moveObject(obj, dest);
+            // move now
+            moveObject(obj, dest);
+        }
 
         // next
         if (mShowOffMode) {
-            mHandler.postDelayed(mShowOffRunnable, 500);
+            mHandler.postDelayed(mShowOffRunnable, 100);
         }
     }
 
