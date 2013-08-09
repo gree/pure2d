@@ -21,6 +21,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.loaders.AsyncTaskExecuter;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.loaders.tasks.Task;
+import com.funzio.pure2D.particles.nova.NovaConfig;
 
 /**
  * @author long
@@ -130,16 +131,61 @@ public class JsonAtlas extends Atlas {
         mWidth = size.getInt("w") * scale;
         mHeight = size.getInt("h") * scale;
         mImage = meta.getString("image");
-        // framerate
-        getMasterFrameSet().setFps(meta.optInt("fps"));
 
-        // create the frames
+        // Long Ngo added: framerate
+        getMasterFrameSet().setFps(meta.optInt("fps"));
+        String loopMode = meta.optString("loop_mode", null);
+        if (loopMode != null) {
+            getMasterFrameSet().setLoopMode(NovaConfig.getLoopMode(loopMode));
+        }
+
+        // create the master frame set
         final JSONArray frames = jsonObject.getJSONArray("frames");
-        final int length = frames.length();
-        for (int i = 0; i < length; i++) {
+        final int totalFrames = frames.length();
+        for (int i = 0; i < totalFrames; i++) {
             addFrame(parseFrame(i, frames.getJSONObject(i), scale));
         }
 
+        // Long Ngo added: check for sub frame sets
+        final JSONObject frameSets = jsonObject.optJSONObject("frame_sets");
+        if (frameSets != null) {
+            final JSONArray names = frameSets.names();
+            if (names != null) {
+                final int numSets = names.length();
+                for (int i = 0; i < numSets; i++) {
+                    final String setName = names.getString(i);
+                    final JSONObject set = frameSets.optJSONObject(setName);
+                    // Log.e(TAG, "New set: " + setName);
+                    if (set != null) {
+                        final JSONArray subFrames = set.optJSONArray("frames");
+                        if (subFrames != null) {
+                            // create new subset
+                            final AtlasFrameSet newSet = new AtlasFrameSet(setName);
+                            // add the frames
+                            final int numFrames = subFrames.length();
+                            for (int j = 0; j < numFrames; j++) {
+                                final int frameIndex = subFrames.getInt(j);
+                                if (frameIndex < totalFrames - 1) {
+                                    // Log.e(TAG, j + ": " + getFrame(frameIndex));
+                                    newSet.addFrame(getFrame(frameIndex));
+                                }
+                            }
+
+                            // check optional loop mode
+                            loopMode = set.optString("loop_mode", null);
+                            if (loopMode != null) {
+                                newSet.setLoopMode(NovaConfig.getLoopMode(loopMode));
+                            }
+
+                            // add to the subsets
+                            addSubFrameSet(newSet);
+                        }
+                    }
+                }
+            }
+        }
+
+        Log.v(TAG, "parse(): frames: " + totalFrames + ", subsets: " + getNumSubFrameSets());
     }
 
     protected AtlasFrame parseFrame(final int index, final JSONObject frameJson, final float scale) throws JSONException {

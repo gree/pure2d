@@ -167,10 +167,10 @@ public class PathAnimator extends TweenAnimator {
         mSnapEnabled = snapEnabled;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.TweenAnimator#onLoop()
-     */
+    public float getTotalLength() {
+        return mTotalLength;
+    }
+
     @Override
     protected void onLoop() {
         super.onLoop();
