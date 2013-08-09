@@ -11,6 +11,7 @@ import android.view.animation.Interpolator;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
 
 /**
@@ -124,6 +125,15 @@ public class Polyline extends Shape {
         }
 
         invalidate(InvalidateFlags.VISUAL);
+    }
+
+    @Override
+    public boolean draw(final GLState glState) {
+        if (mTotalLength > 1) {
+            return super.draw(glState);
+        } else {
+            return false;
+        }
     }
 
     protected void allocateVertices(final int numVertices, final int vertexSize) {
