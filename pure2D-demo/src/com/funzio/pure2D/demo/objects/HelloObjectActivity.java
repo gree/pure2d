@@ -34,9 +34,9 @@ public class HelloObjectActivity extends StageActivity {
         // Polyline line = new Polyline();
         // line.setStrokeRange(50, 50);
         // line.setStrokeColors(new GLColor(1, 1, 0, 0.5f));
-        // line.setPoints(new PointF(0, 0), new PointF(100, 50), new PointF(200, 0), new PointF(200, 300), new PointF(0, 300), new PointF(0, 200), new PointF(-100, 200), new PointF(-100, 400),
-        // new PointF(-100, 500), new PointF(-100, 600), new PointF(0, 600), new PointF(-200, 800), new PointF(-200, 400), new PointF(-200, 500), new PointF(-200, 0), new PointF(-500, 500));
-        // // line.setPoints(new PointF(0, 0), new PointF(0, 0), new PointF(0, 0), new PointF(0, 100));
+        // // line.setPoints(new PointF(0, 0), new PointF(100, 50), new PointF(200, 0), new PointF(200, 300), new PointF(0, 300), new PointF(0, 200), new PointF(-100, 200), new PointF(-100, 400),
+        // // new PointF(-100, 500), new PointF(-100, 600), new PointF(0, 600), new PointF(-200, 800), new PointF(-200, 400), new PointF(-200, 500), new PointF(-200, 0), new PointF(-500, 500));
+        // line.setPoints(new PointF(0, 0), new PointF(100, 100), new PointF(200, 0), new PointF(0, 100));
         // line.setPosition(x, y);
         // line.setDebugFlags(Pure2D.DEBUG_FLAG_WIREFRAME);
         // mScene.addChild(line);
