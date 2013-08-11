@@ -24,7 +24,7 @@ public class Polyline extends Shape {
     protected static final int VERTEX_POINTER_SIZE = 2; // xy
 
     protected PointF[] mPoints;
-    protected float mNarrowAngle = (float) (Math.PI * 3 / 4);
+    protected float mNarrowAngle = (float) (Math.PI / 4);
     protected float mStroke1 = 1;
     protected float mStroke2 = 1;
 
@@ -95,7 +95,7 @@ public class Polyline extends Shape {
             } else {
                 angleDelta = (angle1 - angle0);
                 // check narrow/opposite angle
-                if (Math.abs(angleDelta) <= mNarrowAngle) {
+                if (Math.abs(Math.abs(angleDelta) - Math.PI) > mNarrowAngle) {
                     angleCut = angle1 + Pure2DUtils.PI_D2 - angleDelta * 0.5f;
                     r /= (float) Math.cos(angleDelta * 0.5f);
                 } else {
