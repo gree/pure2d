@@ -33,6 +33,7 @@ public class StageActivity extends Activity implements OnTouchListener {
     final protected static GLColor COLOR_RED = new GLColor(0.7f, 0, 0, 1);
     final protected static GLColor COLOR_GREEN = new GLColor(0, 0.7f, 0, 1);
     final protected static GLColor COLOR_BLUE = new GLColor(0, 0, 0.7f, 1);
+    final protected static GLColor COLOR_YELLOW = new GLColor(1f, 1f, 0, 1);
 
     protected BaseStage mStage;
     protected BaseScene mScene;

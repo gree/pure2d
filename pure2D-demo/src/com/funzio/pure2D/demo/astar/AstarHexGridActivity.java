@@ -1,4 +1,4 @@
-package com.funzio.pure2D.demo.physics;
+package com.funzio.pure2D.demo.astar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -22,68 +23,52 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
-import com.funzio.pure2D.grid.RectGrid;
+import com.funzio.pure2D.grid.HexGrid;
+import com.funzio.pure2D.grid.VerticalHexGrid;
 import com.funzio.pure2D.shapes.Sprite;
 
-public class AstarActivity extends StageActivity {
-    private static final int GRID_CELL = 64;
+public class AstarHexGridActivity extends StageActivity {
+    private static final int GRID_CELL_RADIUS = 32;
     private int GRID_WIDTH;
     private int GRID_HEIGHT;
 
     private List<Texture> mTextures = new ArrayList<Texture>();
-    private RectGrid<DisplayObject> mRectGrid;
+    private Texture mNeighborTexture1, mNeighborTexture2;
+    private Sprite[] mNeighborSprites;
+    private Point[] mNeighborCells;
+    private VerticalHexGrid<DisplayObject> mHexGrid;
     private GridGroup<DisplayObject> mGridGroup;
     private PointF mTempPoint = new PointF();
-    private Point mTempCell = new Point();
 
     private DisplayObject mSelectedObject;
 
     private Astar mAstar = new Astar(new AstarAdapter() {
         @Override
         public int getNodeMaxNeighbors() {
-            return 4;
+            return HexGrid.CELL_MAX_NEIGHBORS;
         }
 
         @Override
         public void getNodeNeighbors(final AstarNode node, final AstarNodeSet openNodes, final AstarNodeSet closedNodes, final AstarNode[] neighbors) {
+            final int[][] indices = mHexGrid.getNeighborOffets();
+            final int start = (node.x % 2) * HexGrid.CELL_MAX_NEIGHBORS;
             int index = 0, x, y;
-
-            // left
-            x = node.x - 1;
-            y = node.y;
-            if (x >= 0 && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
+            // find empty neighbors
+            for (int i = 0; i < HexGrid.CELL_MAX_NEIGHBORS; i++) {
+                x = node.x + indices[start + i][0];
+                y = node.y + indices[start + i][1];
+                if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT && mHexGrid.getDataAt(x, y) == null) {
+                    neighbors[index++] = new AstarNode(x, y);
+                }
             }
-
-            // right
-            x = node.x + 1;
-            y = node.y;
-            if (x < GRID_WIDTH && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
-            }
-
-            // top
-            x = node.x;
-            y = node.y - 1;
-            if (y >= 0 && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
-            }
-
-            // bottom
-            x = node.x;
-            y = node.y + 1;
-            if (y < GRID_HEIGHT && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
-            }
-
         }
 
         @Override
         public int getHeuristic(final AstarNode node1, final AstarNode node2) {
-            return Math.abs(node2.x - node1.x) + Math.abs(node2.y - node1.y);
+            return mHexGrid.getCellsDistance(node1.x, node1.y, node2.x, node2.y);
         }
     });
 
@@ -106,8 +91,11 @@ public class AstarActivity extends StageActivity {
         super.onCreate(savedInstanceState);
 
         // define the grid dimensions based on the screen size
-        GRID_WIDTH = mDisplaySize.x / GRID_CELL;
-        GRID_HEIGHT = mDisplaySize.y / GRID_CELL;
+        GRID_WIDTH = (int) (mDisplaySize.x / (GRID_CELL_RADIUS * 1.5f + 0.5f));
+        GRID_HEIGHT = (int) (mDisplaySize.y / (GRID_CELL_RADIUS * (float) Math.sqrt(3)) - 0.5f);
+        mHexGrid = new VerticalHexGrid<DisplayObject>(GRID_WIDTH, GRID_HEIGHT, false);
+        // mHexGrid.flipVertical(true); // flip the y-orientation
+        mHexGrid.setCellSize(GRID_CELL_RADIUS);
 
         // to allow touching
         mScene.setUIEnabled(true);
@@ -120,7 +108,7 @@ public class AstarActivity extends StageActivity {
                     loadTextures();
 
                     // generate a lot of squares
-                    addGroup(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                    createChildren(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
                 }
             }
         });
@@ -128,40 +116,40 @@ public class AstarActivity extends StageActivity {
 
     private void loadTextures() {
         final int[] ids = {
-                R.drawable.cc_128, // cc
-                R.drawable.mw_128, // mw
-                R.drawable.ka_128, // ka
+            // R.drawable.hex_red_64, //
+            R.drawable.hex_white_64, //
+        // R.drawable.hex_blue_64, //
         };
 
-        TextureOptions options = TextureOptions.getDefault();
-        options.inMipmaps = 1;
         for (int id : ids) {
             // add texture to list
-            mTextures.add(mScene.getTextureManager().createDrawableTexture(id, options));
+            mTextures.add(mScene.getTextureManager().createDrawableTexture(id, null));
         }
+        mNeighborTexture1 = mScene.getTextureManager().createDrawableTexture(R.drawable.hex_green_64, null);
+        mNeighborTexture2 = mScene.getTextureManager().createDrawableTexture(R.drawable.hex_red_64, null);
     }
 
-    private void addGroup(final float x, final float y) {
-        mRectGrid = new RectGrid<DisplayObject>(GRID_WIDTH, GRID_HEIGHT);
-        mRectGrid.flipVertical(true); // flip the y-orientation
-        mRectGrid.setCellSize(GRID_CELL, GRID_CELL);
-
-        mGridGroup = new GridGroup<DisplayObject>(mRectGrid);
+    private void createChildren(final float x, final float y) {
+        mGridGroup = new GridGroup<DisplayObject>(mHexGrid);
 
         // create children
         for (int row = 0; row < GRID_HEIGHT; row++) {
             for (int col = 0; col < GRID_WIDTH; col++) {
-                if (mRandom.nextInt(4) > 0) {
+                if (mRandom.nextInt(3) > 0) {
                     continue;
                 }
+
+                // if (col % 2 == 0) {
+                // continue;
+                // }
 
                 // random texture
                 final Texture texture = mTextures.get(row % mTextures.size());
                 // create object
                 final Sprite sprite = new Sprite();
                 sprite.setTexture(texture);
-                sprite.setOriginAtCenter();
-                sprite.setScale(0.5f);
+                // sprite.setOriginAtCenter();
+                // sprite.setBlendFunc(BlendModes.ADD_FUNC);
                 mGridGroup.addChildAt(sprite, col, row);
 
                 // motion trail
@@ -171,13 +159,26 @@ public class AstarActivity extends StageActivity {
                 final MotionTrailShape trail = new MotionTrailShape();
                 trail.setMotionEasing(0.95f);
                 trail.setNumPoints(30);
-                trail.setStrokeRange(GRID_CELL / 2f, GRID_CELL / 4f);
+                trail.setStrokeRange(GRID_CELL_RADIUS / 2f, GRID_CELL_RADIUS / 4f);
                 trail.setStrokeColors(color1, color2);
                 trail.setTarget(sprite);
+                trail.setTargetOffset(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
                 mGridGroup.addChild(trail, 0);
 
             }
         }
+
+        // create the neighbor sprites
+        mNeighborSprites = new Sprite[HexGrid.CELL_MAX_NEIGHBORS];
+        for (int i = 0; i < mNeighborSprites.length; i++) {
+            final Sprite sprite = new Sprite();
+            sprite.setVisible(false);
+            // sprite.setAlpha(0.5f);
+            sprite.setBlendFunc(BlendModes.ADD_FUNC);
+            mGridGroup.addChild(sprite);
+            mNeighborSprites[i] = sprite;
+        }
+
         // center on screen
         mGridGroup.setPosition(mDisplaySizeDiv2.x - mGridGroup.getWidth() / 2, mDisplaySizeDiv2.y - mGridGroup.getHeight() / 2);
 
@@ -190,9 +191,52 @@ public class AstarActivity extends StageActivity {
             mSelectedObject.setColor(null);
         }
 
-        mSelectedObject = mGridGroup.getChildAt(cell.x, cell.y);
-        if (mSelectedObject != null) {
-            mSelectedObject.setColor(COLOR_GREEN);
+        // toggle selection
+        final DisplayObject newObject = mHexGrid.getDataAt(cell.x, cell.y);
+        if (newObject != null && newObject != mSelectedObject) {
+            mSelectedObject = newObject;
+            mSelectedObject.setColor(COLOR_YELLOW);
+            showNeighborsAt(cell);
+        } else {
+            mSelectedObject = null;
+            hideNeighbors();
+        }
+    }
+
+    private void showNeighborsAt(final Point cell) {
+        // init the array
+        if (mNeighborCells == null) {
+            mNeighborCells = new Point[HexGrid.CELL_MAX_NEIGHBORS];
+            for (int i = 0; i < mNeighborCells.length; i++) {
+                mNeighborCells[i] = new Point();
+            }
+        }
+
+        // find empty neighbors
+        final int num = mHexGrid.getNeighborsAt(cell, mNeighborCells);
+        final PointF temp = new PointF();
+        for (int i = 0; i < mNeighborCells.length; i++) {
+            if (i < num) {
+                mHexGrid.cellToPoint(mNeighborCells[i], temp);
+                mNeighborSprites[i].setPosition(temp);
+                mNeighborSprites[i].setVisible(true);
+                if (mHexGrid.getDataAt(mNeighborCells[i].x, mNeighborCells[i].y) == null) {
+                    mNeighborSprites[i].setTexture(mNeighborTexture1);
+                } else {
+                    mNeighborSprites[i].setTexture(mNeighborTexture2);
+                }
+            } else {
+                // hide the out-of-bounds neighbors
+                mNeighborSprites[i].setVisible(false);
+            }
+        }
+    }
+
+    private void hideNeighbors() {
+        if (mNeighborCells != null) {
+            for (int i = 0; i < mNeighborCells.length; i++) {
+                mNeighborSprites[i].setVisible(false);
+            }
         }
     }
 
@@ -214,8 +258,14 @@ public class AstarActivity extends StageActivity {
 
         // long time = SystemClock.elapsedRealtime();
         final Point start = new Point();
-        mRectGrid.pointToCell(object.getPosition(), start);
-        final List<AstarNode> path = mAstar.findPath(new AstarNode(start), new AstarNode(dest), 0, true);
+        mHexGrid.pointToCell(object.getPosition().x + object.getSize().x * 0.5f, object.getPosition().y + object.getSize().y * 0.5f, start);
+        if (mHexGrid.getDataAt(start.x, start.y) != object) {
+            // FIXME this is because of the precision error in HexGrid.pointToCell()
+            Log.e("long", "Precision Error!");
+            return false;
+        }
+
+        final List<AstarNode> path = mAstar.findPath(new AstarNode(start), new AstarNode(dest), 0, false); // hex is not linear, no optimized path
         // Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
             // convert grid points to pixel points
@@ -224,12 +274,12 @@ public class AstarActivity extends StageActivity {
                 // Log.e("long", i + ": " + path.get(i));
 
                 PointF point = new PointF();
-                mRectGrid.cellToPoint(path.get(i), point);
+                mHexGrid.cellToPoint(path.get(i), point);
                 points[i] = point;
             }
 
             // apply to the group
-            mGridGroup.swapChildren(start, path.get(path.size() - 1), false);
+            mGridGroup.swapChildren(start, dest, false);
 
             // end the old animator
             if (animator == null) {
@@ -257,9 +307,9 @@ public class AstarActivity extends StageActivity {
                 int cellX = mRandom.nextInt(GRID_WIDTH);
                 int cellY = mRandom.nextInt(GRID_HEIGHT);
 
-                if (mGridGroup.getChildAt(cellX, cellY) != null) {
+                if (mHexGrid.getDataAt(cellX, cellY) != null) {
                     if (obj == null) {
-                        obj = mGridGroup.getChildAt(cellX, cellY);
+                        obj = mHexGrid.getDataAt(cellX, cellY);
                     }
                 } else if (dest == null) {
                     dest = new Point(cellX, cellY);
@@ -299,13 +349,15 @@ public class AstarActivity extends StageActivity {
         if (action == MotionEvent.ACTION_DOWN) {
             mGridGroup.globalToLocal(mScene.getTouchedPoint(), mTempPoint);
             if (mTempPoint.x > 0 && mTempPoint.y > 0) {
-                mRectGrid.pointToCell(mTempPoint, mTempCell);
+                final Point temp = new Point();
+                mHexGrid.pointToCell(mTempPoint, temp);
 
-                final DisplayObject child = mGridGroup.getChildAt(mTempCell.x, mTempCell.y);
+                final DisplayObject child = mHexGrid.getDataAt(temp.x, temp.y);
                 if (child != null) {
-                    selectObjectAt(mTempCell);
+                    selectObjectAt(temp);
                 } else if (mSelectedObject != null) {
-                    moveObject(mSelectedObject, mTempCell);
+                    hideNeighbors();
+                    moveObject(mSelectedObject, temp);
                 }
             }
         }

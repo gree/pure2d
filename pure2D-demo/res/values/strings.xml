@@ -183,4 +183,8 @@
 
     <string name="show_off">Show Off!</string>
 
+    <string name="rect_grid">Rect Grid</string>
+
+    <string name="hex_grid">Hex Grid</string>
+
 </resources>

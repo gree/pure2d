@@ -269,14 +269,24 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".physics.PhysicsMenuActivity"
+            android:name=".astar.AstarMenuActivity"
             android:label="@string/physics"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".physics.AstarActivity"
+            android:name="com.funzio.pure2D.demo.astar.AstarRectGridActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.funzio.pure2D.demo.astar.AstarHexGridActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".physics.PhysicsMenuActivity"
+            android:label="@string/physics"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".physics.HelloPhysicsActivity"
