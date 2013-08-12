@@ -346,4 +346,26 @@ public class Astar {
         nodes.clear();
     }
 
+    public void recycleNodes(final List<AstarNode> nodes) {
+        if (nodes == null) {
+            return;
+        }
+
+        // put into pool
+        int i, size = nodes.size();
+        for (i = 0; i < size; i++) {
+            if (!mNodePool.release(nodes.get(i))) {
+                // pool full
+                break;
+            }
+        }
+
+        if (LOG_ENABLED) {
+            Log.v(TAG, "recycleNodes(): " + i + " / " + size);
+        }
+
+        // clear the source also
+        nodes.clear();
+    }
+
 }

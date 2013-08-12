@@ -231,6 +231,8 @@ public class AstarRectGridActivity extends StageActivity {
                 mRectGrid.cellToPoint(path.get(i), point);
                 points[i] = point;
             }
+            // optional: recycle nodes
+            mAstar.recycleNodes(path);
 
             // apply to the group
             mGridGroup.swapChildren(start, dest, false);
