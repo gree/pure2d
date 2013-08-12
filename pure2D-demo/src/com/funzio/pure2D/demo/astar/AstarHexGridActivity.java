@@ -163,8 +163,8 @@ public class AstarHexGridActivity extends StageActivity {
                 trail.setNumPoints(30);
                 trail.setStrokeRange(GRID_CELL_RADIUS / 2f, GRID_CELL_RADIUS / 4f);
                 trail.setStrokeColors(color1, color2);
-                trail.setTarget(sprite);
                 trail.setTargetOffset(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
+                trail.setTarget(sprite);
                 mGridGroup.addChild(trail, 0);
 
             }
