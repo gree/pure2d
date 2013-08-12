@@ -327,6 +327,7 @@ public final class R {
         public static final int frigate=0x7f05002e;
         public static final int gray=0x7f050079;
         public static final int green=0x7f050075;
+        public static final int grid_astar=0x7f050097;
         public static final int grid_group=0x7f050090;
         public static final int ground_units=0x7f050024;
         public static final int gunshots=0x7f05001d;

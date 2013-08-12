@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:onClick="onClickButton"
-            android:text="@string/astar" />
+            android:text="@string/grid_astar" />
     </LinearLayout>
 
     <Button

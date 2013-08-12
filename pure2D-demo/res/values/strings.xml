@@ -187,4 +187,6 @@
 
     <string name="hex_grid">Hex Grid</string>
 
+    <string name="grid_astar">Grid &amp; Astar</string>
+
 </resources>
