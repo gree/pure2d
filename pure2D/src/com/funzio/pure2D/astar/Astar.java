@@ -240,7 +240,7 @@ public class Astar {
         return returnSet;
     }
 
-    protected static List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
+    protected List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
         if (LOG_ENABLED) {
             Log.v(TAG, "extractPath(): " + fromNode + ", " + fromNode.parent);
         }
@@ -339,7 +339,7 @@ public class Astar {
         }
 
         if (LOG_ENABLED) {
-            Log.v(TAG, "recycleNodes(): " + i + " / " + size);
+            Log.v(TAG, "recycleNodes(): " + i + " / " + size + ", available: " + mNodePool.size());
         }
 
         // clear the source also
@@ -361,7 +361,7 @@ public class Astar {
         }
 
         if (LOG_ENABLED) {
-            Log.v(TAG, "recycleNodes(): " + i + " / " + size);
+            Log.v(TAG, "recycleNodes(): " + i + " / " + size + ", available: " + mNodePool.size());
         }
 
         // clear the source also

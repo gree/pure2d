@@ -20,7 +20,7 @@ public class ObjectPool<T extends Reusable> {
         return mMaxSize;
     }
 
-    public void setMaxSize(int maxSize) {
+    public void setMaxSize(final int maxSize) {
         mMaxSize = maxSize;
     }
 
@@ -43,5 +43,9 @@ public class ObjectPool<T extends Reusable> {
 
     public void clear() {
         mReusables.clear();
+    }
+
+    public int size() {
+        return mReusables.size();
     }
 }

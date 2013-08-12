@@ -100,9 +100,14 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
 
         if (mNumPoints > 0) {
 
-            if (!mFollowingHead && mTarget != null && !mTarget.getPosition().equals(mPoints[0].x, mPoints[0].y)) {
-                // flag
-                mFollowingHead = true;
+            if (!mFollowingHead && mTarget != null) {
+                final PointF p1 = mTarget.getPosition();
+                final float dx = p1.x - (mPoints[0].x - mTargetOffset.x);
+                final float dy = p1.y - (mPoints[0].y - mTargetOffset.y);
+                if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
+                    // flag
+                    mFollowingHead = true;
+                }
             }
 
             if (mFollowingHead) {

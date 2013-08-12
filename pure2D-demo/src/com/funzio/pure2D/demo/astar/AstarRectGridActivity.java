@@ -37,6 +37,7 @@ public class AstarRectGridActivity extends StageActivity {
     private RectGrid<DisplayObject> mRectGrid;
     private GridGroup<DisplayObject> mGridGroup;
     private PointF mTempPoint = new PointF();
+    // private ObjectPool<ReusablePointF> mPointPool = new ObjectPool<ReusablePointF>(100);
 
     private DisplayObject mSelectedObject;
 
@@ -287,6 +288,31 @@ public class AstarRectGridActivity extends StageActivity {
     protected int getNumObjects() {
         return mScene.getNumGrandChildren();
     }
+
+    // private void recyclePoint(final List<ReusablePointF> points) {
+    // if (points == null) {
+    // return;
+    // }
+    //
+    // int size = points.size();
+    // for (int i = 0; i < size; i++) {
+    // if (mPointPool.release(points.get(i))) {
+    // // pool full
+    // return;
+    // }
+    // }
+    // }
+    //
+    // private ReusablePointF createPoint(final float x, final float y) {
+    // ReusablePointF point = mPointPool.acquire();
+    // if (point != null) {
+    // point.reset(x, y);
+    // } else {
+    // point = new ReusablePointF(x, y);
+    // }
+    //
+    // return point;
+    // }
 
     @Override
     public void finish() {
