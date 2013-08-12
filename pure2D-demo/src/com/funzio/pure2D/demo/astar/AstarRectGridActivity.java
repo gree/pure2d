@@ -54,28 +54,28 @@ public class AstarRectGridActivity extends StageActivity {
             x = node.x - 1;
             y = node.y;
             if (x >= 0 && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
+                neighbors[index++] = mAstar.createNode(x, y);
             }
 
             // right
             x = node.x + 1;
             y = node.y;
             if (x < GRID_WIDTH && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
+                neighbors[index++] = mAstar.createNode(x, y);
             }
 
             // top
             x = node.x;
             y = node.y - 1;
             if (y >= 0 && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
+                neighbors[index++] = mAstar.createNode(x, y);
             }
 
             // bottom
             x = node.x;
             y = node.y + 1;
             if (y < GRID_HEIGHT && !openNodes.containsXY(x, y) && !closedNodes.containsXY(x, y) && mRectGrid.getDataAt(x, y) == null) {
-                neighbors[index++] = new AstarNode(x, y);
+                neighbors[index++] = mAstar.createNode(x, y);
             }
 
         }
@@ -110,6 +110,8 @@ public class AstarRectGridActivity extends StageActivity {
         mRectGrid = new RectGrid<DisplayObject>(GRID_WIDTH, GRID_HEIGHT);
         mRectGrid.flipVertical(true); // flip the y-orientation
         mRectGrid.setCellSize(GRID_CELL_SIZE, GRID_CELL_SIZE);
+        // set pool size for recycling nodes
+        mAstar.setNodePoolSize(GRID_WIDTH * GRID_HEIGHT);
 
         // to allow touching
         mScene.setUIEnabled(true);
@@ -217,7 +219,7 @@ public class AstarRectGridActivity extends StageActivity {
         // long time = SystemClock.elapsedRealtime();
         final Point start = new Point();
         mRectGrid.pointToCell(object.getPosition(), start);
-        final List<AstarNode> path = mAstar.findPath(new AstarNode(start), new AstarNode(dest), 0, true);
+        final List<AstarNode> path = mAstar.findPath(mAstar.createNode(start), mAstar.createNode(dest), 0, true);
         // Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
             // convert grid points to pixel points

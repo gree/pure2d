@@ -8,6 +8,8 @@ import java.util.PriorityQueue;
 import android.graphics.Point;
 import android.util.Log;
 
+import com.funzio.pure2D.utils.ObjectPool;
+
 /**
  * @author long.ngo
  */
@@ -17,15 +19,21 @@ public class Astar {
     private static final String TAG = Astar.class.getSimpleName();
 
     protected AstarAdapter mAdapter;
+    protected ObjectPool<AstarNode> mNodePool;
     protected boolean mClosedNodeRevision;
 
     public Astar(final AstarAdapter adapter) {
-        this(adapter, false);
+        this(adapter, 0, false);
     }
 
-    public Astar(final AstarAdapter adapter, final boolean closedNodeRevision) {
+    public Astar(final AstarAdapter adapter, final int nodePoolSize, final boolean closedNodeRevision) {
         mAdapter = adapter;
+        mNodePool = new ObjectPool<AstarNode>(nodePoolSize);
         mClosedNodeRevision = closedNodeRevision;
+    }
+
+    public void setNodePoolSize(final int nodePoolSize) {
+        mNodePool.setMaxSize(nodePoolSize);
     }
 
     /**
@@ -84,6 +92,8 @@ public class Astar {
             closedSet.addNode(currentNode);
 
             if (currentNode.equals(end)) {
+                // recycle open nodes only, just in case you need to do something with the closes nodes
+                recycleNodes(openSet);
                 // awesome! path found!
                 return extractPath(currentNode, compressPath);
             }
@@ -136,6 +146,10 @@ public class Astar {
                 }
             }
         } while (openQueue.size() > 0);
+
+        // recycle open and closed nodes
+        recycleNodes(openSet);
+        recycleNodes(closedSet);
 
         return null;
     }
@@ -216,6 +230,9 @@ public class Astar {
             }
         } while (openQueue.size() > 0);
 
+        // recycle open nodes only
+        recycleNodes(openSet);
+
         return returnSet;
     }
 
@@ -260,6 +277,61 @@ public class Astar {
         }
 
         return path;
+    }
+
+    /**
+     * Check the pool first to either recycle or create a new node
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
+    public AstarNode createNode(final int x, final int y) {
+        AstarNode node = mNodePool.acquire();
+        if (node != null) {
+            node.reset(x, y);
+        } else {
+            node = new AstarNode(x, y);
+        }
+        return node;
+    }
+
+    /**
+     * Check the pool first to either recycle or create a new node
+     * 
+     * @param p
+     * @return
+     */
+    public AstarNode createNode(final Point p) {
+        AstarNode node = mNodePool.acquire();
+        if (node != null) {
+            node.reset(p.x, p.y);
+        } else {
+            node = new AstarNode(p.x, p.y);
+        }
+        return node;
+    }
+
+    public void recycleNodes(final AstarNodeSet nodes) {
+        if (nodes == null) {
+            return;
+        }
+
+        // put into pool
+        int i, size = nodes.size();
+        for (i = 0; i < size; i++) {
+            if (!mNodePool.release(nodes.get(nodes.keyAt(i)))) {
+                // pool full
+                break;
+            }
+        }
+
+        if (LOG_ENABLED) {
+            Log.v(TAG, "recycleNodes(): " + i + " / " + size);
+        }
+
+        // clear the source also
+        nodes.clear();
     }
 
 }

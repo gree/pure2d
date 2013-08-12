@@ -61,7 +61,7 @@ public class AstarHexGridActivity extends StageActivity {
                 x = node.x + indices[start + i][0];
                 y = node.y + indices[start + i][1];
                 if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT && mHexGrid.getDataAt(x, y) == null) {
-                    neighbors[index++] = new AstarNode(x, y);
+                    neighbors[index++] = mAstar.createNode(x, y);
                 }
             }
         }
@@ -96,6 +96,8 @@ public class AstarHexGridActivity extends StageActivity {
         mHexGrid = new VerticalHexGrid<DisplayObject>(GRID_WIDTH, GRID_HEIGHT, false);
         // mHexGrid.flipVertical(true); // flip the y-orientation
         mHexGrid.setCellSize(GRID_CELL_RADIUS);
+        // set pool size for recycling nodes
+        mAstar.setNodePoolSize(GRID_WIDTH * GRID_HEIGHT);
 
         // to allow touching
         mScene.setUIEnabled(true);
@@ -265,7 +267,7 @@ public class AstarHexGridActivity extends StageActivity {
             return false;
         }
 
-        final List<AstarNode> path = mAstar.findPath(new AstarNode(start), new AstarNode(dest), 0, false); // hex is not linear, no optimized path
+        final List<AstarNode> path = mAstar.findPath(mAstar.createNode(start), mAstar.createNode(dest), 0, false); // hex is not linear, no optimized path
         // Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
             // convert grid points to pixel points

@@ -4,15 +4,18 @@ import java.util.Comparator;
 
 import android.graphics.Point;
 
+import com.funzio.pure2D.utils.Reusable;
+
 /**
  * @author long.ngo
  */
-public class AstarNode extends Point {
+public class AstarNode extends Point implements Reusable {
+
     public AstarNode parent = null;
     public int h = 0; // heuristic
     public int g = 1; // cost
 
-    protected final int key;
+    private int key;
 
     public static final Comparator<AstarNode> COMPARATOR = new Comparator<AstarNode>() {
         public int compare(final AstarNode left, final AstarNode right) {
@@ -43,6 +46,23 @@ public class AstarNode extends Point {
     }
 
     @Override
+    public void reset(final Object... params) {
+        if (params.length >= 2) {
+            x = (Integer) params[0];
+            y = (Integer) params[1];
+        } else {
+            x = y = 0;
+        }
+
+        h = 0;
+        g = 1;
+        parent = null;
+
+        // generate the key for quick lookup
+        key = generateKey(x, y);
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (o instanceof AstarNode) {
             final AstarNode node = (AstarNode) o;
@@ -50,6 +70,10 @@ public class AstarNode extends Point {
         } else {
             return super.equals(o);
         }
+    }
+
+    public int getKey() {
+        return key;
     }
 
     @Override

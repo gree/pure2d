@@ -25,16 +25,16 @@ public class AstarNodeSet extends SparseArray<AstarNode> {
     }
 
     public void addNode(final AstarNode node) {
-        // put(node.key, node);
-        append(node.key, node);
+        // put(node.getKey(), node);
+        append(node.getKey(), node);
     }
 
     public void removeNode(final AstarNode node) {
-        remove(node.key);
+        remove(node.getKey());
     }
 
     public boolean containsSimilarNode(final AstarNode node) {
-        return this.indexOfKey(node.key) >= 0;
+        return this.indexOfKey(node.getKey()) >= 0;
     }
 
     public boolean containsXY(final int x, final int y) {
@@ -42,6 +42,6 @@ public class AstarNodeSet extends SparseArray<AstarNode> {
     }
 
     public AstarNode getSimilarNode(final AstarNode node) {
-        return get(node.key);
+        return get(node.getKey());
     }
 }
