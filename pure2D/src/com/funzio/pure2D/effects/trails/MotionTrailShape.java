@@ -19,7 +19,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     protected int mNumPoints = DEFAULT_NUM_POINTS;
     protected float mMotionEasingX = DEFAULT_MOTION_EASING;
     protected float mMotionEasingY = DEFAULT_MOTION_EASING;
-    protected int mMinLength = 0;
+    protected int mMinLength = 1;
     protected int mSegmentLength = 0;
 
     protected DisplayObject mTarget;
@@ -121,7 +121,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                         p2 = mPoints[i - 1];
                         dx = p2.x - p1.x;
                         dy = p2.y - p1.y;
-                        if (mMinLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
+                        if (mMinLength <= 1 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
                             // move toward the leading point
                             p1.x += dx * mMotionEasingX;
                             p1.y += dy * mMotionEasingY;
@@ -148,7 +148,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     public void setPoints(final PointF... points) {
         super.setPoints(points);
 
-        if (mTotalLength < 1) {
+        if (mTotalLength <= mMinLength) {
             // flag done
             mFollowingHead = false;
         }
