@@ -92,10 +92,14 @@ public class Astar {
             closedSet.addNode(currentNode);
 
             if (currentNode.equals(end)) {
-                // recycle open nodes only, just in case you need to do something with the closes nodes
-                recycleNodes(openSet);
+
                 // awesome! path found!
-                return extractPath(currentNode, compressPath);
+                final List<AstarNode> path = extractPath(currentNode, compressPath);
+                // recycle open and closed nodes
+                recycleNodes(openSet);
+                // but exclude nodes in the path
+                recycleNodes(closedSet, path);
+                return path;
             }
 
             // otherwise find the neighbors
@@ -313,16 +317,24 @@ public class Astar {
     }
 
     public void recycleNodes(final AstarNodeSet nodes) {
+        recycleNodes(nodes, null);
+    }
+
+    public void recycleNodes(final AstarNodeSet nodes, final List<AstarNode> excludes) {
         if (nodes == null) {
             return;
         }
 
         // put into pool
         int i, size = nodes.size();
+        AstarNode node;
         for (i = 0; i < size; i++) {
-            if (!mNodePool.release(nodes.get(nodes.keyAt(i)))) {
-                // pool full
-                break;
+            node = nodes.get(nodes.keyAt(i));
+            if (excludes == null || !excludes.contains(node)) {
+                if (!mNodePool.release(node)) {
+                    // pool full
+                    break;
+                }
             }
         }
 
