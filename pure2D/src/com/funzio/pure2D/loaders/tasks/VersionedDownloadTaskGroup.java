@@ -82,7 +82,8 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
 
                 // check for specific file's version
                 if (remoteVersionProperties != null) {
-                    final String relativePathFromVersionFile = PathUtils.getRelativePath(mRemoteVersion, downloadTask.getURL());
+                    final String urlWithoutParams = downloadTask.getURL().split("\\?")[0]; // strip out the url params
+                    final String relativePathFromVersionFile = PathUtils.getRelativePath(mRemoteVersion, urlWithoutParams);
                     final String remoteFileVersion = remoteVersionProperties.getProperty(relativePathFromVersionFile, "");
                     if (!remoteFileVersion.equals("")) {
                         if (localVersionProperties != null) {
