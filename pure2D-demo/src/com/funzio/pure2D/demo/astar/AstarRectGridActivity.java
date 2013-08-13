@@ -219,23 +219,16 @@ public class AstarRectGridActivity extends StageActivity {
         // long time = SystemClock.elapsedRealtime();
         final Point start = new Point();
         mRectGrid.pointToCell(object.getPosition(), start);
-        final List<AstarNode> path = mAstar.findPath(mAstar.createNode(start), mAstar.createNode(dest), 0, true);
+        final List<AstarNode> path = mAstar.findPath(mAstar.createNode(start), mAstar.createNode(dest), 0, true); // also compress here since RectGrid is linear
         // Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
-            // convert grid points to pixel points
-            final PointF[] points = new PointF[path.size()];
-            for (int i = 0; i < points.length; i++) {
-                // Log.e("long", i + ": " + path.get(i));
+            // apply to the grid/group
+            mGridGroup.swapChildren(start, dest, false);
 
-                PointF point = new PointF();
-                mRectGrid.cellToPoint(path.get(i), point);
-                points[i] = point;
-            }
+            // convert grid points to pixel points
+            final PointF[] points = mRectGrid.cellToPointPath(path, false); // already compressed above, so don't compress here
             // optional: recycle nodes
             mAstar.recycleNodes(path);
-
-            // apply to the group
-            mGridGroup.swapChildren(start, dest, false);
 
             // end the old animator
             if (animator == null) {

@@ -3,10 +3,13 @@
  */
 package com.funzio.pure2D.grid;
 
+
 /**
  * @author long.ngo
  */
 public abstract class HexGrid<T> extends AbstractGrid<T> {
+    public static final String TAG = HexGrid.class.getName();
+
     public static final float SQRT_3 = (float) Math.sqrt(3);
     public static final int CELL_MAX_NEIGHBORS = 6;
 
@@ -26,4 +29,5 @@ public abstract class HexGrid<T> extends AbstractGrid<T> {
         // update the bounds
         updateBounds();
     }
+
 }

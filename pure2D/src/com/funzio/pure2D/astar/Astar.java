@@ -260,7 +260,7 @@ public class Astar {
                         // override the node
                         path.set(0, node);
                     } else {
-                        // angle changes
+                        // add new node
                         path.add(0, node);
                     }
 

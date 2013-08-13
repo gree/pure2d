@@ -270,20 +270,14 @@ public class AstarHexGridActivity extends StageActivity {
         final List<AstarNode> path = mAstar.findPath(mAstar.createNode(start), mAstar.createNode(dest), 0, false); // hex is not linear, no optimized path
         // Log.e("long", "Time taken: " + (SystemClock.elapsedRealtime() - time) + " ms");
         if (path != null) {
-            // convert grid points to pixel points
-            final PointF[] points = new PointF[path.size()];
-            for (int i = 0; i < points.length; i++) {
-                // Log.e("long", i + ": " + path.get(i));
 
-                PointF point = new PointF();
-                mHexGrid.cellToPoint(path.get(i), point);
-                points[i] = point;
-            }
+            // apply to the grid/group
+            mGridGroup.swapChildren(start, dest, false);
+
+            // convert grid points to pixel points
+            final PointF[] points = mHexGrid.cellToPointPath(path, true); // compress here
             // optional: recycle nodes
             mAstar.recycleNodes(path);
-
-            // apply to the group
-            mGridGroup.swapChildren(start, dest, false);
 
             // end the old animator
             if (animator == null) {

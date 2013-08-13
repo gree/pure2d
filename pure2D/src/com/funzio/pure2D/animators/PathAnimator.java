@@ -27,9 +27,13 @@ public class PathAnimator extends TweenAnimator {
     }
 
     public void setValues(final PointF... points) {
+        setValues(points.length, points);
+    }
+
+    public void setValues(final int limit, final PointF... points) {
         mPoints = points;
 
-        mNumSegments = points.length - 1;
+        mNumSegments = Math.min(limit, points.length) - 1;
         // safety check
         if (mNumSegments < 1) {
             return;
