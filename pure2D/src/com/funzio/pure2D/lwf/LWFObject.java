@@ -1,5 +1,7 @@
 package com.funzio.pure2D.lwf;
 
+import java.util.Locale;
+
 import android.util.Log;
 import android.graphics.RectF;
 
@@ -23,7 +25,6 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     private LWF mLWF;
     private LWF mLastAttachedLWF;
     private int mAttachId;
-    private boolean mPlaying;
     private float mWidth;
     private float mHeight;
     private int mDefaultScaling = SCALING_NONE;
@@ -120,8 +121,8 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         return attachLWF(data, SCALING_USE_DEFAULT);
     }
 
-    public LWF attachLWF(LWFData data, int scaling) {
-        String attachName = String.format("childLWF%d", mAttachId++);
+	public LWF attachLWF(LWFData data, int scaling) {
+        String attachName = String.format(Locale.US, "childLWF%d", mAttachId++);
         return attachLWF(data, "_root", attachName, scaling);
     }
 
@@ -130,10 +131,8 @@ public class LWFObject extends BaseDisplayObject implements Playable {
     }
 
     public LWF attachLWF(LWFData data, String target, String attachName, int scaling) {
-        if (mLWF == null)  {
+        if (mLWF == null)
             mLWF = data.getLWFManager().createLWF();
-            mPlaying = true;
-        }
 
         LWF lwf = data.getLWFManager().createLWF(data);
 
