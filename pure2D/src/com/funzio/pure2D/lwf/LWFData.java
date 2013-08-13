@@ -93,7 +93,7 @@ public class LWFData {
     public void dispose() {
         if (mId != -1) {
             if (LOG_ENABLED) {
-                Log.e(TAG, "dispose()");
+                Log.i(TAG, "dispose()");
             }
             destroy(mId);
             mId = -1;

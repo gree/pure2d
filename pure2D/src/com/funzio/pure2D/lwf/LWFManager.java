@@ -1,14 +1,11 @@
 package com.funzio.pure2D.lwf;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.HashSet;
-
-import android.util.Log;
 
 public class LWFManager {
     public static boolean LOG_ENABLED = true;
-    private static final String TAG = LWFManager.class.getSimpleName();
+    //private static final String TAG = LWFManager.class.getSimpleName();
 
     private HashSet<LWFData> mDatas;
     private HashSet<LWF> mLWFs;
