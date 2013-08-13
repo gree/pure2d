@@ -160,6 +160,7 @@ public final class R {
         public static final int col1=0x7f090047;
         public static final int col2=0x7f090048;
         public static final int debug=0x7f090092;
+        public static final int fps=0x7f090093;
         public static final int nova_menu_layout=0x7f090046;
         public static final int pause=0x7f090091;
         public static final int radio_1=0x7f090074;
@@ -207,6 +208,7 @@ public final class R {
         public static final int radio_tank_fire=0x7f09005f;
         public static final int radio_v22osprey=0x7f09005c;
         public static final int radio_white=0x7f090003;
+        public static final int source=0x7f090094;
         public static final int stage=0x7f090079;
         public static final int sv_code=0x7f09006a;
         public static final int tv_code=0x7f09006b;
@@ -291,7 +293,7 @@ public final class R {
         public static final int blue=0x7f050078;
         public static final int bounce=0x7f05004b;
         public static final int bouncing_objects=0x7f050008;
-        public static final int bounds_wireframe=0x7f05008b;
+        public static final int bounds_wireframes=0x7f05008b;
         public static final int buffers=0x7f05005b;
         public static final int button=0x7f05007c;
         public static final int cache=0x7f05008d;
@@ -323,6 +325,7 @@ public final class R {
         public static final int explosion_combo=0x7f05001c;
         public static final int f15=0x7f050027;
         public static final int flip_orientation=0x7f050091;
+        public static final int fps=0x7f050099;
         public static final int frame_buffer=0x7f05000a;
         public static final int frigate=0x7f05002e;
         public static final int gray=0x7f050079;
@@ -406,6 +409,7 @@ public final class R {
         public static final int skeleton_animation_cache=0x7f05005a;
         public static final int slot_machine=0x7f050044;
         public static final int smoke_puff=0x7f05001f;
+        public static final int source=0x7f050098;
         public static final int sparks=0x7f05003b;
         public static final int sprite=0x7f050009;
         public static final int start_loading=0x7f050057;

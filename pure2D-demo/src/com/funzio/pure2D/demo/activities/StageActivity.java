@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.BaseStage;
@@ -105,6 +106,16 @@ public class StageActivity extends Activity implements OnTouchListener {
 
             case R.id.debug:
                 Pure2D.DEBUG_FLAGS = Pure2D.DEBUG_FLAGS == 0 ? Pure2D.DEBUG_FLAG_WIREFRAME | Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS : 0;
+                return true;
+
+            case R.id.fps:
+                final int visibility = mFrameRate.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE;
+                mFrameRate.setVisibility(visibility);
+                mObjects.setVisibility(visibility);
+                return true;
+
+            case R.id.source:
+                Toast.makeText(this, getClass().getCanonicalName(), Toast.LENGTH_LONG).show();
                 return true;
         }
 
