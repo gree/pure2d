@@ -20,6 +20,7 @@ public class PathAnimator extends TweenAnimator {
     protected PointF mVelocity = new PointF();
     protected int mCurrentSegment = 0;
     protected boolean mSnapEnabled = false;
+    protected int mNumSegments = 0;
 
     public PathAnimator(final Interpolator interpolator) {
         super(interpolator);
@@ -28,19 +29,22 @@ public class PathAnimator extends TweenAnimator {
     public void setValues(final PointF... points) {
         mPoints = points;
 
+        mNumSegments = points.length - 1;
         // safety check
-        final int n = points.length;
-        if (n < 2) {
+        if (mNumSegments < 1) {
             return;
         }
 
-        mSin = new float[n - 1];
-        mCos = new float[n - 1];
-        mSegments = new float[n - 1];
+        // reuse arrays when possible
+        if (mSegments == null || mNumSegments > mSegments.length) {
+            mSin = new float[mNumSegments];
+            mCos = new float[mNumSegments];
+            mSegments = new float[mNumSegments];
+        }
 
         float dx, dy, angle;
         mTotalLength = 0;
-        for (int i = 0; i < n - 1; i++) {
+        for (int i = 0; i < mNumSegments; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
             angle = (float) Math.atan2(dy, dx);
@@ -92,12 +96,11 @@ public class PathAnimator extends TweenAnimator {
             }
 
             final float valueLen = value * mTotalLength;
-            final int size = mSegments.length;
             float len = 0;
 
             // find the right segment
             float segment;
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < mNumSegments; i++) {
                 segment = mSegments[i];
 
                 // bingo?
@@ -128,11 +131,10 @@ public class PathAnimator extends TweenAnimator {
 
     protected int getSegment(final float value) {
         final float valueLen = value * mTotalLength;
-        final int size = mSegments.length;
         float len = 0;
 
         // find the right segment
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < mNumSegments; i++) {
             len += mSegments[i];
 
             // bingo?

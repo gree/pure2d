@@ -241,33 +241,35 @@ public class Astar {
     }
 
     protected List<AstarNode> extractPath(final AstarNode fromNode, final boolean compression) {
-        if (LOG_ENABLED) {
-            Log.v(TAG, "extractPath(): " + fromNode + ", " + fromNode.parent);
-        }
-
         final ArrayList<AstarNode> path = new ArrayList<AstarNode>();
         AstarNode node = fromNode;
 
         if (compression) {
             // optimize the path
-            Point lastPoint = null, newPoint;
-            Point lastAngle = null, newAngle;
+            AstarNode lastNode = null;
+            int lastVectorX = 0, lastVectorY = 0;
+            int newVectorX, newVectorY;
             do {
-                newPoint = node;
-                newAngle = (lastPoint != null) ? new Point(newPoint.x - lastPoint.x, newPoint.y - lastPoint.y) : null;
-                // same angle?
-                if (lastAngle != null && lastAngle.equals(newAngle)) {
-                    // override the node
-                    path.set(0, node);
-                } else {
-                    // angle changes
+                if (lastNode == null) {
+                    // first node
                     path.add(0, node);
+                } else {
+                    newVectorX = node.x - lastNode.x;
+                    newVectorY = node.y - lastNode.y;
+                    if ((lastVectorX == newVectorX && lastVectorY == newVectorY)) {
+                        // override the node
+                        path.set(0, node);
+                    } else {
+                        // angle changes
+                        path.add(0, node);
+                    }
+
+                    lastVectorX = newVectorX;
+                    lastVectorY = newVectorY;
                 }
 
-                lastPoint = newPoint;
-                lastAngle = newAngle;
-
-                // upper node
+                lastNode = node;
+                // go to upper node
                 node = node.parent;
             } while (node != null);
         } else {
@@ -278,6 +280,10 @@ public class Astar {
                 // upper node
                 node = node.parent;
             } while (node != null);
+        }
+
+        if (LOG_ENABLED) {
+            Log.v(TAG, "extractPath(): " + fromNode + " -> " + path.size() + " nodes");
         }
 
         return path;

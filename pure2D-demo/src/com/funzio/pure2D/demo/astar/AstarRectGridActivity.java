@@ -166,11 +166,10 @@ public class AstarRectGridActivity extends StageActivity {
                 mGridGroup.addChildAt(sprite, col, row);
 
                 // motion trail
-                final GLColor color1 = new GLColor(1, mRandom.nextFloat(), 0, 0.5f);
-                final GLColor color2 = new GLColor(color1);
-                color2.a = 0;
+                final GLColor color1 = new GLColor(1, mRandom.nextFloat(), 0, 1f);
+                final GLColor color2 = new GLColor(1, mRandom.nextFloat(), 0, 1f);
                 final MotionTrailShape trail = new MotionTrailShape();
-                trail.setMotionEasing(0.95f);
+                trail.setMotionEasing(0.98f);
                 trail.setNumPoints(20);
                 trail.setStrokeRange(GRID_CELL_SIZE / 4f, GRID_CELL_SIZE / 6f);
                 trail.setStrokeColors(color1, color2);

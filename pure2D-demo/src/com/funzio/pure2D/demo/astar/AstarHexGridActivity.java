@@ -151,15 +151,15 @@ public class AstarHexGridActivity extends StageActivity {
                 final Sprite sprite = new Sprite();
                 sprite.setTexture(texture);
                 // sprite.setOriginAtCenter();
-                // sprite.setBlendFunc(BlendModes.ADD_FUNC);
+                sprite.setBlendFunc(BlendModes.PREMULTIPLIED_ALPHA_FUNC);
                 mGridGroup.addChildAt(sprite, col, row);
 
                 // motion trail
-                final GLColor color1 = new GLColor(1, mRandom.nextFloat(), 0, 0.5f);
-                final GLColor color2 = new GLColor(color1);
-                color2.a = 0;
+                final GLColor color1 = new GLColor(1, mRandom.nextFloat(), 0, 1f);
+                final GLColor color2 = new GLColor(1, mRandom.nextFloat(), 0, 1f);
                 final MotionTrailShape trail = new MotionTrailShape();
-                trail.setMotionEasing(0.95f);
+                trail.setMotionEasing(0.98f);
+                // trail.setBlendFunc(BlendModes.ADD_FUNC);
                 trail.setNumPoints(20);
                 trail.setStrokeRange(GRID_CELL_RADIUS / 2f, GRID_CELL_RADIUS / 4f);
                 trail.setStrokeColors(color1, color2);
