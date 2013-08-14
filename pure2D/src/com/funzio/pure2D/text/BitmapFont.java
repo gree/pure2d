@@ -61,7 +61,7 @@ public class BitmapFont {
                     final Bitmap bitmap = createBitmap(dimensions);
                     mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
                 }
-            });
+            }, null);
 
             mTexture.reload();
             mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output

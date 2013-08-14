@@ -21,6 +21,7 @@ import com.funzio.pure2D.text.TextOptions;
 public class TextureManager {
 
     public static final String TAG = TextureManager.class.getSimpleName();
+    public static final int DEFAULT_EXPIRATION_CHECK_INTERVAL = 60 * 1000; // ms
 
     protected Scene mScene;
     protected ArrayList<Texture> mTextures = new ArrayList<Texture>();
@@ -29,6 +30,10 @@ public class TextureManager {
 
     protected Resources mResources;
     protected AssetManager mAssets;
+
+    // texture expiration
+    protected int mExpirationCheckInterval = DEFAULT_EXPIRATION_CHECK_INTERVAL;
+    protected int mExpirationCheckElapsedTime = 0;
 
     public TextureManager(final Scene scene, final Resources res) {
         mScene = scene;
@@ -47,6 +52,14 @@ public class TextureManager {
 
     public GLState getGLState() {
         return mGLState;
+    }
+
+    public int getExpirationCheckInterval() {
+        return mExpirationCheckInterval;
+    }
+
+    public void setExpirationCheckInterval(final int expirationCheckInterval) {
+        mExpirationCheckInterval = expirationCheckInterval;
     }
 
     /**
@@ -262,7 +275,7 @@ public class TextureManager {
      * @param options
      * @return
      */
-    public Texture createDynamicTexture(final Runnable loadRunnable) {
+    public Texture createDynamicTexture(final Runnable loadRunnable, final TextOptions options) {
         Log.v(TAG, String.format("createDynamicTexture()"));
 
         final Texture texture = new Texture(mGLState) {
@@ -345,6 +358,10 @@ public class TextureManager {
     }
 
     public void update(final int deltaTime) {
-        // TODO
+        mExpirationCheckElapsedTime += deltaTime;
+        if (mExpirationCheckElapsedTime >= mExpirationCheckInterval) {
+            // TODO check all textures' expiration
+            mExpirationCheckElapsedTime -= mExpirationCheckInterval;
+        }
     }
 }
