@@ -11,8 +11,7 @@ import android.view.animation.Interpolator;
  */
 public class PathAnimator extends TweenAnimator {
     protected PointF[] mPoints;
-    protected float[] mSin;
-    protected float[] mCos;
+    protected float[] mDx, mDy;
     protected float[] mSegments;
     protected float mTotalLength;
 
@@ -41,19 +40,18 @@ public class PathAnimator extends TweenAnimator {
 
         // reuse arrays when possible
         if (mSegments == null || mNumSegments > mSegments.length) {
-            mSin = new float[mNumSegments];
-            mCos = new float[mNumSegments];
+            mDx = new float[mNumSegments];
+            mDy = new float[mNumSegments];
             mSegments = new float[mNumSegments];
         }
 
-        float dx, dy, angle;
+        float dx, dy;
         mTotalLength = 0;
         for (int i = 0; i < mNumSegments; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
-            angle = (float) Math.atan2(dy, dx);
-            mSin[i] = (float) Math.sin(angle);
-            mCos[i] = (float) Math.cos(angle);
+            mDx[i] = dx;
+            mDy[i] = dy;
             mSegments[i] = (float) Math.sqrt(dx * dx + dy * dy);
             mTotalLength += mSegments[i];
         }
@@ -110,13 +108,13 @@ public class PathAnimator extends TweenAnimator {
                 // bingo?
                 if (len + segment >= valueLen) {
                     mCurrentSegment = i;
-                    final float delta = valueLen - len;
+                    final float deltaScale = (valueLen - len) / segment;
                     PointF currentPos = mTarget.getPosition();
                     float lastX = currentPos.x;
                     float lastY = currentPos.y;
 
                     // new position
-                    mTarget.setPosition(mPoints[i].x + delta * mCos[i], mPoints[i].y + delta * mSin[i]);
+                    mTarget.setPosition(mPoints[i].x + deltaScale * mDx[i], mPoints[i].y + deltaScale * mDy[i]);
 
                     // find the velocity
                     currentPos = mTarget.getPosition();
