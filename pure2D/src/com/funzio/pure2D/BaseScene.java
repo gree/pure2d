@@ -398,6 +398,9 @@ public class BaseScene implements Scene {
                     }
                 }
             }
+
+            // update texture manager
+            mTextureManager.update((int) delta);
         }
 
         // draw children if needed

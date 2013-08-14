@@ -38,18 +38,18 @@ public abstract class Texture {
     protected PointF mSize = new PointF(0, 0);
     protected Listener mListener;
 
-    public Texture(final GLState glState) {
+    protected Texture(final GLState glState) {
         mGLState = glState;
         mGL = mGLState.mGL;
     }
 
-    public Texture(final GLState glState, final Bitmap bitmap) {
+    protected Texture(final GLState glState, final Bitmap bitmap) {
         mGLState = glState;
         mGL = mGLState.mGL;
         load(bitmap, 0, 0, 0);
     }
 
-    public Texture(final GLState glState, final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
+    protected Texture(final GLState glState, final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
         mGLState = glState;
         mGL = mGLState.mGL;
         load(bitmap, actualWidth, actualHeight, mipmaps);

@@ -38,6 +38,8 @@ public class FrameBufferActivity extends StageActivity {
                     loadTextures();
                     createBufferTexture();
                     addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                } else {
+                    // TODO regenerate textures...
                 }
             }
         });
@@ -48,9 +50,6 @@ public class FrameBufferActivity extends StageActivity {
                 R.drawable.cc_32, // cc
                 R.drawable.mw_32, // mw
                 R.drawable.ka_32, // ka
-        // R.drawable.cc_128, // cc
-        // R.drawable.mw_128, // mw
-        // R.drawable.ka_128, // ka
         };
 
         for (int id : ids) {
@@ -89,8 +88,6 @@ public class FrameBufferActivity extends StageActivity {
         // create object
         Sprite obj = new Sprite();
         obj.setTexture(mBufferTexture);
-        // obj.setAutoUpdateBounds(true);
-        // obj.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
 
         // center origin
         obj.setOriginAtCenter();

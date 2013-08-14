@@ -256,6 +256,30 @@ public class TextureManager {
     }
 
     /**
+     * Create a new general Texture with your own reload logic
+     * 
+     * @param text
+     * @param options
+     * @return
+     */
+    public Texture createDynamicTexture(final Runnable loadRunnable) {
+        Log.v(TAG, String.format("createDynamicTexture()"));
+
+        final Texture texture = new Texture(mGLState) {
+
+            @Override
+            public void reload() {
+                loadRunnable.run();
+            }
+        };
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
      * Add a new texture which created outside this manager
      * 
      * @param texture
@@ -320,4 +344,7 @@ public class TextureManager {
         mTextures.clear();
     }
 
+    public void update(final int deltaTime) {
+        // TODO
+    }
 }

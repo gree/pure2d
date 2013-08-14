@@ -169,7 +169,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         for (int i = 0; i < filenames.length; i++) {
 
             // create a temp texture for the image
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, false);
+            final AssetTexture texture = mGLState.getTextureManager().createAssetTexture(assetDir + "/" + filenames[i], options);
 
             // init the buffer based on the first texture
             if (i == 0) {
@@ -226,7 +226,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
 
         for (int i = 0; i < filenames.length; i++) {
             // load the texture asynchronously
-            final AssetTexture texture = new AssetTexture(mGLState, assetManager, assetDir + "/" + filenames[i], options, true); // async
+            final AssetTexture texture = mGLState.getTextureManager().createAssetTextureAsync(assetDir + "/" + filenames[i], options); // async
             // listen to it
             texture.setListener(mTextureListener);
 
@@ -257,7 +257,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         for (int i = 0; i < files.length; i++) {
 
             // create a temp texture for the image
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, false);
+            final FileTexture texture = mGLState.getTextureManager().createFileTexture(files[i].getAbsolutePath(), options);
 
             // init the buffer based on the first texture
             if (i == 0) {
@@ -311,7 +311,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
 
         for (int i = 0; i < files.length; i++) {
             // load the texture asynchronously
-            final FileTexture texture = new FileTexture(mGLState, files[i].getAbsolutePath(), options, true); // async
+            final FileTexture texture = mGLState.getTextureManager().createFileTextureAsync(files[i].getAbsolutePath(), options); // async
             // listen to it
             texture.setListener(mTextureListener);
 

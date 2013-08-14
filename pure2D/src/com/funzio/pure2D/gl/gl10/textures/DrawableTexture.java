@@ -22,14 +22,14 @@ public class DrawableTexture extends Texture {
     private Resources mResources;
     private boolean mIsAsync = false;
 
-    public DrawableTexture(final GLState glState, final Resources res, final int drawable, final TextureOptions options) {
+    protected DrawableTexture(final GLState glState, final Resources res, final int drawable, final TextureOptions options) {
         super(glState);
 
         mResources = res;
         load(drawable, options);
     }
 
-    public DrawableTexture(final GLState glState, final Resources res, final int drawable, final TextureOptions options, final boolean async) {
+    protected DrawableTexture(final GLState glState, final Resources res, final int drawable, final TextureOptions options, final boolean async) {
         super(glState);
 
         mResources = res;
