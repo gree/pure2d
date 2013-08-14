@@ -16,7 +16,7 @@ public class PathAnimator extends TweenAnimator {
     protected float mTotalLength;
 
     // current velocity
-    protected PointF mVelocity = new PointF();
+    protected final PointF mVelocity = new PointF();
     protected int mCurrentSegment = 0;
     protected boolean mSnapEnabled = false;
     protected int mNumSegments = 0;
@@ -180,6 +180,12 @@ public class PathAnimator extends TweenAnimator {
         super.onLoop();
 
         mCurrentSegment = 0;
+    }
+
+    public void dispose() {
+        mPoints = null;
+        mDx = mDy = null;
+        mSegments = null;
     }
 
 }
