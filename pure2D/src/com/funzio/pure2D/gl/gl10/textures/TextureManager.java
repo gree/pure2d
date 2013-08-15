@@ -75,7 +75,7 @@ public class TextureManager {
         mAssets = mResources.getAssets();
 
         // reset
-        reloadAllTextures();
+        reloadAllTextures(false);
     }
 
     public Resources getResources() {
@@ -316,7 +316,7 @@ public class TextureManager {
     /**
      * Can be used after the Surface reloaded.
      */
-    public void reloadAllTextures() {
+    public void reloadAllTextures(final boolean includeExpiredTextures) {
         Log.v(TAG, "reloadAllTextures()");
 
         // reload every texture
@@ -326,7 +326,11 @@ public class TextureManager {
             if (texture instanceof DrawableTexture) {
                 ((DrawableTexture) texture).setResources(mResources);
             }
-            texture.reload(mGLState);
+
+            // check for expired texture
+            if (includeExpiredTextures || !texture.isExpired()) {
+                texture.reload(mGLState);
+            }
         }
     }
 
@@ -339,8 +343,7 @@ public class TextureManager {
         final int len = mTextures.size();
         // unload all
         for (int i = 0; i < len; i++) {
-            Texture texture = mTextures.get(i);
-            texture.unload();
+            mTextures.get(i).unload();
         }
     }
 
@@ -359,14 +362,19 @@ public class TextureManager {
 
     public void update(final int deltaTime) {
         // negative check
-        if (mExpirationCheckInterval <= 0) {
-            return;
-        }
+        if (mExpirationCheckInterval > 0) {
 
-        mExpirationCheckElapsedTime += deltaTime;
-        if (mExpirationCheckElapsedTime >= mExpirationCheckInterval) {
-            // TODO check all textures' expiration
-            mExpirationCheckElapsedTime -= mExpirationCheckInterval;
+            mExpirationCheckElapsedTime += deltaTime;
+            if (mExpirationCheckElapsedTime >= mExpirationCheckInterval) {
+
+                // check every texture
+                final int len = mTextures.size();
+                for (int i = 0; i < len; i++) {
+                    mTextures.get(i).update(mExpirationCheckElapsedTime);
+                }
+
+                mExpirationCheckElapsedTime -= mExpirationCheckInterval;
+            }
         }
     }
 }
