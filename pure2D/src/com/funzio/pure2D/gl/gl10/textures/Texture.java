@@ -274,6 +274,7 @@ public abstract class Texture {
      * Set how long (in ms) of idle/inactive time before this Texture should be expired and unloaded automatically.
      * 
      * @param expirationTime
+     * @see TextureManager.#setExpirationCheckInterval(int)
      */
     public void setExpirationTime(final int expirationTime) {
         mExpirationTime = expirationTime;

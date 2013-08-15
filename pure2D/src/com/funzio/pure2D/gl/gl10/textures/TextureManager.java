@@ -54,10 +54,21 @@ public class TextureManager {
         return mGLState;
     }
 
+    /**
+     * Get the Expiration check interval (in ms)
+     * 
+     * @return
+     */
     public int getExpirationCheckInterval() {
         return mExpirationCheckInterval;
     }
 
+    /**
+     * Set how often (in ms) this Manager should check for all the Textures' expiration. By default, it doesn't check at all.
+     * 
+     * @param expirationCheckInterval
+     * @see Texture.#setExpirationTime(int)
+     */
     public void setExpirationCheckInterval(final int expirationCheckInterval) {
         mExpirationCheckInterval = expirationCheckInterval;
     }
@@ -360,6 +371,11 @@ public class TextureManager {
         mTextures.clear();
     }
 
+    /**
+     * For internal use only. Do NOT call!
+     * 
+     * @param deltaTime
+     */
     public void update(final int deltaTime) {
         // negative check
         if (mExpirationCheckInterval > 0) {
