@@ -32,7 +32,7 @@ public class TextureManager {
     protected AssetManager mAssets;
 
     // texture expiration
-    protected int mExpirationCheckInterval = DEFAULT_EXPIRATION_CHECK_INTERVAL;
+    protected int mExpirationCheckInterval = 0; // <= 0 means disabled
     protected int mExpirationCheckElapsedTime = 0;
 
     public TextureManager(final Scene scene, final Resources res) {
@@ -358,6 +358,11 @@ public class TextureManager {
     }
 
     public void update(final int deltaTime) {
+        // negative check
+        if (mExpirationCheckInterval <= 0) {
+            return;
+        }
+
         mExpirationCheckElapsedTime += deltaTime;
         if (mExpirationCheckElapsedTime >= mExpirationCheckInterval) {
             // TODO check all textures' expiration
