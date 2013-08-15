@@ -91,6 +91,10 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         return mAnimator;
     }
 
+    public Timeline getTimeline() {
+        return mTimeline;
+    }
+
     protected void createManipulators() {
         // emitting action for particles
         int size = mEmitterVO.particles.size();
