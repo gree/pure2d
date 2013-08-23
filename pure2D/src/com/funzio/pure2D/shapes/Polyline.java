@@ -14,6 +14,7 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
@@ -24,6 +25,7 @@ public class Polyline extends Shape {
     protected static final int VERTEX_POINTER_SIZE = 2; // xy
 
     protected PointF[] mPoints;
+    protected float[] mTextureCoords;
     protected float mNarrowAngle = (float) (Math.PI / 4);
     protected float mStroke1 = 1;
     protected float mStroke2 = 1;
@@ -35,6 +37,10 @@ public class Polyline extends Shape {
     protected int mVerticesNum = 0;
     protected float mTotalLength;
     protected Interpolator mStrokeInterpolator = null;
+
+    // texture caps
+    protected float mTextureCap1 = 0;
+    protected float mTextureCap2 = 0;
 
     public PointF[] getPoints() {
         return mPoints;
@@ -48,6 +54,7 @@ public class Polyline extends Shape {
 
         final float strokeDelta = mStroke2 - mStroke1;
         float dx, dy, segment = 0;
+        float firstAngle = 0;
         float angle0 = 0;
         float angle1 = 0;
         float angleDelta = 0;
@@ -68,6 +75,37 @@ public class Polyline extends Shape {
             mTotalLength += Math.sqrt(dx * dx + dy * dy);
         }
 
+        // texture fitting
+        int textureCoordIndex = 0;
+        float textureCoordOffset = 0;
+        float textureScale = 1;
+        if (mTexture != null) {
+            final int numCoords = (len + (mTextureCap1 > 0 ? 1 : 0) + (mTextureCap2 > 0 ? 1 : 0)) * 4;
+            if (mTextureCoords == null || mTextureCoords.length < numCoords) {
+                mTextureCoords = new float[numCoords];
+            }
+
+            // first point of the texture
+            mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = 0;
+            mTextureCoords[textureCoordIndex + 1] = 0;
+            mTextureCoords[textureCoordIndex + 3] = 1;
+            textureCoordIndex += 4;
+
+            // first cap
+            final float textureWidth = mTexture.getSize().x;
+            if (mTextureCap1 > 0) {
+                mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = textureCoordOffset = mTextureCap1 / textureWidth;
+                mTextureCoords[textureCoordIndex + 1] = 0;
+                mTextureCoords[textureCoordIndex + 3] = 1;
+                textureCoordIndex += 4;
+
+                // also offset the vertex index
+                vertexIndex += VERTEX_POINTER_SIZE * 2;
+            }
+
+            textureScale = 1 - (mTextureCap1 + mTextureCap2) / textureWidth;
+        }
+
         for (i = 0; i < len; i++) {
             currentPoint = points[i];
 
@@ -86,6 +124,17 @@ public class Polyline extends Shape {
                 }
 
                 angle1 = (float) Math.atan2(dy, dx);
+                if (i == 0) {
+                    firstAngle = angle1;
+                }
+
+                // texture fitting
+                if (mTexture != null) {
+                    mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = textureCoordOffset + textureScale * segment / mTotalLength;
+                    mTextureCoords[textureCoordIndex + 1] = 0;
+                    mTextureCoords[textureCoordIndex + 3] = 1;
+                    textureCoordIndex += 4;
+                }
             }
 
             r = stroke * 0.5f;
@@ -108,6 +157,7 @@ public class Polyline extends Shape {
             if (lastPoint != null) {
                 // check crossing lines
                 if (Line.linesIntersect(lastPoint.x, lastPoint.y, currentPoint.x, currentPoint.y, lastUX, lastUY, currentPoint.x + rx, currentPoint.y + ry)) {
+                    // invert
                     rx = -rx;
                     ry = -ry;
                 }
@@ -119,10 +169,45 @@ public class Polyline extends Shape {
             // lower point
             mVertices[vertexIndex + 2] = currentPoint.x - rx;
             mVertices[vertexIndex + 3] = currentPoint.y - ry;
+
             vertexIndex += VERTEX_POINTER_SIZE * 2;
 
             angle0 = angle1;
             lastPoint = currentPoint;
+        }
+
+        // texture fitting
+        if (mTexture != null) {
+            if (mTextureCap1 > 0) {
+                // prepend the first vertices
+                dx = mTextureCap1 * (float) Math.cos(firstAngle + Math.PI);
+                dy = mTextureCap1 * (float) Math.sin(firstAngle + Math.PI);
+                mVertices[0] = mVertices[4] + dx;
+                mVertices[1] = mVertices[5] + dy;
+                // lower point
+                mVertices[2] = mVertices[6] + dx;
+                mVertices[3] = mVertices[7] + dy;
+            }
+
+            // texture's end cap
+            if (mTextureCap2 > 0) {
+                // append the last texture coords
+                mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = 1;
+                mTextureCoords[textureCoordIndex + 1] = 0;
+                mTextureCoords[textureCoordIndex + 3] = 1;
+                textureCoordIndex += 4;
+
+                // append the last vertices
+                dx = mTextureCap2 * (float) Math.cos(angle1);
+                dy = mTextureCap2 * (float) Math.sin(angle1);
+                mVertices[vertexIndex] = mVertices[vertexIndex - 4] + dx;
+                mVertices[vertexIndex + 1] = mVertices[vertexIndex - 3] + dy;
+                // lower point
+                mVertices[vertexIndex + 2] = mVertices[vertexIndex - 2] + dx;
+                mVertices[vertexIndex + 3] = mVertices[vertexIndex - 1] + dy;
+            }
+
+            setTextureCoordBuffer(mTextureCoords);
         }
 
         if (mVertexBuffer == null) {
@@ -132,6 +217,27 @@ public class Polyline extends Shape {
         }
 
         invalidate(InvalidateFlags.VISUAL);
+    }
+
+    public void setTextureCaps(final float cap1, final float cap2) {
+        mTextureCap1 = cap1;
+        mTextureCap2 = cap2;
+
+        // to generate the texture coords
+        if (mTexture != null && mPoints != null && mPoints.length > 0) {
+            // allocate more/less points if necessary
+            setPoints(mPoints);
+        }
+    }
+
+    @Override
+    public void setTexture(final Texture texture) {
+        super.setTexture(texture);
+
+        // to generate the texture coords
+        if (mPoints != null && mPoints.length > 0) {
+            setPoints(mPoints);
+        }
     }
 
     @Override
@@ -145,6 +251,13 @@ public class Polyline extends Shape {
 
     protected void allocateVertices(final int numVertices, final int vertexSize) {
         mVerticesNum = numVertices; // each point has upper and lower points
+        if (mTextureCap1 > 0) {
+            mVerticesNum += 2;
+        }
+        if (mTextureCap2 > 0) {
+            mVerticesNum += 2;
+        }
+
         // NOTE: only re-allocate when the required size is bigger
         if (mVertices == null || mVerticesNum * vertexSize > mVertices.length) {
             mVertices = new float[mVerticesNum * vertexSize];
