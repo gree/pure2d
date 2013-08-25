@@ -211,11 +211,10 @@ public class Polyline extends Shape {
             // texture repeating?
             if (mTextureRepeating) {
                 final float sx = (mTotalLength + mTextureCap1 + mTextureCap2) / mTexture.getSize().x;
-                for (int n = 0; n < mTextureCoords.length; n++) {
+                final int pairs = mTextureCoords.length / 2;
+                for (int n = 0; n < pairs; n++) {
                     // apply to x only
-                    if (n % 2 == 0) {
-                        mTextureCoords[n] *= sx;
-                    }
+                    mTextureCoords[n * 2] *= sx;
                 }
             }
 
