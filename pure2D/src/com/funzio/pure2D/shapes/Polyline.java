@@ -41,6 +41,7 @@ public class Polyline extends Shape {
     // texture caps
     protected float mTextureCap1 = 0;
     protected float mTextureCap2 = 0;
+    protected boolean mTextureRepeating = false;
 
     public PointF[] getPoints() {
         return mPoints;
@@ -207,6 +208,17 @@ public class Polyline extends Shape {
                 mVertices[vertexIndex + 3] = mVertices[vertexIndex - 1] + dy;
             }
 
+            // texture repeating?
+            if (mTextureRepeating) {
+                final float sx = mTotalLength / mTexture.getSize().x;
+                for (int n = 0; n < mTextureCoords.length; n++) {
+                    // apply to x only
+                    if (n % 2 == 0) {
+                        mTextureCoords[n] *= sx;
+                    }
+                }
+            }
+
             setTextureCoordBuffer(mTextureCoords);
         }
 
@@ -219,6 +231,22 @@ public class Polyline extends Shape {
         invalidate(InvalidateFlags.VISUAL);
     }
 
+    @Override
+    public void setTexture(final Texture texture) {
+        super.setTexture(texture);
+
+        // to generate the texture coords
+        if (mPoints != null && mPoints.length > 0) {
+            setPoints(mPoints);
+        }
+    }
+
+    /**
+     * Set the beginning and end caps' widths. This works similarly as the 9-patch technique.
+     * 
+     * @param cap1
+     * @param cap2
+     */
     public void setTextureCaps(final float cap1, final float cap2) {
         mTextureCap1 = cap1;
         mTextureCap2 = cap2;
@@ -230,12 +258,17 @@ public class Polyline extends Shape {
         }
     }
 
-    @Override
-    public void setTexture(final Texture texture) {
-        super.setTexture(texture);
+    /**
+     * Repeat the texture to fill the body of this polyline
+     * 
+     * @param repeating
+     */
+    public void setTextureRepeating(final boolean repeating) {
+        mTextureRepeating = repeating;
 
         // to generate the texture coords
-        if (mPoints != null && mPoints.length > 0) {
+        if (mTexture != null && mPoints != null && mPoints.length > 0) {
+            // allocate more/less points if necessary
             setPoints(mPoints);
         }
     }
