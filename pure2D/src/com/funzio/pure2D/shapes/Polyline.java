@@ -210,7 +210,7 @@ public class Polyline extends Shape {
 
             // texture repeating?
             if (mTextureRepeating) {
-                final float sx = mTotalLength / mTexture.getSize().x;
+                final float sx = (mTotalLength + mTextureCap1 + mTextureCap2) / mTexture.getSize().x;
                 for (int n = 0; n < mTextureCoords.length; n++) {
                     // apply to x only
                     if (n % 2 == 0) {
@@ -412,6 +412,10 @@ public class Polyline extends Shape {
 
     public void setStrokeInterpolator(final Interpolator strokeInterpolator) {
         mStrokeInterpolator = strokeInterpolator;
+    }
+
+    public float getTotalLength() {
+        return mTotalLength;
     }
 
 }
