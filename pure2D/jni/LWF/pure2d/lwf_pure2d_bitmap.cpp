@@ -52,22 +52,20 @@ Pure2DRendererBitmapContext::Pure2DRendererBitmapContext(
 	m_vertices[2] = Vector2(x0, y0);
 	m_vertices[3] = Vector2(x0, y1);
 
-	float dw = 2.0f * tw;
-	float dh = 2.0f * th;
 	if (f.rotated == 0) {
-		float u0 = (float)(2 * u + 1) / dw;
-		float v0 = (float)(2 * v + 1) / dh;
-		float u1 = u0 + (float)(w * 2 - 2) / dw;
-		float v1 = v0 + (float)(h * 2 - 2) / dh;
+		float u0 = u / tw;
+		float v0 = v / th;
+		float u1 = (u + w) / tw;
+		float v1 = (v + h) / th;
 		m_coordinates[0] = Vector2(u1, v1);
 		m_coordinates[1] = Vector2(u1, v0);
 		m_coordinates[2] = Vector2(u0, v1);
 		m_coordinates[3] = Vector2(u0, v0);
 	} else {
-		float u0 = (float)(2 * u + 1) / dw;
-		float v0 = (float)(2 * v + 1) / dh;
-		float u1 = u0 + (float)(h * 2 - 2) / dw;
-		float v1 = v0 + (float)(w * 2 - 2) / dh;
+		float u0 = u / tw;
+		float v0 = v / th;
+		float u1 = (u + h) / tw;
+		float v1 = (v + w) / th;
 		m_coordinates[0] = Vector2(u0, v1);
 		m_coordinates[1] = Vector2(u1, v1);
 		m_coordinates[2] = Vector2(u0, v0);
