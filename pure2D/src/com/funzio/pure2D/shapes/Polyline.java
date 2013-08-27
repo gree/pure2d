@@ -25,6 +25,7 @@ public class Polyline extends Shape {
     protected static final int VERTEX_POINTER_SIZE = 2; // xy
 
     protected PointF[] mPoints;
+    protected int mNumPointsUsed = 0; // <= mPoints.length
     protected float[] mTextureCoords;
     protected float mNarrowAngle = (float) (Math.PI / 4);
     protected float mStroke1 = 1;
@@ -48,10 +49,15 @@ public class Polyline extends Shape {
     }
 
     public void setPoints(final PointF... points) {
-        mPoints = points;
-        final int len = mPoints.length;
+        setPoints(points.length, points);
+    }
 
-        allocateVertices(len * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
+    public void setPoints(final int numPoints, final PointF... points) {
+        // you don't have to use all the points
+        mNumPointsUsed = Math.min(numPoints, points.length); // <= mPoints.length
+        mPoints = points;
+
+        allocateVertices(mNumPointsUsed * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
 
         final float strokeDelta = mStroke2 - mStroke1;
         float dx, dy, segment = 0;
@@ -69,7 +75,7 @@ public class Polyline extends Shape {
 
         // find total segment
         mTotalLength = 0;
-        for (i = 0; i < len - 1; i++) {
+        for (i = 0; i < mNumPointsUsed - 1; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
 
@@ -81,7 +87,7 @@ public class Polyline extends Shape {
         float textureCoordOffset = 0;
         float textureScale = 1;
         if (mTexture != null) {
-            final int numCoords = (len + (mTextureCap1 > 0 ? 1 : 0) + (mTextureCap2 > 0 ? 1 : 0)) * 4;
+            final int numCoords = (mNumPointsUsed + (mTextureCap1 > 0 ? 1 : 0) + (mTextureCap2 > 0 ? 1 : 0)) * 4;
             if (mTextureCoords == null || mTextureCoords.length < numCoords) {
                 mTextureCoords = new float[numCoords];
             }
@@ -107,10 +113,10 @@ public class Polyline extends Shape {
             textureScale = 1 - (mTextureCap1 + mTextureCap2) / textureWidth;
         }
 
-        for (i = 0; i < len; i++) {
+        for (i = 0; i < mNumPointsUsed; i++) {
             currentPoint = points[i];
 
-            if (i < len - 1) {
+            if (i < mNumPointsUsed - 1) {
                 dx = points[i + 1].x - currentPoint.x;
                 dy = points[i + 1].y - currentPoint.y;
 
@@ -139,7 +145,7 @@ public class Polyline extends Shape {
             }
 
             r = stroke * 0.5f;
-            if (i == 0 || i == len - 1) {
+            if (i == 0 || i == mNumPointsUsed - 1) {
                 // beginning and closing cut
                 angleCut = angle1 + Pure2DUtils.PI_D2;
             } else {
@@ -235,7 +241,7 @@ public class Polyline extends Shape {
         super.setTexture(texture);
 
         // to generate the texture coords
-        if (mPoints != null && mPoints.length > 0) {
+        if (mPoints != null && mNumPointsUsed > 0) {
             setPoints(mPoints);
         }
     }
@@ -251,7 +257,7 @@ public class Polyline extends Shape {
         mTextureCap2 = cap2;
 
         // to generate the texture coords
-        if (mTexture != null && mPoints != null && mPoints.length > 0) {
+        if (mTexture != null && mPoints != null && mNumPointsUsed > 0) {
             // allocate more/less points if necessary
             setPoints(mPoints);
         }
@@ -266,7 +272,7 @@ public class Polyline extends Shape {
         mTextureRepeating = repeating;
 
         // to generate the texture coords
-        if (mTexture != null && mPoints != null && mPoints.length > 0) {
+        if (mTexture != null && mPoints != null && mNumPointsUsed > 0) {
             // allocate more/less points if necessary
             setPoints(mPoints);
         }
@@ -303,7 +309,7 @@ public class Polyline extends Shape {
         mStroke1 = stroke1;
         mStroke2 = stroke2;
 
-        if (mPoints != null && mPoints.length > 0) {
+        if (mPoints != null && mNumPointsUsed > 0) {
             setPoints(mPoints);
         }
     }
