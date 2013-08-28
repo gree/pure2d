@@ -167,6 +167,10 @@ public class LWFObject extends BaseDisplayObject implements Playable {
         return mLastAttachedLWF;
     }
 
+    public boolean loaded() {
+        return getLWF() != null;
+    }
+
     @Override
     public void dispose() {
         super.dispose();
