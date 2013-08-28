@@ -328,7 +328,7 @@ public class GLState {
         }
 
         // values check
-        if (buffer != null && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer)) {
+        if (buffer != null) { // && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer) // not correct for all cases
             mGL.glTexCoordPointer(2, GL10.GL_FLOAT, 0, buffer.mBuffer);
         }
 

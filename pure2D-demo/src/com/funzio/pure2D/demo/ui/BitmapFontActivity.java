@@ -34,7 +34,7 @@ public class BitmapFontActivity extends StageActivity {
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
     private PointF mTempPoint = new PointF();
-    private boolean mCacheEnabled = true;
+    private boolean mCacheEnabled = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {

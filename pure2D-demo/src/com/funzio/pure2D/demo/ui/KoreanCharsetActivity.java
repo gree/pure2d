@@ -3,10 +3,6 @@
  */
 package com.funzio.pure2D.demo.ui;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -45,7 +41,7 @@ public class KoreanCharsetActivity extends StageActivity {
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
     private PointF mTempPoint = new PointF();
-    private boolean mCacheEnabled = true;
+    private boolean mCacheEnabled = false;
 
     private String[] mSayings;
     private int mNumSayings;
@@ -100,23 +96,7 @@ public class KoreanCharsetActivity extends StageActivity {
         options.inTextPaint.setColor(Color.WHITE);
         options.inTextPaint.setTextSize(30f);
 
-        Set<Character> charset = new LinkedHashSet<Character>();
-        for (String s : mSayings) {
-            for (int i = 0; i < s.length(); i++) {
-                Character c = s.charAt(i);
-                if (!(c == Characters.SPACE || c == Characters.NEW_LINE)) {
-                    charset.add(c);
-                }
-            }
-        }
-
-        StringBuffer buffer = new StringBuffer(charset.size());
-        Iterator<Character> itr = charset.iterator();
-        while (itr.hasNext()) {
-            buffer.append(itr.next());
-        }
-
-        mBitmapFont = new BitmapFont(buffer.toString(), options);
+        mBitmapFont = new BitmapFont(Characters.getUniqueCharacters(mSayings), options);
         mBitmapFont.load(mScene.getGLState());
     }
 
