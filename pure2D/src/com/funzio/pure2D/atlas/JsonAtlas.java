@@ -165,7 +165,7 @@ public class JsonAtlas extends Atlas {
                             final int numFrames = subFrames.length();
                             for (int j = 0; j < numFrames; j++) {
                                 final int frameIndex = subFrames.getInt(j);
-                                if (frameIndex < totalFrames - 1) {
+                                if (frameIndex < totalFrames) {
                                     // Log.e(TAG, j + ": " + getFrame(frameIndex));
                                     newSet.addFrame(getFrame(frameIndex));
                                 }
