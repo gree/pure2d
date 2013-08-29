@@ -106,7 +106,7 @@ public class KoreanCharsetActivity extends StageActivity {
         // create object
         final BmfTextObject obj = new BmfTextObject();
         obj.setTextAlignment(Alignment.HORIZONTAL_CENTER);
-        obj.setCacheEnabled(mCacheEnabled); // for perf on large text
+        obj.setCacheEnabled(mCacheEnabled);
         obj.setBitmapFont(mBitmapFont);
         obj.setText(mSayings[RANDOM.nextInt(mNumSayings)]);
         obj.setColor(GLColor.WHITE);

@@ -110,13 +110,14 @@ public class BitmapFontActivity extends StageActivity {
         // create object
         final BmfTextObject obj = new BmfTextObject();
         obj.setTextAlignment(Alignment.HORIZONTAL_CENTER);
-        obj.setCacheEnabled(mCacheEnabled); // for perf on large text
+        obj.setCacheEnabled(mCacheEnabled);
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
         obj.setText("Hello World!\nHope you're listening...\n#" + RANDOM.nextInt(999999));
         obj.setColor(new GLColor(1, RANDOM.nextFloat(), RANDOM.nextFloat(), 1f));
         // obj.setAlpha(0.5f);
         // obj.setBlendFunc(BlendModes.SCREEN_FUNC);
+        // obj.setOriginAtCenter();
 
         // set positions
         obj.setPosition(mTempPoint);
@@ -131,7 +132,7 @@ public class BitmapFontActivity extends StageActivity {
         animator.setDuration(2000);
         // NOTE: it is NOT ideal to call updateTextBounds() manually
         obj.updateTextBounds();
-        // obj.setOriginAtCenter();
+
         animator.start(0, mTempPoint.y, mDisplaySize.x - obj.getWidth(), mTempPoint.y);
 
         return obj;

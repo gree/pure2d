@@ -71,6 +71,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAlphaTestEnabled = false;
 
     private boolean mHasOrigin = false;
+    private boolean mOriginAtCenter = false;
     private GLColor mBlendColor;
     private PointF mGlobalPosition;
 
@@ -465,11 +466,26 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mOrigin.y = y;
         mHasOrigin = mOrigin.x != 0 || mOrigin.y != 0;
 
+        // check center
+        if (mOriginAtCenter) {
+            if (x != mSize.x * 0.5f || y != mSize.y * 0.5f) {
+                // no longer center
+                mOriginAtCenter = false;
+            }
+        }
+
         invalidate(ORIGIN);
     }
 
     public void setOriginAtCenter() {
         setOrigin(mSize.x * 0.5f, mSize.y * 0.5f);
+
+        // flag
+        mOriginAtCenter = true;
+    }
+
+    public boolean isOriginAtCenter() {
+        return mOriginAtCenter;
     }
 
     public PointF getPivot() {
@@ -525,6 +541,12 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void setSize(final float w, final float h) {
         mSize.x = w;
         mSize.y = h;
+
+        if (mOriginAtCenter) {
+            // auto center
+            setOrigin(w * 0.5f, h * 0.5f);
+        }
+
         invalidate(SIZE);
     }
 

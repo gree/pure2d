@@ -58,14 +58,13 @@ public class HelloTextureActivity extends StageActivity {
 
         // create object
         Sprite obj = new Sprite();
+        // center origin
+        obj.setOriginAtCenter();
         if (mUseTexture) {
             obj.setTexture(mTexture);
         } else {
             obj.setSize(mTexture.getSize());
         }
-
-        // center origin
-        obj.setOriginAtCenter();
 
         // set positions
         obj.setPosition(mTempPoint.x, mTempPoint.y);
