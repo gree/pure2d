@@ -40,10 +40,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
 
     // clipping
-    private boolean mClippingEnabled = false;
-    private boolean mOriginalScissorEnabled = false;
-    private int[] mOriginalScissor;
-    private RectF mClipStageRect;
+    protected boolean mClippingEnabled = false;
+    protected boolean mOriginalScissorEnabled = false;
+    protected int[] mOriginalScissor;
+    protected RectF mClipStageRect;
 
     public DisplayGroup() {
         super();
@@ -129,6 +129,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 scene.globalToStage(mBounds, mClipStageRect);
             } else {
                 mClipStageRect.set(mBounds);
+            }
+
+            // check parent group
+            if (mParent instanceof DisplayGroup) {
+                final DisplayGroup parentGroup = (DisplayGroup) mParent;
+                if (parentGroup.mClippingEnabled) {
+                    mClipStageRect.intersect(parentGroup.mClipStageRect);
+                }
             }
 
             // set the new scissor rect, only take position and scale into account!
