@@ -49,6 +49,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
+
+        setPointsAt(0, 0);
     }
 
     @Override
@@ -145,8 +147,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     }
 
     @Override
-    public void setPoints(final PointF... points) {
-        super.setPoints(points);
+    protected void validateVertices() {
+        super.validateVertices();
 
         if (mTotalLength <= mMinLength) {
             // flag done

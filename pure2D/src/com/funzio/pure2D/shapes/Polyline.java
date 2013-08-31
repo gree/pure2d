@@ -8,7 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
-import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.geom.Line;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
@@ -44,11 +44,14 @@ public class Polyline extends Shape {
     protected float mTextureCap2 = 0;
     protected boolean mTextureRepeating = false;
 
+    // for texture animation
+    protected AtlasFrame mAtlasFrame;
+
     public PointF[] getPoints() {
         return mPoints;
     }
 
-    public void setPoints(final PointF... points) {
+    final public void setPoints(final PointF... points) {
         setPoints(points.length, points);
     }
 
@@ -56,6 +59,12 @@ public class Polyline extends Shape {
         // you don't have to use all the points
         mNumPointsUsed = Math.min(numPoints, points.length); // <= mPoints.length
         mPoints = points;
+
+        invalidate(VERTICES);
+    }
+
+    protected void validateVertices() {
+        final PointF[] points = mPoints;
 
         allocateVertices(mNumPointsUsed * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
 
@@ -86,22 +95,27 @@ public class Polyline extends Shape {
         int textureCoordIndex = 0;
         float textureCoordOffset = 0;
         float textureScale = 1;
+        float textureWidth = 0;
         if (mTexture != null) {
+            if (mAtlasFrame == null) {
+                textureWidth = mTexture.getSize().x;
+            } else {
+                textureWidth = mAtlasFrame.getSize().x;
+            }
             final int numCoords = (mNumPointsUsed + (mTextureCap1 > 0 ? 1 : 0) + (mTextureCap2 > 0 ? 1 : 0)) * 4;
             if (mTextureCoords == null || mTextureCoords.length < numCoords) {
                 mTextureCoords = new float[numCoords];
             }
 
             // first point of the texture
-            mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = 0;
+            mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = textureCoordOffset;
             mTextureCoords[textureCoordIndex + 1] = 0;
             mTextureCoords[textureCoordIndex + 3] = 1;
             textureCoordIndex += 4;
 
             // first cap
-            final float textureWidth = mTexture.getSize().x;
             if (mTextureCap1 > 0) {
-                mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = textureCoordOffset = mTextureCap1 / textureWidth;
+                textureCoordOffset += mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = mTextureCap1 / textureWidth;
                 mTextureCoords[textureCoordIndex + 1] = 0;
                 mTextureCoords[textureCoordIndex + 3] = 1;
                 textureCoordIndex += 4;
@@ -216,7 +230,7 @@ public class Polyline extends Shape {
 
             // texture repeating?
             if (mTextureRepeating) {
-                final float sx = (mTotalLength + mTextureCap1 + mTextureCap2) / mTexture.getSize().x;
+                final float sx = (mTotalLength + mTextureCap1 + mTextureCap2) / textureWidth;
                 final int pairs = mTextureCoords.length / 2;
                 for (int n = 0; n < pairs; n++) {
                     // apply to x only
@@ -224,6 +238,22 @@ public class Polyline extends Shape {
                 }
             }
 
+            // check atlas frame
+            if (mAtlasFrame != null) {
+                final float[] coords = mAtlasFrame.getTextureCoords();
+                final float ox = coords[0];
+                final float oy = coords[1];
+                final float w = coords[4] - ox;
+                final float h = coords[3] - oy;
+                final int pairs = mTextureCoords.length / 2;
+                int index = 0;
+                for (int t = 0; t < pairs; t++) {
+                    mTextureCoords[index] = ox + w * mTextureCoords[index];
+                    mTextureCoords[index + 1] = oy + h * mTextureCoords[index + 1];
+                    index += 2;
+                }
+
+            }
             setTextureCoordBuffer(mTextureCoords);
         }
 
@@ -233,17 +263,26 @@ public class Polyline extends Shape {
             mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
         }
 
-        invalidate(InvalidateFlags.VISUAL);
+        validate(VERTICES);
+    }
+
+    @Override
+    public boolean update(final int deltaTime) {
+        if ((mInvalidateFlags & VERTICES) > 0) {
+            if (mPoints != null && mNumPointsUsed > 0) {
+                // allocate more/less points if necessary
+                validateVertices();
+            }
+        }
+
+        return super.update(deltaTime);
     }
 
     @Override
     public void setTexture(final Texture texture) {
         super.setTexture(texture);
 
-        // to generate the texture coords
-        if (mPoints != null && mNumPointsUsed > 0) {
-            setPoints(mPoints);
-        }
+        invalidate(VERTICES);
     }
 
     /**
@@ -256,11 +295,7 @@ public class Polyline extends Shape {
         mTextureCap1 = cap1;
         mTextureCap2 = cap2;
 
-        // to generate the texture coords
-        if (mTexture != null && mPoints != null && mNumPointsUsed > 0) {
-            // allocate more/less points if necessary
-            setPoints(mPoints);
-        }
+        invalidate(VERTICES);
     }
 
     /**
@@ -271,11 +306,7 @@ public class Polyline extends Shape {
     public void setTextureRepeating(final boolean repeating) {
         mTextureRepeating = repeating;
 
-        // to generate the texture coords
-        if (mTexture != null && mPoints != null && mNumPointsUsed > 0) {
-            // allocate more/less points if necessary
-            setPoints(mPoints);
-        }
+        invalidate(VERTICES);
     }
 
     @Override
@@ -309,9 +340,7 @@ public class Polyline extends Shape {
         mStroke1 = stroke1;
         mStroke2 = stroke2;
 
-        if (mPoints != null && mNumPointsUsed > 0) {
-            setPoints(mPoints);
-        }
+        invalidate(VERTICES);
     }
 
     @Deprecated
@@ -421,6 +450,24 @@ public class Polyline extends Shape {
 
     public float getTotalLength() {
         return mTotalLength;
+    }
+
+    public void setAtlasFrame(final AtlasFrame frame) {
+        if (frame != null) {
+
+            // if there is a specific texture
+            final Texture frameTexture = frame.getTexture();
+            if (frameTexture != null) {
+                setTexture(frameTexture);
+            }
+        }
+
+        mAtlasFrame = frame;
+        invalidate(FRAME | VERTICES);
+    }
+
+    public AtlasFrame getAtlasFrame() {
+        return mAtlasFrame;
     }
 
 }
