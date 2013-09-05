@@ -48,15 +48,10 @@ public abstract class PlayableObject extends BaseDisplayObject implements Playab
                         mCurrentFrame %= mNumFrames;
                     }
                 } else if (mLoop == LOOP_REVERSE) {
-                    final int trips = (mAccumulatedFrames / mNumFrames);
-                    if (trips % 2 == 0) {
-                        // play forward
-                        if (mCurrentFrame >= mNumFrames) {
-                            mCurrentFrame %= mNumFrames;
-                        }
-                    } else {
-                        // play backward
-                        mCurrentFrame = mNumFrames - 1 - mAccumulatedFrames % mNumFrames;
+                    final int cycle = (mNumFrames - 1) * 2;
+                    mCurrentFrame = mAccumulatedFrames % cycle;
+                    if (mCurrentFrame >= mNumFrames) {
+                        mCurrentFrame = cycle - mCurrentFrame;
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
