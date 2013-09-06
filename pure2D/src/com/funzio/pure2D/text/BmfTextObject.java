@@ -175,7 +175,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
      */
     @Override
     public boolean draw(final GLState glState) {
-        if (mText == null || mLineWidths.size() == 0) {
+        if (mText == null || mText.length() == 0) {
             return false;
         }
 
