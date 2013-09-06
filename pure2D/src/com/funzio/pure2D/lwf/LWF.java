@@ -330,6 +330,9 @@ public class LWF {
     }
 
     protected void draw() {
+        if (LOG_ENABLED && !Thread.currentThread().getName().startsWith("GLThread")) {
+            Log.e(TAG, "LWF.draw() was called from " + Thread.currentThread().getName());
+        }
         if (mId < 0) {
             return;
         }
