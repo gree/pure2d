@@ -9,9 +9,10 @@ import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.QuadBuffer;
+import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
+import com.funzio.pure2D.gl.gl10.QuadMeshColorBuffer;
+import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
  * @author long
@@ -38,9 +39,9 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     protected float mTextureHeight = DEFAULT_PLOT_SIZE;
     protected float mTextureScaleX = 1, mTextureScaleY = 1;
 
-    protected QuadBuffer mQuadBuffer;
-    protected TextureCoordBuffer mTextureCoordBufferScaled;
-    protected boolean mTextureFlippedForAxis;
+    protected QuadMeshBuffer mMeshBuffer;
+    protected QuadMeshTextureCoordBuffer mTextureCoordBuffer;
+    protected QuadMeshColorBuffer mColorBuffer;
 
     protected float mAlpha1 = 1;
     protected float mAlpha2 = 1;
@@ -54,6 +55,8 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     public MotionTrailPlot(final DisplayObject target) {
         super();
 
+        mMeshBuffer = new QuadMeshBuffer(mNumPoints);
+
         // set default num points
         setNumPoints(mNumPoints);
 
@@ -61,7 +64,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
             setTarget(target);
         }
 
-        mQuadBuffer = new QuadBuffer();
     }
 
     /*
@@ -84,8 +86,12 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     }
 
     public void setAlphaRange(final float alpha1, final float alpha2) {
-        mAlpha = mAlpha1 = alpha1;
+        mAlpha1 = alpha1;
         mAlpha2 = alpha2;
+
+        if (mAlpha1 == mAlpha2) {
+            mAlpha = alpha1;
+        }
 
         invalidate(ALPHA);
     }
@@ -117,6 +123,8 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         if (mNumPoints > 0) {
             mPoints[0].set(x, y);
         }
+
+        invalidate(CHILDREN);
     }
 
     /*
@@ -128,6 +136,8 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         if (mNumPoints > 0) {
             mPoints[0].offset(dx, dy);
         }
+
+        invalidate(CHILDREN);
     }
 
     /*
@@ -148,7 +158,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                     p2 = mPoints[i - 1];
                     dx = p2.x - p1.x;
                     dy = p2.y - p1.y;
-                    if (mMinLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
+                    if (mMinLength == 0 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
                         // move toward the leading point
                         p1.x += dx * mMotionEasingX;
                         p1.y += dy * mMotionEasingY;
@@ -161,71 +171,136 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 // set the head
                 final PointF pos = mTarget.getPosition();
                 mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
+
+                // invalidate(CHILDREN);
             }
 
-            // apply
-            setPoints(mPoints);
+            // validate texture coords
+            if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
+
+                if (mTextureCoordBuffer == null) {
+                    mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(mNumPoints);
+                } else if (mTextureCoordBuffer.getNumCells() < mNumPoints) {
+                    mTextureCoordBuffer.setNumCells(mNumPoints);
+                }
+            }
+
+            // validate color
+            if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
+
+                if (mColorBuffer == null) {
+                    mColorBuffer = new QuadMeshColorBuffer(mNumPoints);
+                } else if (mColorBuffer.getNumCells() < mNumPoints) {
+                    mColorBuffer.setNumCells(mNumPoints);
+                }
+            }
+
+            // apply to the mesh
+            if (mMeshBuffer.getNumCells() < mNumPoints) {
+                mMeshBuffer.setNumCells(mNumPoints);
+            }
+            PointF point;
+            final float scaleStep = (mScale2 - mScale1) / mNumPoints;
+            float width = mTextureWidth, height = mTextureHeight, scale = mScale1;
+            final Scene scene = getScene();
+            final boolean flippedAxis = scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT;
+            final float alphaStep = (mAlpha2 - mAlpha1) / mNumPoints;
+            float alpha = mAlpha1;
+            // draw backward from tail to head
+            for (int i = 0; i < mNumPoints; i++) {
+                point = mPoints[i];
+
+                // scale interpolation
+                if (scaleStep != 0) {
+                    width = mTextureWidth * scale;
+                    height = mTextureWidth * scale;
+                    scale += scaleStep;
+                }
+                mMeshBuffer.setRectAt(mNumPoints - i - 1, point.x - width * 0.5f, point.y - height * 0.5f, width, height);
+
+                // make texture coords
+                if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
+                    // apply the coordinates
+                    if (flippedAxis) {
+                        mTextureCoordBuffer.setRectFlipVerticalAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
+                    } else {
+                        mTextureCoordBuffer.setRectAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
+                    }
+                }
+
+                // make colors
+                if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
+                    // alpha interpolation
+                    mColorBuffer.setAlphaAt(mNumPoints - i - 1, alpha);
+                    alpha += alphaStep;
+                }
+            }
+
+            // apply values to the vertex buffer
+            mMeshBuffer.setIndicesNumUsed(mNumPoints * QuadMeshBuffer.NUM_INDICES_PER_CELL);
+            mMeshBuffer.validate();
+
+            // apply coords
+            if (mTexture != null && mTextureCoordBuffer != null) {
+                mTextureCoordBuffer.validate();
+            }
+
+            // apply colors
+            if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
+                mColorBuffer.validate();
+            }
         }
 
         return super.update(deltaTime);
     }
 
     @Override
-    protected boolean drawChildren(final GLState glState) {
-        if ((mInvalidateFlags & TEXTURE_COORDS) != 0) {
-            validateTextureCoordBuffer();
-        }
+    public boolean draw(final GLState glState) {
+        drawStart(glState);
 
         // blend mode
         glState.setBlendFunc(getInheritedBlendFunc());
         // color and alpha
         glState.setColor(getInheritedColor());
 
+        // draw the content
+        drawChildren(glState);
+
+        // wrap up
+        drawEnd(glState);
+
+        // validate visual only
+        mInvalidateFlags &= ~(VISUAL | CHILDREN);
+
+        return true;
+    }
+
+    @Override
+    protected boolean drawChildren(final GLState glState) {
+
+        // color buffer
+        if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
+            // apply color buffer
+            mColorBuffer.apply(glState);
+        } else {
+            glState.setColorArrayEnabled(false);
+        }
+
         // texture
         if (mTexture != null) {
             // bind the texture
             mTexture.bind();
-
-            // apply the coordinates
-            if (mTextureCoordBufferScaled != null) {
-                mTextureCoordBufferScaled.apply(glState);
-            }
         } else {
             // unbind the texture
             glState.unbindTexture();
         }
 
-        PointF point;
-        final float alphaStep = (mAlpha2 - mAlpha1) / mNumPoints;
-        mAlpha = mAlpha2;
-        final float scaleStep = (mScale2 - mScale1) / mNumPoints;
-        float width = mTextureWidth, height = mTextureHeight, scale = mScale2;
-        // draw backward from tail to head
-        for (int i = mNumPoints - 1; i >= 0; i--) {
-            point = mPoints[i];
-
-            // alpha interpolation. This can be slow!
-            if (alphaStep != 0) {
-                mAlpha -= alphaStep;
-                glState.setColor(getInheritedColor());
-            }
-
-            // scale interpolation
-            if (scaleStep != 0) {
-                width = mTextureWidth * scale;
-                height = mTextureWidth * scale;
-                scale -= scaleStep;
-            }
-
-            if (mAlpha > 0) {
-                // set position and size
-                mQuadBuffer.setRect(point.x - width * 0.5f, point.y - height * 0.5f, width, height);
-                // draw
-                mQuadBuffer.draw(glState);
-
-                // GLES11Ext.glDrawTexfOES(point.x - width * 0.5f, point.y - height * 0.5f, 0, width, height);
-            }
+        if (mTexture != null && mTextureCoordBuffer != null) {
+            mTextureCoordBuffer.apply(glState);
         }
+
+        // draw
+        mMeshBuffer.draw(glState);
 
         return mNumPoints > 0;
     }
@@ -247,39 +322,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         invalidate(TEXTURE | TEXTURE_COORDS);
     }
 
-    /**
-     * validate texture coords
-     */
-    protected void validateTextureCoordBuffer() {
-        if (mTextureCoordBufferScaled == null) {
-            mTextureCoordBufferScaled = TextureCoordBuffer.getDefault();
-            mTextureFlippedForAxis = false;
-        }
-
-        // match texture coordinates with the Axis system
-        final Scene scene = getScene();
-        if (scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
-            // flip vertically
-            mTextureCoordBufferScaled.flipVertical();
-            mTextureFlippedForAxis = true;
-        }
-
-        // scale to match with the Texture scale, for optimization
-        if (mTexture != null) {
-            // diff check
-            if ((mTexture.mCoordScaleX != mTextureScaleX || mTexture.mCoordScaleY != mTextureScaleY)) {
-                // apply scale
-                mTextureCoordBufferScaled.scale(mTexture.mCoordScaleX / mTextureScaleX, mTexture.mCoordScaleY / mTextureScaleY);
-                // store for ref
-                mTextureScaleX = mTexture.mCoordScaleX;
-                mTextureScaleY = mTexture.mCoordScaleY;
-            }
-        }
-
-        // clear flag: texture coords
-        validate(TEXTURE_COORDS);
-    }
-
     public PointF[] getPoints() {
         return mPoints;
     }
@@ -287,7 +329,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     public void setPoints(final PointF... points) {
         mPoints = points;
 
-        invalidate(VISUAL);
+        invalidate(CHILDREN);
     }
 
     public int getNumPoints() {
@@ -316,6 +358,8 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
             // find the
             mSegmentLength = mMinLength / (numPoints - 1);
+
+            invalidate(CHILDREN);
         }
     }
 
@@ -402,10 +446,20 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
         mPoints = null;
 
-        mQuadBuffer.dispose();
-        mQuadBuffer = null;
+        if (mMeshBuffer != null) {
+            mMeshBuffer.dispose();
+            mMeshBuffer = null;
+        }
 
-        mTextureCoordBufferScaled.dispose();
-        mTextureCoordBufferScaled = null;
+        if (mTextureCoordBuffer != null) {
+            mTextureCoordBuffer.dispose();
+            mTextureCoordBuffer = null;
+        }
+
+        if (mColorBuffer != null) {
+            mColorBuffer.dispose();
+            mColorBuffer = null;
+        }
+
     }
 }

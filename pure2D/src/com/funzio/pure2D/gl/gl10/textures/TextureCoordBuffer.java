@@ -48,7 +48,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
         return mValues;
     }
 
-    public void setRect(final float x, final float y, final float width, final float height) {
+    public void setRectFlipVertical(final float x, final float y, final float width, final float height) {
         if (mValues == null || mValues.length < 8) {
             mValues = new float[8];
         }
