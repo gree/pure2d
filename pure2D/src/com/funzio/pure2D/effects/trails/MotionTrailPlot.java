@@ -33,6 +33,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
     protected Object mData;
+    private boolean mFollowingHead = false;
 
     protected Texture mTexture;
     protected float mTextureWidth = DEFAULT_PLOT_SIZE;
@@ -121,7 +122,13 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     @Override
     public void setPosition(final float x, final float y) {
         if (mNumPoints > 0) {
-            mPoints[0].set(x, y);
+            if (!mPoints[0].equals(x, y)) {
+
+                mPoints[0].set(x, y);
+
+                // flag
+                mFollowingHead = true;
+            }
         }
 
         invalidate(CHILDREN);
@@ -135,6 +142,9 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
             mPoints[0].offset(dx, dy);
+
+            // flag
+            mFollowingHead = true;
         }
 
         invalidate(CHILDREN);
@@ -148,106 +158,118 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     public boolean update(final int deltaTime) {
         if (mNumPoints > 0) {
 
-            // calculate time loop for consistency with different framerate
-            final int loop = deltaTime / Scene.DEFAULT_MSPF;
-            PointF p1, p2;
-            float dx, dy;
-            for (int n = 0; n < loop; n++) {
-                for (int i = mNumPoints - 1; i > 0; i--) {
-                    p1 = mPoints[i];
-                    p2 = mPoints[i - 1];
-                    dx = p2.x - p1.x;
-                    dy = p2.y - p1.y;
-                    if (mMinLength == 0 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
-                        // move toward the leading point
-                        p1.x += dx * mMotionEasingX;
-                        p1.y += dy * mMotionEasingY;
+            if (!mFollowingHead && mTarget != null) {
+                final PointF p1 = mTarget.getPosition();
+                final float dx = p1.x - (mPoints[0].x - mTargetOffset.x);
+                final float dy = p1.y - (mPoints[0].y - mTargetOffset.y);
+                if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
+                    // flag
+                    mFollowingHead = true;
+                }
+            }
+
+            if (mFollowingHead) {
+
+                // calculate time loop for consistency with different framerate
+                final int loop = deltaTime / Scene.DEFAULT_MSPF;
+                PointF p1, p2;
+                float dx, dy;
+                for (int n = 0; n < loop; n++) {
+                    for (int i = mNumPoints - 1; i > 0; i--) {
+                        p1 = mPoints[i];
+                        p2 = mPoints[i - 1];
+                        dx = p2.x - p1.x;
+                        dy = p2.y - p1.y;
+                        if (mMinLength == 0 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
+                            // move toward the leading point
+                            p1.x += dx * mMotionEasingX;
+                            p1.y += dy * mMotionEasingY;
+                        }
                     }
                 }
-            }
 
-            // follow the target
-            if (mTarget != null) {
-                // set the head
-                final PointF pos = mTarget.getPosition();
-                mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
-
-                // invalidate(CHILDREN);
-            }
-
-            // validate texture coords
-            if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
-
-                if (mTextureCoordBuffer == null) {
-                    mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(mNumPoints);
-                } else if (mTextureCoordBuffer.getNumCells() < mNumPoints) {
-                    mTextureCoordBuffer.setNumCells(mNumPoints);
+                // follow the target
+                if (mTarget != null) {
+                    // set the head
+                    final PointF pos = mTarget.getPosition();
+                    mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
                 }
-            }
 
-            // validate color
-            if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
-
-                if (mColorBuffer == null) {
-                    mColorBuffer = new QuadMeshColorBuffer(mNumPoints);
-                } else if (mColorBuffer.getNumCells() < mNumPoints) {
-                    mColorBuffer.setNumCells(mNumPoints);
-                }
-            }
-
-            // apply to the mesh
-            if (mMeshBuffer.getNumCells() < mNumPoints) {
-                mMeshBuffer.setNumCells(mNumPoints);
-            }
-            PointF point;
-            final float scaleStep = (mScale2 - mScale1) / mNumPoints;
-            float width = mTextureWidth, height = mTextureHeight, scale = mScale1;
-            final Scene scene = getScene();
-            final boolean flippedAxis = scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT;
-            final float alphaStep = (mAlpha2 - mAlpha1) / mNumPoints;
-            float alpha = mAlpha1;
-            // draw backward from tail to head
-            for (int i = 0; i < mNumPoints; i++) {
-                point = mPoints[i];
-
-                // scale interpolation
-                if (scaleStep != 0) {
-                    width = mTextureWidth * scale;
-                    height = mTextureWidth * scale;
-                    scale += scaleStep;
-                }
-                mMeshBuffer.setRectAt(mNumPoints - i - 1, point.x - width * 0.5f, point.y - height * 0.5f, width, height);
-
-                // make texture coords
+                // validate texture coords
                 if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
-                    // apply the coordinates
-                    if (flippedAxis) {
-                        mTextureCoordBuffer.setRectFlipVerticalAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
-                    } else {
-                        mTextureCoordBuffer.setRectAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
+
+                    if (mTextureCoordBuffer == null) {
+                        mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(mNumPoints);
+                    } else if (mTextureCoordBuffer.getNumCells() < mNumPoints) {
+                        mTextureCoordBuffer.setNumCells(mNumPoints);
                     }
                 }
 
-                // make colors
+                // validate color
                 if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
-                    // alpha interpolation
-                    mColorBuffer.setAlphaAt(mNumPoints - i - 1, alpha);
-                    alpha += alphaStep;
+
+                    if (mColorBuffer == null) {
+                        mColorBuffer = new QuadMeshColorBuffer(mNumPoints);
+                    } else if (mColorBuffer.getNumCells() < mNumPoints) {
+                        mColorBuffer.setNumCells(mNumPoints);
+                    }
                 }
-            }
 
-            // apply values to the vertex buffer
-            mMeshBuffer.setIndicesNumUsed(mNumPoints * QuadMeshBuffer.NUM_INDICES_PER_CELL);
-            mMeshBuffer.validate();
+                // apply to the mesh
+                if (mMeshBuffer.getNumCells() < mNumPoints) {
+                    mMeshBuffer.setNumCells(mNumPoints);
+                }
+                PointF point;
+                final float scaleStep = (mScale2 - mScale1) / mNumPoints;
+                float width = mTextureWidth, height = mTextureHeight, scale = mScale1;
+                final Scene scene = getScene();
+                final boolean flippedAxis = scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT;
+                final float alphaStep = (mAlpha2 - mAlpha1) / mNumPoints;
+                float alpha = mAlpha1;
+                // draw backward from tail to head
+                for (int i = 0; i < mNumPoints; i++) {
+                    point = mPoints[i];
 
-            // apply coords
-            if (mTexture != null && mTextureCoordBuffer != null) {
-                mTextureCoordBuffer.validate();
-            }
+                    // scale interpolation
+                    if (scaleStep != 0) {
+                        width = mTextureWidth * scale;
+                        height = mTextureWidth * scale;
+                        scale += scaleStep;
+                    }
+                    mMeshBuffer.setRectAt(mNumPoints - i - 1, point.x - width * 0.5f, point.y - height * 0.5f, width, height);
 
-            // apply colors
-            if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
-                mColorBuffer.validate();
+                    // make texture coords
+                    if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
+                        // apply the coordinates
+                        if (flippedAxis) {
+                            mTextureCoordBuffer.setRectFlipVerticalAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
+                        } else {
+                            mTextureCoordBuffer.setRectAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
+                        }
+                    }
+
+                    // make colors
+                    if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
+                        // alpha interpolation
+                        mColorBuffer.setAlphaAt(mNumPoints - i - 1, alpha);
+                        alpha += alphaStep;
+                    }
+                }
+
+                // apply values to the vertex buffer
+                mMeshBuffer.setIndicesNumUsed(mNumPoints * QuadMeshBuffer.NUM_INDICES_PER_CELL);
+                mMeshBuffer.validate();
+
+                // apply coords
+                if (mTexture != null && mTextureCoordBuffer != null) {
+                    mTextureCoordBuffer.validate();
+                }
+
+                // apply colors
+                if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
+                    mColorBuffer.validate();
+                }
+
             }
         }
 
@@ -256,51 +278,42 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
     @Override
     public boolean draw(final GLState glState) {
-        drawStart(glState);
-
-        // blend mode
-        glState.setBlendFunc(getInheritedBlendFunc());
-        // color and alpha
-        glState.setColor(getInheritedColor());
-
-        // draw the content
-        drawChildren(glState);
-
-        // wrap up
-        drawEnd(glState);
+        super.draw(glState);
 
         // validate visual only
         mInvalidateFlags &= ~(VISUAL | CHILDREN);
 
-        return true;
+        return mNumPoints > 0;
     }
 
     @Override
     protected boolean drawChildren(final GLState glState) {
 
-        // color buffer
-        if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
-            // apply color buffer
-            mColorBuffer.apply(glState);
-        } else {
-            glState.setColorArrayEnabled(false);
-        }
+        if (mNumPoints > 0) {
+            // color buffer
+            if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
+                // apply color buffer
+                mColorBuffer.apply(glState);
+            } else {
+                glState.setColorArrayEnabled(false);
+            }
 
-        // texture
-        if (mTexture != null) {
-            // bind the texture
-            mTexture.bind();
-        } else {
-            // unbind the texture
-            glState.unbindTexture();
-        }
+            // texture
+            if (mTexture != null) {
+                // bind the texture
+                mTexture.bind();
+            } else {
+                // unbind the texture
+                glState.unbindTexture();
+            }
 
-        if (mTexture != null && mTextureCoordBuffer != null) {
-            mTextureCoordBuffer.apply(glState);
-        }
+            if (mTexture != null && mTextureCoordBuffer != null) {
+                mTextureCoordBuffer.apply(glState);
+            }
 
-        // draw
-        mMeshBuffer.draw(glState);
+            // draw
+            mMeshBuffer.draw(glState);
+        }
 
         return mNumPoints > 0;
     }
@@ -339,7 +352,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     public void setNumPoints(final int numPoints) {
         mNumPoints = numPoints;
 
-        if (numPoints < 2) {
+        if (numPoints < 1) {
             mPoints = null;
             return;
         }
@@ -356,8 +369,11 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 }
             }
 
-            // find the
-            mSegmentLength = mMinLength / (numPoints - 1);
+            // find the length
+            mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
+
+            // optimize
+            mFollowingHead = false;
 
             invalidate(CHILDREN);
         }

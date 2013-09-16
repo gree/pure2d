@@ -81,7 +81,7 @@ public class MotionTrailPlotActivity extends StageActivity {
         // trail.setAlpha(0.5f);
         // trail.setColor(new GLColor(1, 0, 0, 1f));
         trail.setScaleRange(1f, 0.25f);
-        trail.setNumPoints(20);
+        trail.setNumPoints(10);
         // trail.setMinLength(400);
         trail.setTarget(obj);
         mScene.addChild(trail);

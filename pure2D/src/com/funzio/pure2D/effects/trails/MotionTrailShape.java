@@ -181,7 +181,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
             }
 
             // find the length
-            mSegmentLength = mMinLength / (numPoints - 1);
+            mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
 
             // optimize
             mTotalLength = 0;
