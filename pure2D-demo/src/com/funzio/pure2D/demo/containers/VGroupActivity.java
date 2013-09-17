@@ -3,8 +3,6 @@ package com.funzio.pure2D.demo.containers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +12,7 @@ import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.containers.VGroup;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
@@ -39,12 +38,15 @@ public class VGroupActivity extends StageActivity {
         mScene.setListener(new BaseScene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTextures();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
 
-                // generate a lot of squares
-                addGroup(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                    // load the textures
+                    loadTextures();
+
+                    // generate a lot of squares
+                    addGroup(mRandom.nextInt(mDisplaySize.x), mRandom.nextInt(mDisplaySize.y));
+                }
             }
         });
     }
@@ -67,6 +69,7 @@ public class VGroupActivity extends StageActivity {
         mContainer.setGap(50);
         mContainer.setSize(200, mDisplaySize.y);
         mContainer.setSwipeEnabled(true);
+        mContainer.setCacheEnabled(true);
 
         // mContainer.setClippingEnabled(true);
         // mContainer.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);

@@ -20,13 +20,13 @@ public class FileTexture extends Texture {
     private TextureOptions mOptions;
     private boolean mIsAsync = false;
 
-    public FileTexture(final GLState glState, final String filePath, final TextureOptions options) {
+    protected FileTexture(final GLState glState, final String filePath, final TextureOptions options) {
         super(glState);
 
         load(filePath, options);
     }
 
-    public FileTexture(final GLState glState, final String filePath, final TextureOptions options, final boolean async) {
+    protected FileTexture(final GLState glState, final String filePath, final TextureOptions options, final boolean async) {
         super(glState);
 
         if (async) {

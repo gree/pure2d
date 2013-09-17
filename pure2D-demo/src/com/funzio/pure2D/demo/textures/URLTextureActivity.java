@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.textures;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -10,6 +8,7 @@ import android.view.View;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 public class URLTextureActivity extends StageActivity {
@@ -24,16 +23,17 @@ public class URLTextureActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTexture(new Texture.Listener() {
-                    @Override
-                    public void onTextureLoad(final Texture texture) {
-                        // create first obj
-                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                    }
-                });
-
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTexture(new Texture.Listener() {
+                        @Override
+                        public void onTextureLoad(final Texture texture) {
+                            // create first obj
+                            addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                        }
+                    });
+                }
             }
         });
     }

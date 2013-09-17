@@ -17,7 +17,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
-        android:checked="true"
+        android:checked="false"
         android:onClick="onClickCache"
         android:text="@string/cache" />
 

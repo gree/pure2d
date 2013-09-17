@@ -204,12 +204,6 @@ public class BaseScene implements Scene {
             Pure2D.initGLProperties(gl);
         }
 
-        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
-        mDownTime = 0;
-        mFrameCount = 0;
-        mCurrentFps = 0;
-        mFrameCountDuration = 0;
-
         // Set the background color to black ( rgba ).
         gl.glClearColor(mColor.r, mColor.g, mColor.b, mColor.a);
         // Enable Smooth Shading, default not really needed.
@@ -256,28 +250,44 @@ public class BaseScene implements Scene {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
         // unload the textures on the old GL
-        if (mTextureManager != null) {
-            mTextureManager.unloadAllTextures();
-        }
+        // if (mTextureManager != null) {
+        // mTextureManager.unloadAllTextures();
+        // }
 
         // init GL state
-        mGLState = new GLState(gl, mStage);
-        mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
-        mGLState.setCamera(mCamera);
+        boolean firstTime;
+        if (mGLState == null) {
+            mGLState = new GLState(gl, mStage);
+            mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
+            mGLState.setCamera(mCamera);
 
-        // init Texture manager with the new GL
-        if (mTextureManager == null) {
+            // init Texture manager with the new GL
             mTextureManager = createDefaultTextureManager();
             // assign to GLState
             mGLState.setTextureManager(mTextureManager);
+
+            mStartTime = SystemClock.elapsedRealtime();
+            mDownTime = 0;
+            mFrameCount = 0;
+            mCurrentFps = 0;
+            mFrameCountDuration = 0;
+            firstTime = true;
         } else {
+            // reload with new gl
+            mGLState.reset(gl);
+            // reload all textures
             mTextureManager.reload(mGLState, mStage.getResources());
+
+            // simulate surface changed
+            onSurfaceChanged(gl, (int) mSize.x, (int) mSize.y);
+            firstTime = false;
         }
 
         // callback
         if (mListener != null) {
-            mListener.onSurfaceCreated(gl);
+            mListener.onSurfaceCreated(mGLState, firstTime);
         }
+
     }
 
     /*
@@ -302,79 +312,95 @@ public class BaseScene implements Scene {
         gl.glLoadIdentity();
     }
 
+    @Override
+    public void onSurfacePaused() {
+        Log.v(TAG, "onSurfacePaused()");
+    }
+
+    @Override
+    public void onSurfaceResumed() {
+        Log.v(TAG, "onSurfaceResumed()");
+    }
+
     /*
      * (non-Javadoc)
      * @see android.opengl.GLSurfaceView.Renderer#onDrawFrame(javax.microedition.khronos.opengles.GL10)
      */
     @Override
     public void onDrawFrame(final GL10 gl) {
-        // pause check
-        if (mPaused) {
+        // state check
+        if (mGLState == null) {
             return;
         }
-
-        // delta time
-        final long now = SystemClock.elapsedRealtime(); // System.nanoTime();
-        // final float delta = ((now - mStartTime) / 1000000f);
-        final long delta = now - mStartTime;
         DisplayObject child;
 
-        if (delta == 0) {
-            // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
-            // We need to force invalidate!
-            invalidate();
-        } else {
-            mStartTime = now;
+        // pause check
+        if (!mPaused) {
+            // delta time
+            final long now = SystemClock.elapsedRealtime();
+            // final float delta = ((now - mStartTime) / 1000000f);
+            final long delta = now - mStartTime;
 
-            int sleepTime = 0;
-            // compensate the framerate around the target fps
-            if (mTargetFps > 0) {
-                float targetDelta = (mTargetDuration - delta);
-                if (targetDelta > 0) { // too fast?
-                    if (mDownTime > targetDelta) {
-                        mDownTime -= targetDelta;
-                    } else {
-                        sleepTime = (int) targetDelta - mDownTime;
-                        mDownTime = 0;
-                        if (sleepTime > mTargetDurationJitter) {
-                            try {
-                                Thread.sleep(sleepTime);
-                            } catch (Exception e) {
-                                // TODO: nothing
-                            }
-                        } else {
-                            sleepTime = 0;
-                        }
-                    }
-                } else if (targetDelta < 0) { // too slow?
-                    mDownTime -= targetDelta;
-                }
-            }
-
-            // calculate frame rate
-            mFrameCountDuration += delta + sleepTime;
-            if (mFrameCountDuration <= 1000) {
-                mFrameCount++;
+            if (delta == 0) {
+                // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
+                // We need to force invalidate!
+                invalidate();
             } else {
-                mCurrentFps = mFrameCount;
-                mFrameCount = 0;
-                mFrameCountDuration = 0;
-            }
+                mStartTime = now;
 
-            // camera update
-            if (mCamera != null) {
-                // update the camera
-                mCamera.update((int) delta);
-            }
+                int sleepTime = 0;
+                // compensate the framerate around the target fps
+                if (mTargetFps > 0) {
+                    float targetDelta = (mTargetDuration - delta);
+                    if (targetDelta > 0) { // too fast?
+                        if (mDownTime > targetDelta) {
+                            mDownTime -= targetDelta;
+                        } else {
+                            sleepTime = (int) targetDelta - mDownTime;
+                            mDownTime = 0;
+                            if (sleepTime > mTargetDurationJitter) {
+                                try {
+                                    Thread.sleep(sleepTime);
+                                } catch (Exception e) {
+                                    // TODO: nothing
+                                }
+                            } else {
+                                sleepTime = 0;
+                            }
+                        }
+                    } else if (targetDelta < 0) { // too slow?
+                        mDownTime -= targetDelta;
+                    }
+                }
 
-            // update children
-            for (int i = 0; i < mNumChildren; i++) {
-                child = mChildren.get(i);
-                if (child.isAlive()) {
-                    // heart beat
-                    child.update((int) delta);
+                // calculate frame rate
+                mFrameCountDuration += delta + sleepTime;
+                if (mFrameCountDuration <= 1000) {
+                    mFrameCount++;
+                } else {
+                    mCurrentFps = mFrameCount;
+                    mFrameCount = 0;
+                    mFrameCountDuration = 0;
+                }
+
+                // camera update
+                if (mCamera != null) {
+                    // update the camera
+                    mCamera.update((int) delta);
+                }
+
+                // update children
+                for (int i = 0; i < mNumChildren; i++) {
+                    child = mChildren.get(i);
+                    if (child.isAlive()) {
+                        // heart beat
+                        child.update((int) delta);
+                    }
                 }
             }
+
+            // update texture manager
+            mTextureManager.update((int) delta);
         }
 
         // draw children if needed
@@ -430,7 +456,10 @@ public class BaseScene implements Scene {
                 }
             }
 
-            // validated
+            // validate state
+            // mGLState.validate();
+
+            // validate scene
             mInvalidated--;
         }
     }
@@ -449,7 +478,7 @@ public class BaseScene implements Scene {
         }
 
         mPaused = false;
-        mStartTime = SystemClock.elapsedRealtime(); // System.nanoTime();
+        mStartTime = SystemClock.elapsedRealtime();
     }
 
     public boolean isPaused() {

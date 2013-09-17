@@ -1,34 +1,15 @@
 package com.funzio.pure2D.demo.casino;
 
-import javax.microedition.khronos.opengles.GL10;
-
-import jp.gree.casino.machine.SlotMachine;
 import jp.gree.casino.scene.CasinoScene;
 
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
-import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 
 public class SlotMachineActivity extends StageActivity {
-    private SlotMachine mMachine;
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // need to get the GL reference first
-        mScene.setListener(new Scene.Listener() {
-
-            @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                createMachine();
-            }
-        });
-    }
+    private CasinoScene mCasinoScene;
 
     @Override
     protected int getNumObjects() {
@@ -41,14 +22,7 @@ public class SlotMachineActivity extends StageActivity {
      */
     @Override
     protected BaseScene createScene() {
-        return new CasinoScene();
-    }
-
-    private void createMachine() {
-        mMachine = new SlotMachine((CasinoScene) mScene, 5);
-
-        // add to scene
-        mScene.addChild(mMachine);
+        return mCasinoScene = new CasinoScene();
     }
 
     @Override
@@ -56,8 +30,8 @@ public class SlotMachineActivity extends StageActivity {
         final int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            if (mMachine != null) {
-                mMachine.spin();
+            if (mCasinoScene.getMachine() != null) {
+                mCasinoScene.getMachine().spin();
             }
         }
 

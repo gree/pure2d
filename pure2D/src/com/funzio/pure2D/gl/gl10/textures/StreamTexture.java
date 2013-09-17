@@ -17,13 +17,13 @@ public class StreamTexture extends Texture {
     private TextureOptions mOptions;
     private InputStream mStream;
 
-    public StreamTexture(final GLState glState, final InputStream stream, final TextureOptions options) {
+    protected StreamTexture(final GLState glState, final InputStream stream, final TextureOptions options) {
         super(glState);
 
         load(stream, options);
     }
 
-    public void load(final InputStream stream, final TextureOptions options) {
+    protected void load(final InputStream stream, final TextureOptions options) {
         mStream = stream;
         mOptions = options;
 

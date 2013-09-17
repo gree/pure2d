@@ -11,41 +11,47 @@ import android.view.animation.Interpolator;
  */
 public class PathAnimator extends TweenAnimator {
     protected PointF[] mPoints;
-    protected float[] mSin;
-    protected float[] mCos;
+    protected float[] mDx, mDy;
     protected float[] mSegments;
     protected float mTotalLength;
 
     // current velocity
-    protected PointF mVelocity = new PointF();
+    protected final PointF mVelocity = new PointF();
     protected int mCurrentSegment = 0;
     protected boolean mSnapEnabled = false;
+    protected int mNumSegments = 0;
 
     public PathAnimator(final Interpolator interpolator) {
         super(interpolator);
     }
 
     public void setValues(final PointF... points) {
+        setValues(points.length, points);
+    }
+
+    public void setValues(final int limit, final PointF... points) {
         mPoints = points;
 
+        mNumSegments = Math.min(limit, points.length) - 1;
         // safety check
-        final int n = points.length;
-        if (n < 2) {
+        if (mNumSegments < 1) {
             return;
         }
 
-        mSin = new float[n - 1];
-        mCos = new float[n - 1];
-        mSegments = new float[n - 1];
+        // reuse arrays when possible
+        if (mSegments == null || mNumSegments > mSegments.length) {
+            mDx = new float[mNumSegments];
+            mDy = new float[mNumSegments];
+            mSegments = new float[mNumSegments];
+        }
 
-        float dx, dy, angle;
+        float dx, dy;
         mTotalLength = 0;
-        for (int i = 0; i < n - 1; i++) {
+        for (int i = 0; i < mNumSegments; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
-            angle = (float) Math.atan2(dy, dx);
-            mSin[i] = (float) Math.sin(angle);
-            mCos[i] = (float) Math.cos(angle);
+            mDx[i] = dx;
+            mDy[i] = dy;
             mSegments[i] = (float) Math.sqrt(dx * dx + dy * dy);
             mTotalLength += mSegments[i];
         }
@@ -92,24 +98,23 @@ public class PathAnimator extends TweenAnimator {
             }
 
             final float valueLen = value * mTotalLength;
-            final int size = mSegments.length;
             float len = 0;
 
             // find the right segment
             float segment;
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < mNumSegments; i++) {
                 segment = mSegments[i];
 
                 // bingo?
                 if (len + segment >= valueLen) {
                     mCurrentSegment = i;
-                    final float delta = valueLen - len;
+                    final float deltaScale = (valueLen - len) / segment;
                     PointF currentPos = mTarget.getPosition();
                     float lastX = currentPos.x;
                     float lastY = currentPos.y;
 
                     // new position
-                    mTarget.setPosition(mPoints[i].x + delta * mCos[i], mPoints[i].y + delta * mSin[i]);
+                    mTarget.setPosition(mPoints[i].x + deltaScale * mDx[i], mPoints[i].y + deltaScale * mDy[i]);
 
                     // find the velocity
                     currentPos = mTarget.getPosition();
@@ -128,11 +133,10 @@ public class PathAnimator extends TweenAnimator {
 
     protected int getSegment(final float value) {
         final float valueLen = value * mTotalLength;
-        final int size = mSegments.length;
         float len = 0;
 
         // find the right segment
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < mNumSegments; i++) {
             len += mSegments[i];
 
             // bingo?
@@ -167,15 +171,21 @@ public class PathAnimator extends TweenAnimator {
         mSnapEnabled = snapEnabled;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.TweenAnimator#onLoop()
-     */
+    public float getTotalLength() {
+        return mTotalLength;
+    }
+
     @Override
     protected void onLoop() {
         super.onLoop();
 
         mCurrentSegment = 0;
+    }
+
+    public void dispose() {
+        mPoints = null;
+        mDx = mDy = null;
+        mSegments = null;
     }
 
 }

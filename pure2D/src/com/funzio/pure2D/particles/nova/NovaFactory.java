@@ -41,7 +41,7 @@ public class NovaFactory {
     }
 
     public NovaFactory(final NovaVO novaVO, final NovaDelegator NovaDelegator, final int poolSize) {
-        Log.v(TAG, "NovaFactory(): " + novaVO + ", " + poolSize);
+        Log.v(TAG, "NovaFactory(): " + novaVO);
 
         mNovaVO = novaVO;
         mNovaDelegator = NovaDelegator;
@@ -121,7 +121,7 @@ public class NovaFactory {
      * Clear the pools. This might be useful when you need more memory.
      */
     public void clearPools() {
-        Log.v(TAG, "clearPools()");
+        Log.v(TAG, "clearPools(): " + mNovaVO);
 
         if (mParticlePool != null) {
             mParticlePool.clear();
@@ -132,6 +132,7 @@ public class NovaFactory {
             for (String key : keys) {
                 mAnimatorPools.get(key).clear();
             }
+            mAnimatorPools.clear();
         }
 
         if (mMotionTrailPools != null) {
@@ -139,6 +140,7 @@ public class NovaFactory {
             for (String key : keys) {
                 mMotionTrailPools.get(key).clear();
             }
+            mMotionTrailPools.clear();
         }
     }
 
@@ -150,7 +152,7 @@ public class NovaFactory {
      * Clear everything! Call when this object is no longer being used.
      */
     public void dispose() {
-        Log.v(TAG, "dispose()");
+        Log.v(TAG, "dispose(): " + mNovaVO);
 
         if (mParticlePool != null) {
             mParticlePool.clear();

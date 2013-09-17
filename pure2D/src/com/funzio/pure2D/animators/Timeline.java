@@ -131,6 +131,14 @@ public class Timeline implements Manipulator {
         return mElapsedTime;
     }
 
+    public int getLifespan() {
+        return mLifespan;
+    }
+
+    public void setLifespan(final int lifespan) {
+        mLifespan = lifespan;
+    }
+
     public Listener getListener() {
         return mListener;
     }

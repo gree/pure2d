@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.ui;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -21,6 +19,7 @@ import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -35,7 +34,7 @@ public class BitmapFontActivity extends StageActivity {
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
     private PointF mTempPoint = new PointF();
-    private boolean mCacheEnabled = true;
+    private boolean mCacheEnabled = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -46,23 +45,26 @@ public class BitmapFontActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
 
-                // mScene.setColor(COLOR_GREEN);
-                // mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
+                if (firstTime) {
 
-                // load the textures
-                loadTexture();
+                    // mScene.setColor(COLOR_GREEN);
+                    // mScene.setAxisSystem(Scene.AXIS_TOP_LEFT);
 
-                if (mBitmapFont != null) {
-                    mAtlasSprite = new Sprite();
-                    mAtlasSprite.setTexture(mBitmapFont.getTexture());
-                    mScene.addChild(mAtlasSprite);
+                    // load the textures
+                    loadTexture();
 
-                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                    // for (int i = 0; i < 300; i++) {
-                    // addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
-                    // }
+                    if (mBitmapFont != null) {
+                        mAtlasSprite = new Sprite();
+                        mAtlasSprite.setTexture(mBitmapFont.getTexture());
+                        mScene.addChild(mAtlasSprite);
+
+                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                        // for (int i = 0; i < 300; i++) {
+                        // addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                        // }
+                    }
                 }
             }
         });
@@ -108,13 +110,14 @@ public class BitmapFontActivity extends StageActivity {
         // create object
         final BmfTextObject obj = new BmfTextObject();
         obj.setTextAlignment(Alignment.HORIZONTAL_CENTER);
-        obj.setCacheEnabled(mCacheEnabled); // for perf on large text
+        obj.setCacheEnabled(mCacheEnabled);
         obj.setBitmapFont(mBitmapFont);
         // obj.setText("\"HelloWorld!\"\nHopeyou'relistening...");
         obj.setText("Hello World!\nHope you're listening...\n#" + RANDOM.nextInt(999999));
         obj.setColor(new GLColor(1, RANDOM.nextFloat(), RANDOM.nextFloat(), 1f));
         // obj.setAlpha(0.5f);
         // obj.setBlendFunc(BlendModes.SCREEN_FUNC);
+        // obj.setOriginAtCenter();
 
         // set positions
         obj.setPosition(mTempPoint);
@@ -129,7 +132,7 @@ public class BitmapFontActivity extends StageActivity {
         animator.setDuration(2000);
         // NOTE: it is NOT ideal to call updateTextBounds() manually
         obj.updateTextBounds();
-        // obj.setOriginAtCenter();
+
         animator.start(0, mTempPoint.y, mDisplaySize.x - obj.getWidth(), mTempPoint.y);
 
         return obj;

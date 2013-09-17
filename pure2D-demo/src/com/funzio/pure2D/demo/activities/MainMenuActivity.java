@@ -2,6 +2,7 @@ package com.funzio.pure2D.demo.activities;
 
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.animations.AnimationMenuActivity;
+import com.funzio.pure2D.demo.astar.AstarMenuActivity;
 import com.funzio.pure2D.demo.buffers.BufferMenuActivity;
 import com.funzio.pure2D.demo.camera.CameraMenuActivity;
 import com.funzio.pure2D.demo.casino.CasinoMenuActivity;
@@ -38,6 +39,7 @@ public class MainMenuActivity extends MenuActivity {
         addMenu(R.id.btn_effects, EffectsMenuActivity.class);
         addMenu(R.id.btn_animations, AnimationMenuActivity.class);
         addMenu(R.id.btn_physics, PhysicsMenuActivity.class);
+        addMenu(R.id.btn_astar, AstarMenuActivity.class);
         addMenu(R.id.btn_loaders, LoaderMenuActivity.class);
         addMenu(R.id.btn_mw, MWMenuActivity.class);
         addMenu(R.id.btn_ui, UIMenuActivity.class);

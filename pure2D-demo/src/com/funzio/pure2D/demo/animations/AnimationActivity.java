@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.animations;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -22,6 +20,7 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
@@ -74,13 +73,15 @@ public abstract class AnimationActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
 
-                // load the textures
-                loadTexture();
+                if (firstTime) {
+                    // load the textures
+                    loadTexture();
 
-                // generate a lot of squares
-                mSprite = addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // generate a lot of squares
+                    mSprite = addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
     }

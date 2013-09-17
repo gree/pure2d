@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.BaseStage;
@@ -33,6 +34,7 @@ public class StageActivity extends Activity implements OnTouchListener {
     final protected static GLColor COLOR_RED = new GLColor(0.7f, 0, 0, 1);
     final protected static GLColor COLOR_GREEN = new GLColor(0, 0.7f, 0, 1);
     final protected static GLColor COLOR_BLUE = new GLColor(0, 0, 0.7f, 1);
+    final protected static GLColor COLOR_YELLOW = new GLColor(1f, 1f, 0, 1);
 
     protected BaseStage mStage;
     protected BaseScene mScene;
@@ -43,8 +45,9 @@ public class StageActivity extends Activity implements OnTouchListener {
     // views
     protected TextView mFrameRate;
     protected TextView mObjects;
+    protected boolean mUserPaused;
 
-    private Handler mHandler = new Handler();
+    protected Handler mHandler = new Handler();
     private Runnable mFrameRateUpdater = new Runnable() {
         @Override
         public void run() {
@@ -79,10 +82,6 @@ public class StageActivity extends Activity implements OnTouchListener {
         mDisplaySizeDiv2.y = mDisplaySize.y / 2;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -95,9 +94,11 @@ public class StageActivity extends Activity implements OnTouchListener {
         switch (item.getItemId()) {
             case R.id.pause:
                 if (mScene.isPaused()) {
+                    mUserPaused = false;
                     mScene.resume();
                     item.setTitle(getResources().getString(R.string.pause));
                 } else {
+                    mUserPaused = true;
                     mScene.pause();
                     item.setTitle(getResources().getString(R.string.resume));
                 }
@@ -105,6 +106,16 @@ public class StageActivity extends Activity implements OnTouchListener {
 
             case R.id.debug:
                 Pure2D.DEBUG_FLAGS = Pure2D.DEBUG_FLAGS == 0 ? Pure2D.DEBUG_FLAG_WIREFRAME | Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS : 0;
+                return true;
+
+            case R.id.fps:
+                final int visibility = mFrameRate.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE;
+                mFrameRate.setVisibility(visibility);
+                mObjects.setVisibility(visibility);
+                return true;
+
+            case R.id.source:
+                Toast.makeText(this, getClass().getCanonicalName(), Toast.LENGTH_LONG).show();
                 return true;
         }
 
@@ -147,31 +158,36 @@ public class StageActivity extends Activity implements OnTouchListener {
         return mScene.getNumChildren();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
     @Override
     protected void onStop() {
         super.onStop();
-
-        // pause the scene
-        mScene.pause();
 
         // stop tracing
         mHandler.removeCallbacks(mFrameRateUpdater);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onResume()
-     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // pause the stage
+        if (mStage != null && mScene != null) {
+            mStage.onPause();
+            mScene.pause();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        // resume the scene
-        mScene.resume();
+        // resume the stage
+        if (mStage != null && mScene != null) {
+            mStage.onResume();
+            if (!mUserPaused) {
+                mScene.resume();
+            }
+        }
 
         // start recording frame rate
         startFrameRate();
