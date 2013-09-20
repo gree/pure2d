@@ -35,12 +35,16 @@ public class BitmapFont {
     private BitmapFontMetrics mFontMetrics;
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
+        this(characters, textOptions, 512);
+    }
+
+    public BitmapFont(final String characters, final TextOptions textOptions, final int textureSize) {
         mTextOptions = (textOptions == null) ? TextOptions.getDefault() : textOptions;
         mCharacters = characters;
 
         mFontMetrics = new BitmapFontMetrics(mTextOptions);
 
-        mRectPacker = new RectPacker(Math.min(512, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
+        mRectPacker = new RectPacker(Math.min(textureSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
         mRectPacker.setQuickMode(true);
         mRectPacker.setRotationEnabled(false);
     }
