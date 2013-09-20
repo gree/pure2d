@@ -30,11 +30,16 @@ LOCAL_SRC_FILES := \
 	LWF/lwf/cplusplus/core/lwf_text.cpp \
 	LWF/lwf/cplusplus/core/lwf_utility.cpp \
 	LWF/lwf/cplusplus/supports/boost/android.cpp \
+	LWF/lwf/cplusplus/supports/lzma/Alloc.c \
+	LWF/lwf/cplusplus/supports/lzma/LzmaDec.c \
 	LWF/pure2d/lwf_pure2d_bitmap.cpp \
 	LWF/pure2d/lwf_pure2d_factory.cpp \
 	LWF/pure2d/lwf_pure2d_object.cpp
 
-LOCAL_C_INCLUDES := LWF/lwf/cplusplus/supports LWF/lwf/cplusplus/core
+LOCAL_C_INCLUDES := \
+	LWF/lwf/cplusplus/supports \
+	LWF/lwf/cplusplus/supports/lzma \
+	LWF/lwf/cplusplus/core
 LOCAL_LDLIBS    := -llog -lGLESv1_CM
 
 include $(BUILD_SHARED_LIBRARY)
