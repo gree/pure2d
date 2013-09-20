@@ -3,7 +3,7 @@
  */
 package jp.gree.casino.machine;
 
-import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
+import com.funzio.pure2D.atlas.ImageSequenceAtlas;
 import com.funzio.pure2D.shapes.Clip;
 
 /**
@@ -14,10 +14,10 @@ public class Symbol extends Clip {
     /**
      * @param frameSet
      */
-    public Symbol(final ImageSequenceBufferAtlas atlas) {
+    public Symbol(final ImageSequenceAtlas atlas) {
         super(atlas.getMasterFrameSet());
 
-        setTexture(atlas.getTexture());
+        // setTexture(atlas.getTexture());
     }
 
 }

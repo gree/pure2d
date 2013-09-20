@@ -10,6 +10,16 @@
         android:id="@+id/debug"
         android:menuCategory="system"
         android:showAsAction="ifRoom"
-        android:title="@string/bounds_wireframe"/>
+        android:title="@string/bounds_wireframes"/>
+    <item
+        android:id="@+id/fps"
+        android:menuCategory="system"
+        android:showAsAction="ifRoom"
+        android:title="@string/fps"/>
+    <item
+        android:id="@+id/source"
+        android:menuCategory="system"
+        android:showAsAction="ifRoom"
+        android:title="@string/source"/>
 
 </menu>

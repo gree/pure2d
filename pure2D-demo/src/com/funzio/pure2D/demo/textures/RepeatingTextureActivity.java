@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.Sprite;
@@ -38,16 +39,18 @@ public class RepeatingTextureActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTexture();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTexture();
 
-                // create the sprite
-                mSprite = addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // create the sprite
+                    mSprite = addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
 
-                // mTextureScale = new PointF(3, 3); // how many time you want to repeat?
-                mTextureScale = new PointF(OBJ_WIDTH / mTexture.getSize().x, OBJ_WIDTH / mTexture.getSize().y); // or automatically find the repeating times according to the size
-                applyRepeating();
+                    // mTextureScale = new PointF(3, 3); // how many time you want to repeat?
+                    mTextureScale = new PointF(OBJ_WIDTH / mTexture.getSize().x, OBJ_WIDTH / mTexture.getSize().y); // or automatically find the repeating times according to the size
+                    applyRepeating();
+                }
             }
         });
     }

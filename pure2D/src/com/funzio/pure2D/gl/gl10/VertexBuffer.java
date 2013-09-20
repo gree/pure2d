@@ -18,6 +18,7 @@ public class VertexBuffer extends GLFloatBuffer {
     protected int mPrimitive = GL10.GL_TRIANGLES;
     protected int mVerticesNum = 0;
     protected int mIndicesNum = 0;
+    protected int mIndicesNumUsed = 0;
     protected ShortBuffer mIndexBuffer;
     protected int mVertexPointerSize = 2; // only x & y
 
@@ -68,6 +69,14 @@ public class VertexBuffer extends GLFloatBuffer {
         return mIndicesNum;
     }
 
+    public int getIndicesNumUsed() {
+        return mIndicesNumUsed;
+    }
+
+    public void setIndicesNumUsed(final int indicesNumUsed) {
+        mIndicesNumUsed = indicesNumUsed;
+    }
+
     public int getPrimitive() {
         return mPrimitive;
     }
@@ -93,7 +102,7 @@ public class VertexBuffer extends GLFloatBuffer {
         glState.setVertexBuffer(this);
 
         if (mIndicesNum > 0) {
-            glState.mGL.glDrawElements(mPrimitive, mIndicesNum, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
+            glState.mGL.glDrawElements(mPrimitive, mIndicesNumUsed > 0 ? Math.min(mIndicesNumUsed, mIndicesNum) : mIndicesNum, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
         } else {
             glState.mGL.glDrawArrays(mPrimitive, 0, mVerticesNum);
         }

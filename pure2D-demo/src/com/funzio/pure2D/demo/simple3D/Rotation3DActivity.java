@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.simple3D;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -16,6 +14,7 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
@@ -46,18 +45,20 @@ public class Rotation3DActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                mCamera = new PerspectiveCamera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
-                mScene.setCamera(mCamera);
-                // need more depth for better z-sorting
-                // mScene.setDepthRange(0.001f, mCamera.getZFar()); // doesn't help
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    mCamera = new PerspectiveCamera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
+                    mScene.setCamera(mCamera);
+                    // need more depth for better z-sorting
+                    // mScene.setDepthRange(0.001f, mCamera.getZFar()); // doesn't help
 
-                // load the textures
-                loadTexture();
+                    // load the textures
+                    loadTexture();
 
-                // create first obj
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-                // testTiles();
+                    // create first obj
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // testTiles();
+                }
             }
         });
     }

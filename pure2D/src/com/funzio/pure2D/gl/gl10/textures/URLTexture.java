@@ -20,13 +20,13 @@ public class URLTexture extends Texture {
     private TextureOptions mOptions;
     private boolean mIsAsync = false;
 
-    public URLTexture(final GLState glState, final String url, final TextureOptions options) {
+    protected URLTexture(final GLState glState, final String url, final TextureOptions options) {
         super(glState);
 
         load(url, options);
     }
 
-    public URLTexture(final GLState glState, final String url, final TextureOptions options, final boolean async) {
+    protected URLTexture(final GLState glState, final String url, final TextureOptions options, final boolean async) {
         super(glState);
 
         if (async) {

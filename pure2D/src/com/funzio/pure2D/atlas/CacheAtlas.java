@@ -30,7 +30,7 @@ public class CacheAtlas extends Atlas {
     private Playable mTarget;
 
     public CacheAtlas(final GLState glState, final Playable target, final int maxWidth) {
-        Log.v(TAG, "PlayableAtlas()");
+        Log.v(TAG, "CacheAtlas()");
 
         mGLState = glState;
         mTarget = target;
@@ -87,6 +87,7 @@ public class CacheAtlas extends Atlas {
             // create frame
             final AtlasFrame frame = new AtlasFrame(this, i, "", posRect);
             frame.mOffset = new PointF(frameRect.left, frameRect.top);
+            frame.mTexture = mTexture;
             addFrame(frame);
 
             if (Math.round(frameRect.width()) == posRect.width()) {
@@ -115,6 +116,26 @@ public class CacheAtlas extends Atlas {
 
         // done
         mFrameBuffer.unbind();
+    }
+
+    /**
+     * Only call this when GLSurface re-created
+     */
+    public void reload() {
+        if (mTexture == null) {
+            return;
+        }
+
+        // remove the old texture
+        mGLState.getTextureManager().removeTexture(mTexture);
+
+        // create a new texture
+        mFrameBuffer = new FrameBuffer(mGLState, mWidth, mHeight, false);
+        mTexture = (BufferTexture) mFrameBuffer.getTexture();
+
+        // re-generate the frames
+        getMasterFrameSet().removeAllFrames();
+        generateFrames();
     }
 
     public BufferTexture getTexture() {

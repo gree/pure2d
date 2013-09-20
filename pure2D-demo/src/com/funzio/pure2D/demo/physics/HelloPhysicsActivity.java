@@ -6,8 +6,6 @@ package com.funzio.pure2D.demo.physics;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.content.Context;
 import android.graphics.PointF;
 import android.hardware.Sensor;
@@ -24,10 +22,11 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.joints.MouseJoint;
 import org.jbox2d.dynamics.joints.MouseJointDef;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
 
@@ -52,13 +51,15 @@ public class HelloPhysicsActivity extends StageActivity implements SensorEventLi
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTextures();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTextures();
 
-                // add boxes
-                for (int i = 0; i < 50; i++) {
-                    addBox(mRandom.nextInt(mDisplaySize.x), 100 + mRandom.nextInt(300));
+                    // add boxes
+                    for (int i = 0; i < 50; i++) {
+                        addBox(mRandom.nextInt(mDisplaySize.x), 100 + mRandom.nextInt(300));
+                    }
                 }
             }
         });

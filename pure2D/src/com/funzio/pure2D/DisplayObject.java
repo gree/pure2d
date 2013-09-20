@@ -91,6 +91,10 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public int removeAllManipulators();
 
+    public Manipulator getManipulator(final int index);
+
+    public int getNumManipulators();
+
     public Scene getScene();
 
     public Container getParent();

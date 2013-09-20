@@ -40,10 +40,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     protected int mCachePolicy = CACHE_WHEN_CHILDREN_STABLE; // best perf
 
     // clipping
-    private boolean mClippingEnabled = false;
-    private boolean mOriginalScissorEnabled = false;
-    private int[] mOriginalScissor;
-    private RectF mClipStageRect;
+    protected boolean mClippingEnabled = false;
+    protected boolean mOriginalScissorEnabled = false;
+    protected int[] mOriginalScissor;
+    protected RectF mClipStageRect;
 
     public DisplayGroup() {
         super();
@@ -131,6 +131,14 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 mClipStageRect.set(mBounds);
             }
 
+            // check parent group
+            if (mParent instanceof DisplayGroup) {
+                final DisplayGroup parentGroup = (DisplayGroup) mParent;
+                if (parentGroup.mClippingEnabled) {
+                    mClipStageRect.intersect(parentGroup.mClipStageRect);
+                }
+            }
+
             // set the new scissor rect, only take position and scale into account!
             glState.setScissor(Math.round(mClipStageRect.left), Math.round(mClipStageRect.top), Math.round(mClipStageRect.right - mClipStageRect.left + 1),
                     Math.round(mClipStageRect.bottom - mClipStageRect.top + 1));
@@ -139,7 +147,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         // check cache enabled, only draw cache when Children stop changing or the policy equals CACHE_WHEN_CHILDREN_CHANGED
         if (mCacheEnabled && ((mInvalidateFlags & (CHILDREN | VISUAL)) == 0 || mCachePolicy == CACHE_WHEN_CHILDREN_CHANGED)) {
             // check invalidate flags, either CACHE or CHILDREN
-            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0) {
+            if ((mInvalidateFlags & (CACHE | CHILDREN | VISUAL)) != 0 || (mCacheFrameBuffer != null && !mCacheFrameBuffer.verifyGLState(glState))) {
+
+                // when surface got reset, the old framebuffer and texture need to be re-created!
+                if (mCacheFrameBuffer != null && !mCacheFrameBuffer.verifyGLState(glState)) {
+                    // unload and remove the old texture
+                    glState.getTextureManager().removeTexture(mCacheFrameBuffer.getTexture());
+                    // flag for a new frame buffer
+                    mCacheFrameBuffer = null;
+                }
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -213,8 +229,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             child = mChildrenDisplayOrder.get(i);
 
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
-                // draw frame
-                child.draw(glState);
+                // draw frame, check alpha for optimization
+                if (child.getAlpha() > 0) {
+                    child.draw(glState);
+                }
 
                 // stack the visible child
                 if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {

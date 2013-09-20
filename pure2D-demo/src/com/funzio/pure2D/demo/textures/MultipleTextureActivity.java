@@ -3,8 +3,6 @@ package com.funzio.pure2D.demo.textures;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +13,7 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 public class MultipleTextureActivity extends StageActivity {
@@ -34,12 +33,14 @@ public class MultipleTextureActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTextures();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTextures();
 
-                // generate a lot of squares
-                addObjects(OBJ_INIT_NUM, mUseTexture);
+                    // generate a lot of squares
+                    addObjects(OBJ_INIT_NUM, mUseTexture);
+                }
             }
         });
     }

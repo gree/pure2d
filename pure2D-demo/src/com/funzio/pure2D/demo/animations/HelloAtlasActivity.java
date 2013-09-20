@@ -1,17 +1,16 @@
 package com.funzio.pure2D.demo.animations;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.FunzioAtlas;
+import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
@@ -30,13 +29,15 @@ public class HelloAtlasActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
 
-                // load the textures
-                loadTexture();
+                    // load the textures
+                    loadTexture();
 
-                // generate a lot of squares
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // generate a lot of squares
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
 

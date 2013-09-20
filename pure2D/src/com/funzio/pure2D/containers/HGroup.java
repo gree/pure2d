@@ -354,7 +354,7 @@ public class HGroup extends LinearGroup implements UIObject {
             final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-                final RectF bounds = getBounds();
+                final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
                 final PointF global = getScene().getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {

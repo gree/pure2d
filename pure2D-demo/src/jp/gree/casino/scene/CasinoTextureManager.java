@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.atlas.ImageSequenceBufferAtlas;
+import com.funzio.pure2D.atlas.ImageSequenceAtlas;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
@@ -30,15 +30,15 @@ public class CasinoTextureManager extends TextureManager {
     // XXX remove me
     private String mTheme = "mayan";
 
-    public final Texture mFrontTexture;
-    public final Texture mBackTexture;
+    public Texture mFrontTexture;
+    public Texture mBackTexture;
 
     public final DisplayMetrics mDisplayMetrics;
     public final float mTextureScaleX;
     public final float mTextureScaleY;
 
     public final TextureOptions mTextureOptions;
-    public ImageSequenceBufferAtlas[] mMajorSymbols;
+    public ImageSequenceAtlas[] mMajorSymbols;
 
     public CasinoTextureManager(final Scene scene, final Resources resources) throws UnsupportedOperationException {
         super(scene, resources);
@@ -69,7 +69,9 @@ public class CasinoTextureManager extends TextureManager {
         mTextureOptions = TextureOptions.getDefault();
         mTextureOptions.inScaleX = mTextureScaleX;
         mTextureOptions.inScaleY = mTextureScaleY;
+    }
 
+    public void loadTextures() {
         // load the textures and atlas
         mBackTexture = createAssetTexture(mTheme + "/" + "mayan_machine_back.jpg", mTextureOptions);
         mFrontTexture = createAssetTexture(mTheme + "/" + "mayan_machine_front.png", mTextureOptions);
@@ -90,9 +92,9 @@ public class CasinoTextureManager extends TextureManager {
         try {
             String dir = getSymbolsMajorsDir();
             String files[] = mAssets.list(dir);
-            mMajorSymbols = new ImageSequenceBufferAtlas[files.length];
+            mMajorSymbols = new ImageSequenceAtlas[files.length];
             for (int i = 0; i < files.length; i++) {
-                mMajorSymbols[i] = new ImageSequenceBufferAtlas(mScene.getGLState());
+                mMajorSymbols[i] = new ImageSequenceAtlas(mScene.getGLState());
                 mMajorSymbols[i].loadDir(mAssets, dir + "/" + files[i], mTextureOptions);
             }
         } catch (IOException e) {

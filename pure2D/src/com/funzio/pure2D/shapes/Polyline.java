@@ -8,10 +8,14 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
-import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.atlas.AtlasFrame;
+import com.funzio.pure2D.geom.Line;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
@@ -21,6 +25,9 @@ public class Polyline extends Shape {
     protected static final int VERTEX_POINTER_SIZE = 2; // xy
 
     protected PointF[] mPoints;
+    protected int mNumPointsUsed = 0; // <= mPoints.length
+    protected float[] mTextureCoords;
+    protected float mNarrowAngle = (float) (Math.PI / 4);
     protected float mStroke1 = 1;
     protected float mStroke2 = 1;
 
@@ -32,46 +39,103 @@ public class Polyline extends Shape {
     protected float mTotalLength;
     protected Interpolator mStrokeInterpolator = null;
 
+    // texture caps
+    protected float mTextureCap1 = 0;
+    protected float mTextureCap2 = 0;
+    protected boolean mTextureRepeating = false;
+
+    // for texture animation
+    protected AtlasFrame mAtlasFrame;
+
     public PointF[] getPoints() {
         return mPoints;
     }
 
-    public void setPoints(final PointF... points) {
-        mPoints = points;
-        final int len = mPoints.length;
+    final public void setPoints(final PointF... points) {
+        setPoints(points.length, points);
+    }
 
-        allocateVertices(len * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
+    public void setPoints(final int numPoints, final PointF... points) {
+        // you don't have to use all the points
+        mNumPointsUsed = Math.min(numPoints, points.length); // <= mPoints.length
+        mPoints = points;
+
+        invalidate(VERTICES);
+    }
+
+    protected void validateVertices() {
+        final PointF[] points = mPoints;
+
+        allocateVertices(mNumPointsUsed * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
 
         final float strokeDelta = mStroke2 - mStroke1;
         float dx, dy, segment = 0;
+        float firstAngle = 0;
         float angle0 = 0;
         float angle1 = 0;
         float angleDelta = 0;
         float angleCut = 0;
-        float rx, ry;
+        float rx = 0, ry = 0, r;
         float stroke = mStroke1;
         int i, vertexIndex = 0;
-        float lastRY = 0;
-        float lastRX = 0;
-        boolean flip = false;
-        PointF currentPoint;
+        float lastUX = 0;
+        float lastUY = 0;
+        PointF lastPoint = null, currentPoint;
 
         // find total segment
         mTotalLength = 0;
-        for (i = 0; i < len - 1; i++) {
+        for (i = 0; i < mNumPointsUsed - 1; i++) {
             dx = points[i + 1].x - points[i].x;
             dy = points[i + 1].y - points[i].y;
 
             mTotalLength += Math.sqrt(dx * dx + dy * dy);
         }
 
-        for (i = 0; i < len; i++) {
+        // texture fitting
+        int textureCoordIndex = 0;
+        float textureCoordOffset = 0;
+        float textureScale = 1;
+        float textureWidth = 0;
+        if (mTexture != null) {
+            if (mAtlasFrame == null) {
+                textureWidth = mTexture.getSize().x;
+            } else {
+                textureWidth = mAtlasFrame.getSize().x;
+            }
+            final int numCoords = (mNumPointsUsed + (mTextureCap1 > 0 ? 1 : 0) + (mTextureCap2 > 0 ? 1 : 0)) * 4;
+            if (mTextureCoords == null || mTextureCoords.length < numCoords) {
+                mTextureCoords = new float[numCoords];
+            }
+
+            // first point of the texture
+            mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = textureCoordOffset;
+            mTextureCoords[textureCoordIndex + 1] = 0;
+            mTextureCoords[textureCoordIndex + 3] = 1;
+            textureCoordIndex += 4;
+
+            // first cap
+            if (mTextureCap1 > 0) {
+                textureCoordOffset += mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = mTextureCap1 / textureWidth;
+                mTextureCoords[textureCoordIndex + 1] = 0;
+                mTextureCoords[textureCoordIndex + 3] = 1;
+                textureCoordIndex += 4;
+
+                // also offset the vertex index
+                vertexIndex += VERTEX_POINTER_SIZE * 2;
+            }
+
+            textureScale = 1 - (mTextureCap1 + mTextureCap2) / textureWidth;
+        }
+
+        for (i = 0; i < mNumPointsUsed; i++) {
             currentPoint = points[i];
 
-            if (i < len - 1) {
+            if (i < mNumPointsUsed - 1) {
                 dx = points[i + 1].x - currentPoint.x;
                 dy = points[i + 1].y - currentPoint.y;
+
                 segment += Math.sqrt(dx * dx + dy * dy);
+
                 if (mStrokeInterpolator != null) {
                     // interpolating
                     stroke = mStroke1 + mStrokeInterpolator.getInterpolation(segment / mTotalLength) * strokeDelta;
@@ -81,40 +145,116 @@ public class Polyline extends Shape {
                 }
 
                 angle1 = (float) Math.atan2(dy, dx);
+                if (i == 0) {
+                    firstAngle = angle1;
+                }
+
+                // texture fitting
+                if (mTexture != null) {
+                    mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = textureCoordOffset + textureScale * segment / mTotalLength;
+                    mTextureCoords[textureCoordIndex + 1] = 0;
+                    mTextureCoords[textureCoordIndex + 3] = 1;
+                    textureCoordIndex += 4;
+                }
             }
 
-            if (i == 0 || i == len - 1) {
+            r = stroke * 0.5f;
+            if (i == 0 || i == mNumPointsUsed - 1) {
                 // beginning and closing cut
-                angleCut = angle1 + (float) Math.PI * 0.5f;
+                angleCut = angle1 + Pure2DUtils.PI_D2;
             } else {
                 angleDelta = (angle1 - angle0);
-                angleCut += angleDelta * 0.5f;
+                // check narrow/opposite angle
+                if (Math.abs(Math.abs(angleDelta) - Math.PI) > mNarrowAngle) {
+                    angleCut = angle1 + Pure2DUtils.PI_D2 - angleDelta * 0.5f;
+                    r /= (float) Math.cos(angleDelta * 0.5f);
+                } else {
+                    angleCut = angle1 + Pure2DUtils.PI_D2;
+                }
             }
 
-            rx = stroke * (float) Math.cos(angleCut) * 0.5f;
-            ry = stroke * (float) Math.sin(angleCut) * 0.5f;
-            // Log.e("long", "a t r x y: " + angle1 + " " + Math.round(stroke) + " " + Math.round(radius) + " " + Math.round(rx) + " " + Math.round(ry));
-
-            if (lastRY * ry < 0 && lastRX * rx < 0) {
-                // flag for flipping the upper and lower points
-                flip = !flip;
-            }
-            lastRX = rx;
-            lastRY = ry;
-            if (flip) {
-                rx = -rx;
-                ry = -ry;
+            rx = r * (float) Math.cos(angleCut);
+            ry = r * (float) Math.sin(angleCut);
+            if (lastPoint != null) {
+                // check crossing lines
+                if (Line.linesIntersect(lastPoint.x, lastPoint.y, currentPoint.x, currentPoint.y, lastUX, lastUY, currentPoint.x + rx, currentPoint.y + ry)) {
+                    // invert
+                    rx = -rx;
+                    ry = -ry;
+                }
             }
 
             // upper point
-            mVertices[vertexIndex] = currentPoint.x + rx;
-            mVertices[vertexIndex + 1] = currentPoint.y + ry;
+            mVertices[vertexIndex] = lastUX = currentPoint.x + rx;
+            mVertices[vertexIndex + 1] = lastUY = currentPoint.y + ry;
             // lower point
             mVertices[vertexIndex + 2] = currentPoint.x - rx;
             mVertices[vertexIndex + 3] = currentPoint.y - ry;
+
             vertexIndex += VERTEX_POINTER_SIZE * 2;
 
             angle0 = angle1;
+            lastPoint = currentPoint;
+        }
+
+        // texture fitting
+        if (mTexture != null) {
+            if (mTextureCap1 > 0) {
+                // prepend the first vertices
+                dx = mTextureCap1 * (float) Math.cos(firstAngle + Math.PI);
+                dy = mTextureCap1 * (float) Math.sin(firstAngle + Math.PI);
+                mVertices[0] = mVertices[4] + dx;
+                mVertices[1] = mVertices[5] + dy;
+                // lower point
+                mVertices[2] = mVertices[6] + dx;
+                mVertices[3] = mVertices[7] + dy;
+            }
+
+            // texture's end cap
+            if (mTextureCap2 > 0) {
+                // append the last texture coords
+                mTextureCoords[textureCoordIndex] = mTextureCoords[textureCoordIndex + 2] = 1;
+                mTextureCoords[textureCoordIndex + 1] = 0;
+                mTextureCoords[textureCoordIndex + 3] = 1;
+                textureCoordIndex += 4;
+
+                // append the last vertices
+                dx = mTextureCap2 * (float) Math.cos(angle1);
+                dy = mTextureCap2 * (float) Math.sin(angle1);
+                mVertices[vertexIndex] = mVertices[vertexIndex - 4] + dx;
+                mVertices[vertexIndex + 1] = mVertices[vertexIndex - 3] + dy;
+                // lower point
+                mVertices[vertexIndex + 2] = mVertices[vertexIndex - 2] + dx;
+                mVertices[vertexIndex + 3] = mVertices[vertexIndex - 1] + dy;
+            }
+
+            // texture repeating?
+            if (mTextureRepeating) {
+                final float sx = (mTotalLength + mTextureCap1 + mTextureCap2) / textureWidth;
+                final int pairs = mTextureCoords.length / 2;
+                for (int n = 0; n < pairs; n++) {
+                    // apply to x only
+                    mTextureCoords[n * 2] *= sx;
+                }
+            }
+
+            // check atlas frame
+            if (mAtlasFrame != null) {
+                final float[] coords = mAtlasFrame.getTextureCoords();
+                final float ox = coords[0];
+                final float oy = coords[1];
+                final float w = coords[4] - ox;
+                final float h = coords[3] - oy;
+                final int pairs = mTextureCoords.length / 2;
+                int index = 0;
+                for (int t = 0; t < pairs; t++) {
+                    mTextureCoords[index] = ox + w * mTextureCoords[index];
+                    mTextureCoords[index + 1] = oy + h * mTextureCoords[index + 1];
+                    index += 2;
+                }
+
+            }
+            setTextureCoordBuffer(mTextureCoords);
         }
 
         if (mVertexBuffer == null) {
@@ -123,11 +263,70 @@ public class Polyline extends Shape {
             mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
         }
 
-        invalidate(InvalidateFlags.VISUAL);
+        validate(VERTICES);
+    }
+
+    @Override
+    public boolean update(final int deltaTime) {
+        if ((mInvalidateFlags & VERTICES) > 0) {
+            if (mPoints != null && mNumPointsUsed > 0) {
+                // allocate more/less points if necessary
+                validateVertices();
+            }
+        }
+
+        return super.update(deltaTime);
+    }
+
+    @Override
+    public void setTexture(final Texture texture) {
+        super.setTexture(texture);
+
+        invalidate(VERTICES);
+    }
+
+    /**
+     * Set the beginning and end caps' widths. This works similarly as the 9-patch technique.
+     * 
+     * @param cap1
+     * @param cap2
+     */
+    public void setTextureCaps(final float cap1, final float cap2) {
+        mTextureCap1 = cap1;
+        mTextureCap2 = cap2;
+
+        invalidate(VERTICES);
+    }
+
+    /**
+     * Repeat the texture to fill the body of this polyline
+     * 
+     * @param repeating
+     */
+    public void setTextureRepeating(final boolean repeating) {
+        mTextureRepeating = repeating;
+
+        invalidate(VERTICES);
+    }
+
+    @Override
+    public boolean draw(final GLState glState) {
+        if (mTotalLength >= 1) {
+            return super.draw(glState);
+        } else {
+            return false;
+        }
     }
 
     protected void allocateVertices(final int numVertices, final int vertexSize) {
         mVerticesNum = numVertices; // each point has upper and lower points
+        if (mTextureCap1 > 0) {
+            mVerticesNum += 2;
+        }
+        if (mTextureCap2 > 0) {
+            mVerticesNum += 2;
+        }
+
         // NOTE: only re-allocate when the required size is bigger
         if (mVertices == null || mVerticesNum * vertexSize > mVertices.length) {
             mVertices = new float[mVerticesNum * vertexSize];
@@ -141,9 +340,7 @@ public class Polyline extends Shape {
         mStroke1 = stroke1;
         mStroke2 = stroke2;
 
-        if (mPoints != null && mPoints.length > 0) {
-            setPoints(mPoints);
-        }
+        invalidate(VERTICES);
     }
 
     @Deprecated
@@ -249,6 +446,28 @@ public class Polyline extends Shape {
 
     public void setStrokeInterpolator(final Interpolator strokeInterpolator) {
         mStrokeInterpolator = strokeInterpolator;
+    }
+
+    public float getTotalLength() {
+        return mTotalLength;
+    }
+
+    public void setAtlasFrame(final AtlasFrame frame) {
+        if (frame != null) {
+
+            // if there is a specific texture
+            final Texture frameTexture = frame.getTexture();
+            if (frameTexture != null) {
+                setTexture(frameTexture);
+            }
+        }
+
+        mAtlasFrame = frame;
+        invalidate(FRAME | VERTICES);
+    }
+
+    public AtlasFrame getAtlasFrame() {
+        return mAtlasFrame;
     }
 
 }

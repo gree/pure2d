@@ -57,4 +57,22 @@ public class BaseStage extends GLSurfaceView implements Stage {
     public AssetManager getAssets() {
         return getContext().getAssets();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mScene != null) {
+            mScene.onSurfacePaused();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mScene != null) {
+            mScene.onSurfaceResumed();
+        }
+    }
 }

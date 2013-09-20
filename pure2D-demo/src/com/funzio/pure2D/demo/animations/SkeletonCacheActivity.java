@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +15,7 @@ import com.funzio.pure2D.animation.skeleton.AniSkeleton;
 import com.funzio.pure2D.atlas.CacheAtlas;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
@@ -36,31 +35,33 @@ public class SkeletonCacheActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
 
-                // load the textures
-                loadTexture();
+                    // load the textures
+                    loadTexture();
 
-                // initial object
-                // addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    final AniSkeleton skeleton = new AniSkeleton(mAniFile);
+                    // skeleton.setDebugging(true);
+                    mCacheAtlas = new CacheAtlas(mScene.getGLState(), skeleton, 512);
 
-                final AniSkeleton skeleton = new AniSkeleton(mAniFile);
-                // skeleton.setDebugging(true);
-                mCacheAtlas = new CacheAtlas(mScene.getGLState(), skeleton, 512);
+                    mAtlasSprite = new Sprite();
+                    mAtlasSprite.setTexture(mCacheAtlas.getTexture());
+                    mScene.addChild(mAtlasSprite);
 
-                mAtlasSprite = new Sprite();
-                mAtlasSprite.setTexture(mCacheAtlas.getTexture());
-                mScene.addChild(mAtlasSprite);
+                    // initial object
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                } else {
+                    // re-create texture
+                    mCacheAtlas.reload();
+                    mAtlasSprite.setTexture(mCacheAtlas.getTexture());
+                }
             }
         });
 
         mAniFile = new AniFile(getAssets(), ANI_FILE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.samples.activities.StageActivity#getLayout()
-     */
     @Override
     protected int getLayout() {
         return R.layout.stage_atlas;
@@ -81,7 +82,6 @@ public class SkeletonCacheActivity extends StageActivity {
     private Clip addObject(final float x, final float y) {
         // create object
         final Clip obj = new Clip();
-        obj.setTexture(mCacheAtlas.getTexture());
         obj.setAtlasFrameSet(mCacheAtlas.getMasterFrameSet());
         // obj.setFps(30);
 

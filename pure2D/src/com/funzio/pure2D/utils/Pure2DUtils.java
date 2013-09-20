@@ -231,6 +231,11 @@ public class Pure2DUtils {
      * @return
      */
     public static Bitmap scaleBitmapToPo2(final Bitmap bitmap, final int[] outDimensions) {
+        // null check for input bitmap
+        if (bitmap == null) {
+            return null;
+        }
+
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();
 

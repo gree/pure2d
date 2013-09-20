@@ -19,7 +19,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
             1.0f, 1.0f, // BR
     };
 
-    private float[] mValues;
+    protected float[] mValues;
 
     public TextureCoordBuffer(final float... textCoords) {
         super(textCoords);
@@ -33,12 +33,14 @@ public class TextureCoordBuffer extends GLFloatBuffer {
     public void setValues(final float... values) {
         super.setValues(values);
 
-        if (mValues == null) {
-            mValues = new float[values.length];
-        }
-        // store the values
-        for (int i = 0; i < mValues.length; i++) {
-            mValues[i] = values[i];
+        if (values != null) {
+            if (mValues == null) {
+                mValues = new float[values.length];
+            }
+            // store the values
+            for (int i = 0; i < mValues.length; i++) {
+                mValues[i] = values[i];
+            }
         }
     }
 

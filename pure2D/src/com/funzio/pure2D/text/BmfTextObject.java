@@ -13,15 +13,16 @@ import android.util.Log;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
+import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.QuadBuffer;
+import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
+import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.DummyDrawer;
 
 /**
@@ -33,20 +34,23 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     protected BitmapFontMetrics mFontMetrics;
 
     protected Texture mTexture;
-    protected QuadBuffer mQuadBuffer;
+    protected QuadMeshBuffer mMeshBuffer;
 
     protected String mText = "";
     protected int mTextAlignment = Alignment.LEFT;
     protected RectF mTextBounds = new RectF();
 
     private int mSceneAxis = -1;
-    private TextureCoordBuffer mTextureCoordBuffer;
-    private ArrayList<Float> mLineWidths;
+    private QuadMeshTextureCoordBuffer mTextureCoordBuffer;
+    private ArrayList<Float> mLineWidths = new ArrayList<Float>();
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
     protected DummyDrawer mCacheDrawer;
     protected boolean mCacheEnabled = false;
+
+    // a copy of text for rendering without being interrupted
+    private static String sScratchText;
 
     // protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
 
@@ -95,11 +99,6 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     public void updateTextBounds() {
         // find the bounds, this is not 100% precised, so we need the below logic
         mFontMetrics.getTextBounds(mText, mTextBounds);
-
-        // init line with
-        if (mLineWidths == null) {
-            mLineWidths = new ArrayList<Float>();
-        }
 
         final int length = mText.length();
         float nextX = 0;
@@ -176,7 +175,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
      */
     @Override
     public boolean draw(final GLState glState) {
-        if (mText == null) {
+        if (mText == null || mText.length() == 0) {
             return false;
         }
 
@@ -188,7 +187,15 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         // check cache enabled, only refresh when children stop changing
         if (mCacheEnabled && (mInvalidateFlags & CHILDREN) == 0 && (mSize.x > 0 && mSize.y > 0)) {
             // check invalidate flags
-            if ((mInvalidateFlags & CACHE) != 0) {
+            if ((mInvalidateFlags & CACHE) != 0 || (mCacheFrameBuffer != null && !mCacheFrameBuffer.verifyGLState(glState))) {
+
+                // when surface got reset, the old framebuffer and texture need to be re-created!
+                if (mCacheFrameBuffer != null && !mCacheFrameBuffer.verifyGLState(glState)) {
+                    // unload and remove the old texture
+                    glState.getTextureManager().removeTexture(mCacheFrameBuffer.getTexture());
+                    // flag for a new frame buffer
+                    mCacheFrameBuffer = null;
+                }
 
                 // init frame buffer
                 if (mCacheFrameBuffer == null || !mCacheFrameBuffer.hasSize(mSize)) {
@@ -259,91 +266,108 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             return false;
         }
 
-        // init quad buffer
-        if (mQuadBuffer == null) {
-            mQuadBuffer = new QuadBuffer();
-        }
-
         // bind the texture
         mTexture.bind();
 
-        final boolean axisFlipped = (mSceneAxis == Scene.AXIS_TOP_LEFT);
-        final int length = mText.length();
-        float nextX, nextY = mTextBounds.bottom;
-        char ch;
-        AtlasFrame frame;
-        PointF frameSize;
+        if ((mInvalidateFlags & InvalidateFlags.CHILDREN) > 0) {
+            sScratchText = mText;
+            final boolean axisFlipped = (mSceneAxis == Scene.AXIS_TOP_LEFT);
+            final int length = sScratchText.length();
+            float nextX, nextY = mTextBounds.bottom;
+            char ch;
+            AtlasFrame frame;
+            PointF frameSize;
 
-        // alignment
-        int lineIndex = 0;
-        if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-            nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
-        } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-            nextX = (mSize.x - mLineWidths.get(lineIndex));
-        } else {
-            nextX = 0;
-        }
-
-        for (int i = 0; i < length; i++) {
-            ch = mText.charAt(i);
-
-            if (ch == Characters.SPACE) {
-                nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
-            } else if (ch == Characters.NEW_LINE) {
-
-                // alignment
-                lineIndex++;
-                if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                    nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
-                } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                    nextX = (mSize.x - mLineWidths.get(lineIndex));
-                } else {
-                    nextX = 0;
-                }
-
-                // next y
-                nextY -= (mFontMetrics.bottom - mFontMetrics.top);
+            // alignment
+            int lineIndex = 0;
+            if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+            } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                nextX = (mSize.x - mLineWidths.get(lineIndex));
             } else {
-                // get the current atlas frame
-                frame = mBitmapFont.getCharFrame(ch);
-                if (frame != null) {
-                    frameSize = frame.getSize();
+                nextX = 0;
+            }
 
-                    // apply the coordinates
-                    if (mTextureCoordBuffer == null) {
-                        mTextureCoordBuffer = new TextureCoordBuffer(frame.getTextureCoords());
+            // init mesh buffer
+            if (mMeshBuffer == null) {
+                mMeshBuffer = new QuadMeshBuffer(length);
+            } else {
+                mMeshBuffer.setNumCells(length);
+            }
+            // apply the coordinates
+            if (mTextureCoordBuffer == null) {
+                mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(length);
+            } else {
+                mTextureCoordBuffer.setNumCells(length);
+            }
+
+            int meshIndex = 0;
+            for (int i = 0; i < length; i++) {
+                ch = sScratchText.charAt(i);
+
+                if (ch == Characters.SPACE) {
+                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
+                } else if (ch == Characters.NEW_LINE) {
+
+                    // alignment
+                    lineIndex++;
+                    if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                        nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                    } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                        nextX = (mSize.x - mLineWidths.get(lineIndex));
                     } else {
-                        mTextureCoordBuffer.setValues(frame.getTextureCoords());
+                        nextX = 0;
                     }
-                    mTextureCoordBuffer.apply(glState);
 
-                    // set position and size
-                    if (axisFlipped) {
-                        mQuadBuffer.setRectFlipVertical(nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
-                    } else {
-                        mQuadBuffer.setRect(nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
+                    // next y
+                    nextY -= (mFontMetrics.bottom - mFontMetrics.top);
+                } else {
+                    // get the current atlas frame
+                    frame = mBitmapFont.getCharFrame(ch);
+                    if (frame != null) {
+                        frameSize = frame.getSize();
+
+                        // apply the coordinates
+                        mTextureCoordBuffer.setRectAt(meshIndex, frame.getTextureCoords());
+
+                        // set position and size
+                        if (axisFlipped) {
+                            mMeshBuffer.setRectFlipVerticalAt(meshIndex++, nextX, convertY(nextY - (frameSize.y - frame.mOffset.y), frameSize.y), frameSize.x, frameSize.y);
+                        } else {
+                            mMeshBuffer.setRectAt(meshIndex++, nextX, nextY - (frameSize.y - frame.mOffset.y), frameSize.x, frameSize.y);
+                        }
+
+                        // find next x
+                        nextX += frameSize.x + mFontMetrics.letterSpacing;
                     }
-                    // draw
-                    mQuadBuffer.draw(glState);
-
-                    // find next x
-                    nextX += frameSize.x + mFontMetrics.letterSpacing;
                 }
             }
+
+            // apply
+            mTextureCoordBuffer.applyValues();
+            // and the vertex buffer
+            mMeshBuffer.setIndicesNumUsed(meshIndex * QuadMeshBuffer.NUM_INDICES_PER_CELL);
+            mMeshBuffer.applyValues();
         }
+
+        // draw now
+        mTextureCoordBuffer.apply(glState);
+        mMeshBuffer.draw(glState);
 
         return true;
     }
 
+    @Deprecated
     public boolean isCacheEnabled() {
         return mCacheEnabled;
     }
 
     /**
-     * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
+     * Enable/disable cache. With the new method of QuadMeshBuffer, Cache is not necessary faster.
      * 
      * @param cacheEnabled
      */
+    @Deprecated
     public void setCacheEnabled(final boolean cacheEnabled) {
         // diff check
         if (mCacheEnabled == cacheEnabled) {
@@ -355,6 +379,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         invalidate(CACHE);
     }
 
+    @Deprecated
     public void clearCache() {
         if (mCacheFrameBuffer != null) {
             mCacheFrameBuffer.getTexture().unload();
@@ -371,9 +396,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     public void dispose() {
         super.dispose();
 
-        if (mQuadBuffer != null) {
-            mQuadBuffer.dispose();
-            mQuadBuffer = null;
+        if (mMeshBuffer != null) {
+            mMeshBuffer.dispose();
+            mMeshBuffer = null;
         }
 
         if (mTextureCoordBuffer != null) {

@@ -22,7 +22,7 @@ public class AssetTexture extends Texture {
     private TextureOptions mOptions;
     private boolean mIsAsync = false;
 
-    public AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options) {
+    protected AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options) {
         super(glState);
 
         mAssetManager = assetManager;
@@ -30,7 +30,7 @@ public class AssetTexture extends Texture {
         load(filePath, options);
     }
 
-    public AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options, final boolean async) {
+    protected AssetTexture(final GLState glState, final AssetManager assetManager, final String filePath, final TextureOptions options, final boolean async) {
         super(glState);
 
         mAssetManager = assetManager;

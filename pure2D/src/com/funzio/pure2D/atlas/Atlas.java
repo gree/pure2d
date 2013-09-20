@@ -109,6 +109,17 @@ public class Atlas {
         return mSubFrameSets.get(name);
     }
 
+    public boolean addSubFrameSet(final AtlasFrameSet newSet) {
+        if (!mSubFrameSets.containsKey(newSet.mName)) {
+            mSubFrameSets.put(newSet.mName, newSet);
+            mNumSubFrameSets++;
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public int getNumSubFrameSets() {
         return mNumSubFrameSets;
     }

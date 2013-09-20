@@ -67,13 +67,17 @@ public class GridGroup<T extends DisplayObject> extends DisplayGroup {
         setChildAt(child, cell.x, cell.y, updatePosition);
     }
 
-    public void swapChildren(final Point cell1, final Point cell2) {
+    public void swapChildren(final Point cell1, final Point cell2, final boolean updatePosition) {
         T child1 = getChildAt(cell1.x, cell1.y);
         T child2 = getChildAt(cell2.x, cell2.y);
 
         // swap data
-        setChildAt(child1, cell2.x, cell2.y, true);
-        setChildAt(child2, cell1.x, cell1.y, true);
+        setChildAt(child1, cell2.x, cell2.y, updatePosition);
+        setChildAt(child2, cell1.x, cell1.y, updatePosition);
+    }
+
+    public void swapChildren(final Point cell1, final Point cell2) {
+        swapChildren(cell1, cell2, true);
     }
 
     public void removeChildAt(final int cellX, final int cellY) {
