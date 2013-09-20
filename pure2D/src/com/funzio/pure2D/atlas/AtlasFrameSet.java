@@ -19,6 +19,7 @@ public class AtlasFrameSet {
     protected PointF mFrameMaxSize = new PointF();
     protected Texture mTexture;
     protected int mFps = 0;
+    protected int mLoopMode = -1; // ignored
 
     public AtlasFrameSet(final String name) {
         mName = name;
@@ -161,6 +162,14 @@ public class AtlasFrameSet {
 
     public void setFps(final int fps) {
         mFps = fps;
+    }
+
+    public int getLoopMode() {
+        return mLoopMode;
+    }
+
+    public void setLoopMode(final int loopMode) {
+        mLoopMode = loopMode;
     }
 
     public static AtlasFrameSet createReversedFrameSet(final AtlasFrameSet frameSet) {

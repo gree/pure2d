@@ -41,6 +41,11 @@ public class Clip extends Sprite implements Playable {
         if (frameSet != null) {
             mNumFrames = frameSet.getNumFrames();
             setFps(frameSet.getFps());
+            // if there is a loop mode
+            final int loopMode = frameSet.getLoopMode();
+            if (loopMode >= 0) {
+                setLoop(loopMode);
+            }
 
             // start from first frame
             mCurrentFrame = 0;
@@ -110,15 +115,10 @@ public class Clip extends Sprite implements Playable {
                         mCurrentFrame %= mNumFrames;
                     }
                 } else if (mLoop == LOOP_REVERSE) {
-                    final int trips = (mAccumulatedFrames / mNumFrames);
-                    if (trips % 2 == 0) {
-                        // play forward
-                        if (mCurrentFrame >= mNumFrames) {
-                            mCurrentFrame %= mNumFrames;
-                        }
-                    } else {
-                        // play backward
-                        mCurrentFrame = mNumFrames - 1 - mAccumulatedFrames % mNumFrames;
+                    final int cycle = (mNumFrames - 1) * 2;
+                    mCurrentFrame = mAccumulatedFrames % cycle;
+                    if (mCurrentFrame >= mNumFrames) {
+                        mCurrentFrame = cycle - mCurrentFrame;
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {

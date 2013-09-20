@@ -21,6 +21,7 @@ import com.funzio.pure2D.text.TextOptions;
 public class TextureManager {
 
     public static final String TAG = TextureManager.class.getSimpleName();
+    public static final int DEFAULT_EXPIRATION_CHECK_INTERVAL = 60 * 1000; // ms
 
     protected Scene mScene;
     protected ArrayList<Texture> mTextures = new ArrayList<Texture>();
@@ -29,6 +30,10 @@ public class TextureManager {
 
     protected Resources mResources;
     protected AssetManager mAssets;
+
+    // texture expiration
+    protected int mExpirationCheckInterval = 0; // <= 0 means disabled
+    protected int mExpirationCheckElapsedTime = 0;
 
     public TextureManager(final Scene scene, final Resources res) {
         mScene = scene;
@@ -50,6 +55,25 @@ public class TextureManager {
     }
 
     /**
+     * Get the Expiration check interval (in ms)
+     * 
+     * @return
+     */
+    public int getExpirationCheckInterval() {
+        return mExpirationCheckInterval;
+    }
+
+    /**
+     * Set how often (in ms) this Manager should check for all the Textures' expiration. By default, it doesn't check at all.
+     * 
+     * @param expirationCheckInterval
+     * @see Texture.#setExpirationTime(int)
+     */
+    public void setExpirationCheckInterval(final int expirationCheckInterval) {
+        mExpirationCheckInterval = expirationCheckInterval;
+    }
+
+    /**
      * Call this when GL changed
      * 
      * @param gl
@@ -62,7 +86,7 @@ public class TextureManager {
         mAssets = mResources.getAssets();
 
         // reset
-        reloadAllTextures();
+        reloadAllTextures(false);
     }
 
     public Resources getResources() {
@@ -244,8 +268,49 @@ public class TextureManager {
      * @param height
      * @return
      */
-    public BufferTexture createBufferTexture(final int width, final int height) {
-        return new BufferTexture(mGLState, width, height);
+    public BufferTexture createBufferTexture(final int width, final int height, final boolean checkPo2) {
+        Log.v(TAG, String.format("createBufferTexture( %d, %d)", width, height));
+
+        final BufferTexture texture = new BufferTexture(mGLState, width, height, checkPo2);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new general Texture with your own reload logic
+     * 
+     * @param text
+     * @param options
+     * @return
+     */
+    public Texture createDynamicTexture(final Runnable loadRunnable, final TextOptions options) {
+        Log.v(TAG, String.format("createDynamicTexture()"));
+
+        final Texture texture = new Texture(mGLState) {
+
+            @Override
+            public void reload() {
+                loadRunnable.run();
+            }
+        };
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Add a new texture which created outside this manager
+     * 
+     * @param texture
+     * @return
+     */
+    public boolean addTexture(final Texture texture) {
+        return mTextures.add(texture);
     }
 
     /**
@@ -262,8 +327,7 @@ public class TextureManager {
     /**
      * Can be used after the Surface reloaded.
      */
-    @Deprecated
-    public void reloadAllTextures() {
+    public void reloadAllTextures(final boolean includeExpiredTextures) {
         Log.v(TAG, "reloadAllTextures()");
 
         // reload every texture
@@ -273,7 +337,11 @@ public class TextureManager {
             if (texture instanceof DrawableTexture) {
                 ((DrawableTexture) texture).setResources(mResources);
             }
-            texture.reload(mGLState);
+
+            // check for expired texture
+            if (includeExpiredTextures || !texture.isExpired()) {
+                texture.reload(mGLState);
+            }
         }
     }
 
@@ -286,8 +354,7 @@ public class TextureManager {
         final int len = mTextures.size();
         // unload all
         for (int i = 0; i < len; i++) {
-            Texture texture = mTextures.get(i);
-            texture.unload();
+            mTextures.get(i).unload();
         }
     }
 
@@ -304,7 +371,26 @@ public class TextureManager {
         mTextures.clear();
     }
 
-    protected void addTexture(final Texture texture) {
-        mTextures.add(texture);
+    /**
+     * For internal use only. Do NOT call!
+     * 
+     * @param deltaTime
+     */
+    public void update(final int deltaTime) {
+        // negative check
+        if (mExpirationCheckInterval > 0) {
+
+            mExpirationCheckElapsedTime += deltaTime;
+            if (mExpirationCheckElapsedTime >= mExpirationCheckInterval) {
+
+                // check every texture
+                final int len = mTextures.size();
+                for (int i = 0; i < len; i++) {
+                    mTextures.get(i).update(mExpirationCheckElapsedTime);
+                }
+
+                mExpirationCheckElapsedTime -= mExpirationCheckInterval;
+            }
+        }
     }
 }

@@ -19,7 +19,9 @@ public class Polyline3D extends Polyline {
     protected static final int VERTEX_POINTER_SIZE = 3; // xyz
 
     @Override
-    public void setPoints(final PointF... points) {
+    protected void validateVertices() {
+        final PointF[] points = mPoints;
+
         if (points instanceof Point3D[]) {
             final Point3D[] point3Ds = (Point3D[]) points;
 

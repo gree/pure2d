@@ -56,7 +56,7 @@ public class FrameBuffer {
         // auto create a new texture
         final int roundedWidth = Math.round(width);
         final int roundedHeight = Math.round(height);
-        final BufferTexture texture = new BufferTexture(mGLState, roundedWidth, roundedHeight, checkPo2);
+        final BufferTexture texture = mGLState.getTextureManager().createBufferTexture(roundedWidth, roundedHeight, checkPo2);
         // texture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output, but don't set it here
         if (!attachTexture(texture) && !texture.isPo2()) {
             // NOTE: most of 2.2 devices have problem with NPOT texture (even thought it's supported) when attached to a FrameBuffer
@@ -67,25 +67,6 @@ public class FrameBuffer {
             // re-attach it
             attachTexture(texture);
         }
-    }
-
-    @Deprecated
-    /**
-     * This method somehow does not work for some certain devices such as Samsung S2
-     * @param gl
-     * @param texture
-     */
-    public FrameBuffer(final GL10 gl, final Texture texture) {
-        mGL = gl;
-        mGL11Ex = (GL11ExtensionPack) gl;
-        mDepthEnabled = false;
-        mWidth = (int) texture.getSize().x;
-        mHeight = (int) texture.getSize().y;
-
-        init();
-
-        // attach the texture
-        attachTexture(texture);
     }
 
     private void init() {
@@ -149,14 +130,15 @@ public class FrameBuffer {
         return mTextureAttached;
     }
 
-    // public void bind() {
-    // bind(Scene.AXIS_BOTTOM_LEFT);
-    // }
+    public boolean verifyGLState(final GLState glState) {
+        return glState.mGL == mGL;
+    }
 
     /**
      * Bind this frame buffer
      */
     public boolean bind(final int projection) {
+        Log.v(TAG, "bind(): " + mFrameBuffer + ", " + projection);
         if (!mTextureAttached || mBinded) {
             return false;
         }
@@ -204,6 +186,7 @@ public class FrameBuffer {
      * Unbind this frame buffer and switch back to the original buffer
      */
     public boolean unbind() {
+        Log.v(TAG, "unbind(): " + mFrameBuffer);
         if (!mTextureAttached || !mBinded) {
             return false;
         }
@@ -237,6 +220,7 @@ public class FrameBuffer {
     }
 
     public void clear() {
+        Log.v(TAG, "clear(): " + mFrameBuffer);
         if (!mBinded) {
             return;
         }

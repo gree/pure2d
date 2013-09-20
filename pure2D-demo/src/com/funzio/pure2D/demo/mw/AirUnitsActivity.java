@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.mw;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -18,6 +16,7 @@ import com.funzio.crimecity.particles.units.V22Osprey;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 
 public class AirUnitsActivity extends StageActivity {
 
@@ -33,9 +32,9 @@ public class AirUnitsActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 ParticleAdapter.getInstance().setSurface(mStage);
-                ParticleAdapter.getInstance().onSurfaceCreated(gl, null);
+                ParticleAdapter.getInstance().onSurfaceCreated(glState.mGL, null);
             }
         });
     }

@@ -160,7 +160,7 @@
     <string name="anticipate">Anticipate</string>
     <string name="motion_trail_dots">Motion Trail Dots</string>
     <string name="motion_trail_plot">Motion Trail Plot</string>
-    <string name="bounds_wireframe">Bounds &amp; Wireframe</string>
+    <string name="bounds_wireframes">Bounds &amp; Wireframes</string>
     <string name="bitmap_font">Bitmap Font</string>
     <string name="cache">Cache</string>
     <string name="alt_charset">Alternate Charset</string>
@@ -176,7 +176,13 @@
     <string name="korean_bitmap_font">Korean Bitmap Font</string>
     <string name="grid_group">Grid Group</string>
     <string name="flip_orientation">Flip Orientation</string>
-
     <string name="url_texture">URL Texture</string>
+    <string name="astar">Astar</string>
+    <string name="show_off">Show Off!</string>
+    <string name="rect_grid">Rect Grid</string>
+    <string name="hex_grid">Hex Grid</string>
+    <string name="grid_astar">Grid &amp; Astar</string>
+    <string name="source">Source</string>
+    <string name="fps">FPS</string>
 
 </resources>

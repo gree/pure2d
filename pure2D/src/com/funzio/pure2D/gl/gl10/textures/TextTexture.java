@@ -17,13 +17,13 @@ public class TextTexture extends Texture {
     private String mText = "";
     private TextOptions mOptions;
 
-    public TextTexture(final GLState glState, final String text, final TextOptions options) {
+    protected TextTexture(final GLState glState, final String text, final TextOptions options) {
         super(glState);
 
         load(text, options);
     }
 
-    public void load(final String text, final TextOptions options) {
+    protected void load(final String text, final TextOptions options) {
         mText = text;
         mOptions = options;
 

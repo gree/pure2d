@@ -19,12 +19,13 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     protected int mNumPoints = DEFAULT_NUM_POINTS;
     protected float mMotionEasingX = DEFAULT_MOTION_EASING;
     protected float mMotionEasingY = DEFAULT_MOTION_EASING;
-    protected int mMinLength = 0;
+    protected int mMinLength = 1;
     protected int mSegmentLength = 0;
 
     protected DisplayObject mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
     protected Object mData;
+    private boolean mFollowingHead = false;
 
     public MotionTrailShape() {
         this(null);
@@ -48,6 +49,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
+
+        setPointsAt(0, 0);
     }
 
     @Override
@@ -67,7 +70,12 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     @Override
     public void setPosition(final float x, final float y) {
         if (mNumPoints > 0) {
-            mPoints[0].set(x, y);
+            if (!mPoints[0].equals(x, y)) {
+                mPoints[0].set(x, y);
+
+                // flag
+                mFollowingHead = true;
+            }
         }
     }
 
@@ -79,6 +87,9 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
             mPoints[0].offset(dx, dy);
+
+            // flag
+            mFollowingHead = true;
         }
     }
 
@@ -88,38 +99,61 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
      */
     @Override
     public boolean update(final int deltaTime) {
+
         if (mNumPoints > 0) {
 
-            // calculate time loop for consistency with different framerate
-            final int loop = deltaTime / Scene.DEFAULT_MSPF;
-            PointF p1, p2;
-            float dx, dy;
-            for (int n = 0; n < loop; n++) {
-                for (int i = mNumPoints - 1; i > 0; i--) {
-                    p1 = mPoints[i];
-                    p2 = mPoints[i - 1];
-                    dx = p2.x - p1.x;
-                    dy = p2.y - p1.y;
-                    if (mMinLength == 0 || Math.sqrt(dx * dx + dy * dy) > mSegmentLength) {
-                        // move toward the leading point
-                        p1.x += dx * mMotionEasingX;
-                        p1.y += dy * mMotionEasingY;
-                    }
+            if (!mFollowingHead && mTarget != null) {
+                final PointF p1 = mTarget.getPosition();
+                final float dx = p1.x - (mPoints[0].x - mTargetOffset.x);
+                final float dy = p1.y - (mPoints[0].y - mTargetOffset.y);
+                if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
+                    // flag
+                    mFollowingHead = true;
                 }
             }
 
-            // follow the target
-            if (mTarget != null) {
-                // set the head
-                final PointF pos = mTarget.getPosition();
-                mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
-            }
+            if (mFollowingHead) {
+                // calculate time loop for consistency with different framerate
+                final int loop = deltaTime / Scene.DEFAULT_MSPF;
+                PointF p1, p2;
+                float dx, dy;
+                for (int n = 0; n < loop; n++) {
+                    for (int i = mNumPoints - 1; i > 0; i--) {
+                        p1 = mPoints[i];
+                        p2 = mPoints[i - 1];
+                        dx = p2.x - p1.x;
+                        dy = p2.y - p1.y;
+                        if (mMinLength <= 1 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
+                            // move toward the leading point
+                            p1.x += dx * mMotionEasingX;
+                            p1.y += dy * mMotionEasingY;
+                        }
+                    }
+                }
 
-            // apply
-            setPoints(mPoints);
+                // follow the target
+                if (mTarget != null) {
+                    // set the head
+                    final PointF pos = mTarget.getPosition();
+                    mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
+                }
+
+                // apply
+                setPoints(mPoints);
+            }
         }
 
         return super.update(deltaTime);
+    }
+
+    @Override
+    protected void validateVertices() {
+        super.validateVertices();
+
+        if (mTotalLength <= mMinLength) {
+            // flag done
+            mFollowingHead = false;
+        }
     }
 
     public int getNumPoints() {
@@ -146,8 +180,12 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                 }
             }
 
-            // find the
+            // find the length
             mSegmentLength = mMinLength / (numPoints - 1);
+
+            // optimize
+            mTotalLength = 0;
+            mFollowingHead = false;
         }
 
         // re-count, each point has 2 vertices
@@ -166,10 +204,10 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
             for (int i = 0; i < mNumPoints; i++) {
                 mPoints[i].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
             }
-        }
 
-        // apply
-        setPoints(mPoints);
+            // apply
+            setPoints(mPoints);
+        }
     }
 
     public void setPointsAt(final float x, final float y) {

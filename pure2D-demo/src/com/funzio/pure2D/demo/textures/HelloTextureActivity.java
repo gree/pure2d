@@ -1,7 +1,5 @@
 package com.funzio.pure2D.demo.textures;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -11,6 +9,7 @@ import android.widget.CheckBox;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Shape;
 import com.funzio.pure2D.shapes.Sprite;
@@ -35,12 +34,14 @@ public class HelloTextureActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTexture();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTexture();
 
-                // create first obj
-                addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // create first obj
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
             }
         });
     }
@@ -57,14 +58,13 @@ public class HelloTextureActivity extends StageActivity {
 
         // create object
         Sprite obj = new Sprite();
+        // center origin
+        obj.setOriginAtCenter();
         if (mUseTexture) {
             obj.setTexture(mTexture);
         } else {
             obj.setSize(mTexture.getSize());
         }
-
-        // center origin
-        obj.setOriginAtCenter();
 
         // set positions
         obj.setPosition(mTempPoint.x, mTempPoint.y);

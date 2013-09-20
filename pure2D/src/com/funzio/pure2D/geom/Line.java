@@ -15,7 +15,7 @@ public class Line {
      * @param p2
      * @param p3
      * @param p4
-     * @return the intersection between 2 points.
+     * @return the intersection between 2 lines.
      */
     public static PointF getLinesIntersection(final PointF p1, final PointF p2, final PointF p3, final PointF p4) {
         final float d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
@@ -33,7 +33,7 @@ public class Line {
      * @param p2
      * @param p3
      * @param p4
-     * @param result is the intersection between 2 points. This is more optimized because it doesn't allocate new PointF.
+     * @param result is the intersection between 2 lines. This is more optimized because it doesn't allocate new PointF.
      */
     public static void getLinesIntersection(final PointF p1, final PointF p2, final PointF p3, final PointF p4, final PointF result) {
         final float d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);

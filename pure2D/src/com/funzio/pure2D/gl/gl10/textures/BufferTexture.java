@@ -15,7 +15,7 @@ public class BufferTexture extends Texture {
     /**
      * @param gl
      */
-    public BufferTexture(final GLState glState, final int width, final int height) {
+    protected BufferTexture(final GLState glState, final int width, final int height) {
         super(glState);
 
         // create an blank texture
@@ -25,7 +25,7 @@ public class BufferTexture extends Texture {
     /**
      * @param gl
      */
-    public BufferTexture(final GLState glState, final int actualWidth, final int actualHeight, final boolean checkPo2) {
+    protected BufferTexture(final GLState glState, final int actualWidth, final int actualHeight, final boolean checkPo2) {
         super(glState);
 
         final int bitmapWidth;

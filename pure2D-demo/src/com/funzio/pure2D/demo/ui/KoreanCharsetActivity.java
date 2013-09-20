@@ -3,12 +3,6 @@
  */
 package com.funzio.pure2D.demo.ui;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -29,6 +23,7 @@ import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendModes;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
@@ -46,7 +41,7 @@ public class KoreanCharsetActivity extends StageActivity {
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
     private PointF mTempPoint = new PointF();
-    private boolean mCacheEnabled = true;
+    private boolean mCacheEnabled = false;
 
     private String[] mSayings;
     private int mNumSayings;
@@ -62,16 +57,18 @@ public class KoreanCharsetActivity extends StageActivity {
         mScene.setListener(new Scene.Listener() {
 
             @Override
-            public void onSurfaceCreated(final GL10 gl) {
-                // load the textures
-                loadTexture();
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    // load the textures
+                    loadTexture();
 
-                if (mBitmapFont != null) {
-                    mAtlasSprite = new Sprite();
-                    mAtlasSprite.setTexture(mBitmapFont.getTexture());
-                    mScene.addChild(mAtlasSprite);
+                    if (mBitmapFont != null) {
+                        mAtlasSprite = new Sprite();
+                        mAtlasSprite.setTexture(mBitmapFont.getTexture());
+                        mScene.addChild(mAtlasSprite);
 
-                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                        addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    }
                 }
             }
         });
@@ -99,23 +96,7 @@ public class KoreanCharsetActivity extends StageActivity {
         options.inTextPaint.setColor(Color.WHITE);
         options.inTextPaint.setTextSize(30f);
 
-        Set<Character> charset = new LinkedHashSet<Character>();
-        for (String s : mSayings) {
-            for (int i = 0; i < s.length(); i++) {
-                Character c = s.charAt(i);
-                if (!(c == Characters.SPACE || c == Characters.NEW_LINE)) {
-                    charset.add(c);
-                }
-            }
-        }
-
-        StringBuffer buffer = new StringBuffer(charset.size());
-        Iterator<Character> itr = charset.iterator();
-        while (itr.hasNext()) {
-            buffer.append(itr.next());
-        }
-
-        mBitmapFont = new BitmapFont(buffer.toString(), options);
+        mBitmapFont = new BitmapFont(Characters.getUniqueCharacters(mSayings), options);
         mBitmapFont.load(mScene.getGLState());
     }
 
@@ -125,7 +106,7 @@ public class KoreanCharsetActivity extends StageActivity {
         // create object
         final BmfTextObject obj = new BmfTextObject();
         obj.setTextAlignment(Alignment.HORIZONTAL_CENTER);
-        obj.setCacheEnabled(mCacheEnabled); // for perf on large text
+        obj.setCacheEnabled(mCacheEnabled);
         obj.setBitmapFont(mBitmapFont);
         obj.setText(mSayings[RANDOM.nextInt(mNumSayings)]);
         obj.setColor(GLColor.WHITE);

@@ -86,6 +86,10 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
         } else {
             mTouchBounds.offset(-childX, -mRadius - childY);
         }
+        // check clipping
+        if (mClippingEnabled && mClipStageRect != null) {
+            mTouchBounds.intersect(mClipStageRect);
+        }
 
         return super.update(deltaTime);
     }

@@ -18,7 +18,7 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 /**
  * @author long
  */
-public class Texture {
+public abstract class Texture {
     public static boolean LOG_ENABLED = true;
     public static final String TAG = Texture.class.getSimpleName();
 
@@ -38,18 +38,23 @@ public class Texture {
     protected PointF mSize = new PointF(0, 0);
     protected Listener mListener;
 
-    public Texture(final GLState glState) {
+    // expiration stuff
+    protected int mExpirationTime = 0; // <=0 means no expiration
+    protected int mIdleTime = 0;
+    protected boolean mExpired = false;
+
+    protected Texture(final GLState glState) {
         mGLState = glState;
         mGL = mGLState.mGL;
     }
 
-    public Texture(final GLState glState, final Bitmap bitmap) {
+    protected Texture(final GLState glState, final Bitmap bitmap) {
         mGLState = glState;
         mGL = mGLState.mGL;
         load(bitmap, 0, 0, 0);
     }
 
-    public Texture(final GLState glState, final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
+    protected Texture(final GLState glState, final Bitmap bitmap, final int actualWidth, final int actualHeight, final int mipmaps) {
         mGLState = glState;
         mGL = mGLState.mGL;
         load(bitmap, actualWidth, actualHeight, mipmaps);
@@ -108,6 +113,10 @@ public class Texture {
 
             // mGL.glBindTexture(GL10.GL_TEXTURE_2D, 0);
             // mGLState.unbindTexture();
+
+            // unexpire
+            mExpired = false;
+            mIdleTime = 0;
         } else {
             Log.e(TAG, "Failed to generate Texture: " + GLU.gluErrorString(error), new Exception());
             // TODO maybe throw an Exception here
@@ -167,9 +176,18 @@ public class Texture {
     // }
 
     public void bind() {
+
+        // if previously expired, auto reload it!
+        if (mExpired && mTextureID == 0) {
+            reload();
+        }
+
         if (mTextureID != 0) {
             // mGL.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
             mGLState.bindTexture(this);
+
+            // no longer idle
+            mIdleTime = 0;
         }
     }
 
@@ -208,7 +226,6 @@ public class Texture {
         return mTextureID != 0;
     }
 
-    @Deprecated
     public void reload(final GLState glState) {
         mGLState = glState;
         mGL = mGLState.mGL;
@@ -216,22 +233,60 @@ public class Texture {
         reload();
     }
 
-    // @Deprecated
-    // public abstract void reload();
-
-    @Deprecated
-    public void reload() {
-        // to be overridden
-    }
+    public abstract void reload();
 
     public boolean isPo2() {
         return Pure2DUtils.isPO2((int) mSize.x) && Pure2DUtils.isPO2((int) mSize.y);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * For internal use only. Do not ever call this!
+     * 
+     * @param deltaTime
      */
+    public void update(final int deltaTime) {
+        if (!mExpired && mExpirationTime > 0) {
+
+            // add more idle time
+            mIdleTime += deltaTime;
+
+            // expiration check
+            if (mIdleTime >= mExpirationTime) {
+                // expire it now!
+                unload();
+
+                // flag
+                mExpired = true;
+            }
+        }
+    }
+
+    /**
+     * Get the expiration time (in ms)
+     * 
+     * @return
+     */
+    public int getExpirationTime() {
+        return mExpirationTime;
+    }
+
+    /**
+     * Set how long (in ms) of idle/inactive time before this Texture should be expired and unloaded automatically.
+     * 
+     * @param expirationTime
+     * @see TextureManager.#setExpirationCheckInterval(int)
+     */
+    public void setExpirationTime(final int expirationTime) {
+        mExpirationTime = expirationTime;
+    }
+
+    /**
+     * @return whether this Texture is expired or not
+     */
+    public boolean isExpired() {
+        return mExpired;
+    }
+
     @Override
     public String toString() {
         return "Texture {id: " + mTextureID + ", size: " + mSize.x + " x " + mSize.y + "}";
