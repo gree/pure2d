@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.Log;
 
 public class LWF {
@@ -79,7 +80,7 @@ public class LWF {
 
     private native PointF globalToLocal(long ptr, String target, float x, float y);
 
-    private native PointF getButtonInstanceSize(long ptr, String target);
+    private native RectF getButtonInstanceRect(long ptr, String target);
 
     private native void setPlaying(long ptr, boolean playing);
 
@@ -304,11 +305,11 @@ public class LWF {
         return new Point(getWidth(mPtr), getHeight(mPtr));
     }
 
-    public PointF getButtonInstanceSize(final String target) {
+    public RectF getButtonInstanceRect(final String target) {
         if (mId < 0) {
             return null;
         }
-        return getButtonInstanceSize(mPtr, target);
+        return getButtonInstanceRect(mPtr, target);
     }
 
     public String[] getEvents() {

@@ -22,7 +22,9 @@ struct DataContext {
 };
 
 static jclass gPointFClass;
+static jclass gRectFClass;
 static jmethodID gPointFConstructor;
+static jmethodID gRectFConstructor;
 
 class EventHandlerWrapper {
 private:
@@ -55,6 +57,15 @@ static void getPointFClass(JNIEnv *env)
         jclass cls = env->FindClass("android/graphics/PointF");
         gPointFClass = (jclass)env->NewGlobalRef(cls);
         gPointFConstructor = env->GetMethodID(gPointFClass, "<init>", "(FF)V");
+    }
+}
+
+static void getRectFClass(JNIEnv *env)
+{
+    if (!gRectFClass) {
+        jclass cls = env->FindClass("android/graphics/RectF");
+        gRectFClass = (jclass)env->NewGlobalRef(cls);
+        gRectFConstructor = env->GetMethodID(gRectFClass, "<init>", "(FFFF)V");
     }
 }
 
@@ -557,7 +568,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_getHeight(JNIEn
     return (jint)lwf->height;
 }
 
-extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_getButtonInstanceSize(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget)
+extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_getButtonInstanceRect(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget)
 {
     if (!jLWF)
         return NULL;
@@ -569,13 +580,16 @@ extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_getButtonIns
     if (!button)
         return NULL;
 
-    getPointFClass(env);
-    jobject jPointF = env->NewObject(
-        gPointFClass, gPointFConstructor, button->width, button->height);
+    float x = button->matrix.translateX;
+    float y = button->matrix.translateY;
+
+    getRectFClass(env);
+    jobject jRectF = env->NewObject(gRectFClass, gRectFConstructor,
+        x, y, x + button->width, y + button->height);
 
     env->ReleaseStringUTFChars(jTarget, target);
 
-    return jPointF;
+    return jRectF;
 }
 
 extern "C" JNIEXPORT jobjectArray JNICALL Java_com_funzio_pure2D_lwf_LWF_getEvents(JNIEnv *env, jobject obj, jlong jLWF)
