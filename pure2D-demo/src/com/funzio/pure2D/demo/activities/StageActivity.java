@@ -61,6 +61,12 @@ public class StageActivity extends Activity implements OnTouchListener {
 
         getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
 
+        final DisplayMetrics metrics = getResources().getDisplayMetrics();
+        mDisplaySize.x = metrics.widthPixels;
+        mDisplaySize.y = metrics.heightPixels;
+        mDisplaySizeDiv2.x = mDisplaySize.x / 2;
+        mDisplaySizeDiv2.y = mDisplaySize.y / 2;
+
         setContentView(getLayout());
 
         // set up the stage and scene
@@ -74,12 +80,6 @@ public class StageActivity extends Activity implements OnTouchListener {
         mFrameRate = (TextView) findViewById(R.id.tv_frame_rate);
         // objects
         mObjects = (TextView) findViewById(R.id.tv_objects);
-
-        final DisplayMetrics metrics = getResources().getDisplayMetrics();
-        mDisplaySize.x = metrics.widthPixels;
-        mDisplaySize.y = metrics.heightPixels;
-        mDisplaySizeDiv2.x = mDisplaySize.x / 2;
-        mDisplaySizeDiv2.y = mDisplaySize.y / 2;
     }
 
     @Override

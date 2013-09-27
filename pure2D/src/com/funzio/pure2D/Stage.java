@@ -5,6 +5,8 @@ package com.funzio.pure2D;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Handler;
 
@@ -21,4 +23,10 @@ public interface Stage {
     public Handler getHandler();
 
     public void queueEvent(Runnable r);
+
+    public void setFixedSize(final int width, final int height);
+
+    public Point getFixedSize();
+
+    public PointF getFixedScale();
 }
