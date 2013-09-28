@@ -65,7 +65,7 @@ public class DynamicEmitterActivity extends StageActivity {
         mStage.setFixedSize(mZoomSize.x, mZoomSize.y);
 
         mScene = super.createScene();
-        // mScene.setCamera(new Camera(mZoomSize.x, mZoomSize.y)); // 50x slower than setFixedSize()
+        // mScene.setCamera(new Camera(mZoomSize.x, mZoomSize.y)); // 30x slower without setFixedSize()
 
         return mScene;
     }

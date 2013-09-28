@@ -68,7 +68,7 @@ public class BaseStage extends GLSurfaceView implements Stage {
     }
 
     /**
-     * Use this to take advantage of the Hardware Scaler for scaling up scene without any additional cost as opposed to using Camera. This can be called any time but must be on UI Thread.
+     * Use this to take advantage of the Hardware Scaler for scaling up scene in conjunction with Camera's zoom, without any additional cost. This can be called any time but must be on UI Thread.
      * 
      * @param width The surface's width. This can be < the resolution width
      * @param height The surface's height. This can be < the resolution height
