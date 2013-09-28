@@ -161,7 +161,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     }
 
     public void setNumPoints(final int numPoints) {
-        mNumPoints = numPoints;
+        mNumPointsUsed = mNumPoints = numPoints;
 
         if (numPoints < 2) {
             mPoints = null;
