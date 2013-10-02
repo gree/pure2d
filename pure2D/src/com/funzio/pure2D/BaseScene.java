@@ -1049,16 +1049,16 @@ public class BaseScene implements Scene {
     public void dispose() {
         if (mChildren != null) {
             removeAllChildren();
-            mChildren = null;
+            // mChildren = null;
 
             if (mTextureManager != null) {
                 mTextureManager.removeAllTextures();
-                mTextureManager = null;
+                // mTextureManager = null;
             }
 
-            mColor = null;
-            mSize = null;
-            mGLState = null;
+            // mColor = null;
+            // mSize = null;
+            // mGLState = null;
         }
     }
 
