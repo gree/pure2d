@@ -375,13 +375,17 @@ public class VGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
+            final Scene scene = getScene();
+            if (scene == null) {
+                return controlled;
+            }
+
             final int action = event.getActionMasked();
             final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-            final Scene scene = getScene();
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
-                final PointF global = getScene().getTouchedPoint(pointerIndex);
+                final PointF global = scene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         mSwipeAnchor = event.getY(pointerIndex);

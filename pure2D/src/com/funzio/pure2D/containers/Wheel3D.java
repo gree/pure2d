@@ -467,11 +467,16 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
 
         // swipe enabled?
         if (mSwipeEnabled) {
+            final Scene scene = getScene();
+            if (scene == null) {
+                return controlled;
+            }
+
             final int action = event.getActionMasked();
             final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-                final PointF global = getScene().getTouchedPoint(pointerIndex);
+                final PointF global = scene.getTouchedPoint(pointerIndex);
                 if (mTouchBounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         if (mOrientation == ORIENTATION_X) {
@@ -509,7 +514,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
 
                     } else {
 
-                        final Scene scene = getScene();
                         float deltaY = event.getY(swipePointerIndex) - mSwipeAnchor;
                         if (scene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
                             // flip
