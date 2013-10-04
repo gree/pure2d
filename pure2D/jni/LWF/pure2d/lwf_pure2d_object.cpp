@@ -22,7 +22,9 @@ struct DataContext {
 };
 
 static jclass gPointFClass;
+static jclass gRectFClass;
 static jmethodID gPointFConstructor;
+static jmethodID gRectFConstructor;
 
 class EventHandlerWrapper {
 private:
@@ -48,6 +50,24 @@ static LWFMap s_lwfMap;
 static int s_lwfId;
 
 static vector<shared_ptr<Pure2DRendererBitmapContext> > s_nullContexts;
+
+static void getPointFClass(JNIEnv *env)
+{
+    if (!gPointFClass) {
+        jclass cls = env->FindClass("android/graphics/PointF");
+        gPointFClass = (jclass)env->NewGlobalRef(cls);
+        gPointFConstructor = env->GetMethodID(gPointFClass, "<init>", "(FF)V");
+    }
+}
+
+static void getRectFClass(JNIEnv *env)
+{
+    if (!gRectFClass) {
+        jclass cls = env->FindClass("android/graphics/RectF");
+        gRectFClass = (jclass)env->NewGlobalRef(cls);
+        gRectFConstructor = env->GetMethodID(gRectFClass, "<init>", "(FFFF)V");
+    }
+}
 
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIEnv *env, jobject obj, jbyteArray jdata)
 {
@@ -404,6 +424,25 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleTo(JNIEnv 
     env->ReleaseStringUTFChars(jTarget, target);
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setColor(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jRed, jfloat jGreen, jfloat jBlue, jfloat jAlpha)
+{
+    if (!jLWF)
+        return;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    if (movie) {
+        movie->SetRed(jRed);
+        movie->SetGreen(jGreen);
+        movie->SetBlue(jBlue);
+        movie->SetAlpha(jAlpha);
+    }
+
+    env->ReleaseStringUTFChars(jTarget, target);
+}
+
 extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_localToGlobal(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget, jfloat jX, jfloat jY)
 {
     if (!jLWF)
@@ -417,12 +456,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_localToGloba
     if (movie)
         point = movie->LocalToGlobal(Point(jX, jY));
 
-    if (!gPointFClass) {
-        jclass cls = env->FindClass("android/graphics/PointF");
-        gPointFClass = (jclass)env->NewGlobalRef(cls);
-        gPointFConstructor = env->GetMethodID(gPointFClass, "<init>", "(FF)V");
-    }
-
+    getPointFClass(env);
     jobject jPointF =
         env->NewObject(gPointFClass, gPointFConstructor, point.x, point.y);
 
@@ -444,12 +478,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_globalToLoca
     if (movie)
         point = movie->GlobalToLocal(Point(jX, jY));
 
-    if (!gPointFClass) {
-        jclass cls = env->FindClass("android/graphics/PointF");
-        gPointFClass = (jclass)env->NewGlobalRef(cls);
-        gPointFConstructor = env->GetMethodID(gPointFClass, "<init>", "(FF)V");
-    }
-
+    getPointFClass(env);
     jobject jPointF =
         env->NewObject(gPointFClass, gPointFConstructor, point.x, point.y);
 
@@ -465,6 +494,24 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setPlaying(JNIE
 
     class LWF *lwf = (class LWF *)jLWF;
     lwf->playing = jPlaying;
+}
+
+extern "C" JNIEXPORT jboolean JNICALL Java_com_funzio_pure2D_lwf_LWF_isPlaying(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget)
+{
+    if (!jLWF)
+        return false;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Movie *movie = lwf->SearchMovieInstance(target);
+    bool isPlaying = false;
+    if (movie)
+        isPlaying = movie->playing;
+
+    env->ReleaseStringUTFChars(jTarget, target);
+
+    return (jboolean)isPlaying;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_fitForHeight(JNIEnv *env, jobject obj, jlong jLWF, jfloat jWidth, jfloat jHeight)
@@ -519,6 +566,51 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_getHeight(JNIEn
 
     class LWF *lwf = (class LWF *)jLWF;
     return (jint)lwf->height;
+}
+
+extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_getButtonInstanceRect(JNIEnv *env, jobject obj, jlong jLWF, jstring jTarget)
+{
+    if (!jLWF)
+        return NULL;
+
+    const char *target = env->GetStringUTFChars(jTarget, 0);
+
+    class LWF *lwf = (class LWF *)jLWF;
+    Button *button = lwf->SearchButtonInstance(target);
+    if (!button)
+        return NULL;
+
+    float x = button->matrix.translateX;
+    float y = button->matrix.translateY;
+
+    getRectFClass(env);
+    jobject jRectF = env->NewObject(gRectFClass, gRectFConstructor,
+        x, y, x + button->width, y + button->height);
+
+    env->ReleaseStringUTFChars(jTarget, target);
+
+    return jRectF;
+}
+
+extern "C" JNIEXPORT jobjectArray JNICALL Java_com_funzio_pure2D_lwf_LWF_getEvents(JNIEnv *env, jobject obj, jlong jLWF)
+{
+    if (!jLWF)
+        return NULL;
+
+    class LWF *lwf = (class LWF *)jLWF;
+    jobjectArray array = (jobjectArray)env->NewObjectArray(
+        lwf->data->events.size(), env->FindClass("java/lang/String"),
+        env->NewStringUTF(""));
+
+    const vector<string> &strings = lwf->data->strings;
+    LWF::vector<Format::Event>::const_iterator
+        it(lwf->data->events.begin()), itend(lwf->data->events.end());
+
+    for (int i = 0; it != itend; ++i, ++it)
+        env->SetObjectArrayElement(array,
+            i, env->NewStringUTF(strings[it->stringId].c_str()));
+
+    return array;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)

@@ -21,29 +21,34 @@ public class LWFData {
     private int mId = -1;
 
     private native int create(byte[] data);
+
     private native String getName(int lwfDataId);
+
     private native int getTextureNum(int lwfDataId);
+
     private native String getTextureName(int lwfDataId, int textureNo);
+
     private native void setGLTexture(int lwfDataId, int[] glTextureIds, float[] glTextureUs, float[] glTextureVs);
+
     private native void destroy(int lwfDataId);
+
     public static native void disposeAll();
 
-    public LWFData(InputStream stream) throws Exception {
+    public LWFData(final InputStream stream) throws Exception {
         init(null, stream);
     }
 
-    public LWFData(final LWFManager lwfManager, InputStream stream) throws Exception {
+    public LWFData(final LWFManager lwfManager, final InputStream stream) throws Exception {
         init(lwfManager, stream);
     }
 
-    private void init(final LWFManager lwfManager, InputStream stream) throws Exception {
+    private void init(final LWFManager lwfManager, final InputStream stream) throws Exception {
         mManager = lwfManager;
 
         byte[] header = new byte[HEADER_SIZE];
         stream.read(header);
 
-        int length = ByteBuffer.wrap(header,
-            header.length - 4, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+        int length = ByteBuffer.wrap(header, header.length - 4, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
 
         byte[] data = new byte[length];
         System.arraycopy(header, 0, data, 0, header.length);
@@ -56,7 +61,7 @@ public class LWFData {
         return mManager;
     }
 
-    public void setLWFManager(LWFManager lwfManager) {
+    public void setLWFManager(final LWFManager lwfManager) {
         mManager = lwfManager;
     }
 
@@ -72,20 +77,27 @@ public class LWFData {
         return getTextureNum(mId);
     }
 
-    public String getTextureName(int textureNo) {
+    public String getTextureName(final int textureNo) {
         return getTextureName(mId, textureNo);
     }
 
-    public void setTextures(Texture[] textures) {
+    public void setTextures(final Texture[] textures) {
         int textureNum = getTextureNum(mId);
         int[] glTextureIds = new int[textureNum];
         float[] glTextureUs = new float[textureNum];
         float[] glTextureVs = new float[textureNum];
         for (int i = 0; i < textureNum; ++i) {
             Texture texture = textures[i];
-            glTextureIds[i] = texture.getTextureID();
-            glTextureUs[i] = texture.mCoordScaleX;
-            glTextureVs[i] = texture.mCoordScaleY;
+            if (texture != null) {
+                glTextureIds[i] = texture.getTextureID();
+                glTextureUs[i] = texture.mCoordScaleX;
+                glTextureVs[i] = texture.mCoordScaleY;
+            } else {
+                // fail safe
+                glTextureIds[i] = -1;
+                glTextureUs[i] = 0;
+                glTextureVs[i] = 0;
+            }
         }
         setGLTexture(mId, glTextureIds, glTextureUs, glTextureVs);
     }
@@ -97,8 +109,9 @@ public class LWFData {
             }
             destroy(mId);
             mId = -1;
-            if (mManager != null)
+            if (mManager != null) {
                 mManager.removeLWFData(this);
+            }
             mManager = null;
         }
     }

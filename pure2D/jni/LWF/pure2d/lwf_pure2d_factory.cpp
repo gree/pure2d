@@ -38,17 +38,20 @@ shared_ptr<Renderer> Pure2DRendererFactory::ConstructParticle(
 void Pure2DRendererFactory::Init(LWF *lwf)
 {
 	m_lwf = lwf;
-
-	GLuint buffers[2];
-	glGenBuffers(2, buffers);
-	m_vertexBuffer = buffers[0];
-	m_indicesBuffer = buffers[1];
-
+	m_bufferGenerated = false;
 	m_updateCount = -1;
 }
 
 void Pure2DRendererFactory::BeginRender(LWF *lwf)
 {
+	if (!m_bufferGenerated) {
+		GLuint buffers[2];
+		glGenBuffers(2, buffers);
+		m_vertexBuffer = buffers[0];
+		m_indicesBuffer = buffers[1];
+		m_bufferGenerated = true;
+	}
+
 	if (m_updateCount != lwf->updateCount) {
 		m_updateCount = lwf->updateCount;
 		m_updated = true;
@@ -107,6 +110,9 @@ void Pure2DRendererFactory::EndRender(LWF *lwf)
 
 void Pure2DRendererFactory::Destruct()
 {
+	if (!m_bufferGenerated)
+		return;
+
 	GLuint buffers[] = {m_vertexBuffer, m_indicesBuffer};
 	glDeleteBuffers(2, buffers);
 }

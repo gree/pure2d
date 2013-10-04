@@ -47,6 +47,7 @@ protected:
 	const vector<shared_ptr<Pure2DRendererBitmapContext> > &m_bitmapContexts;
 	const vector<shared_ptr<Pure2DRendererBitmapContext> > &m_bitmapExContexts;
 	vector<Buffer> m_buffers;
+	bool m_bufferGenerated;
 	unsigned int m_vertexBuffer;
 	unsigned int m_indicesBuffer;
 	int m_updateCount;
