@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public class LWFManager {
     public static boolean LOG_ENABLED = true;
-    //private static final String TAG = LWFManager.class.getSimpleName();
+    // private static final String TAG = LWFManager.class.getSimpleName();
 
     private HashSet<LWFData> mDatas;
     private HashSet<LWF> mLWFs;
@@ -16,47 +16,71 @@ public class LWFManager {
         mLWFs = new HashSet<LWF>();
     }
 
-    public LWFData createLWFData(InputStream stream) throws Exception {
+    public LWFData createLWFData(final InputStream stream) throws Exception {
         LWFData data = new LWFData(this, stream);
-        mDatas.add(data);
+        synchronized (mDatas) {
+            mDatas.add(data);
+        }
         return data;
     }
 
-    public void addLWFData(LWFData data) {
+    public void addLWFData(final LWFData data) {
         data.setLWFManager(this);
-        mDatas.add(data);
+        synchronized (mDatas) {
+            mDatas.add(data);
+        }
     }
 
     public LWF createLWF() {
         LWF lwf = new LWF(this);
-        mLWFs.add(lwf);
+        synchronized (mLWFs) {
+            mLWFs.add(lwf);
+        }
         return lwf;
     }
 
-    public LWF createLWF(LWFData data) {
+    public LWF createLWF(final LWFData data) {
         LWF lwf = new LWF(this, data);
-        mLWFs.add(lwf);
+        synchronized (mLWFs) {
+            mLWFs.add(lwf);
+        }
         return lwf;
     }
 
-    public void removeLWFData(LWFData data) {
-        if (!mRemoving)
-            mDatas.remove(data);
+    public void removeLWFData(final LWFData data) {
+        if (!mRemoving) {
+            synchronized (mDatas) {
+                mDatas.remove(data);
+            }
+        }
     }
 
-    public void removeLWF(LWF lwf) {
-        if (!mRemoving)
-            mLWFs.remove(lwf);
+    public void removeLWF(final LWF lwf) {
+        if (!mRemoving) {
+            synchronized (mLWFs) {
+                mLWFs.remove(lwf);
+            }
+        }
     }
 
     public void dispose() {
         mRemoving = true;
-        for (LWF lwf : mLWFs)
-            lwf.dispose();
-        for (LWFData data : mDatas)
-            data.dispose();
+        synchronized (mLWFs) {
+            for (LWF lwf : mLWFs) {
+                lwf.dispose();
+            }
+        }
+        synchronized (mDatas) {
+            for (LWFData data : mDatas) {
+                data.dispose();
+            }
+        }
         mRemoving = false;
-        mLWFs.clear();
-        mDatas.clear();
+        synchronized (mLWFs) {
+            mLWFs.clear();
+        }
+        synchronized (mDatas) {
+            mDatas.clear();
+        }
     }
 }
