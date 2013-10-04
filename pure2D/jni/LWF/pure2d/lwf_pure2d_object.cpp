@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <android/log.h>
+#include <pthread.h>
 #include "lwf.h"
 #include "lwf_pure2d_bitmap.h"
 #include "lwf_pure2d_factory.h"
@@ -43,13 +44,23 @@ public:
 typedef map<int, DataContext> DataMap;
 typedef map<int, shared_ptr<class LWF> > LWFMap;
 
+static pthread_mutex_t s_dataMutex;
 static DataMap s_dataMap;
 static int s_dataId;
 
+static pthread_mutex_t s_lwfMutex;
 static LWFMap s_lwfMap;
 static int s_lwfId;
 
 static vector<shared_ptr<Pure2DRendererBitmapContext> > s_nullContexts;
+
+jint JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    pthread_mutex_init(&s_dataMutex, 0);
+    pthread_mutex_init(&s_lwfMutex, 0);
+
+    return JNI_VERSION_1_4;
+}
 
 static void getPointFClass(JNIEnv *env)
 {
@@ -107,8 +118,10 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIE
                 make_shared<Pure2DRendererBitmapContext>(data.get(), bx);
         }
 
+        pthread_mutex_lock(&s_dataMutex);
         id = ++s_dataId;
         s_dataMap[id] = DataContext(data, bitmapContexts, bitmapExContexts);
+        pthread_mutex_unlock(&s_dataMutex);
     } else {
         id = -1;
     }
@@ -119,37 +132,58 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_create(JNIE
 
 extern "C" JNIEXPORT jstring JNICALL Java_com_funzio_pure2D_lwf_LWFData_getName(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
+    const char *name = 0;
+    pthread_mutex_lock(&s_dataMutex);
     DataMap::iterator it = s_dataMap.find(jLWFDataId);
-    if (it == s_dataMap.end())
+    if (it != s_dataMap.end())
+        name = it->second.data->name.c_str();
+    pthread_mutex_unlock(&s_dataMutex);
+
+    if (!name)
         return 0;
 
-    return env->NewStringUTF(it->second.data->name.c_str());
+    return env->NewStringUTF(name);
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWFData_getTextureNum(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
+    int size = 0;
+    pthread_mutex_lock(&s_dataMutex);
     DataMap::iterator it = s_dataMap.find(jLWFDataId);
-    if (it == s_dataMap.end())
-        return 0;
+    if (it != s_dataMap.end())
+        size = it->second.data->textures.size();
+    pthread_mutex_unlock(&s_dataMutex);
 
-    return (jint)it->second.data->textures.size();
+    return (jint)size;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_com_funzio_pure2D_lwf_LWFData_getTextureName(JNIEnv *env, jobject obj, jint jLWFDataId, jint jNo)
 {
+    const char *name = 0;
+    pthread_mutex_lock(&s_dataMutex);
     DataMap::iterator it = s_dataMap.find(jLWFDataId);
-    if (it == s_dataMap.end())
+    if (it != s_dataMap.end()) {
+        const Format::Texture &t = it->second.data->textures[jNo];
+        name = t.GetFilename(it->second.data.get()).c_str();
+    }
+    pthread_mutex_unlock(&s_dataMutex);
+
+    if (!name)
         return 0;
 
-    const Format::Texture &t = it->second.data->textures[jNo];
-    string name = t.GetFilename(it->second.data.get());
-    return env->NewStringUTF(name.c_str());
+    return env->NewStringUTF(name);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTexture(JNIEnv *env, jobject obj, jint jLWFDataId, jintArray jGLTextureIds, jfloatArray jGLTextureUs, jfloatArray jGLTextureVs)
 {
+    DataContext *dataContext = 0;
+    pthread_mutex_lock(&s_dataMutex);
     DataMap::iterator it = s_dataMap.find(jLWFDataId);
-    if (it == s_dataMap.end())
+    if (it != s_dataMap.end())
+        dataContext = &it->second;
+    pthread_mutex_unlock(&s_dataMutex);
+
+    if (!dataContext)
         return;
 
     jsize len = env->GetArrayLength(jGLTextureIds);
@@ -158,8 +192,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextur
     jfloat *vs = env->GetFloatArrayElements(jGLTextureVs, NULL);
 
     vector<shared_ptr<Pure2DRendererBitmapContext> >::iterator cit, citend;
-    cit = it->second.bitmapContexts.begin();
-    citend = it->second.bitmapContexts.end();
+    cit = dataContext->bitmapContexts.begin();
+    citend = dataContext->bitmapContexts.end();
     for (; cit != citend; ++cit) {
         if (!*cit)
             continue;
@@ -167,8 +201,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextur
         if (id >= 0)
             (*cit)->SetGLTexture(ids[id], us[id], vs[id]);
     }
-    cit = it->second.bitmapExContexts.begin();
-    citend = it->second.bitmapExContexts.end();
+    cit = dataContext->bitmapExContexts.begin();
+    citend = dataContext->bitmapExContexts.end();
     for (; cit != citend; ++cit) {
         if (!*cit)
             continue;
@@ -184,12 +218,16 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_setGLTextur
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_destroy(JNIEnv *env, jobject obj, jint jLWFDataId)
 {
+    pthread_mutex_lock(&s_dataMutex);
     s_dataMap.erase(jLWFDataId);
+    pthread_mutex_unlock(&s_dataMutex);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWFData_disposeAll(JNIEnv *env, jobject obj)
 {
+    pthread_mutex_lock(&s_dataMutex);
     s_dataMap.clear();
+    pthread_mutex_unlock(&s_dataMutex);
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *env, jobject obj, jint jLWFDataId)
@@ -205,32 +243,43 @@ extern "C" JNIEXPORT jint JNICALL Java_com_funzio_pure2D_lwf_LWF_create(JNIEnv *
 
     } else {
 
+        DataContext *dataContext = 0;
+        pthread_mutex_lock(&s_dataMutex);
         DataMap::iterator it = s_dataMap.find(jLWFDataId);
-        if (it == s_dataMap.end())
+        if (it != s_dataMap.end())
+            dataContext = &it->second;
+        pthread_mutex_unlock(&s_dataMutex);
+
+        if (!dataContext)
             return -1;
 
         shared_ptr<Pure2DRendererFactory> factory =
             make_shared<Pure2DRendererFactory>(
-                it->second.bitmapContexts, it->second.bitmapExContexts);
-        lwf = make_shared<class LWF>(it->second.data, factory);
+                dataContext->bitmapContexts, dataContext->bitmapExContexts);
+        lwf = make_shared<class LWF>(dataContext->data, factory);
 
     }
 
     lwf->privateData = env->NewGlobalRef(obj);
 
+    pthread_mutex_lock(&s_lwfMutex);
     int id = ++s_lwfId;
     s_lwfMap[id] = lwf;
+    pthread_mutex_unlock(&s_lwfMutex);
 
     return id;
 }
 
 extern "C" JNIEXPORT jlong JNICALL Java_com_funzio_pure2D_lwf_LWF_getPointer(JNIEnv *env, jobject obj, jint jLWFId)
 {
+    void *pointer = 0;
+    pthread_mutex_lock(&s_lwfMutex);
     LWFMap::iterator it = s_lwfMap.find(jLWFId);
-    if (it == s_lwfMap.end())
-        return 0;
+    if (it != s_lwfMap.end())
+        pointer = it->second.get();
+    pthread_mutex_unlock(&s_lwfMutex);
 
-    return (jlong)it->second.get();
+    return (jlong)pointer;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_init(JNIEnv *env, jobject obj, jlong jLWF)
@@ -265,12 +314,17 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_attachLWF(JNIEn
     if (!jLWF)
         return;
 
+    shared_ptr<class LWF> child;
+    pthread_mutex_lock(&s_lwfMutex);
     LWFMap::iterator it = s_lwfMap.find(jChildId);
-    if (it == s_lwfMap.end())
+    if (it != s_lwfMap.end())
+        child = it->second;
+    pthread_mutex_unlock(&s_lwfMutex);
+
+    if (!child)
         return;
 
     class LWF *lwf = (class LWF *)jLWF;
-    shared_ptr<class LWF> &child = it->second;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
     const char *attachName = env->GetStringUTFChars(jAttachName, 0);
@@ -615,11 +669,15 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_com_funzio_pure2D_lwf_LWF_getEven
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv *env, jobject obj, jint jLWFId)
 {
+    shared_ptr<class LWF> lwf;
+    pthread_mutex_lock(&s_lwfMutex);
     LWFMap::iterator it = s_lwfMap.find(jLWFId);
-    if (it == s_lwfMap.end())
-        return;
+    if (it != s_lwfMap.end())
+        lwf = it->second;
+    pthread_mutex_unlock(&s_lwfMutex);
 
-    shared_ptr<class LWF> lwf = it->second;
+    if (!lwf)
+        return;
 
     env->DeleteGlobalRef((jobject)lwf->privateData);
 
@@ -627,11 +685,15 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_destroy(JNIEnv 
         lwf->parent->DetachLWF(lwf);
     lwf->Destroy();
 
+    pthread_mutex_lock(&s_lwfMutex);
     s_lwfMap.erase(it);
+    pthread_mutex_unlock(&s_lwfMutex);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_disposeAll(JNIEnv *env, jobject obj)
 {
+    pthread_mutex_lock(&s_lwfMutex);
     s_lwfMap.clear();
+    pthread_mutex_unlock(&s_lwfMutex);
 }
 
