@@ -327,7 +327,11 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_attachLWF(JNIEn
     class LWF *lwf = (class LWF *)jLWF;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
     const char *attachName = env->GetStringUTFChars(jAttachName, 0);
+    if (!attachName)
+        return;
 
     Movie *movie = lwf->SearchMovieInstance(target);
     if (movie)
@@ -345,6 +349,8 @@ extern "C" JNIEXPORT int JNICALL Java_com_funzio_pure2D_lwf_LWF_addEventHandler(
     class LWF *lwf = (class LWF *)jLWF;
 
     const char *event = env->GetStringUTFChars(jEvent, 0);
+    if (!event)
+        return -1;
     jclass cls = env->GetObjectClass(obj);
     jmethodID method = env->GetMethodID(cls, "callHandler", "(I)V");
 
@@ -362,7 +368,11 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoAndPlay(JNI
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
     const char *label = env->GetStringUTFChars(jLabel, 0);
+    if (!label)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -379,6 +389,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_gotoFrameAndPla
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -394,6 +406,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_play(JNIEnv *en
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -409,6 +423,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_stop(JNIEnv *en
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -424,6 +440,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_move(JNIEnv *en
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -439,6 +457,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_moveTo(JNIEnv *
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -454,6 +474,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scale(JNIEnv *e
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -469,6 +491,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_scaleTo(JNIEnv 
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -484,6 +508,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_funzio_pure2D_lwf_LWF_setColor(JNIEnv
         return;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -503,6 +529,8 @@ extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_localToGloba
         return NULL;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return NULL;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -525,6 +553,8 @@ extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_globalToLoca
         return NULL;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return NULL;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -556,6 +586,8 @@ extern "C" JNIEXPORT jboolean JNICALL Java_com_funzio_pure2D_lwf_LWF_isPlaying(J
         return false;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return false;
 
     class LWF *lwf = (class LWF *)jLWF;
     Movie *movie = lwf->SearchMovieInstance(target);
@@ -628,6 +660,8 @@ extern "C" JNIEXPORT jobject JNICALL Java_com_funzio_pure2D_lwf_LWF_getButtonIns
         return NULL;
 
     const char *target = env->GetStringUTFChars(jTarget, 0);
+    if (!target)
+        return NULL;
 
     class LWF *lwf = (class LWF *)jLWF;
     Button *button = lwf->SearchButtonInstance(target);
