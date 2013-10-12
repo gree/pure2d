@@ -189,6 +189,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".ui.XMLUIActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".camera.CameraMenuActivity"
             android:label="@string/camera"
             android:screenOrientation="portrait" >

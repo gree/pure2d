@@ -142,6 +142,7 @@ public final class R {
         public static final int btn_vwheel_3d=0x7f09002a;
         public static final int btn_wave_animation=0x7f090018;
         public static final int btn_whirl_animation=0x7f09001b;
+        public static final int btn_xml_ui=0x7f090091;
         public static final int cb_cache=0x7f090054;
         public static final int cb_checker=0x7f09007e;
         public static final int cb_flip_orientation=0x7f09006d;
@@ -159,10 +160,10 @@ public final class R {
         public static final int cb_textures=0x7f090083;
         public static final int col1=0x7f090047;
         public static final int col2=0x7f090048;
-        public static final int debug=0x7f090092;
-        public static final int fps=0x7f090093;
+        public static final int debug=0x7f090093;
+        public static final int fps=0x7f090094;
         public static final int nova_menu_layout=0x7f090046;
-        public static final int pause=0x7f090091;
+        public static final int pause=0x7f090092;
         public static final int radio_1=0x7f090074;
         public static final int radio_2=0x7f090075;
         public static final int radio_3=0x7f090076;
@@ -208,7 +209,7 @@ public final class R {
         public static final int radio_tank_fire=0x7f09005f;
         public static final int radio_v22osprey=0x7f09005c;
         public static final int radio_white=0x7f090003;
-        public static final int source=0x7f090094;
+        public static final int source=0x7f090095;
         public static final int stage=0x7f090079;
         public static final int sv_code=0x7f09006a;
         public static final int tv_code=0x7f09006b;
@@ -437,6 +438,7 @@ public final class R {
         public static final int wave_animation=0x7f05006a;
         public static final int whirl_animation=0x7f050080;
         public static final int white=0x7f050074;
+        public static final int xml_uis=0x7f05009a;
         public static final int zeus=0x7f050035;
     }
     public static final class style {
@@ -457,5 +459,6 @@ public final class R {
     public static final class xml {
         public static final int atlas=0x7f040000;
         public static final int atlas_large=0x7f040001;
+        public static final int test_ui=0x7f040002;
     }
 }

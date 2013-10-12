@@ -70,4 +70,11 @@
         android:onClick="onClickButton"
         android:text="@string/lists" />
 
+    <Button
+        android:id="@+id/btn_xml_ui"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/xml_uis" />
+
 </LinearLayout>

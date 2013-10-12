@@ -44,7 +44,7 @@ public class FunzioAtlas extends XMLAtlas {
             // perform the synchronous parse
             xmlreader.parse(new InputSource(new StringReader(xml)));
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, "Parsing Error!", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class FunzioAtlas extends XMLAtlas {
             try {
                 eventType = parser.next();
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "Parsing Error!", e);
             }
         }
     }

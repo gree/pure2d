@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group
+    height="300"
+    width="300" >
+
+    <!-- testing -->
+    <VGroup>
+        <Button
+            id="button_a"
+            height="50"
+            width="200" />
+        <Button
+            id="button_b"
+            height="50"
+            width="200" />
+    </VGroup>
+
+</Group>

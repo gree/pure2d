@@ -182,5 +182,6 @@
     <string name="grid_astar">Grid &amp; Astar</string>
     <string name="source">Source</string>
     <string name="fps">FPS</string>
+    <string name="xml_uis">XML UIs</string>
 
 </resources>
