@@ -174,10 +174,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
             // no color buffer supported
             glState.setColorArrayEnabled(false);
-            // clear color
-            glState.setColor(null);
-            // clear blending
-            glState.setBlendFunc(null);
+            // now the real blend mode
+            glState.setBlendFunc(getInheritedBlendFunc());
+            // color and alpha
+            glState.setColor(getInheritedColor());
             // now draw the cache
             mCacheDrawer.draw(glState);
         } else {
