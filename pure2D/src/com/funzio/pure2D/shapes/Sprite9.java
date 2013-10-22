@@ -154,9 +154,9 @@ public class Sprite9 extends Rectangular {
 
                 // set the coordinates
                 if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-                    mCoordBuffers[index].setRect(tx * tsx, tyInverted * tsy, tw * tsx, th * tsy);
+                    mCoordBuffers[index].setRectFlipVertical(tx * tsx, tyInverted * tsy, tw * tsx, th * tsy);
                 } else {
-                    mCoordBuffers[index].setRect(tx * tsx, ty * tsy, tw * tsx, -th * tsy);
+                    mCoordBuffers[index].setRectFlipVertical(tx * tsx, ty * tsy, tw * tsx, -th * tsy);
                 }
 
                 vx += vw;

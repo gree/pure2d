@@ -10,6 +10,7 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
     private static final int NUM_COORD_PER_CELL = 4 * 2;
 
     protected int mNumCells;
+    protected boolean mInvalidated = false;
 
     public QuadMeshTextureCoordBuffer(final int numCells) {
         super(null);
@@ -20,6 +21,8 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
     public void setNumCells(final int numCells) {
         if (numCells > mNumCells) {
             mValues = new float[numCells * NUM_COORD_PER_CELL];
+
+            mInvalidated = true;
         }
 
         mNumCells = numCells;
@@ -37,9 +40,24 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
      * @param y
      * @param width
      * @param height
-     * @see #applyValues()
+     * @see #validate()
      */
     public void setRectAt(final int index, final float x, final float y, final float width, final float height) {
+
+        final int start = index * NUM_COORD_PER_CELL;
+        mValues[start + 0] = x;
+        mValues[start + 1] = y;
+        mValues[start + 2] = x;
+        mValues[start + 3] = y + height;
+        mValues[start + 4] = x + width;
+        mValues[start + 5] = y;
+        mValues[start + 6] = x + width;
+        mValues[start + 7] = y + height;
+
+        mInvalidated = true;
+    }
+
+    public void setRectFlipVerticalAt(final int index, final float x, final float y, final float width, final float height) {
 
         final int start = index * NUM_COORD_PER_CELL;
         mValues[start + 0] = x;
@@ -50,6 +68,8 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
         mValues[start + 5] = y + height;
         mValues[start + 6] = x + width;
         mValues[start + 7] = y;
+
+        mInvalidated = true;
     }
 
     /**
@@ -57,7 +77,7 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
      * 
      * @param index
      * @param values
-     * @see #applyValues()
+     * @see #validate()
      */
     public void setRectAt(final int index, final float... values) {
 
@@ -70,13 +90,20 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
         mValues[start + 5] = values[5];
         mValues[start + 6] = values[6];
         mValues[start + 7] = values[7];
+
+        mInvalidated = true;
     }
 
     /**
      * Applies the values set by {@link #setRectAt(int, float...)}
      */
-    public void applyValues() {
-        setValues(mValues);
+    public void validate() {
+        if (mInvalidated) {
+            setValues(mValues);
+
+            // unflag
+            mInvalidated = false;
+        }
     }
 
 }

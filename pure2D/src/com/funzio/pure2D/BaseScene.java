@@ -813,16 +813,17 @@ public class BaseScene implements Scene {
     @Deprecated
     final public PointF globalToScreen(final float globalX, final float globalY) {
         final Rect stageRect = mStage.getRect();
+        final PointF stageScale = mStage.getFixedScale();
         final PointF screen;
         // check the camera
         if (mCamera != null) {
             screen = mCamera.globalToLocal(globalX, globalY);
 
             final RectF cameraRect = mCamera.mZoomRect;
-            screen.x /= cameraRect.width() / mSize.x;
-            screen.y /= cameraRect.height() / mSize.y;
+            screen.x /= (cameraRect.width() / mSize.x) * stageScale.x;
+            screen.y /= (cameraRect.height() / mSize.y) * stageScale.y;
         } else {
-            screen = new PointF(globalX, globalY);
+            screen = new PointF(globalX / stageScale.x, globalY / stageScale.y);
         }
 
         screen.x += stageRect.left;
@@ -845,16 +846,17 @@ public class BaseScene implements Scene {
      */
     final public void globalToScreen(final float globalX, final float globalY, final PointF result) {
         final Rect stageRect = mStage.getRect();
+        final PointF stageScale = mStage.getFixedScale();
         // check the camera
         if (mCamera != null) {
             mCamera.globalToLocal(globalX, globalY, result);
 
             final RectF cameraRect = mCamera.mZoomRect;
-            result.x /= cameraRect.width() / mSize.x;
-            result.y /= cameraRect.height() / mSize.y;
+            result.x /= (cameraRect.width() / mSize.x) * stageScale.x;
+            result.y /= (cameraRect.height() / mSize.y) * stageScale.y;
         } else {
-            result.x = globalX;
-            result.y = globalY;
+            result.x = globalX / stageScale.x;
+            result.y = globalY / stageScale.y;
         }
 
         result.x += stageRect.left;
@@ -886,6 +888,7 @@ public class BaseScene implements Scene {
     @Deprecated
     final public PointF screenToGlobal(final float screenX, final float screenY) {
         final Rect stageRect = mStage.getRect();
+        final PointF stageScale = mStage.getFixedScale();
         float localX = screenX - stageRect.left;
         float localY;
         if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
@@ -898,11 +901,11 @@ public class BaseScene implements Scene {
         // check the camera
         if (mCamera != null) {
             final RectF cameraRect = mCamera.mZoomRect;
-            localX *= cameraRect.width() / mSize.x;
-            localY *= cameraRect.height() / mSize.y;
+            localX *= (cameraRect.width() / mSize.x) * stageScale.x;
+            localY *= (cameraRect.height() / mSize.y) * stageScale.y;
             return mCamera.localToGlobal(localX, localY);
         } else {
-            return new PointF(localX, localY);
+            return new PointF(localX * stageScale.x, localY * stageScale.y);
         }
     }
 
@@ -914,8 +917,10 @@ public class BaseScene implements Scene {
      */
     final public void screenToGlobal(final float screenX, final float screenY, final PointF result) {
         final Rect stageRect = mStage.getRect();
+        final PointF stageScale = mStage.getFixedScale();
         float localX = screenX - stageRect.left;
         float localY;
+
         if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
             localY = screenY - stageRect.top;
         } else {
@@ -926,12 +931,12 @@ public class BaseScene implements Scene {
         // check the camera
         if (mCamera != null) {
             final RectF cameraRect = mCamera.mZoomRect;
-            localX *= cameraRect.width() / mSize.x;
-            localY *= cameraRect.height() / mSize.y;
+            localX *= (cameraRect.width() / mSize.x) * stageScale.x;
+            localY *= (cameraRect.height() / mSize.y) * stageScale.y;
             mCamera.localToGlobal(localX, localY, result);
         } else {
-            result.x = localX;
-            result.y = localY;
+            result.x = localX * stageScale.x;
+            result.y = localY * stageScale.y;
         }
     }
 

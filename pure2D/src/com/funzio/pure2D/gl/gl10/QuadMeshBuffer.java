@@ -15,6 +15,7 @@ public class QuadMeshBuffer extends VertexBuffer {
     protected float[] mVertices;
     protected short[] mIndices;
     protected int mNumCells = 0;
+    protected boolean mInvalidated = false;
 
     public QuadMeshBuffer(final int numCells) {
         super(GL10.GL_TRIANGLES, numCells * NUM_VERTICES_PER_CELL);
@@ -43,6 +44,8 @@ public class QuadMeshBuffer extends VertexBuffer {
                 vertexStart += NUM_VERTICES_PER_CELL;
             }
             setIndices(mIndices);
+
+            mInvalidated = true;
         }
 
         mNumCells = numCells;
@@ -61,7 +64,7 @@ public class QuadMeshBuffer extends VertexBuffer {
      * @param y
      * @param width
      * @param height
-     * @see #applyValues()
+     * @see #validate()
      */
     public void setRectAt(final int index, final float x, final float y, final float width, final float height) {
 
@@ -74,6 +77,8 @@ public class QuadMeshBuffer extends VertexBuffer {
         mVertices[start + 5] = y + height;
         mVertices[start + 6] = x + width;
         mVertices[start + 7] = y;
+
+        mInvalidated = true;
     }
 
     /**
@@ -84,7 +89,7 @@ public class QuadMeshBuffer extends VertexBuffer {
      * @param y
      * @param width
      * @param height
-     * @see #applyValues()
+     * @see #validate()
      */
     public void setRectFlipVerticalAt(final int index, final float x, final float y, final float width, final float height) {
 
@@ -97,13 +102,20 @@ public class QuadMeshBuffer extends VertexBuffer {
         mVertices[start + 7] = y + height;
         mVertices[start + 4] = x + width;
         mVertices[start + 5] = y;
+
+        mInvalidated = true;
     }
 
     /**
      * Applies the values set by {@link #setRectAt(int, float...)}
      */
-    public void applyValues() {
-        setValues(mVertices);
+    public void validate() {
+        if (mInvalidated) {
+            setValues(mVertices);
+
+            // unflag
+            mInvalidated = false;
+        }
     }
 
 }

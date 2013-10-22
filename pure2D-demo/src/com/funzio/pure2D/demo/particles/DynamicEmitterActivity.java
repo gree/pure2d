@@ -2,10 +2,13 @@ package com.funzio.pure2D.demo.particles;
 
 import java.util.ArrayList;
 
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
@@ -19,6 +22,8 @@ public class DynamicEmitterActivity extends StageActivity {
     private Texture mSmokeTexture;
     private Texture mFireTexture;
     private ArrayList<DynamicEmitter> mEmitters = new ArrayList<DynamicEmitter>();
+    private Point mZoomSize = new Point();
+    private PointF mTempPoint = new PointF();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -34,22 +39,35 @@ public class DynamicEmitterActivity extends StageActivity {
                     loadTextures();
 
                     // create emitters
-                    DynamicEmitter emitter = new DynamicEmitter(mDisplaySize, mFireTexture, mSmokeTexture);
+                    DynamicEmitter emitter = new DynamicEmitter(mZoomSize, mFireTexture, mSmokeTexture);
                     mScene.addChild(emitter);
                     mEmitters.add(emitter);
 
-                    emitter = new DynamicEmitter(mDisplaySize, mFireTexture, mSmokeTexture);
+                    emitter = new DynamicEmitter(mZoomSize, mFireTexture, mSmokeTexture);
                     emitter.setType(2);
                     mScene.addChild(emitter);
                     mEmitters.add(emitter);
 
-                    emitter = new DynamicEmitter(mDisplaySize, mFireTexture, mSmokeTexture);
+                    emitter = new DynamicEmitter(mZoomSize, mFireTexture, mSmokeTexture);
                     emitter.setType(3);
                     mScene.addChild(emitter);
                     mEmitters.add(emitter);
                 }
             }
         });
+    }
+
+    @Override
+    protected BaseScene createScene() {
+
+        mZoomSize.x = (int) (mDisplaySize.x * 0.25f);
+        mZoomSize.y = (int) (mDisplaySize.y * 0.25f);
+        mStage.setFixedSize(mZoomSize.x, mZoomSize.y);
+
+        mScene = super.createScene();
+        // mScene.setCamera(new Camera(mZoomSize.x, mZoomSize.y)); // 30x slower without setFixedSize()
+
+        return mScene;
     }
 
     /*
@@ -81,10 +99,12 @@ public class DynamicEmitterActivity extends StageActivity {
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         final int action = event.getAction();
+
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
             for (int i = 0; i < NUM; i++) {
                 DynamicEmitter emitter = mEmitters.get(i);
-                emitter.setDestination(event.getX(), mDisplaySize.y - event.getY());
+                mScene.screenToGlobal(event.getX(), event.getY(), mTempPoint);
+                emitter.setDestination(mTempPoint.x, mTempPoint.y);
                 emitter.lockDestination(true);
             }
         } else if (action == MotionEvent.ACTION_UP) {

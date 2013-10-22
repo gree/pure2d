@@ -1,5 +1,6 @@
 package com.funzio.pure2D.demo.objects;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.funzio.pure2D.shapes.Rectangular;
 public class HelloObjectActivity extends StageActivity {
 
     protected DrawableTexture mTexture;
+    private PointF mTempPoint = new PointF();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -20,16 +22,16 @@ public class HelloObjectActivity extends StageActivity {
         // addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
     }
 
-    private void addObject(final float x, final float y) {
+    private void addObject(final float screenX, final float screenY) {
         // create object
-        Rectangular obj = new Rectangular();
+        final Rectangular obj = new Rectangular();
         obj.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
         obj.setSize(128, 128);
-
         // center origin
         obj.setOriginAtCenter();
         // position
-        obj.setPosition(x, y);
+        mScene.screenToGlobal(screenX, screenY, mTempPoint);
+        obj.setPosition(mTempPoint);
         // add to scene
         mScene.addChild(obj);
 
@@ -62,7 +64,7 @@ public class HelloObjectActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addObject(event.getX(), mDisplaySize.y - event.getY());
+                    addObject(event.getX(), event.getY());
                 }
             });
         }
