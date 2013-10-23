@@ -4,6 +4,7 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -41,6 +42,7 @@ public class StageActivity extends Activity implements OnTouchListener {
     protected Point mDisplaySize = new Point();
     protected Point mDisplaySizeDiv2 = new Point();
     protected Random mRandom = new Random();
+    protected PointF mTempPoint = new PointF();
 
     // views
     protected TextView mFrameRate;

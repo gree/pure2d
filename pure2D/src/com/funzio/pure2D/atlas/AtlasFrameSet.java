@@ -101,6 +101,13 @@ public class AtlasFrameSet {
         Collections.reverse(mFrames);
     }
 
+    public void appendFrames(final AtlasFrameSet frames) {
+        final int size = frames.getNumFrames();
+        for (int i = 0; i < size; i++) {
+            addFrame(frames.getFrame(i));
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder st = new StringBuilder();

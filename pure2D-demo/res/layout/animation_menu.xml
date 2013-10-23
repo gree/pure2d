@@ -6,26 +6,51 @@
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
 
-    <Button
-        android:id="@+id/btn_hello_atlas"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/texture_atlas" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
 
-    <Button
-        android:id="@+id/btn_json_atlas"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/json_atlas" />
+        <Button
+            android:id="@+id/btn_hello_atlas"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/texture_atlas" />
 
-    <Button
-        android:id="@+id/btn_image_sequence"
+        <Button
+            android:id="@+id/btn_image_sequence"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/image_sequence" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/image_sequence" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_json_atlas"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/json_atlas" />
+
+        <Button
+            android:id="@+id/btn_multi_atlas"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/multi_atlases" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -117,7 +142,6 @@
             android:layout_weight="0.5"
             android:onClick="onClickButton"
             android:text="@string/whirl_animation" />
-
     </LinearLayout>
 
     <LinearLayout

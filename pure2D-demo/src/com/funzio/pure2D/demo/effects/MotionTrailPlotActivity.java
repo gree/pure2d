@@ -90,7 +90,6 @@ public class MotionTrailPlotActivity extends StageActivity {
         // trail.setMinLength(400);
         trail.setTarget(obj);
         mScene.addChild(trail);
-
     }
 
     @Override

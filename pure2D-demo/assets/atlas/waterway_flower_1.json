@@ -1,0 +1,156 @@
+{"frames": [
+
+{
+	"filename": "Flower0047.png",
+	"frame": {"x":1,"y":1,"w":48,"h":164},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":75,"w":48,"h":164},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0048.png",
+	"frame": {"x":50,"y":1,"w":48,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":69,"w":48,"h":192},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0049.png",
+	"frame": {"x":99,"y":1,"w":48,"h":190},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":66,"w":48,"h":190},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0050.png",
+	"frame": {"x":148,"y":1,"w":48,"h":190},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":62,"w":48,"h":190},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0051.png",
+	"frame": {"x":197,"y":1,"w":48,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":56,"w":48,"h":192},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0052.png",
+	"frame": {"x":246,"y":1,"w":50,"h":190},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":53,"w":50,"h":190},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0053.png",
+	"frame": {"x":297,"y":1,"w":50,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":47,"w":50,"h":192},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0054.png",
+	"frame": {"x":348,"y":1,"w":50,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":43,"w":50,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0055.png",
+	"frame": {"x":399,"y":1,"w":50,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":39,"w":50,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0056.png",
+	"frame": {"x":450,"y":1,"w":52,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":36,"w":52,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0057.png",
+	"frame": {"x":1,"y":220,"w":54,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":33,"w":54,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0058.png",
+	"frame": {"x":56,"y":220,"w":56,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":30,"w":56,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0059.png",
+	"frame": {"x":113,"y":220,"w":56,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":28,"w":56,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0060.png",
+	"frame": {"x":170,"y":220,"w":56,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":26,"w":56,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0061.png",
+	"frame": {"x":227,"y":220,"w":58,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":24,"w":58,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0062.png",
+	"frame": {"x":286,"y":220,"w":58,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":23,"w":58,"h":218},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0063.png",
+	"frame": {"x":345,"y":220,"w":58,"h":224},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":16,"w":58,"h":224},
+	"sourceSize": {"w":120,"h":268}
+},
+{
+	"filename": "Flower0064.png",
+	"frame": {"x":404,"y":220,"w":58,"h":226},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":13,"w":58,"h":226},
+	"sourceSize": {"w":120,"h":268}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "waterway_flower_1.png",
+	"format": "RGBA8888",
+	"size": {"w":503,"h":447},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:9ccf6870f64b04cbed73ff48d057005f:1/1$"
+}
+}

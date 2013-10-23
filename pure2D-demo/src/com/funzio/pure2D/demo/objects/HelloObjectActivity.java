@@ -1,6 +1,5 @@
 package com.funzio.pure2D.demo.objects;
 
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.funzio.pure2D.shapes.Rectangular;
 public class HelloObjectActivity extends StageActivity {
 
     protected DrawableTexture mTexture;
-    private PointF mTempPoint = new PointF();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
