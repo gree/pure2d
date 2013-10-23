@@ -17,7 +17,7 @@ import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
 
 public class MultiAtlasActivity extends StageActivity {
-    private static final int NUM_FILES = 15;
+    private static final int NUM_FILES = 3;
 
     private Sprite[] mAtlasSprites = new Sprite[NUM_FILES];
     private AtlasFrameSet mAllFrames = new AtlasFrameSet("");
@@ -54,6 +54,7 @@ public class MultiAtlasActivity extends StageActivity {
 
     private void loadTexture() {
         int nextX = 0;
+        float displayScale = 0.5f;
         for (int i = 0; i < NUM_FILES; i++) {
             // load texture
             final Texture texture = mScene.getTextureManager().createAssetTexture("atlas/waterway_flower_" + i + ".png", null);
@@ -62,8 +63,9 @@ public class MultiAtlasActivity extends StageActivity {
             mAtlasSprites[i] = new Sprite();
             mAtlasSprites[i].setTexture(texture);
             mAtlasSprites[i].setX(nextX);
+            mAtlasSprites[i].setScale(displayScale);
             mScene.addChild(mAtlasSprites[i]);
-            nextX += texture.getSize().x;
+            nextX += texture.getSize().x * displayScale;
 
             // load atlas
             final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
