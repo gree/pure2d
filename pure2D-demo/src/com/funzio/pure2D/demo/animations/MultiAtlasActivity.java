@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
@@ -15,10 +16,11 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
 
-public class JsonAtlasActivity extends StageActivity {
-    private Texture mTexture;
-    private JsonAtlas mAtlas;
-    private Sprite mAtlasSprite;
+public class MultiAtlasActivity extends StageActivity {
+    private static final int NUM_FILES = 3;
+
+    private Sprite[] mAtlasSprites = new Sprite[NUM_FILES];
+    private AtlasFrameSet mAllFrames = new AtlasFrameSet("");
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -39,13 +41,6 @@ public class JsonAtlasActivity extends StageActivity {
                 }
             }
         });
-
-        try {
-            mAtlas = new JsonAtlas(mScene.getAxisSystem());
-            mAtlas.load(getAssets(), "atlas/coin_01_60.json", 1);
-        } catch (Exception e) {
-            Log.e("MultiAtlasActivity", "Loading Atlas Error!", e);
-        }
     }
 
     /*
@@ -58,19 +53,42 @@ public class JsonAtlasActivity extends StageActivity {
     }
 
     private void loadTexture() {
-        // create texture
-        mTexture = mScene.getTextureManager().createAssetTexture("atlas/coin_01_60.png", null);
+        int nextX = 0;
+        float displayScale = 0.5f;
+        for (int i = 0; i < NUM_FILES; i++) {
+            // load texture
+            final Texture texture = mScene.getTextureManager().createAssetTexture("atlas/waterway_flower_" + i + ".png", null);
 
-        mAtlasSprite = new Sprite();
-        mAtlasSprite.setTexture(mTexture);
-        mScene.addChild(mAtlasSprite);
+            // for debugging
+            mAtlasSprites[i] = new Sprite();
+            mAtlasSprites[i].setTexture(texture);
+            mAtlasSprites[i].setX(nextX);
+            mAtlasSprites[i].setScale(displayScale);
+            mScene.addChild(mAtlasSprites[i]);
+            nextX += texture.getSize().x * displayScale;
+
+            // load atlas
+            final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
+            try {
+                atlas.load(getAssets(), "atlas/waterway_flower_" + i + ".json", 1);
+                // attach texture
+                atlas.getMasterFrameSet().setTexture(texture);
+                // append to master frames
+                mAllFrames.appendFrames(atlas.getMasterFrameSet());
+            } catch (Exception e) {
+                Log.e("MultiAtlasActivity", "Loading Atlas Error!", e);
+            }
+
+        }
+
+        // create texture
+
     }
 
     private void addObject(final float screenX, final float screenY) {
         // create object
-        Clip obj = new Clip(mAtlas.getMasterFrameSet());
-        obj.setTexture(mTexture);
-        // obj.setFps(30);
+        Clip obj = new Clip(mAllFrames);
+        obj.setFps(30);
 
         // center origin
         // obj.setOriginAtCenter();
@@ -106,14 +124,10 @@ public class JsonAtlasActivity extends StageActivity {
 
     public void onClickAtlas(final View view) {
         if (view.getId() == R.id.cb_show_atlas) {
-            if (mAtlasSprite != null) {
-                mAtlasSprite.setVisible(((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked());
-                // for testing clipping
-                // if (((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked()) {
-                // mAtlasSprite.setPosition(0, 0);
-                // } else {
-                // mAtlasSprite.setPosition(0, mDisplaySize.y);
-                // }
+            if (mAtlasSprites != null) {
+                for (int i = 0; i < mAtlasSprites.length; i++) {
+                    mAtlasSprites[i].setVisible(((CheckBox) findViewById(R.id.cb_show_atlas)).isChecked());
+                }
             }
         }
     }

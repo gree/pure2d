@@ -74,10 +74,24 @@ public class QuadMeshColorBuffer extends ColorBuffer {
         mInvalidated = true;
     }
 
+    public void setColorAt(final int index, final float r, final float g, final float b, final float a) {
+
+        int start = index * NUM_CHANNEL_PER_COLOR * NUM_COLOR_PER_CELL;
+        for (int j = 0; j < NUM_COLOR_PER_CELL; j++) {
+            mValues[start++] = r;
+            mValues[start++] = g;
+            mValues[start++] = b;
+            mValues[start++] = a;
+        }
+
+        mInvalidated = true;
+    }
+
     public void setAlphaAt(final int index, final float alpha) {
 
         int start = index * NUM_CHANNEL_PER_COLOR * NUM_COLOR_PER_CELL;
         for (int j = 0; j < NUM_COLOR_PER_CELL; j++) {
+            // mValues[start + 0] = mValues[start + 1] = mValues[start + 2] = mValues[start + 3] = alpha;
             mValues[start + 3] = alpha;
 
             start += NUM_COLOR_PER_CELL;

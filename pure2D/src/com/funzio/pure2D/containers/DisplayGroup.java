@@ -4,6 +4,7 @@
 package com.funzio.pure2D.containers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -15,6 +16,7 @@ import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.DummyDrawer;
@@ -26,6 +28,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
+    protected HashMap<String, DisplayObject> mChildrenIds = new HashMap<String, DisplayObject>();
     protected int mNumChildren = 0;
 
     // UI
@@ -317,9 +320,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     public boolean addChild(final DisplayObject child) {
         if (mChildren.indexOf(child) < 0) {
 
+            // check id
+            final String childId = child.getId();
+            if (mChildrenIds.containsKey(childId)) {
+                throw new Pure2DException("There is already a child with ID: " + childId);
+            }
+
             // child callback
             // child.onPreAdded(this);
 
+            mChildrenIds.put(childId, child);
             mChildren.add(child);
             mNumChildren++;
 
@@ -337,9 +347,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     public boolean addChild(final DisplayObject child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
 
+            // check id
+            final String childId = child.getId();
+            if (mChildrenIds.containsKey(childId)) {
+                throw new Pure2DException("There is already a child with ID: " + childId);
+            }
+
             // child callback
             // child.onPreAdded(this);
 
+            mChildrenIds.put(childId, child);
             mChildren.add(index, child);
             mNumChildren++;
 
@@ -359,6 +376,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             // child callback
             // child.onPreRemoved();
 
+            mChildrenIds.remove(child.getId());
             mChildren.remove(child);
             mNumChildren--;
 
@@ -380,6 +398,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             // child callback
             // child.onPreRemoved();
 
+            mChildrenIds.remove(child.getId());
             mChildren.remove(child);
             mNumChildren--;
 
@@ -410,6 +429,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             onRemovedChild(child);
         }
 
+        mChildrenIds.clear();
         mChildren.clear();
         mNumChildren = 0;
         invalidate(CHILDREN);
@@ -421,6 +441,10 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     public int getChildIndex(final DisplayObject child) {
         return mChildren.indexOf(child);
+    }
+
+    public DisplayObject getChildById(final String id) {
+        return mChildrenIds.get(id);
     }
 
     /**

@@ -132,4 +132,8 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public void onRemoved();
 
     public String getObjectTree(final String prefix);
+
+    public String getId();
+
+    public void setId(String id);
 }

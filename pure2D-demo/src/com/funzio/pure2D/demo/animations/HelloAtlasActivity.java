@@ -66,7 +66,7 @@ public class HelloAtlasActivity extends StageActivity {
         mScene.addChild(mAtlasSprite);
     }
 
-    private void addObject(final float x, final float y) {
+    private void addObject(final float screenX, final float screenY) {
         // create object
         Clip obj = new Clip(mAtlas.getSubFrameSet(mFrameSetNames[mRandom.nextInt(mFrameSetNames.length)]));
         obj.setTexture(mTexture);
@@ -75,8 +75,8 @@ public class HelloAtlasActivity extends StageActivity {
         // center origin
         obj.setOriginAtCenter();
 
-        // random positions
-        obj.setPosition(x, y);
+        mScene.screenToGlobal(screenX, screenY, mTempPoint);
+        obj.setPosition(mTempPoint);
 
         // add to scene
         mScene.addChild(obj);
@@ -84,18 +84,20 @@ public class HelloAtlasActivity extends StageActivity {
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        final int action = event.getAction();
+        final int action = event.getActionMasked();
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
-            mStage.queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    int len = event.getPointerCount();
-                    for (int i = 0; i < len; i++) {
-                        addObject(event.getX(i), mDisplaySize.y - event.getY(i));
+            int len = event.getPointerCount();
+            for (int i = 0; i < len; i++) {
+                final float screenX = event.getX(i);
+                final float screenY = event.getY(i);
+                mStage.queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                        addObject(screenX, screenY);
                     }
-                }
-            });
+                });
+            }
         }
 
         return true;

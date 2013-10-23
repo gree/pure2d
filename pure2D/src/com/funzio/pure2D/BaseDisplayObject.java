@@ -13,6 +13,7 @@ import android.graphics.RectF;
 
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
@@ -27,6 +28,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     // for debugging
     protected int mDebugFlags = 0;
+
+    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode());
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);
@@ -1183,7 +1186,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+        return mId;
     }
 
     /**
@@ -1191,5 +1194,17 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public String getObjectTree(final String prefix) {
         return prefix + toString();
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(final String id) {
+        if (mParent != null) {
+            throw new Pure2DException("Object is already contained. ID cannot be changed!");
+        }
+
+        mId = id;
     }
 }

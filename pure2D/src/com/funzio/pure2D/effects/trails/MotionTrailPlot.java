@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
 import com.funzio.pure2D.gl.gl10.QuadMeshColorBuffer;
@@ -44,8 +45,8 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     protected QuadMeshTextureCoordBuffer mTextureCoordBuffer;
     protected QuadMeshColorBuffer mColorBuffer;
 
-    protected float mAlpha1 = 1;
-    protected float mAlpha2 = 1;
+    protected GLColor mColor1 = null;
+    protected GLColor mColor2 = null;
     protected float mScale1 = 1;
     protected float mScale2 = 1;
 
@@ -86,26 +87,11 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         mData = data;
     }
 
-    public void setAlphaRange(final float alpha1, final float alpha2) {
-        mAlpha1 = alpha1;
-        mAlpha2 = alpha2;
+    public void setColorRange(final GLColor color1, final GLColor color2) {
+        mColor1 = color1;
+        mColor2 = color2;
 
-        if (mAlpha1 == mAlpha2) {
-            mAlpha = alpha1;
-        }
-
-        invalidate(ALPHA);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setAlpha(float)
-     */
-    @Override
-    public void setAlpha(final float alpha) {
-        mAlpha1 = mAlpha2 = alpha;
-
-        super.setAlpha(alpha);
+        invalidate(COLOR);
     }
 
     public void setScaleRange(final float scale1, final float scale2) {
@@ -168,7 +154,9 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 }
             }
 
-            if (mFollowingHead) {
+            final boolean changedTextureCoords = mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0;
+            final boolean changedColors = (mColor1 != null && mColor2 != null) && (mInvalidateFlags & (COLOR | CHILDREN)) != 0;
+            if (mFollowingHead || changedTextureCoords || changedColors) {
 
                 // calculate time loop for consistency with different framerate
                 final int loop = deltaTime / Scene.DEFAULT_MSPF;
@@ -196,8 +184,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 }
 
                 // validate texture coords
-                if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
-
+                if (changedTextureCoords) {
                     if (mTextureCoordBuffer == null) {
                         mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(mNumPoints);
                     } else if (mTextureCoordBuffer.getNumCells() < mNumPoints) {
@@ -206,8 +193,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 }
 
                 // validate color
-                if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
-
+                if (changedColors) {
                     if (mColorBuffer == null) {
                         mColorBuffer = new QuadMeshColorBuffer(mNumPoints);
                     } else if (mColorBuffer.getNumCells() < mNumPoints) {
@@ -224,8 +210,10 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 float width = mTextureWidth, height = mTextureHeight, scale = mScale1;
                 final Scene scene = getScene();
                 final boolean flippedAxis = scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT;
-                final float alphaStep = (mAlpha2 - mAlpha1) / mNumPoints;
-                float alpha = mAlpha1;
+                final float dr = changedColors ? (mColor2.r - mColor1.r) / mNumPoints : 0;
+                final float dg = changedColors ? (mColor2.g - mColor1.g) / mNumPoints : 0;
+                final float db = changedColors ? (mColor2.b - mColor1.b) / mNumPoints : 0;
+                final float da = changedColors ? (mColor2.a - mColor1.a) / mNumPoints : 0;
                 // draw backward from tail to head
                 for (int i = 0; i < mNumPoints; i++) {
                     point = mPoints[i];
@@ -239,7 +227,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                     mMeshBuffer.setRectAt(mNumPoints - i - 1, point.x - width * 0.5f, point.y - height * 0.5f, width, height);
 
                     // make texture coords
-                    if (mTexture != null && (mInvalidateFlags & (TEXTURE_COORDS | CHILDREN)) != 0) {
+                    if (changedTextureCoords) {
                         // apply the coordinates
                         if (flippedAxis) {
                             mTextureCoordBuffer.setRectFlipVerticalAt(i, 0, 0, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
@@ -249,10 +237,9 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                     }
 
                     // make colors
-                    if (mAlpha1 != mAlpha2 && (mInvalidateFlags & (ALPHA | CHILDREN)) != 0) {
-                        // alpha interpolation
-                        mColorBuffer.setAlphaAt(mNumPoints - i - 1, alpha);
-                        alpha += alphaStep;
+                    if (changedColors) {
+                        // color interpolation
+                        mColorBuffer.setColorAt(mNumPoints - i - 1, mColor1.r + dr * i, mColor1.g + dg * i, mColor1.b + db * i, mColor1.a + da * i);
                     }
                 }
 
@@ -266,7 +253,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 }
 
                 // apply colors
-                if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
+                if (mColor1 != mColor2 && mColorBuffer != null) {
                     mColorBuffer.validate();
                 }
 
@@ -291,7 +278,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
         if (mNumPoints > 0) {
             // color buffer
-            if (mAlpha1 != mAlpha2 && mColorBuffer != null) {
+            if (mColor1 != mColor2 && mColorBuffer != null) {
                 // apply color buffer
                 mColorBuffer.apply(glState);
             } else {

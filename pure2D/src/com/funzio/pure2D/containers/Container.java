@@ -24,6 +24,8 @@ public interface Container {
 
     public int getChildIndex(final DisplayObject child);
 
+    public DisplayObject getChildById(final String id);
+
     public boolean swapChildren(final DisplayObject child1, final DisplayObject child2);
 
     public boolean swapChildren(final int index1, final int index2);

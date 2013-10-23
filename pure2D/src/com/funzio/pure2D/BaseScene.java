@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -39,6 +40,7 @@ public class BaseScene implements Scene {
     protected Camera mCamera;
     protected TextureManager mTextureManager;
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
+    protected HashMap<String, DisplayObject> mChildrenIds = new HashMap<String, DisplayObject>();
     private int mNumChildren;
 
     private PointF mSize = new PointF();
@@ -580,8 +582,16 @@ public class BaseScene implements Scene {
 
     public boolean addChild(final DisplayObject child) {
         if (mChildren.indexOf(child) < 0) {
+            // check id
+            final String childId = child.getId();
+            if (mChildrenIds.containsKey(childId)) {
+                throw new Pure2DException("There is already a child with ID: " + childId);
+            }
+
+            mChildrenIds.put(childId, child);
             mChildren.add(child);
             mNumChildren++;
+
             child.onAdded(this);
             invalidate();
 
@@ -593,6 +603,13 @@ public class BaseScene implements Scene {
     public boolean addChild(final DisplayObject child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
 
+            // check id
+            final String childId = child.getId();
+            if (mChildrenIds.containsKey(childId)) {
+                throw new Pure2DException("There is already a child with ID: " + childId);
+            }
+
+            mChildrenIds.put(childId, child);
             mChildren.add(index, child);
             mNumChildren++;
 
@@ -607,7 +624,9 @@ public class BaseScene implements Scene {
 
     public boolean removeChild(final DisplayObject child) {
         if (mChildren.remove(child)) {
+            mChildrenIds.remove(child.getId());
             mNumChildren--;
+
             child.onRemoved();
             invalidate();
 
@@ -624,6 +643,7 @@ public class BaseScene implements Scene {
             child.onRemoved();
         }
 
+        mChildrenIds.clear();
         mChildren.clear();
         mNumChildren = 0;
         invalidate();
@@ -635,6 +655,10 @@ public class BaseScene implements Scene {
 
     public int getChildIndex(final DisplayObject child) {
         return mChildren.indexOf(child);
+    }
+
+    public DisplayObject getChildById(final String id) {
+        return mChildrenIds.get(id);
     }
 
     /**
