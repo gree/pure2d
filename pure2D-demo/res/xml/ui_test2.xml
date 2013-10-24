@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group
-    id="group_main"
-    height="500"
-    width="500" >
+    height="wrap_content"
+    width="wrap_content" >
 
     <Sprite
         height="100%"

@@ -53,7 +53,7 @@ public class XMLUIActivity extends StageActivity {
     private void addObject(final float x, final float y) {
 
         // create object
-        DisplayObject obj = mUILoader.load(getResources().getXml(R.xml.test_ui));
+        DisplayObject obj = mUILoader.load(getResources().getXml(R.xml.ui_test1));
         obj.setId("obj_" + (++mObjectSeq));
         // loader.load("<Group><Sprite /></Group>");
         // Log.e("long", obj.getObjectTree(""));

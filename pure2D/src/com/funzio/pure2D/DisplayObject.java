@@ -37,6 +37,10 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public float getZ();
 
+    public float getWidth();
+
+    public float getHeight();
+
     public PointF getOrigin();
 
     public void setOrigin(final PointF origin);

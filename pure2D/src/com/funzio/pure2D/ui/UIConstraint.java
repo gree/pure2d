@@ -10,7 +10,7 @@ import org.xmlpull.v1.XmlPullParser;
  */
 public class UIConstraint {
     public static enum UNIT {
-        UNSET, PIXEL, PERCENT
+        UNSET, PIXEL, PERCENT, WRAP
     }
 
     public float width;
@@ -52,13 +52,17 @@ public class UIConstraint {
 
         widthUnit = getAttributeUnit(xmlParser, "width");
         if (widthUnit != UNIT.UNSET) {
-            width = getAttributeValue(xmlParser, "width");
+            if (widthUnit != UNIT.WRAP) {
+                width = getAttributeValue(xmlParser, "width");
+            }
             mHasAttributes = true;
         }
 
         heightUnit = getAttributeUnit(xmlParser, "height");
         if (heightUnit != UNIT.UNSET) {
-            height = getAttributeValue(xmlParser, "height");
+            if (heightUnit != UNIT.WRAP) {
+                height = getAttributeValue(xmlParser, "height");
+            }
             mHasAttributes = true;
         }
 
@@ -115,9 +119,9 @@ public class UIConstraint {
         final String valueSt = xmlParser.getAttributeValue(null, att);
         if (valueSt != null && !valueSt.equals("")) {
             if (valueSt.endsWith("%")) {
-                return Float.valueOf(valueSt.substring(0, valueSt.length() - 1)) / 100; // pre-cal
+                return Float.valueOf(valueSt.substring(0, valueSt.length() - 1).trim()) / 100; // pre-cal
             } else {
-                return Float.valueOf(valueSt);
+                return Float.valueOf(valueSt.trim());
             }
         }
 
@@ -127,7 +131,9 @@ public class UIConstraint {
     protected UNIT getAttributeUnit(final XmlPullParser xmlParser, final String att) {
         final String valueSt = xmlParser.getAttributeValue(null, att);
         if (valueSt != null && !valueSt.equals("")) {
-            if (valueSt.endsWith("%")) {
+            if (valueSt.endsWith("wrap_content")) {
+                return UNIT.WRAP;
+            } else if (valueSt.endsWith("%")) {
                 return UNIT.PERCENT;
             } else {
                 return UNIT.PIXEL;

@@ -20,6 +20,7 @@ import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.DummyDrawer;
+import com.funzio.pure2D.ui.UIConstraint;
 
 /**
  * @author long
@@ -48,6 +49,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     protected int[] mOriginalScissor;
     protected RectF mClipStageRect;
 
+    protected boolean mWrapContentWidth = false;
+    protected boolean mWrapContentHeight = false;
+
     public DisplayGroup() {
         super();
 
@@ -64,12 +68,32 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         boolean ret = super.update(deltaTime);
 
         DisplayObject child;
+        float temp;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             if (child.isAlive()) {
                 // update child
                 child.update(deltaTime);
+
+                // match content size
+                if (mWrapContentWidth) {
+                    temp = child.getX() + child.getWidth();
+                    if (temp > mSize.x) {
+                        mSize.x = temp;
+                    }
+                }
+                if (mWrapContentHeight) {
+                    temp = child.getY() + child.getHeight();
+                    if (temp > mSize.y) {
+                        mSize.y = temp;
+                    }
+                }
             }
+        }
+
+        if (mWrapContentWidth || mWrapContentHeight) {
+            // apply
+            setSize(mSize);
         }
 
         return ret || mNumChildren >= 0;
@@ -679,6 +703,31 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         mChildrenDisplayOrder = childrenDisplayOrder;
 
         invalidate(CHILDREN);
+    }
+
+    public void setWrapContent(final boolean width, final boolean height) {
+        mWrapContentWidth = width;
+        mWrapContentHeight = height;
+
+        invalidate(SIZE);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.funzio.pure2D.BaseDisplayObject#applyUIConstraint()
+     */
+    @Override
+    protected void applyUIConstraint() {
+        super.applyUIConstraint();
+
+        // explicit width
+        if (mUIConstraint.widthUnit == UIConstraint.UNIT.WRAP) {
+            mWrapContentWidth = true;
+        }
+        // explicit height
+        if (mUIConstraint.heightUnit == UIConstraint.UNIT.WRAP) {
+            mWrapContentHeight = true;
+        }
     }
 
     protected void onAddedChild(final DisplayObject child) {
