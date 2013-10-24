@@ -6,6 +6,8 @@ package com.funzio.pure2D;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
@@ -136,4 +138,6 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public String getId();
 
     public void setId(String id);
+
+    public void setAttributes(XmlPullParser xmlParser);
 }

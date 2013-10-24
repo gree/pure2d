@@ -1,10 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group
-    height="300"
-    width="300" >
+    id="group_main"
+    height="500"
+    width="500" >
 
-    <!-- testing -->
-    <VGroup>
+    <Sprite
+        height="100%"
+        source="file://something"
+        width="100%" />
+    <Sprite
+        height="90%"
+        left="5%"
+        source="file://something"
+        top="5%"
+        width="90%" />
+    <Sprite
+        bottom="10%"
+        left="10%"
+        right="10%"
+        source="file://something"
+        top="10%" />
+    <Sprite
+        centerX="0"
+        centerY="0"
+        height="10%"
+        width="10%" />
+    <Sprite
+        height="10%"
+        left="20%"
+        top="20%"
+        width="10%" />
+    <Sprite
+        height="10%"
+        right="20%"
+        top="20%"
+        width="10%" />
+    <Sprite
+        bottom="20%"
+        height="10%"
+        left="20%"
+        width="10%" />
+    <Sprite
+        bottom="20%"
+        height="10%"
+        right="20%"
+        width="10%" />
+    <Sprite
+        centerX="0"
+        height="10%"
+        top="20%"
+        width="10%" />
+    <Sprite
+        centerY="0"
+        height="10%"
+        right="20%"
+        width="10%" />
+
+    <!--
+    testing 
+    <VGroup
+        id="vgroup_main"
+        height="100%"
+        width="100%" >
         <Button
             id="button_a"
             height="50"
@@ -12,7 +69,8 @@
         <Button
             id="button_b"
             height="50"
-            width="200" />
+            width="250" />
     </VGroup>
+    -->
 
 </Group>

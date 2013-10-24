@@ -1,21 +1,21 @@
 package com.funzio.pure2D.demo.ui;
 
-import android.content.res.Resources;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.ui.Button;
 import com.funzio.pure2D.ui.xml.UILoader;
 
 public class XMLUIActivity extends StageActivity {
     private Texture[] mTextures;
+    private UILoader mUILoader;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -37,10 +37,7 @@ public class XMLUIActivity extends StageActivity {
             }
         });
 
-        Resources res = getResources();
-        UILoader loader = new UILoader();
-        loader.load(res.getXml(R.xml.test_ui));
-        // loader.load("<Group><Sprite /></Group>");
+        mUILoader = new UILoader();
     }
 
     private void loadTexture() {
@@ -51,10 +48,15 @@ public class XMLUIActivity extends StageActivity {
         };
     }
 
+    private int mObjectSeq = 0;
+
     private void addObject(final float x, final float y) {
+
         // create object
-        Button obj = new Button();
-        obj.setTextures(mTextures);
+        DisplayObject obj = mUILoader.load(getResources().getXml(R.xml.test_ui));
+        obj.setId("obj_" + (++mObjectSeq));
+        // loader.load("<Group><Sprite /></Group>");
+        // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();
 
         // set positions
@@ -68,7 +70,18 @@ public class XMLUIActivity extends StageActivity {
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        mScene.onTouchEvent(event);
+
+        if (!mScene.onTouchEvent(event)) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                mStage.queueEvent(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        addObject(event.getX(), event.getY());
+                    }
+                });
+            }
+        }
 
         return true;
     }
