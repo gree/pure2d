@@ -107,13 +107,7 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public void dispose();
 
-    @Deprecated
-    public PointF localToGlobal(final PointF local);
-
     public void localToGlobal(final PointF local, final PointF result);
-
-    @Deprecated
-    public PointF globalToLocal(final PointF global);
 
     public void globalToLocal(final PointF global, final PointF result);
 
@@ -129,15 +123,26 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public void setPerspectiveEnabled(final boolean perspectiveEnabled);
 
-    public void onAdded(Container container);
-
-    public void onRemoved();
-
     public String getObjectTree(final String prefix);
 
     public String getId();
 
     public void setId(String id);
 
-    public void setAttributes(XmlPullParser xmlParser);
+    public void setXMLAttributes(XmlPullParser xmlParser);
+
+    /**
+     * @hide For internal use
+     */
+    public void onAdded(Container container);
+
+    /**
+     * @hide For internal use
+     */
+    public void onRemoved();
+
+    /**
+     * @hide For internal use
+     */
+    public void onXMLComplete(XmlPullParser xmlParser);
 }

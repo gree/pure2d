@@ -1220,12 +1220,29 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mId = id;
     }
 
-    public void setAttributes(final XmlPullParser xmlParser) {
+    public void setXMLAttributes(final XmlPullParser xmlParser) {
+        // set id
+        final String id = xmlParser.getAttributeValue(null, "id");
+        if (id != null && !id.equals("")) {
+            setId(id);
+        }
+
+        // XXX remove this
+        setColor(new GLColor((float) Math.random(), (float) Math.random(), (float) Math.random(), 1));
+
+        // get constraint
         if (mUIConstraint == null) {
             mUIConstraint = new UIConstraint(xmlParser);
         } else {
             mUIConstraint.setAttributes(xmlParser);
         }
+    }
+
+    /**
+     * @hide For internal use
+     */
+    public void onXMLComplete(final XmlPullParser xmlParser) {
+        // TODO override this
     }
 
     public UIConstraint getUIConstraint() {

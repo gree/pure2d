@@ -13,7 +13,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.Container;
-import com.funzio.pure2D.gl.GLColor;
 
 /**
  * @author long.ngo
@@ -82,14 +81,8 @@ public class UILoader {
             if (theClass != null) {
                 try {
                     displayObject = theClass.newInstance();
-                    final String id = parser.getAttributeValue(null, "id");
-                    if (id != null && !id.equals("")) {
-                        displayObject.setId(id);
-                    }
                     // set the attributes
-                    displayObject.setAttributes(parser);
-                    // XXX remove this
-                    displayObject.setColor(new GLColor((float) Math.random(), (float) Math.random(), (float) Math.random(), displayObject instanceof Container ? 0.75f : 1f));
+                    displayObject.setXMLAttributes(parser);
                 } catch (Exception e) {
                     Log.e(TAG, "Class Instantiating Error!", e);
                 }
@@ -117,6 +110,11 @@ public class UILoader {
 
         } else {
             Log.e(TAG, "Invalid Event: " + eventType + ", " + nodeName);
+        }
+
+        if (displayObject != null) {
+            // callback
+            displayObject.onXMLComplete(parser);
         }
 
         return displayObject;
