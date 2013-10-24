@@ -37,6 +37,8 @@ public class UIConstraint {
     public float centerY;
     public UNIT centerYUnit = UNIT.UNSET;
 
+    private boolean mHasAttributes = false;
+
     public UIConstraint() {
         // TODO Auto-generated constructor stub
     }
@@ -46,54 +48,66 @@ public class UIConstraint {
     }
 
     public void setAttributes(final XmlPullParser xmlParser) {
+        mHasAttributes = false;
+
         widthUnit = getAttributeUnit(xmlParser, "width");
         if (widthUnit != UNIT.UNSET) {
             width = getAttributeValue(xmlParser, "width");
+            mHasAttributes = true;
         }
 
         heightUnit = getAttributeUnit(xmlParser, "height");
         if (heightUnit != UNIT.UNSET) {
             height = getAttributeValue(xmlParser, "height");
+            mHasAttributes = true;
         }
 
         xUnit = getAttributeUnit(xmlParser, "x");
         if (xUnit != UNIT.UNSET) {
             x = getAttributeValue(xmlParser, "x");
+            mHasAttributes = true;
         }
 
         yUnit = getAttributeUnit(xmlParser, "y");
         if (yUnit != UNIT.UNSET) {
             y = getAttributeValue(xmlParser, "y");
+            mHasAttributes = true;
         }
 
         leftUnit = getAttributeUnit(xmlParser, "left");
         if (leftUnit != UNIT.UNSET) {
             left = getAttributeValue(xmlParser, "left");
+            mHasAttributes = true;
         }
 
         rightUnit = getAttributeUnit(xmlParser, "right");
         if (rightUnit != UNIT.UNSET) {
             right = getAttributeValue(xmlParser, "right");
+            mHasAttributes = true;
         }
 
         topUnit = getAttributeUnit(xmlParser, "top");
         if (topUnit != UNIT.UNSET) {
             top = getAttributeValue(xmlParser, "top");
+            mHasAttributes = true;
         }
 
         bottomUnit = getAttributeUnit(xmlParser, "bottom");
         if (bottomUnit != UNIT.UNSET) {
             bottom = getAttributeValue(xmlParser, "bottom");
+            mHasAttributes = true;
         }
 
         centerXUnit = getAttributeUnit(xmlParser, "centerX");
         if (centerXUnit != UNIT.UNSET) {
             centerX = getAttributeValue(xmlParser, "centerX");
+            mHasAttributes = true;
         }
 
         centerYUnit = getAttributeUnit(xmlParser, "centerY");
         if (centerYUnit != UNIT.UNSET) {
             centerY = getAttributeValue(xmlParser, "centerY");
+            mHasAttributes = true;
         }
     }
 
@@ -121,5 +135,9 @@ public class UIConstraint {
         } else {
             return UNIT.UNSET;
         }
+    }
+
+    public boolean hasAttributes() {
+        return mHasAttributes;
     }
 }

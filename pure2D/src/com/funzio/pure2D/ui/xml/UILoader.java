@@ -114,7 +114,7 @@ public class UILoader {
 
         if (displayObject != null) {
             // callback
-            displayObject.onXMLComplete(parser);
+            displayObject.onCreateChildren(parser);
         }
 
         return displayObject;
