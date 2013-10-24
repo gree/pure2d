@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long.ngo
@@ -23,7 +24,10 @@ public class UILoader {
 
     private XmlPullParserFactory mFactory;
 
-    public UILoader() {
+    private UIManager mUIManager;
+
+    public UILoader(final UIManager manager) {
+        mUIManager = manager;
     }
 
     public DisplayObject load(final String xmlString) {
@@ -82,7 +86,7 @@ public class UILoader {
                 try {
                     displayObject = theClass.newInstance();
                     // set the attributes
-                    displayObject.setXMLAttributes(parser);
+                    displayObject.setXMLAttributes(parser, mUIManager);
                 } catch (Exception e) {
                     Log.e(TAG, "Class Instantiating Error!", e);
                 }

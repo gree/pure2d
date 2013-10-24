@@ -13,6 +13,7 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -133,7 +134,7 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public void setId(String id);
 
-    public void setXMLAttributes(XmlPullParser xmlParser);
+    public void setXMLAttributes(XmlPullParser xmlParser, UIManager manager);
 
     /**
      * @hide For internal use

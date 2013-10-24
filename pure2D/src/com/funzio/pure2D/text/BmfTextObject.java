@@ -11,6 +11,8 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.InvalidateFlags;
@@ -24,6 +26,7 @@ import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
 import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.DummyDrawer;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -422,6 +425,19 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     protected float convertY(final float y, final float size) {
         return mSceneAxis == Scene.AXIS_BOTTOM_LEFT ? y : mSize.y - y - size;
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        if (xmlParser.getAttributeValue(null, "font") != null) {
+            BitmapFont bitmapFont = manager.getTextureManager().getBitmapFont(xmlParser.getAttributeValue(null, "font"));
+            if (bitmapFont != null) {
+                setBitmapFont(bitmapFont);
+                setText(xmlParser.getAttributeValue(null, "text"));
+            }
+        }
     }
 
 }

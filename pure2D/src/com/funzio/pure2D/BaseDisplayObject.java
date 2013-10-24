@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -21,6 +22,7 @@ import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIConstraint;
+import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
@@ -1220,21 +1222,29 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mId = id;
     }
 
-    public void setXMLAttributes(final XmlPullParser xmlParser) {
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         // set id
         final String id = xmlParser.getAttributeValue(null, "id");
         if (id != null && !id.equals("")) {
             setId(id);
         }
 
-        // XXX remove this
-        setColor(new GLColor((float) Math.random(), (float) Math.random(), (float) Math.random(), 1));
-
         // get constraint
         if (mUIConstraint == null) {
             mUIConstraint = new UIConstraint(xmlParser);
         } else {
             mUIConstraint.setAttributes(xmlParser);
+        }
+
+        // more attributes
+        if (xmlParser.getAttributeValue(null, "color") != null) {
+            mColor = new GLColor(Color.parseColor(xmlParser.getAttributeValue(null, "color")));
+        }
+        if (xmlParser.getAttributeValue(null, "alpha") != null) {
+            mAlpha = Float.valueOf(xmlParser.getAttributeValue(null, "alpha"));
+        }
+        if (xmlParser.getAttributeValue(null, "rotation") != null) {
+            mRotation = Float.valueOf(xmlParser.getAttributeValue(null, "rotation"));
         }
     }
 

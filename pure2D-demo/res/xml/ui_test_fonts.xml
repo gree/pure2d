@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group
+    height="400"
+    width="600" >
+
+    <Rect
+        height="100%"
+        width="100%"
+        color="#AAFFFFFF" />
+
+    <Text
+        centerX="0"
+        font="font1"
+        text="Hello Pure2D UI!"
+        top="5%"
+        color="#FFFF0000" />
+    <Text
+        font="font1"
+        left="5%"
+        text="TL"
+        top="5%" />
+    <Text
+        font="font1"
+        right="5%"
+        text="TR"
+        top="5%" />
+    <Text
+        bottom="5%"
+        font="font1"
+        left="5%"
+        text="BL" />
+    <Text
+        bottom="5%"
+        font="font1"
+        right="5%"
+        text="BR" />
+
+</Group>

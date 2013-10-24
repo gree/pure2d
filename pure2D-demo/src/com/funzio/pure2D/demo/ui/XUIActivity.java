@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.ui.xml.UILoader;
+import com.funzio.pure2D.ui.UIManager;
+import com.funzio.pure2D.ui.UITextureManager;
 
-public class XMLUIActivity extends StageActivity {
-    private Texture[] mTextures;
-    private UILoader mUILoader;
+public class XUIActivity extends StageActivity {
+    private UIManager mUIManager = UIManager.getInstance();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -30,31 +30,32 @@ public class XMLUIActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
-                    // load the textures
-                    loadTexture();
-
+                    // load ui config
+                    mUIManager.loadConfig(getResources().getXml(R.xml.ui_config));
+                    mUIManager.setTextureManager((UITextureManager) mScene.getTextureManager());
                 }
             }
         });
 
-        mUILoader = new UILoader();
     }
 
-    private void loadTexture() {
-        // create texture
-        mTextures = new Texture[] { //
-                mScene.getTextureManager().createDrawableTexture(R.drawable.btn_bingo_up, null), mScene.getTextureManager().createDrawableTexture(R.drawable.btn_bingo_down, null),
-                mScene.getTextureManager().createDrawableTexture(R.drawable.btn_bingo_disabled, null),
-        };
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // clear everything
+        mUIManager.reset();
     }
 
-    private int mObjectSeq = 0;
+    @Override
+    protected BaseScene createScene() {
+        return new XUIScene();
+    }
 
     private void addObject(final float x, final float y) {
 
         // create object
-        DisplayObject obj = mUILoader.load(getResources().getXml(R.xml.ui_test1));
-        obj.setId("obj_" + (++mObjectSeq));
+        DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.ui_test_fonts));
         // loader.load("<Group><Sprite /></Group>");
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();

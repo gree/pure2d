@@ -15,6 +15,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
  * @author long
  */
 public class TextOptions extends TextureOptions {
+    public String id;
+
     public TextPaint inTextPaint = new TextPaint();
     public float inOffsetX = 0;
     public float inOffsetY = 0;
@@ -22,6 +24,7 @@ public class TextOptions extends TextureOptions {
     public float inPaddingY = 0;
 
     // extra
+    public String inCharacters;
     public Bitmap inBackground = null;
     public Paint inStrokePaint;
 
@@ -45,5 +48,17 @@ public class TextOptions extends TextureOptions {
         options.inTextPaint.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
 
         return options;
+    }
+
+    public static int getTypefaceStyle(final String style) {
+        if ("bold".equalsIgnoreCase(style)) {
+            return Typeface.BOLD;
+        } else if ("bold_italic".equalsIgnoreCase(style)) {
+            return Typeface.BOLD_ITALIC;
+        } else if ("italic".equalsIgnoreCase(style)) {
+            return Typeface.ITALIC;
+        }
+
+        return Typeface.NORMAL;
     }
 }

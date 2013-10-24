@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fonts>
 
-    <BitmapFont
+    <Font
         id="font1"
-        style=""
-        charSet=""
-        textSize="30"
-        typeFace="sans-serif"
-        color="" />
+        style="bold"
+        characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"
+        paddingX="5"
+        paddingY="5"
+        size="40"
+        strokeColor="#FF333333"
+        typeface="sans-serif"
+        color="#FFFFFFFF" />
 
 </fonts>
