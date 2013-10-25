@@ -61,7 +61,7 @@ public class XUIActivity extends StageActivity {
     private void addObject(final float x, final float y) {
 
         // create object
-        DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.ui_test_fonts));
+        DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.ui_test_constraints));
         // loader.load("<Group><Sprite /></Group>");
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();

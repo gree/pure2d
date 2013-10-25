@@ -83,7 +83,7 @@ public class TextOptions extends TextureOptions {
             } catch (Exception e) {
                 Log.e(TAG, "Creating Typeface Error: " + typeface, e);
                 // fallback solution
-                inTextPaint.setTypeface(Typeface.create(typeface, TextOptions.getTypefaceStyle(parser.getAttributeValue(null, "style"))));
+                inTextPaint.setTypeface(Typeface.create(typeface, getTypefaceStyle(parser.getAttributeValue(null, "style"))));
             }
         }
 

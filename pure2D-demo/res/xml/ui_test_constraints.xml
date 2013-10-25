@@ -3,55 +3,65 @@
     height="wrap_content"
     width="wrap_content" >
 
+    <Sprite9
+        blendMode="premultiplied_alpha"
+        height="500"
+        patches="20,20,20,20"
+        source="asset://sprites/panel_collection_reward.9.png"
+        width="600" />
+
     <Sprite
-        height="600"
-        source="file://something"
-        width="500" />
-    <Sprite
-        height="90%"
+        bottom="5%"
         left="5%"
-        top="5%"
-        width="90%" />
-    <Sprite
+        right="5%"
+        top="10%"
+        color="#33000000" />
+
+    <Group
         bottom="10%"
         left="10%"
         right="10%"
-        top="10%" />
-    <Sprite
-        centerX="0"
-        centerY="0"
-        height="10%"
-        width="10%" />
-    <Sprite
-        height="10%"
-        left="20%"
-        top="20%"
-        width="10%" />
-    <Sprite
-        height="10%"
-        right="20%"
-        top="20%"
-        width="10%" />
-    <Sprite
-        bottom="20%"
-        height="10%"
-        left="20%"
-        width="10%" />
-    <Sprite
-        bottom="20%"
-        height="10%"
-        right="20%"
-        width="10%" />
-    <Sprite
-        centerX="0"
-        height="10%"
-        top="20%"
-        width="10%" />
-    <Sprite
-        centerY="0"
-        height="10%"
-        right="20%"
-        width="10%" />
+        top="15%" >
+        <Sprite
+            alpha="0.5"
+            height="100%"
+            width="100%" />
+        <Sprite
+            centerX="0"
+            centerY="0"
+            height="10%"
+            width="10%" />
+        <Sprite
+            height="10%"
+            left="20%"
+            top="20%"
+            width="10%" />
+        <Sprite
+            height="10%"
+            right="20%"
+            top="20%"
+            width="10%" />
+        <Sprite
+            bottom="20%"
+            height="10%"
+            left="20%"
+            width="10%" />
+        <Sprite
+            bottom="20%"
+            height="10%"
+            right="20%"
+            width="10%" />
+        <Sprite
+            centerX="0"
+            height="10%"
+            top="20%"
+            width="10%" />
+        <Sprite
+            centerY="0"
+            height="10%"
+            right="20%"
+            width="10%" />
+    </Group>
 
     <!--
     testing 
