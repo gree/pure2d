@@ -6,6 +6,8 @@ package com.funzio.pure2D.ui;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.gl.GLColor;
@@ -38,6 +40,9 @@ public class Button extends DisplayGroup implements UIObject {
     public Button() {
         super();
 
+        // wrap by default
+        mWrapContentWidth = mWrapContentHeight = true;
+
         createChildren();
     }
 
@@ -54,10 +59,6 @@ public class Button extends DisplayGroup implements UIObject {
         setState(mState);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setSize(float, float)
-     */
     @Override
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
@@ -213,6 +214,24 @@ public class Button extends DisplayGroup implements UIObject {
         }
 
         return false;
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String source = xmlParser.getAttributeValue(null, "source");
+        if (source != null) {
+            final String[] sources = source.split(",");
+            if (sources.length > 0) {
+                final Texture[] textures = new Texture[sources.length];
+                int i = 0;
+                for (String s : sources) {
+                    textures[i++] = manager.getTextureManager().getUITexture(s);
+                }
+                setTextures(textures);
+            }
+        }
     }
 
     public static interface Listener {

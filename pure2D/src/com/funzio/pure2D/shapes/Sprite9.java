@@ -54,24 +54,26 @@ public class Sprite9 extends Rectangular {
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#setTexture(com.funzio.pure2D.gl.gl10.textures.Texture)
-     */
+    @Override
+    public boolean update(final int deltaTime) {
+        // texture loaded detection and auto size
+        if (!mTextureLoaded && mTexture != null && mTexture.isLoaded()) {
+            setSize(mTexture.getSize());
+        }
+
+        return super.update(deltaTime);
+    }
+
     @Override
     public void setTexture(final Texture texture) {
         super.setTexture(texture);
 
         // auto set size if it's not set
-        if (texture != null && mSize.x <= 1 && mSize.y <= 1) {
+        if (texture != null && texture.isLoaded() && mSize.x <= 1 && mSize.y <= 1) {
             setSize(texture.getSize());
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#validateTextureCoordBuffer()
-     */
     @Override
     protected void validateTextureCoordBuffer() {
         if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
