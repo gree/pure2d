@@ -31,6 +31,7 @@ public class Shape extends BaseDisplayObject {
     protected VertexBuffer mVertexBuffer;
 
     protected Texture mTexture;
+    protected boolean mTextureLoaded;
     protected TextureCoordBuffer mTextureCoordBuffer;
     protected TextureCoordBuffer mTextureCoordBufferScaled;
     protected ColorBuffer mColorBuffer;
@@ -58,8 +59,19 @@ public class Shape extends BaseDisplayObject {
      */
     public void setTexture(final Texture texture) {
         mTexture = texture;
+        mTextureLoaded = mTexture != null ? mTexture.isLoaded() : false;
 
         invalidate(InvalidateFlags.TEXTURE | InvalidateFlags.TEXTURE_COORDS);
+    }
+
+    @Override
+    public boolean update(final int deltaTime) {
+        if (!mTextureLoaded && mTexture != null && mTexture.isLoaded()) {
+            // flag
+            mTextureLoaded = true;
+        }
+
+        return super.update(deltaTime);
     }
 
     /*
@@ -279,7 +291,7 @@ public class Shape extends BaseDisplayObject {
 
         final String source = xmlParser.getAttributeValue(null, "source");
         if (source != null) {
-            setTexture(manager.getTextureManager().getTexture(source));
+            setTexture(manager.getTextureManager().getUITexture(source));
         }
     }
 

@@ -60,6 +60,9 @@ public class UIConfig {
     private XmlPullParserFactory mFactory;
     private ArrayList<TextOptions> mFonts = new ArrayList<TextOptions>();
 
+    // texture settings
+    public boolean mTextureAsync = true;
+
     @SuppressWarnings("unchecked")
     public static Class<? extends DisplayObject> getClassByName(final String name) {
         // Log.v(TAG, "getClassByName(): " + name);

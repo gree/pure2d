@@ -69,7 +69,7 @@ public class BaseUITextureManager extends TextureManager implements UITextureMan
     }
 
     @Override
-    public Texture getTexture(final String textureUri) {
+    public Texture getUITexture(final String textureUri) {
         String actualPath = null;
 
         if (textureUri.startsWith(URI_DRAWABLE)) {
@@ -100,13 +100,13 @@ public class BaseUITextureManager extends TextureManager implements UITextureMan
             // create
             if (textureUri.startsWith(URI_FILE)) {
                 // load from file / sdcard
-                texture = createFileTexture(actualPath, mUIConfig.getTextureOptions());
+                texture = mUIConfig.mTextureAsync ? createFileTextureAsync(actualPath, mUIConfig.getTextureOptions()) : createFileTexture(actualPath, mUIConfig.getTextureOptions());
             } else if (textureUri.startsWith(URI_ASSET)) {
                 // load from bundle assets
-                texture = createAssetTexture(actualPath, mUIConfig.getTextureOptions());
+                texture = mUIConfig.mTextureAsync ? createAssetTextureAsync(actualPath, mUIConfig.getTextureOptions()) : createAssetTexture(actualPath, mUIConfig.getTextureOptions());
             } else if (textureUri.startsWith(URI_HTTP)) {
                 // load from bundle assets
-                texture = createURLTexture(actualPath, mUIConfig.getTextureOptions());
+                texture = mUIConfig.mTextureAsync ? createURLTextureAsync(actualPath, mUIConfig.getTextureOptions()) : createURLTexture(actualPath, mUIConfig.getTextureOptions());
             }
 
             // and cache it if created

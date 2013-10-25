@@ -24,6 +24,16 @@ public class Sprite extends Rectangular {
     }
 
     @Override
+    public boolean update(final int deltaTime) {
+        // texture loaded detection and auto size
+        if (!mTextureLoaded && mSizeToTexture && mTexture != null && mTexture.isLoaded()) {
+            setSize(mTexture.getSize());
+        }
+
+        return super.update(deltaTime);
+    }
+
+    @Override
     public void setTexture(final Texture texture) {
         super.setTexture(texture);
 
@@ -98,27 +108,4 @@ public class Sprite extends Rectangular {
         return mAtlasFrame;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#draw(com.funzio.pure2D.gl.gl10.GLState)
-     */
-    // @Override
-    // public boolean draw(final GLState glState) {
-    //
-    // if (mAtlasFrame != null && mAtlasFrame.mOffset != null) {
-    // final PointF offset = mAtlasFrame.mOffset;
-    // if (offset.x != 0 || offset.y != 0) {
-    //
-    // // shift
-    // glState.mGL.glTranslatef(offset.x, offset.y, 0);
-    // super.draw(glState);
-    // // unshift
-    // glState.mGL.glTranslatef(-offset.x, -offset.y, 0);
-    //
-    // return true;
-    // }
-    // }
-    //
-    // return super.draw(glState);
-    // }
 }
