@@ -4,6 +4,7 @@
 package com.funzio.pure2D.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -21,6 +22,9 @@ public class UIManager {
     private static UIManager sInstance;
 
     private Context mContext;
+    private Resources mResources;
+    private String mPackageName;
+
     private UITextureManager mTextureManager;
     private UIConfig mConfig;
     private UILoader mLoader;
@@ -43,7 +47,9 @@ public class UIManager {
         mContext = context;
 
         if (context != null) {
-            mConfig.reset(mContext.getResources());
+            mResources = context.getResources();
+            mPackageName = context.getApplicationContext().getPackageName();
+            mConfig.reset(mResources);
         } else {
             mConfig.reset(null);
             mTextureManager = null;
@@ -90,4 +96,16 @@ public class UIManager {
         return mTextureManager;
     }
 
+    public String getStringValue(final XmlPullParser parser, final String name) {
+        String value = parser.getAttributeValue(null, name);
+
+        if (value != null) {
+            if (value.startsWith(UIConfig.URI_STRING)) {
+                String id = value.substring(UIConfig.URI_STRING.length());
+                value = mResources.getString(mResources.getIdentifier(id, UIConfig.TYPE_STRING, mPackageName));
+            }
+        }
+
+        return value;
+    }
 }

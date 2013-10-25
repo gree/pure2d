@@ -7,7 +7,7 @@
         blendMode="premultiplied_alpha"
         height="500"
         patches="20,20,20,20"
-        source="asset://sprites/panel_collection_reward.9.png"
+        source="@drawable/panel_collection_reward"
         width="600" />
 
     <Sprite

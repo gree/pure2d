@@ -39,6 +39,14 @@ import com.funzio.pure2D.ui.UIManager;
 public class UIConfig {
     private static final String TAG = UIConfig.class.getSimpleName();
 
+    public static final String URI_STRING = "@string/";
+    public static final String TYPE_STRING = "string";
+    public static final String URI_DRAWABLE = "@drawable/";
+    public static final String TYPE_DRAWABLE = "drawable";
+    public static final String URI_ASSET = "asset://";
+    public static final String URI_FILE = "file://";
+    public static final String URI_HTTP = "http://";
+
     private static final HashMap<String, Class<? extends DisplayObject>> CLASS_MAP = new HashMap<String, Class<? extends DisplayObject>>();
     static {
         CLASS_MAP.put("Group", DisplayGroup.class);

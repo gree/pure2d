@@ -436,7 +436,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             BitmapFont bitmapFont = manager.getTextureManager().getBitmapFont(font);
             if (bitmapFont != null) {
                 setBitmapFont(bitmapFont);
-                setText(xmlParser.getAttributeValue(null, "text"));
+                setText(manager.getStringValue(xmlParser, "text"));
 
                 final String letterSpacing = xmlParser.getAttributeValue(null, "letterSpacing");
                 if (letterSpacing != null) {

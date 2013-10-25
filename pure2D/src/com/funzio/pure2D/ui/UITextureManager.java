@@ -12,16 +12,12 @@ import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
+import com.funzio.pure2D.ui.xml.UIConfig;
 
 /**
  * @author long.ngo
  */
 public class UITextureManager extends TextureManager {
-
-    public static final String URI_DRAWABLE = "@drawable/";
-    public static final String URI_ASSET = "asset://";
-    public static final String URI_FILE = "file://";
-    public static final String URI_HTTP = "http://";
 
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();
     protected final HashMap<String, Texture> mGeneralTextures;
@@ -66,15 +62,15 @@ public class UITextureManager extends TextureManager {
     public Texture getUITexture(final String textureUri) {
         String actualPath = null;
 
-        if (textureUri.startsWith(URI_DRAWABLE)) {
-            actualPath = textureUri.substring(URI_DRAWABLE.length());
-            int drawable = mResources.getIdentifier(actualPath, "drawable", mUIManager.getContext().getApplicationContext().getPackageName());
+        if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
+            actualPath = textureUri.substring(UIConfig.URI_DRAWABLE.length());
+            int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mUIManager.getContext().getApplicationContext().getPackageName());
             actualPath = String.valueOf(drawable);
-        } else if (textureUri.startsWith(URI_ASSET)) {
-            actualPath = textureUri.substring(URI_ASSET.length());
-        } else if (textureUri.startsWith(URI_FILE)) {
-            actualPath = textureUri.substring(URI_FILE.length());
-        } else if (textureUri.startsWith(URI_HTTP)) {
+        } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
+            actualPath = textureUri.substring(UIConfig.URI_ASSET.length());
+        } else if (textureUri.startsWith(UIConfig.URI_FILE)) {
+            actualPath = textureUri.substring(UIConfig.URI_FILE.length());
+        } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
             actualPath = textureUri; // keep
         } else {
             actualPath = textureUri;
@@ -88,16 +84,16 @@ public class UITextureManager extends TextureManager {
             final TextureOptions textureOptions = mUIManager.getConfig().getTextureOptions();
             final boolean async = mUIManager.getConfig().mTextureAsync;
             // create
-            if (textureUri.startsWith(URI_DRAWABLE)) {
+            if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard
                 texture = async ? createDrawableTextureAsync(Integer.valueOf(actualPath), textureOptions) : createDrawableTexture(Integer.valueOf(actualPath), textureOptions);
-            } else if (textureUri.startsWith(URI_FILE)) {
+            } else if (textureUri.startsWith(UIConfig.URI_FILE)) {
                 // load from file / sdcard
                 texture = async ? createFileTextureAsync(actualPath, textureOptions) : createFileTexture(actualPath, textureOptions);
-            } else if (textureUri.startsWith(URI_ASSET)) {
+            } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
                 // load from bundle assets
                 texture = async ? createAssetTextureAsync(actualPath, textureOptions) : createAssetTexture(actualPath, textureOptions);
-            } else if (textureUri.startsWith(URI_HTTP)) {
+            } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
                 // load from bundle assets
                 texture = async ? createURLTextureAsync(actualPath, textureOptions) : createURLTexture(actualPath, textureOptions);
             }
