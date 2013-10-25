@@ -26,6 +26,8 @@ public class UIManager {
     private UIManager() {
         mConfig = new UIConfig();
         mLoader = new UILoader(this);
+
+        reset();
     }
 
     public static UIManager getInstance() {
@@ -37,14 +39,14 @@ public class UIManager {
     }
 
     public void reset() {
-        Log.e(TAG, "reset()");
+        Log.w(TAG, "reset()");
 
         mConfig.reset();
         mTextureManager = null;
     }
 
     public boolean loadConfig(final XmlPullParser parser) {
-        Log.e(TAG, "loadConfig()");
+        Log.v(TAG, "loadConfig()");
 
         final boolean success = mConfig.load(parser);
 
@@ -61,7 +63,7 @@ public class UIManager {
     }
 
     public void setTextureManager(final UITextureManager textureManager) {
-        Log.e(TAG, "setTextureManager(): " + textureManager);
+        Log.v(TAG, "setTextureManager(): " + textureManager);
 
         mTextureManager = textureManager;
 

@@ -20,7 +20,15 @@ import com.funzio.pure2D.ui.xml.UIConfig;
  */
 public class BaseUITextureManager extends TextureManager implements UITextureManager {
 
+    public static final String URI_DRAWABLE = "drawable://";
+    public static final String URI_ASSET = "asset://";
+    public static final String URI_FILE = "file://";
+    public static final String URI_HTTP = "http://";
+
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();
+    protected final HashMap<String, Texture> mGeneralTextures;
+
+    protected UIConfig mUIConfig;
 
     /**
      * @param scene
@@ -28,7 +36,8 @@ public class BaseUITextureManager extends TextureManager implements UITextureMan
      */
     public BaseUITextureManager(final Scene scene, final Resources res) {
         super(scene, res);
-        // TODO Auto-generated constructor stub
+
+        mGeneralTextures = new HashMap<String, Texture>();
     }
 
     private void reset() {
@@ -39,6 +48,8 @@ public class BaseUITextureManager extends TextureManager implements UITextureMan
     @Override
     public void setUIConfig(final UIConfig config) {
         reset();
+
+        mUIConfig = config;
 
         // make bitmap fonts
         final List<TextOptions> fonts = config.getFonts();
@@ -58,9 +69,53 @@ public class BaseUITextureManager extends TextureManager implements UITextureMan
     }
 
     @Override
-    public Texture getUITexture(final String textureUri) {
-        // TODO Auto-generated method stub
-        return null;
+    public Texture getTexture(final String textureUri) {
+        String actualPath = null;
+
+        if (textureUri.startsWith(URI_DRAWABLE)) {
+            actualPath = textureUri.substring(URI_DRAWABLE.length());
+            // int drawable = 0;
+            // try {
+            // Field field = R.drawable.class.getField(actualPath);
+            // drawable = field.getInt(null);
+            // } catch (Exception e) {
+            // // TODO nothing
+            // }
+            // actualPath = String.valueOf(drawable);
+        } else if (textureUri.startsWith(URI_ASSET)) {
+            actualPath = textureUri.substring(URI_ASSET.length());
+        } else if (textureUri.startsWith(URI_FILE)) {
+            actualPath = textureUri.substring(URI_FILE.length());
+        } else if (textureUri.startsWith(URI_HTTP)) {
+            actualPath = textureUri; // keep
+        } else {
+            actualPath = textureUri;
+        }
+
+        if (mGeneralTextures.containsKey(actualPath)) {
+            // use cache
+            return mGeneralTextures.get(actualPath);
+        } else {
+            Texture texture = null;
+            // create
+            if (textureUri.startsWith(URI_FILE)) {
+                // load from file / sdcard
+                texture = createFileTexture(actualPath, mUIConfig.getTextureOptions());
+            } else if (textureUri.startsWith(URI_ASSET)) {
+                // load from bundle assets
+                texture = createAssetTexture(actualPath, mUIConfig.getTextureOptions());
+            } else if (textureUri.startsWith(URI_HTTP)) {
+                // load from bundle assets
+                texture = createURLTexture(actualPath, mUIConfig.getTextureOptions());
+            }
+
+            // and cache it if created
+            if (texture != null) {
+                mGeneralTextures.put(actualPath, texture);
+            }
+
+            return texture;
+        }
     }
 
 }

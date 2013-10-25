@@ -34,4 +34,26 @@ public class BlendModes {
     public static boolean isPremultipliedAlpha(final BlendFunc bf) {
         return bf != null && (bf.src == GL10.GL_ONE && bf.dst == GL10.GL_ONE_MINUS_SRC_ALPHA);
     }
+
+    public static BlendFunc getBlendFunc(final String mode) {
+        if (ADD.equalsIgnoreCase(mode)) {
+            return ADD_FUNC;
+        } else if (SCREEN.equalsIgnoreCase(mode)) {
+            return SCREEN_FUNC;
+        } else if (SCREEN_ALPHA.equalsIgnoreCase(mode)) {
+            return SCREEN_ALPHA_FUNC;
+        } else if (MULTIPLY.equalsIgnoreCase(mode)) {
+            return MULTIPLY_FUNC;
+        } else if (INTERPOLATE.equalsIgnoreCase(mode)) {
+            return INTERPOLATE_FUNC;
+        } else if (INTERPOLATE2.equalsIgnoreCase(mode)) {
+            return INTERPOLATE2_FUNC;
+        } else if (INTERPOLATE_COLOR.equalsIgnoreCase(mode)) {
+            return INTERPOLATE_COLOR_FUNC;
+        } else if (PREMULTIPLIED_ALPHA.equalsIgnoreCase(mode)) {
+            return PREMULTIPLIED_ALPHA_FUNC;
+        }
+
+        return null;
+    }
 }

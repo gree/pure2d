@@ -5,12 +5,15 @@ package com.funzio.pure2D.shapes;
 
 import android.graphics.RectF;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -212,6 +215,20 @@ public class Sprite9 extends Rectangular {
         }
 
         return true;
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        if (xmlParser.getAttributeValue(null, "patches") != null) {
+            final String[] patches = xmlParser.getAttributeValue(null, "patches").split(",");
+            final float left = patches.length >= 1 ? Float.valueOf(patches[0].trim()) : 0;
+            final float right = patches.length >= 2 ? Float.valueOf(patches[1].trim()) : 0;
+            final float top = patches.length >= 3 ? Float.valueOf(patches[2].trim()) : 0;
+            final float bottom = patches.length >= 4 ? Float.valueOf(patches[3].trim()) : 0;
+            set9Patches(left, right, top, bottom);
+        }
     }
 
     /*

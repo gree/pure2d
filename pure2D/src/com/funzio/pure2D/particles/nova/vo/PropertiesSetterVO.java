@@ -13,6 +13,7 @@ import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.PropertiesSetter;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
 
@@ -144,7 +145,7 @@ public class PropertiesSetterVO extends AnimatorVO {
             mProperties.put(PropertiesSetter.COLOR, NovaConfig.getColor(color, emitIndex, null));
         }
         if (blend_mode != null) {
-            mProperties.put(PropertiesSetter.BLEND_MODE, NovaConfig.getBlendFunc(NovaConfig.getString(blend_mode, emitIndex)));
+            mProperties.put(PropertiesSetter.BLEND_MODE, BlendModes.getBlendFunc(NovaConfig.getString(blend_mode, emitIndex)));
         }
 
         final PropertiesSetter setter = (PropertiesSetter) animator;

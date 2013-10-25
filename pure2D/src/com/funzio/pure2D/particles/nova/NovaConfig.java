@@ -19,8 +19,6 @@ import android.view.animation.OvershootInterpolator;
 
 import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.gl.GLColor;
-import com.funzio.pure2D.gl.gl10.BlendFunc;
-import com.funzio.pure2D.gl.gl10.BlendModes;
 
 /**
  * @author long
@@ -139,28 +137,6 @@ public class NovaConfig {
             return INTER_ACCELARATE_DECELERATE;
         } else if (INTER_ST_BOUNCE.equalsIgnoreCase(name)) {
             return INTER_BOUNCE;
-        }
-
-        return null;
-    }
-
-    public static BlendFunc getBlendFunc(final String mode) {
-        if (BlendModes.ADD.equalsIgnoreCase(mode)) {
-            return BlendModes.ADD_FUNC;
-        } else if (BlendModes.SCREEN.equalsIgnoreCase(mode)) {
-            return BlendModes.SCREEN_FUNC;
-        } else if (BlendModes.SCREEN_ALPHA.equalsIgnoreCase(mode)) {
-            return BlendModes.SCREEN_ALPHA_FUNC;
-        } else if (BlendModes.MULTIPLY.equalsIgnoreCase(mode)) {
-            return BlendModes.MULTIPLY_FUNC;
-        } else if (BlendModes.INTERPOLATE.equalsIgnoreCase(mode)) {
-            return BlendModes.INTERPOLATE_FUNC;
-        } else if (BlendModes.INTERPOLATE2.equalsIgnoreCase(mode)) {
-            return BlendModes.INTERPOLATE2_FUNC;
-        } else if (BlendModes.INTERPOLATE_COLOR.equalsIgnoreCase(mode)) {
-            return BlendModes.INTERPOLATE_COLOR_FUNC;
-        } else if (BlendModes.PREMULTIPLIED_ALPHA.equalsIgnoreCase(mode)) {
-            return BlendModes.PREMULTIPLIED_ALPHA_FUNC;
         }
 
         return null;

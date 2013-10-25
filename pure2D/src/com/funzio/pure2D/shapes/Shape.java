@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Pure2D;
@@ -18,6 +20,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -270,10 +273,15 @@ public class Shape extends BaseDisplayObject {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#onAdded(com.funzio.pure2D.containers.Container)
-     */
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        if (xmlParser.getAttributeValue(null, "source") != null) {
+            setTexture(manager.getTextureManager().getTexture(xmlParser.getAttributeValue(null, "source")));
+        }
+    }
+
     @Override
     public void onAdded(final Container parent) {
         super.onAdded(parent);

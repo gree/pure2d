@@ -6,6 +6,7 @@ package com.funzio.pure2D.particles.nova;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.effects.trails.MotionTrail;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.particles.ClipParticle;
 import com.funzio.pure2D.particles.nova.vo.NovaParticleVO;
 
@@ -68,7 +69,7 @@ public class NovaParticle extends ClipParticle implements Animator.AnimatorListe
         mRotation = NovaConfig.getFloat(mParticleVO.rotation, emitIndex, 0);
         mAlpha = NovaConfig.getFloat(mParticleVO.alpha, emitIndex, 1);
         mColor = NovaConfig.getColor(mParticleVO.color, emitIndex, null);
-        mBlendFunc = NovaConfig.getBlendFunc(NovaConfig.getString(mParticleVO.blend_mode, emitIndex));
+        mBlendFunc = BlendModes.getBlendFunc(NovaConfig.getString(mParticleVO.blend_mode, emitIndex));
         mTexture = null;
 
         // now, find optional animator

@@ -15,5 +15,5 @@ public interface UITextureManager {
 
     public BitmapFont getBitmapFont(String fontId);
 
-    public Texture getUITexture(String textureUri);
+    public Texture getTexture(String textureUri);
 }

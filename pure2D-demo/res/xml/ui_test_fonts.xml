@@ -3,36 +3,47 @@
     height="400"
     width="600" >
 
-    <Rect
+    <Sprite9
+        blendMode="premultiplied_alpha"
         height="100%"
-        width="100%"
-        color="#AAFFFFFF" />
+        patches="20,20,20,20"
+        source="asset://sprites/panel_collection_reward.9.png"
+        width="100%" />
+
+    <Sprite
+        centerX="0"
+        source="http://product.gree.net/share/img/header-logo-01.png"
+        top="7%" />
 
     <Text
         centerX="0"
+        centerY="0"
         font="font1"
         text="Hello Pure2D UI!"
-        top="5%"
         color="#FFFF0000" />
     <Text
         font="font1"
         left="5%"
         text="TL"
-        top="5%" />
+        top="5%"
+        color="#FFFFFF00" />
     <Text
         font="font1"
         right="5%"
         text="TR"
-        top="5%" />
+        top="5%"
+        color="#FFFFFF00" />
     <Text
         bottom="5%"
         font="font1"
         left="5%"
-        text="BL" />
+        text="BL"
+        color="#FFFFFF00" />
     <Text
         bottom="5%"
         font="font1"
         right="5%"
-        text="BR" />
+        text="BR"
+        color="#FFFFFF00" />
 
 </Group>

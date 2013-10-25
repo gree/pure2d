@@ -1246,6 +1246,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (xmlParser.getAttributeValue(null, "rotation") != null) {
             mRotation = Float.valueOf(xmlParser.getAttributeValue(null, "rotation"));
         }
+        if (xmlParser.getAttributeValue(null, "blendMode") != null) {
+            mBlendFunc = BlendModes.getBlendFunc(xmlParser.getAttributeValue(null, "blendMode"));
+        }
     }
 
     /**

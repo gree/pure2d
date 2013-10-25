@@ -48,6 +48,11 @@ public class XUIActivity extends StageActivity {
     }
 
     @Override
+    protected int getNumObjects() {
+        return mScene.getNumGrandChildren();
+    }
+
+    @Override
     protected BaseScene createScene() {
         return new XUIScene();
     }

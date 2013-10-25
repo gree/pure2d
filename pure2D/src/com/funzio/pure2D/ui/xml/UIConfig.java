@@ -25,6 +25,7 @@ import com.funzio.pure2D.containers.HWheel;
 import com.funzio.pure2D.containers.VGroup;
 import com.funzio.pure2D.containers.VList;
 import com.funzio.pure2D.containers.VWheel;
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Rectangular;
 import com.funzio.pure2D.shapes.Sprite;
@@ -188,5 +189,9 @@ public class UIConfig {
 
     public List<TextOptions> getFonts() {
         return mFonts;
+    }
+
+    public TextureOptions getTextureOptions() {
+        return null;
     }
 }
