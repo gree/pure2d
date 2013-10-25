@@ -36,6 +36,7 @@ public class UILoader {
         try {
             if (mFactory == null) {
                 mFactory = XmlPullParserFactory.newInstance();
+                mFactory.setNamespaceAware(false);
             }
 
             final XmlPullParser xpp = mFactory.newPullParser();

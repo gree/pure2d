@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.ui;
 
-import android.content.res.AssetManager;
+import android.content.Context;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -20,12 +20,13 @@ public class UIManager {
     // singleton
     private static UIManager sInstance;
 
+    private Context mContext;
     private UITextureManager mTextureManager;
     private UIConfig mConfig;
     private UILoader mLoader;
 
     private UIManager() {
-        mConfig = new UIConfig();
+        mConfig = new UIConfig(this);
         mLoader = new UILoader(this);
     }
 
@@ -37,11 +38,20 @@ public class UIManager {
         return sInstance;
     }
 
-    public void reset(final AssetManager assets) {
-        Log.w(TAG, "reset()");
+    public void setContext(final Context context) {
+        Log.w(TAG, "setContext(): " + context);
+        mContext = context;
 
-        mConfig.reset(assets);
-        mTextureManager = null;
+        if (context != null) {
+            mConfig.reset(mContext.getResources());
+        } else {
+            mConfig.reset(null);
+            mTextureManager = null;
+        }
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     public boolean loadConfig(final XmlPullParser parser) {
@@ -51,7 +61,7 @@ public class UIManager {
 
         // apply the config
         if (mTextureManager != null) {
-            mTextureManager.setUIConfig(mConfig);
+            mTextureManager.loadBitmapFonts();
         }
 
         return success;
@@ -61,6 +71,10 @@ public class UIManager {
         return mLoader;
     }
 
+    public UIConfig getConfig() {
+        return mConfig;
+    }
+
     public void setTextureManager(final UITextureManager textureManager) {
         Log.v(TAG, "setTextureManager(): " + textureManager);
 
@@ -68,7 +82,7 @@ public class UIManager {
 
         // apply the config
         if (mTextureManager != null) {
-            mTextureManager.setUIConfig(mConfig);
+            mTextureManager.loadBitmapFonts();
         }
     }
 

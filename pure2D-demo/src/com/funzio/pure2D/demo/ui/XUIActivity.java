@@ -8,6 +8,7 @@ import android.view.View;
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.demo.Pure2DDemoApplication;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -15,7 +16,7 @@ import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UITextureManager;
 
 public class XUIActivity extends StageActivity {
-    private UIManager mUIManager = UIManager.getInstance();
+    private UIManager mUIManager = Pure2DDemoApplication.getInstance().getUIManager();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -30,9 +31,6 @@ public class XUIActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
-                    // load ui config
-                    mUIManager.reset(getAssets());
-                    mUIManager.loadConfig(getResources().getXml(R.xml.ui_config));
                     mUIManager.setTextureManager((UITextureManager) mScene.getTextureManager());
                 }
             }
@@ -45,7 +43,7 @@ public class XUIActivity extends StageActivity {
         super.onDestroy();
 
         // clear everything
-        mUIManager.reset(null);
+        mUIManager.setTextureManager(null);
     }
 
     @Override
@@ -55,14 +53,13 @@ public class XUIActivity extends StageActivity {
 
     @Override
     protected BaseScene createScene() {
-        return new XUIScene();
+        return new XUIScene(mUIManager);
     }
 
     private void addObject(final float x, final float y) {
 
         // create object
-        DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.ui_test_constraints));
-        // loader.load("<Group><Sprite /></Group>");
+        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.ui_test_fonts));
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();
 

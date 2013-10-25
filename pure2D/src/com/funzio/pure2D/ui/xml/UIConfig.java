@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.util.Log;
 
@@ -31,6 +31,7 @@ import com.funzio.pure2D.shapes.Sprite9;
 import com.funzio.pure2D.text.BmfTextObject;
 import com.funzio.pure2D.text.TextOptions;
 import com.funzio.pure2D.ui.Button;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long.ngo
@@ -58,9 +59,10 @@ public class UIConfig {
     private XmlPullParserFactory mFactory;
     private ArrayList<TextOptions> mFonts = new ArrayList<TextOptions>();
 
-    private AssetManager mAssetManager;
     // texture settings
     public boolean mTextureAsync = true;
+
+    private UIManager mUIManager;
 
     @SuppressWarnings("unchecked")
     public static Class<? extends DisplayObject> getClassByName(final String name) {
@@ -85,8 +87,11 @@ public class UIConfig {
         return null;
     }
 
-    public void reset(final AssetManager assets) {
-        mAssetManager = assets;
+    public UIConfig(final UIManager manager) {
+        mUIManager = manager;
+    }
+
+    public void reset(final Resources resource) {
         mFonts.clear();
     }
 
@@ -149,7 +154,7 @@ public class UIConfig {
 
                 if (nodeName.equalsIgnoreCase("Font")) {
                     final TextOptions options = TextOptions.getDefault();
-                    options.setXMLAttributes(parser, mAssetManager);
+                    options.setXMLAttributes(parser, mUIManager.getContext().getAssets());
 
                     // add to map
                     mFonts.add(options);
