@@ -72,7 +72,7 @@ public class UILoader {
         try {
             eventType = parser.getEventType();
             nodeName = parser.getName();
-            Log.v(TAG, "parseNode(): " + nodeName);
+            // Log.v(TAG, "parseNode(): " + nodeName);
         } catch (Exception e) {
             Log.e(TAG, "XML Parsing Error!", e);
             return null;

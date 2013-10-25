@@ -1237,17 +1237,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // more attributes
-        if (xmlParser.getAttributeValue(null, "color") != null) {
-            mColor = new GLColor(Color.parseColor(xmlParser.getAttributeValue(null, "color")));
+        final String color = xmlParser.getAttributeValue(null, "color");
+        if (color != null) {
+            mColor = new GLColor(Color.parseColor(color));
         }
-        if (xmlParser.getAttributeValue(null, "alpha") != null) {
-            mAlpha = Float.valueOf(xmlParser.getAttributeValue(null, "alpha"));
+
+        final String alpha = xmlParser.getAttributeValue(null, "alpha");
+        if (alpha != null) {
+            mAlpha = Float.valueOf(alpha);
         }
-        if (xmlParser.getAttributeValue(null, "rotation") != null) {
-            mRotation = Float.valueOf(xmlParser.getAttributeValue(null, "rotation"));
+
+        final String rotation = xmlParser.getAttributeValue(null, "rotation");
+        if (rotation != null) {
+            mRotation = Float.valueOf(rotation);
         }
-        if (xmlParser.getAttributeValue(null, "blendMode") != null) {
-            mBlendFunc = BlendModes.getBlendFunc(xmlParser.getAttributeValue(null, "blendMode"));
+
+        final String blendMode = xmlParser.getAttributeValue(null, "blendMode");
+        if (blendMode != null) {
+            mBlendFunc = BlendModes.getBlendFunc(blendMode);
         }
     }
 

@@ -277,8 +277,9 @@ public class Shape extends BaseDisplayObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        if (xmlParser.getAttributeValue(null, "source") != null) {
-            setTexture(manager.getTextureManager().getTexture(xmlParser.getAttributeValue(null, "source")));
+        final String source = xmlParser.getAttributeValue(null, "source");
+        if (source != null) {
+            setTexture(manager.getTextureManager().getTexture(source));
         }
     }
 

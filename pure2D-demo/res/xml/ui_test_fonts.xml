@@ -22,26 +22,26 @@
         text="Hello Pure2D UI!"
         color="#FFFF0000" />
     <Text
-        font="font1"
+        font="font2"
         left="5%"
         text="TL"
         top="5%"
         color="#FFFFFF00" />
     <Text
-        font="font1"
+        font="font2"
         right="5%"
         text="TR"
         top="5%"
         color="#FFFFFF00" />
     <Text
         bottom="5%"
-        font="font1"
+        font="font2"
         left="5%"
         text="BL"
         color="#FFFFFF00" />
     <Text
         bottom="5%"
-        font="font1"
+        font="font2"
         right="5%"
         text="BR"
         color="#FFFFFF00" />

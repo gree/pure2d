@@ -11,5 +11,14 @@
         strokeColor="#FF333333"
         typeface="sans-serif"
         color="#FFFFFFFF" />
+    <Font
+        id="font2"
+        characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"
+        paddingX="5"
+        paddingY="5"
+        size="30"
+        strokeColor="#FF333333"
+        typeface="sans-serif"
+        color="#FFFFFFFF" />
 
 </fonts>

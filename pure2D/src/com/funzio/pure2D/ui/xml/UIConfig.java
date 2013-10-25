@@ -62,7 +62,7 @@ public class UIConfig {
 
     @SuppressWarnings("unchecked")
     public static Class<? extends DisplayObject> getClassByName(final String name) {
-        Log.v(TAG, "getClassByName(): " + name);
+        // Log.v(TAG, "getClassByName(): " + name);
 
         if (CLASS_MAP.containsKey(name)) {
             return CLASS_MAP.get(name);
@@ -129,7 +129,7 @@ public class UIConfig {
 
                 // next
                 eventType = parser.next();
-            } while (eventType != XmlResourceParser.END_TAG);
+            } while (eventType != XmlResourceParser.END_DOCUMENT);
         } catch (Exception e) {
             Log.e(TAG, "XML Parsing Error!", e);
         }
@@ -138,53 +138,65 @@ public class UIConfig {
     }
 
     private void parseFonts(final XmlPullParser parser) throws Exception {
-        int eventType = -1;
-        do {
-            eventType = parser.next();
-            String nodeName = "";
+        while (true) {
+            int eventType = parser.next();
+            String nodeName = parser.getName();
+
             if (eventType == XmlResourceParser.START_TAG) {
-                nodeName = parser.getName();
 
                 if (nodeName.equalsIgnoreCase("Font")) {
                     final TextOptions options = TextOptions.getDefault();
                     options.id = parser.getAttributeValue(null, "id"); // required
 
-                    if (parser.getAttributeValue(null, "characters") != null) {
-                        options.inCharacters = parser.getAttributeValue(null, "characters");
+                    final String characters = parser.getAttributeValue(null, "characters");
+                    if (characters != null) {
+                        options.inCharacters = characters;
                     }
-                    if (parser.getAttributeValue(null, "typeface") != null) {
-                        options.inTextPaint.setTypeface(Typeface.create(parser.getAttributeValue(null, "typeface"), TextOptions.getTypefaceStyle(parser.getAttributeValue(null, "style"))));
+
+                    final String typeface = parser.getAttributeValue(null, "typeface");
+                    if (typeface != null) {
+                        options.inTextPaint.setTypeface(Typeface.create(typeface, TextOptions.getTypefaceStyle(parser.getAttributeValue(null, "style"))));
                     }
-                    if (parser.getAttributeValue(null, "size") != null) {
-                        options.inTextPaint.setTextSize(Float.valueOf(parser.getAttributeValue(null, "size")));
+
+                    final String size = parser.getAttributeValue(null, "size");
+                    if (size != null) {
+                        options.inTextPaint.setTextSize(Float.valueOf(size));
                     }
-                    if (parser.getAttributeValue(null, "color") != null) {
-                        options.inTextPaint.setColor(Color.parseColor(parser.getAttributeValue(null, "color")));
+
+                    final String color = parser.getAttributeValue(null, "color");
+                    if (color != null) {
+                        options.inTextPaint.setColor(Color.parseColor(color));
                     }
-                    if (parser.getAttributeValue(null, "paddingX") != null) {
-                        options.inPaddingX = Float.valueOf(parser.getAttributeValue(null, "paddingX"));
+
+                    final String paddingX = parser.getAttributeValue(null, "paddingX");
+                    if (paddingX != null) {
+                        options.inPaddingX = Float.valueOf(paddingX);
                     }
-                    if (parser.getAttributeValue(null, "paddingY") != null) {
-                        options.inPaddingY = Float.valueOf(parser.getAttributeValue(null, "paddingY"));
+
+                    final String paddingY = parser.getAttributeValue(null, "paddingY");
+                    if (paddingY != null) {
+                        options.inPaddingY = Float.valueOf(paddingY);
                     }
 
                     // stroke
-                    if (parser.getAttributeValue(null, "strokeColor") != null) {
+                    final String stroke = parser.getAttributeValue(null, "strokeColor");
+                    if (stroke != null) {
                         options.inStrokePaint = new TextPaint(options.inTextPaint);
-                        options.inStrokePaint.setColor(Color.parseColor(parser.getAttributeValue(null, "strokeColor")));
-                        if (parser.getAttributeValue(null, "strokeSize") != null) {
-                            options.inStrokePaint.setTextSize(Float.valueOf(parser.getAttributeValue(null, "strokeSize")));
+                        options.inStrokePaint.setColor(Color.parseColor(stroke));
+
+                        final String strokeSize = parser.getAttributeValue(null, "strokeSize");
+                        if (strokeSize != null) {
+                            options.inStrokePaint.setTextSize(Float.valueOf(strokeSize));
                         }
                     }
 
                     // add to map
                     mFonts.add(options);
                 }
+            } else if (eventType == XmlResourceParser.END_TAG && nodeName.equalsIgnoreCase("fonts")) {
+                break;
             }
-
-            // next
-            eventType = parser.next();
-        } while (eventType != XmlResourceParser.END_TAG);
+        }
     }
 
     public List<TextOptions> getFonts() {

@@ -431,8 +431,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        if (xmlParser.getAttributeValue(null, "font") != null) {
-            BitmapFont bitmapFont = manager.getTextureManager().getBitmapFont(xmlParser.getAttributeValue(null, "font"));
+        final String font = xmlParser.getAttributeValue(null, "font");
+        if (font != null) {
+            BitmapFont bitmapFont = manager.getTextureManager().getBitmapFont(font);
             if (bitmapFont != null) {
                 setBitmapFont(bitmapFont);
                 setText(xmlParser.getAttributeValue(null, "text"));
