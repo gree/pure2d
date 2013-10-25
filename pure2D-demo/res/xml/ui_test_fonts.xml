@@ -19,8 +19,7 @@
         centerX="0"
         centerY="0"
         font="font1"
-        text="Hello Pure2D UI!"
-        color="#FFFF0000" />
+        text="Hello Pure2D UI!" />
     <Text
         font="font2"
         left="5%"

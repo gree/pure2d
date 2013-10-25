@@ -3,6 +3,7 @@
  */
 package com.funzio.pure2D.ui;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -26,8 +27,6 @@ public class UIManager {
     private UIManager() {
         mConfig = new UIConfig();
         mLoader = new UILoader(this);
-
-        reset();
     }
 
     public static UIManager getInstance() {
@@ -38,10 +37,10 @@ public class UIManager {
         return sInstance;
     }
 
-    public void reset() {
+    public void reset(final AssetManager assets) {
         Log.w(TAG, "reset()");
 
-        mConfig.reset();
+        mConfig.reset(assets);
         mTextureManager = null;
     }
 

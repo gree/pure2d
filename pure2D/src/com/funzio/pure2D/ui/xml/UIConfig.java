@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.content.res.AssetManager;
 import android.content.res.XmlResourceParser;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.text.TextPaint;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -60,6 +58,7 @@ public class UIConfig {
     private XmlPullParserFactory mFactory;
     private ArrayList<TextOptions> mFonts = new ArrayList<TextOptions>();
 
+    private AssetManager mAssetManager;
     // texture settings
     public boolean mTextureAsync = true;
 
@@ -86,7 +85,8 @@ public class UIConfig {
         return null;
     }
 
-    public void reset() {
+    public void reset(final AssetManager assets) {
+        mAssetManager = assets;
         mFonts.clear();
     }
 
@@ -149,49 +149,7 @@ public class UIConfig {
 
                 if (nodeName.equalsIgnoreCase("Font")) {
                     final TextOptions options = TextOptions.getDefault();
-                    options.id = parser.getAttributeValue(null, "id"); // required
-
-                    final String characters = parser.getAttributeValue(null, "characters");
-                    if (characters != null) {
-                        options.inCharacters = characters;
-                    }
-
-                    final String typeface = parser.getAttributeValue(null, "typeface");
-                    if (typeface != null) {
-                        options.inTextPaint.setTypeface(Typeface.create(typeface, TextOptions.getTypefaceStyle(parser.getAttributeValue(null, "style"))));
-                    }
-
-                    final String size = parser.getAttributeValue(null, "size");
-                    if (size != null) {
-                        options.inTextPaint.setTextSize(Float.valueOf(size));
-                    }
-
-                    final String color = parser.getAttributeValue(null, "color");
-                    if (color != null) {
-                        options.inTextPaint.setColor(Color.parseColor(color));
-                    }
-
-                    final String paddingX = parser.getAttributeValue(null, "paddingX");
-                    if (paddingX != null) {
-                        options.inPaddingX = Float.valueOf(paddingX);
-                    }
-
-                    final String paddingY = parser.getAttributeValue(null, "paddingY");
-                    if (paddingY != null) {
-                        options.inPaddingY = Float.valueOf(paddingY);
-                    }
-
-                    // stroke
-                    final String stroke = parser.getAttributeValue(null, "strokeColor");
-                    if (stroke != null) {
-                        options.inStrokePaint = new TextPaint(options.inTextPaint);
-                        options.inStrokePaint.setColor(Color.parseColor(stroke));
-
-                        final String strokeSize = parser.getAttributeValue(null, "strokeSize");
-                        if (strokeSize != null) {
-                            options.inStrokePaint.setTextSize(Float.valueOf(strokeSize));
-                        }
-                    }
+                    options.setXMLAttributes(parser, mAssetManager);
 
                     // add to map
                     mFonts.add(options);

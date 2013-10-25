@@ -5,12 +5,16 @@
         id="font1"
         style="bold"
         characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"
-        paddingX="5"
-        paddingY="5"
-        size="40"
-        strokeColor="#FF333333"
-        typeface="sans-serif"
-        color="#FFFFFFFF" />
+        paddingX="10"
+        paddingY="10"
+        shadowDx="5"
+        shadowDy="5"
+        shadowRadius="5.5"
+        size="50"
+        strokeColor="#FFFF0000"
+        strokeSize="55"
+        typeface="fonts/foo.ttf"
+        color="#FFFFFF00" />
     <Font
         id="font2"
         characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"
@@ -18,7 +22,6 @@
         paddingY="5"
         size="30"
         strokeColor="#FF333333"
-        typeface="sans-serif"
         color="#FFFFFFFF" />
 
 </fonts>

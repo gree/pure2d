@@ -31,6 +31,7 @@ public class XUIActivity extends StageActivity {
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
                     // load ui config
+                    mUIManager.reset(getAssets());
                     mUIManager.loadConfig(getResources().getXml(R.xml.ui_config));
                     mUIManager.setTextureManager((UITextureManager) mScene.getTextureManager());
                 }
@@ -44,7 +45,7 @@ public class XUIActivity extends StageActivity {
         super.onDestroy();
 
         // clear everything
-        mUIManager.reset();
+        mUIManager.reset(null);
     }
 
     @Override
