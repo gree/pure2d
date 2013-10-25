@@ -59,7 +59,7 @@ public class XUIActivity extends StageActivity {
     private void addObject(final float x, final float y) {
 
         // create object
-        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.ui_test_fonts));
+        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.test_button));
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();
 

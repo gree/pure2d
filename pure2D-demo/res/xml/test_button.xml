@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group
+    height="500"
+    width="wrap_content" >
+
+    <Sprite9
+        blendMode="premultiplied_alpha"
+        height="100%"
+        patches="20,20,20,20"
+        source="@drawable/panel_collection_reward"
+        width="100%" />
+
+    <Sprite
+        centerX="0"
+        source="http://product.gree.net/share/img/header-logo-01.png"
+        top="7%" />
+
+    <Button
+        bottom="5%"
+        centerX="0"
+        source="@drawable/btn_bingo_up" />
+
+</Group>
