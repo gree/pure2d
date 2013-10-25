@@ -3,7 +3,13 @@
  */
 package com.funzio.pure2D.ui;
 
+import android.graphics.PointF;
+
 import org.xmlpull.v1.XmlPullParser;
+
+import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.containers.DisplayGroup;
 
 /**
  * @author long.ngo
@@ -145,5 +151,112 @@ public class UIConstraint {
 
     public boolean hasAttributes() {
         return mHasAttributes;
+    }
+
+    public void apply(final DisplayObject target, final Container container) {
+        if (container == null || !mHasAttributes) {
+            return;
+        }
+
+        final PointF containerSize = container.getSize();
+        float l = target.getX(), r = 0, t = 0, b = target.getY(), w = target.getWidth(), h = target.getHeight();
+
+        // left and right
+        if (leftUnit == UNIT.PIXEL) {
+            l = x;
+        } else if (leftUnit == UNIT.PERCENT) {
+            l = containerSize.x * left;
+        }
+        if (rightUnit == UNIT.PIXEL) {
+            r = right;
+        } else if (rightUnit == UNIT.PERCENT) {
+            r = containerSize.x * right;
+        }
+        // implicit width
+        if (leftUnit != UNIT.UNSET && rightUnit != UNIT.UNSET) {
+            w = containerSize.x - (l + r);
+        }
+
+        // top and bottom
+        if (topUnit == UNIT.PIXEL) {
+            t = top;
+        } else if (topUnit == UNIT.PERCENT) {
+            t = containerSize.y * top;
+        }
+        if (bottomUnit == UNIT.PIXEL) {
+            b = bottom;
+        } else if (bottomUnit == UNIT.PERCENT) {
+            b = containerSize.y * bottom;
+        }
+        // implicit height
+        if (topUnit != UNIT.UNSET && bottomUnit != UNIT.UNSET) {
+            h = containerSize.y - (t + b);
+        }
+
+        // explicit width
+        if (widthUnit == UNIT.PIXEL) {
+            w = width;
+        } else if (widthUnit == UNIT.PERCENT) {
+            w = containerSize.x * width;
+        } else if (widthUnit == UNIT.WRAP && target instanceof DisplayGroup) {
+            ((DisplayGroup) target).setWrapContentWidth(true);
+        }
+
+        // explicit height
+        if (heightUnit == UNIT.PIXEL) {
+            h = height;
+        } else if (heightUnit == UNIT.PERCENT) {
+            h = containerSize.y * height;
+        } else if (heightUnit == UNIT.WRAP && target instanceof DisplayGroup) {
+            ((DisplayGroup) target).setWrapContentHeight(true);
+        }
+
+        // x center
+        if (centerXUnit != UNIT.UNSET) {
+            if (centerXUnit == UNIT.PIXEL) {
+                l = centerX;
+            } else if (xUnit == UNIT.PERCENT) {
+                l = containerSize.x * centerX;
+            }
+            l += (containerSize.x - w) * 0.5f;
+        }
+
+        // y center
+        if (centerYUnit != UNIT.UNSET) {
+            if (centerYUnit == UNIT.PIXEL) {
+                b = centerY;
+            } else if (yUnit == UNIT.PERCENT) {
+                b = containerSize.y * centerY;
+            }
+            b += (containerSize.y - h) * 0.5f;
+        }
+
+        // implicit left base on right and width
+        if (leftUnit == UNIT.UNSET && rightUnit != UNIT.UNSET) {
+            l = containerSize.x - r - w;
+        }
+
+        // implicit bottom base on top and height
+        if (bottomUnit == UNIT.UNSET && topUnit != UNIT.UNSET) {
+            b = containerSize.y - t - h;
+        }
+
+        // explicit x
+        if (xUnit == UNIT.PIXEL) {
+            l = x;
+        } else if (xUnit == UNIT.PERCENT) {
+            l = containerSize.x * x;
+        }
+
+        // explicit y
+        if (yUnit == UNIT.PIXEL) {
+            b = y;
+        } else if (yUnit == UNIT.PERCENT) {
+            b = containerSize.y * y;
+        }
+
+        // apply
+        target.setPosition(l, b);
+        target.setSize(w, h);
     }
 }

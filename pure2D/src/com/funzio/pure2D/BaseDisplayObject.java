@@ -264,7 +264,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     @Override
     public boolean update(final int deltaTime) {
         if (mUIConstraint != null) {
-            applyUIConstraint();
+            mUIConstraint.apply(this, mParent);
         }
 
         // update the manipulators if there's any
@@ -1273,106 +1273,4 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mUIConstraint = uiConstraint;
     }
 
-    protected void applyUIConstraint() {
-        if (mParent == null || mUIConstraint == null || !mUIConstraint.hasAttributes()) {
-            return;
-        }
-
-        final PointF parentSize = mParent.getSize();
-        float left = mPosition.x, right = 0, top = 0, bottom = mPosition.y, width = mSize.x, height = mSize.y;
-
-        // left and right
-        if (mUIConstraint.leftUnit == UIConstraint.UNIT.PIXEL) {
-            left = mUIConstraint.x;
-        } else if (mUIConstraint.leftUnit == UIConstraint.UNIT.PERCENT) {
-            left = parentSize.x * mUIConstraint.left;
-        }
-        if (mUIConstraint.rightUnit == UIConstraint.UNIT.PIXEL) {
-            right = mUIConstraint.right;
-        } else if (mUIConstraint.rightUnit == UIConstraint.UNIT.PERCENT) {
-            right = parentSize.x * mUIConstraint.right;
-        }
-        // implicit width
-        if (mUIConstraint.leftUnit != UIConstraint.UNIT.UNSET && mUIConstraint.rightUnit != UIConstraint.UNIT.UNSET) {
-            width = parentSize.x - (left + right);
-        }
-
-        // top and bottom
-        if (mUIConstraint.topUnit == UIConstraint.UNIT.PIXEL) {
-            top = mUIConstraint.top;
-        } else if (mUIConstraint.topUnit == UIConstraint.UNIT.PERCENT) {
-            top = parentSize.y * mUIConstraint.top;
-        }
-        if (mUIConstraint.bottomUnit == UIConstraint.UNIT.PIXEL) {
-            bottom = mUIConstraint.bottom;
-        } else if (mUIConstraint.bottomUnit == UIConstraint.UNIT.PERCENT) {
-            bottom = parentSize.y * mUIConstraint.bottom;
-        }
-        // implicit height
-        if (mUIConstraint.topUnit != UIConstraint.UNIT.UNSET && mUIConstraint.bottomUnit != UIConstraint.UNIT.UNSET) {
-            height = parentSize.y - (top + bottom);
-        }
-
-        // explicit width
-        if (mUIConstraint.widthUnit == UIConstraint.UNIT.PIXEL) {
-            width = mUIConstraint.width;
-        } else if (mUIConstraint.widthUnit == UIConstraint.UNIT.PERCENT) {
-            width = parentSize.x * mUIConstraint.width;
-        }
-
-        // explicit height
-        if (mUIConstraint.heightUnit == UIConstraint.UNIT.PIXEL) {
-            height = mUIConstraint.height;
-        } else if (mUIConstraint.heightUnit == UIConstraint.UNIT.PERCENT) {
-            height = parentSize.y * mUIConstraint.height;
-        }
-
-        // x center
-        if (mUIConstraint.centerXUnit != UIConstraint.UNIT.UNSET) {
-            if (mUIConstraint.centerXUnit == UIConstraint.UNIT.PIXEL) {
-                left = mUIConstraint.centerX;
-            } else if (mUIConstraint.xUnit == UIConstraint.UNIT.PERCENT) {
-                left = parentSize.x * mUIConstraint.centerX;
-            }
-            left += (parentSize.x - width) * 0.5f;
-        }
-
-        // y center
-        if (mUIConstraint.centerYUnit != UIConstraint.UNIT.UNSET) {
-            if (mUIConstraint.centerYUnit == UIConstraint.UNIT.PIXEL) {
-                bottom = mUIConstraint.centerY;
-            } else if (mUIConstraint.yUnit == UIConstraint.UNIT.PERCENT) {
-                bottom = parentSize.y * mUIConstraint.centerY;
-            }
-            bottom += (parentSize.y - height) * 0.5f;
-        }
-
-        // implicit left base on right and width
-        if (mUIConstraint.leftUnit == UIConstraint.UNIT.UNSET && mUIConstraint.rightUnit != UIConstraint.UNIT.UNSET) {
-            left = parentSize.x - right - width;
-        }
-
-        // implicit bottom base on top and height
-        if (mUIConstraint.bottomUnit == UIConstraint.UNIT.UNSET && mUIConstraint.topUnit != UIConstraint.UNIT.UNSET) {
-            bottom = parentSize.y - top - height;
-        }
-
-        // explicit x
-        if (mUIConstraint.xUnit == UIConstraint.UNIT.PIXEL) {
-            left = mUIConstraint.x;
-        } else if (mUIConstraint.xUnit == UIConstraint.UNIT.PERCENT) {
-            left = parentSize.x * mUIConstraint.x;
-        }
-
-        // explicit y
-        if (mUIConstraint.yUnit == UIConstraint.UNIT.PIXEL) {
-            bottom = mUIConstraint.y;
-        } else if (mUIConstraint.yUnit == UIConstraint.UNIT.PERCENT) {
-            bottom = parentSize.y * mUIConstraint.y;
-        }
-
-        // apply
-        setPosition(left, bottom);
-        setSize(width, height);
-    }
 }

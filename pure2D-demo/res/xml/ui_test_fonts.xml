@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group
-    height="400"
-    width="600" >
+    height="wrap_content"
+    width="wrap_content" >
 
     <Sprite9
         blendMode="premultiplied_alpha"
-        height="100%"
+        height="400"
         patches="20,20,20,20"
         source="asset://sprites/panel_collection_reward.9.png"
-        width="100%" />
+        width="600" />
 
     <Sprite
         centerX="0"
