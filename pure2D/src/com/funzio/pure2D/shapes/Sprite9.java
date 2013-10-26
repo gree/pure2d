@@ -178,10 +178,6 @@ public class Sprite9 extends Rectangular {
         validate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Rectangular#setSize(float, float)
-     */
     @Override
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
@@ -233,10 +229,6 @@ public class Sprite9 extends Rectangular {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();

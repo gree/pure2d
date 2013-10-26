@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group
-    height="500"
-    width="700" >
+    height="400"
+    width="600" >
 
     <Sprite9
         blendMode="premultiplied_alpha"
         height="100%"
         patches="20,20,20,20"
         source="@drawable/panel_collection_reward"
+        touchable="true"
         width="100%" />
 
     <Sprite

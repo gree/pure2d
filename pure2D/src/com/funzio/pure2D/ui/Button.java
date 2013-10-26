@@ -35,7 +35,7 @@ public class Button extends DisplayGroup implements UIObject {
     protected Sprite9 mButtonSprite;
     protected DisplayObject mContentGroup;
 
-    protected Listener mListener;
+    protected TouchListener mTouchListener;
 
     public Button() {
         super();
@@ -144,12 +144,12 @@ public class Button extends DisplayGroup implements UIObject {
         return mTouchable && mAlive;
     }
 
-    public Listener getListener() {
-        return mListener;
+    public TouchListener getTouchListener() {
+        return mTouchListener;
     }
 
-    public void setListener(final Listener listener) {
-        mListener = listener;
+    public void setTouchListener(final TouchListener listener) {
+        mTouchListener = listener;
     }
 
     /**
@@ -176,8 +176,8 @@ public class Button extends DisplayGroup implements UIObject {
                 setState(STATE_DOWN);
 
                 // event
-                if (mListener != null) {
-                    mListener.onTouchDown(this);
+                if (mTouchListener != null) {
+                    mTouchListener.onTouchDown(this);
                 }
 
                 // take control
@@ -193,8 +193,8 @@ public class Button extends DisplayGroup implements UIObject {
                 // hit test
                 final boolean hit = hitTest(touchedPoint.x, touchedPoint.y);
                 // event
-                if (mListener != null) {
-                    mListener.onTouchUp(this, hit);
+                if (mTouchListener != null) {
+                    mTouchListener.onTouchUp(this, hit);
                 }
                 if (hit) {
                     // take control
@@ -243,9 +243,4 @@ public class Button extends DisplayGroup implements UIObject {
         }
     }
 
-    public static interface Listener {
-        public void onTouchDown(Button button);
-
-        public void onTouchUp(Button button, boolean hit);
-    }
 }
