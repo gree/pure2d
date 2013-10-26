@@ -88,6 +88,9 @@ public class Rectangular extends Shape implements UIObject {
      */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
+        if (!mTouchable || !mAlive) {
+            return false;
+        }
 
         final int action = event.getActionMasked();
         final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
