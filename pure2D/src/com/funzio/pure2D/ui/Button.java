@@ -232,6 +232,15 @@ public class Button extends DisplayGroup implements UIObject {
                 setTextures(textures);
             }
         }
+
+        if (xmlParser.getAttributeValue(null, "patches") != null) {
+            final String[] patches = xmlParser.getAttributeValue(null, "patches").split(",");
+            final float left = patches.length >= 1 ? Float.valueOf(patches[0].trim()) : 0;
+            final float right = patches.length >= 2 ? Float.valueOf(patches[1].trim()) : 0;
+            final float top = patches.length >= 3 ? Float.valueOf(patches[2].trim()) : 0;
+            final float bottom = patches.length >= 4 ? Float.valueOf(patches[3].trim()) : 0;
+            set9Patches(left, right, top, bottom);
+        }
     }
 
     public static interface Listener {
