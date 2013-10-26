@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group
     height="500"
-    width="wrap_content" >
+    width="700" >
 
     <Sprite9
         blendMode="premultiplied_alpha"
@@ -18,6 +18,12 @@
     <Button
         bottom="5%"
         centerX="0"
-        source="@drawable/btn_bingo_up" />
+        source="@drawable/btn_up" >
+        <Text
+            centerX="0"
+            centerY="0"
+            font="font2"
+            text="@string/hello_text" />
+    </Button>
 
 </Group>

@@ -20,9 +20,9 @@ public final class R {
         public static final int aircraftcarrier_0_se=0x7f020003;
         public static final int atlas=0x7f020004;
         public static final int b52stratofortress_0_se=0x7f020005;
-        public static final int btn_bingo_disabled=0x7f020006;
-        public static final int btn_bingo_down=0x7f020007;
-        public static final int btn_bingo_up=0x7f020008;
+        public static final int btn_disabled=0x7f020006;
+        public static final int btn_down=0x7f020007;
+        public static final int btn_up=0x7f020008;
         public static final int cc_128=0x7f020009;
         public static final int cc_175=0x7f02000a;
         public static final int cc_32=0x7f02000b;

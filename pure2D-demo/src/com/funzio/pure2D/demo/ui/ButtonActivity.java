@@ -43,8 +43,8 @@ public class ButtonActivity extends StageActivity {
     private void loadTexture() {
         // create texture
         mTextures = new Texture[] { //
-                mScene.getTextureManager().createDrawableTexture(R.drawable.btn_bingo_up, null), mScene.getTextureManager().createDrawableTexture(R.drawable.btn_bingo_down, null),
-                mScene.getTextureManager().createDrawableTexture(R.drawable.btn_bingo_disabled, null),
+                mScene.getTextureManager().createDrawableTexture(R.drawable.btn_up, null), mScene.getTextureManager().createDrawableTexture(R.drawable.btn_down, null),
+                mScene.getTextureManager().createDrawableTexture(R.drawable.btn_disabled, null),
         };
     }
 
