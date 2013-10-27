@@ -1,0 +1,75 @@
+<!ELEMENT Group ANY>
+<!ATTLIST Group 
+	id CDATA ""
+	width CDATA ""
+	height CDATA ""
+	left CDATA "0"
+	right CDATA "0"
+	top CDATA "0"
+	bottom CDATA "0"
+	centerX CDATA "0"
+	centerY CDATA "0"
+	clippingEnabled (true|false) "false"
+	cacheEnabled (true|false) "false">
+	
+<!ELEMENT Rect EMPTY>
+<!ATTLIST Rect 
+	id CDATA ""
+	width CDATA ""
+	height CDATA ""
+	left CDATA "0"
+	right CDATA "0"
+	top CDATA "0"
+	bottom CDATA "0"
+	centerX CDATA "0"
+	centerY CDATA "0"
+	color CDATA "#FFFFFFFF"
+	alpha CDATA "1">
+
+<!ELEMENT Sprite EMPTY>
+<!ATTLIST Sprite 
+	id CDATA ""
+	width CDATA ""
+	height CDATA ""
+	left CDATA "0"
+	right CDATA "0"
+	top CDATA "0"
+	bottom CDATA "0"
+	centerX CDATA "0"
+	centerY CDATA "0"
+	color CDATA "#FFFFFFFF"
+	alpha CDATA "1"
+	source CDATA "">
+	
+<!ELEMENT Sprite9 EMPTY>
+<!ATTLIST Sprite9 
+	id CDATA ""
+	width CDATA ""
+	height CDATA ""
+	left CDATA "0"
+	right CDATA "0"
+	top CDATA "0"
+	bottom CDATA "0"
+	centerX CDATA "0"
+	centerY CDATA "0"
+	color CDATA "#FFFFFFFF"
+	alpha CDATA "1"
+	source CDATA ""
+	patches CDATA "">
+
+<!ELEMENT Button ANY>
+<!ATTLIST Button 
+	id CDATA ""
+	width CDATA ""
+	height CDATA ""
+	left CDATA "0"
+	right CDATA "0"
+	top CDATA "0"
+	bottom CDATA "0"
+	centerX CDATA "0"
+	centerY CDATA "0"
+	color CDATA "#FFFFFFFF"
+	alpha CDATA "1"
+	clippingEnabled (true|false) "false"
+	cacheEnabled (true|false) "false"
+	source CDATA "">
