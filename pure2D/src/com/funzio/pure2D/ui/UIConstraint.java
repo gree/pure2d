@@ -158,46 +158,51 @@ public class UIConstraint {
             return;
         }
 
-        final PointF containerSize = container.getSize();
-        float l = target.getX(), r = 0, t = 0, b = target.getY(), w = target.getWidth(), h = target.getHeight();
+        final PointF targetPos = target.getPosition();
+        final PointF targetSize = target.getSize();
+        final PointF parentSize = container.getSize();
+        final float pw = parentSize.x, ph = parentSize.y;
+        final float cx = targetPos.x, cy = targetPos.y;
+        final float cw = targetSize.x, ch = targetSize.y;
+        float l = cx, r = 0, t = 0, b = cy, w = cw, h = ch;
 
         // left and right
         if (leftUnit == UNIT.PIXEL) {
             l = x;
         } else if (leftUnit == UNIT.PERCENT) {
-            l = containerSize.x * left;
+            l = pw * left;
         }
         if (rightUnit == UNIT.PIXEL) {
             r = right;
         } else if (rightUnit == UNIT.PERCENT) {
-            r = containerSize.x * right;
+            r = pw * right;
         }
         // implicit width
         if (leftUnit != UNIT.UNSET && rightUnit != UNIT.UNSET) {
-            w = containerSize.x - (l + r);
+            w = pw - (l + r);
         }
 
         // top and bottom
         if (topUnit == UNIT.PIXEL) {
             t = top;
         } else if (topUnit == UNIT.PERCENT) {
-            t = containerSize.y * top;
+            t = ph * top;
         }
         if (bottomUnit == UNIT.PIXEL) {
             b = bottom;
         } else if (bottomUnit == UNIT.PERCENT) {
-            b = containerSize.y * bottom;
+            b = ph * bottom;
         }
         // implicit height
         if (topUnit != UNIT.UNSET && bottomUnit != UNIT.UNSET) {
-            h = containerSize.y - (t + b);
+            h = ph - (t + b);
         }
 
         // explicit width
         if (widthUnit == UNIT.PIXEL) {
             w = width;
         } else if (widthUnit == UNIT.PERCENT) {
-            w = containerSize.x * width;
+            w = pw * width;
         } else if (widthUnit == UNIT.WRAP && target instanceof DisplayGroup) {
             ((DisplayGroup) target).setWrapContentWidth(true);
         }
@@ -206,7 +211,7 @@ public class UIConstraint {
         if (heightUnit == UNIT.PIXEL) {
             h = height;
         } else if (heightUnit == UNIT.PERCENT) {
-            h = containerSize.y * height;
+            h = ph * height;
         } else if (heightUnit == UNIT.WRAP && target instanceof DisplayGroup) {
             ((DisplayGroup) target).setWrapContentHeight(true);
         }
@@ -216,9 +221,9 @@ public class UIConstraint {
             if (centerXUnit == UNIT.PIXEL) {
                 l = centerX;
             } else if (xUnit == UNIT.PERCENT) {
-                l = containerSize.x * centerX;
+                l = pw * centerX;
             }
-            l += (containerSize.x - w) * 0.5f;
+            l += (pw - w) * 0.5f;
         }
 
         // y center
@@ -226,37 +231,41 @@ public class UIConstraint {
             if (centerYUnit == UNIT.PIXEL) {
                 b = centerY;
             } else if (yUnit == UNIT.PERCENT) {
-                b = containerSize.y * centerY;
+                b = ph * centerY;
             }
-            b += (containerSize.y - h) * 0.5f;
+            b += (ph - h) * 0.5f;
         }
 
         // implicit left base on right and width
         if (leftUnit == UNIT.UNSET && rightUnit != UNIT.UNSET) {
-            l = containerSize.x - r - w;
+            l = pw - r - w;
         }
 
         // implicit bottom base on top and height
         if (bottomUnit == UNIT.UNSET && topUnit != UNIT.UNSET) {
-            b = containerSize.y - t - h;
+            b = ph - t - h;
         }
 
         // explicit x
         if (xUnit == UNIT.PIXEL) {
             l = x;
         } else if (xUnit == UNIT.PERCENT) {
-            l = containerSize.x * x;
+            l = pw * x;
         }
 
         // explicit y
         if (yUnit == UNIT.PIXEL) {
             b = y;
         } else if (yUnit == UNIT.PERCENT) {
-            b = containerSize.y * y;
+            b = ph * y;
         }
 
-        // apply
-        target.setPosition(l, b);
-        target.setSize(w, h);
+        // apply with diff check for perf
+        if (cx != l || cy != b) {
+            target.setPosition(l, b);
+        }
+        if (cw != w || ch != h) {
+            target.setSize(w, h);
+        }
     }
 }

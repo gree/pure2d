@@ -257,14 +257,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         if (mUIConstraint != null) {
-            mUIConstraint.apply(this, mParent);
+            // only apply constraints when size or parent changed
+            if ((mInvalidateFlags & (SIZE | PARENT)) != 0) {
+                mUIConstraint.apply(this, mParent);
+            }
         }
 
         // update the manipulators if there's any
@@ -304,7 +303,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // validate transform AFTER updateBounds()
-        mInvalidateFlags &= ~TRANSFORM_MATRIX;
+        mInvalidateFlags &= ~(BOUNDS | TRANSFORM_MATRIX);
 
         return mNumManipulators > 0;
     }
@@ -1058,7 +1057,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // clear flags: bounds
-        mInvalidateFlags &= ~BOUNDS;
+        // mInvalidateFlags &= ~BOUNDS;
 
         // translate later
         if ((mPosition.x - mOrigin.x) != 0 || (mPosition.y - mOrigin.y) != 0) {
@@ -1184,7 +1183,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mScene = findScene();
 
         // flag the bounds are changed now
-        invalidate(POSITION);
+        invalidate(PARENT);
     }
 
     /**

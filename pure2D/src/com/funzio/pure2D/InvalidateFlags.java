@@ -30,14 +30,15 @@ public interface InvalidateFlags {
 
     // container related
     public static final int CHILDREN = 1 << 20;
-    public static final int CACHE = 1 << 21;
+    public static final int PARENT = 1 << 21;
+    public static final int CACHE = 1 << 22;
 
     // glsurface related
     // public static final int SURFACE = 1 << 30;
 
     // combined flags
     public static final int TRANSFORM_MATRIX = SKEW;
-    public static final int BOUNDS = ORIGIN | POSITION | ROTATION | SCALE | SIZE | PIVOT | TRANSFORM_MATRIX;
+    public static final int BOUNDS = ORIGIN | POSITION | ROTATION | SCALE | SIZE | PIVOT | TRANSFORM_MATRIX | PARENT;
     public static final int VISUAL = VISIBILITY | COLOR | ALPHA | BLEND | TEXTURE | TEXTURE_COORDS | PERSPECTIVE | DEPTH | FRAME | VERTICES;
     public static final int ALL = BOUNDS | VISUAL | CHILDREN;
 }

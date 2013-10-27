@@ -64,35 +64,43 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
      */
     @Override
     public boolean update(final int deltaTime) {
+        final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
+        // super here
         boolean ret = super.update(deltaTime);
 
         DisplayObject child;
-        float temp;
+        float temp, sx = mSize.x, sy = mSize.y;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
+
+            if (forceChildrenConstraints) {
+                child.invalidate(PARENT);
+            }
+
             if (child.isAlive()) {
                 // update child
                 child.update(deltaTime);
+            }
 
-                // match content size
-                if (mWrapContentWidth) {
-                    temp = child.getX() + child.getWidth();
-                    if (temp > mSize.x) {
-                        mSize.x = temp;
-                    }
+            // match content size
+            if (mWrapContentWidth) {
+                temp = child.getX() + child.getWidth();
+                if (temp > sx) {
+                    sx = temp;
                 }
-                if (mWrapContentHeight) {
-                    temp = child.getY() + child.getHeight();
-                    if (temp > mSize.y) {
-                        mSize.y = temp;
-                    }
+            }
+            if (mWrapContentHeight) {
+                temp = child.getY() + child.getHeight();
+                if (temp > sy) {
+                    sy = temp;
                 }
             }
         }
 
-        if (mWrapContentWidth || mWrapContentHeight) {
+        // diff check
+        if (sx != mSize.x || sy != mSize.y) {
             // apply
-            setSize(mSize);
+            setSize(sx, sy);
         }
 
         return ret || mNumChildren >= 0;
