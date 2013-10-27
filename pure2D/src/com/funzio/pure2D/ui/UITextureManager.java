@@ -61,6 +61,7 @@ public class UITextureManager extends TextureManager {
 
     public Texture getUriTexture(final String textureUri) {
         String actualPath = null;
+        String shortPath = null;
         int drawable = 0;
 
         if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
@@ -74,7 +75,8 @@ public class UITextureManager extends TextureManager {
         } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
             actualPath = textureUri; // keep
         } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
-            actualPath = mUIManager.getCacheDir() + textureUri.substring(UIConfig.URI_CACHE.length());
+            shortPath = textureUri.substring(UIConfig.URI_CACHE.length());
+            actualPath = mUIManager.getCacheDir() + shortPath;
         } else {
             actualPath = textureUri;
         }
@@ -92,7 +94,7 @@ public class UITextureManager extends TextureManager {
                 if (drawable > 0) {
                     texture = createDrawableTexture(drawable, textureOptions, async);
                 }
-            } else if (textureUri.startsWith(UIConfig.URI_FILE) || textureUri.startsWith(UIConfig.URI_CACHE)) {
+            } else if (textureUri.startsWith(UIConfig.URI_FILE)) {
                 // load from file / sdcard
                 texture = createFileTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
@@ -101,6 +103,9 @@ public class UITextureManager extends TextureManager {
             } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
                 // load from bundle assets
                 texture = createURLTexture(actualPath, textureOptions, async);
+            } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
+                // load from url or cache file
+                texture = createURLCacheTexture(mUIManager.getCdnUrl(), mUIManager.getCacheDir(), shortPath, textureOptions, async);
             }
 
             // and cache it if created

@@ -66,10 +66,12 @@ public class UIConfig {
     }
 
     private XmlPullParserFactory mFactory;
-    private ArrayList<TextOptions> mFonts = new ArrayList<TextOptions>();
+
+    protected String mCdnUrl = null;
+    protected ArrayList<TextOptions> mFonts = new ArrayList<TextOptions>();
 
     // texture settings
-    public boolean mTextureAsync = true;
+    public boolean mTextureAsync = true; // TODO make configurable
 
     private UIManager mUIManager;
 
@@ -138,7 +140,9 @@ public class UIConfig {
                 if (eventType == XmlResourceParser.START_TAG) {
                     nodeName = parser.getName();
 
-                    if (nodeName.equalsIgnoreCase("fonts")) {
+                    if (nodeName.equalsIgnoreCase("Config")) {
+                        parseConfig(parser);
+                    } else if (nodeName.equalsIgnoreCase("fonts")) {
                         parseFonts(parser);
                     }
 
@@ -154,7 +158,11 @@ public class UIConfig {
         return false;
     }
 
-    private void parseFonts(final XmlPullParser parser) throws Exception {
+    protected void parseConfig(final XmlPullParser parser) throws Exception {
+        mCdnUrl = parser.getAttributeValue(null, "cdnUrl");
+    }
+
+    protected void parseFonts(final XmlPullParser parser) throws Exception {
         while (true) {
             int eventType = parser.next();
             String nodeName = parser.getName();
@@ -174,6 +182,10 @@ public class UIConfig {
         }
     }
 
+    public String getCdnUrl() {
+        return mCdnUrl;
+    }
+
     public List<TextOptions> getFonts() {
         return mFonts;
     }
@@ -181,4 +193,5 @@ public class UIConfig {
     public TextureOptions getTextureOptions() {
         return null;
     }
+
 }

@@ -67,6 +67,10 @@ public class UIManager {
         return mCacheDir;
     }
 
+    public String getCdnUrl() {
+        return mConfig.getCdnUrl();
+    }
+
     public boolean loadConfig(final XmlPullParser parser) {
         Log.v(TAG, "loadConfig()");
 
