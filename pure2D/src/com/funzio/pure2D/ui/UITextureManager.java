@@ -61,10 +61,11 @@ public class UITextureManager extends TextureManager {
 
     public Texture getUriTexture(final String textureUri) {
         String actualPath = null;
+        int drawable = 0;
 
         if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
             actualPath = textureUri.substring(UIConfig.URI_DRAWABLE.length());
-            int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mUIManager.getContext().getApplicationContext().getPackageName());
+            drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mUIManager.getContext().getApplicationContext().getPackageName());
             actualPath = String.valueOf(drawable);
         } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
             actualPath = textureUri.substring(UIConfig.URI_ASSET.length());
@@ -72,6 +73,8 @@ public class UITextureManager extends TextureManager {
             actualPath = textureUri.substring(UIConfig.URI_FILE.length());
         } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
             actualPath = textureUri; // keep
+        } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
+            actualPath = mUIManager.getCacheDir() + textureUri.substring(UIConfig.URI_CACHE.length());
         } else {
             actualPath = textureUri;
         }
@@ -86,16 +89,18 @@ public class UITextureManager extends TextureManager {
             // create
             if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard
-                texture = async ? createDrawableTextureAsync(Integer.valueOf(actualPath), textureOptions) : createDrawableTexture(Integer.valueOf(actualPath), textureOptions);
-            } else if (textureUri.startsWith(UIConfig.URI_FILE)) {
+                if (drawable > 0) {
+                    texture = createDrawableTexture(drawable, textureOptions, async);
+                }
+            } else if (textureUri.startsWith(UIConfig.URI_FILE) || textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from file / sdcard
-                texture = async ? createFileTextureAsync(actualPath, textureOptions) : createFileTexture(actualPath, textureOptions);
+                texture = createFileTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
                 // load from bundle assets
-                texture = async ? createAssetTextureAsync(actualPath, textureOptions) : createAssetTexture(actualPath, textureOptions);
+                texture = createAssetTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
                 // load from bundle assets
-                texture = async ? createURLTextureAsync(actualPath, textureOptions) : createURLTexture(actualPath, textureOptions);
+                texture = createURLTexture(actualPath, textureOptions, async);
             }
 
             // and cache it if created

@@ -46,6 +46,7 @@ public class UIConfig {
     public static final String URI_ASSET = "asset://";
     public static final String URI_FILE = "file://";
     public static final String URI_HTTP = "http://";
+    public static final String URI_CACHE = "cache://";
 
     private static final HashMap<String, Class<? extends DisplayObject>> CLASS_MAP = new HashMap<String, Class<? extends DisplayObject>>();
     static {

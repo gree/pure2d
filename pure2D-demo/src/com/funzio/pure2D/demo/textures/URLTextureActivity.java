@@ -46,7 +46,7 @@ public class URLTextureActivity extends StageActivity {
         // listener.onTextureLoad(mTexture);
 
         // or create texture async
-        mTexture = mScene.getTextureManager().createURLTextureAsync(url, null);
+        mTexture = mScene.getTextureManager().createURLTexture(url, null, true);
         mTexture.setListener(listener);
 
     }

@@ -5,6 +5,7 @@ package com.funzio.pure2D.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Environment;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -24,6 +25,7 @@ public class UIManager {
     private Context mContext;
     private Resources mResources;
     private String mPackageName;
+    private String mCacheDir;
 
     private UITextureManager mTextureManager;
     private UIConfig mConfig;
@@ -49,6 +51,7 @@ public class UIManager {
         if (context != null) {
             mResources = context.getResources();
             mPackageName = context.getApplicationContext().getPackageName();
+            mCacheDir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
             mConfig.reset(mResources);
         } else {
             mConfig.reset(null);
@@ -58,6 +61,10 @@ public class UIManager {
 
     public Context getContext() {
         return mContext;
+    }
+
+    public String getCacheDir() {
+        return mCacheDir;
     }
 
     public boolean loadConfig(final XmlPullParser parser) {
@@ -108,4 +115,5 @@ public class UIManager {
 
         return value;
     }
+
 }

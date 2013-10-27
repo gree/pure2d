@@ -122,10 +122,10 @@ public class TextureManager {
      * @param config
      * @return
      */
-    public DrawableTexture createDrawableTextureAsync(final int drawable, final TextureOptions options) {
-        Log.v(TAG, String.format("createDrawableTextureAsync(%d, %s)", drawable, options));
+    public DrawableTexture createDrawableTexture(final int drawable, final TextureOptions options, final boolean async) {
+        Log.v(TAG, String.format("createDrawableTexture(%d, %s, %b)", drawable, options, async));
 
-        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, true);
+        final DrawableTexture texture = new DrawableTexture(mGLState, getResources(), drawable, options, async);
 
         // add to list
         addTexture(texture);
@@ -160,10 +160,10 @@ public class TextureManager {
      * @param config
      * @return
      */
-    public AssetTexture createAssetTextureAsync(final String filePath, final TextureOptions options) {
-        Log.v(TAG, String.format("createAssetTextureAsync(%s, %s)", filePath, options));
+    public AssetTexture createAssetTexture(final String filePath, final TextureOptions options, final boolean async) {
+        Log.v(TAG, String.format("createAssetTexture(%s, %s, %b)", filePath, options, async));
 
-        final AssetTexture texture = new AssetTexture(mGLState, mAssets, filePath, options, true);
+        final AssetTexture texture = new AssetTexture(mGLState, mAssets, filePath, options, async);
 
         // add to list
         addTexture(texture);
@@ -196,10 +196,10 @@ public class TextureManager {
      * @param config
      * @return
      */
-    public FileTexture createFileTextureAsync(final String filePath, final TextureOptions options) {
-        Log.v(TAG, String.format("createFileTextureAsync( %s, %s)", filePath, options));
+    public FileTexture createFileTexture(final String filePath, final TextureOptions options, final boolean async) {
+        Log.v(TAG, String.format("createFileTexture( %s, %s, %b)", filePath, options, async));
 
-        final FileTexture texture = new FileTexture(mGLState, filePath, options, true);
+        final FileTexture texture = new FileTexture(mGLState, filePath, options, async);
 
         // add to list
         addTexture(texture);
@@ -232,10 +232,10 @@ public class TextureManager {
      * @param options
      * @return
      */
-    public URLTexture createURLTextureAsync(final String url, final TextureOptions options) {
-        Log.v(TAG, String.format("createURLTextureAsync(%s, %s)", url, options));
+    public URLTexture createURLTexture(final String url, final TextureOptions options, final boolean async) {
+        Log.v(TAG, String.format("createURLTexture(%s, %s, %b)", url, options, async));
 
-        final URLTexture texture = new URLTexture(mGLState, url, options, true);
+        final URLTexture texture = new URLTexture(mGLState, url, options, async);
 
         // add to list
         addTexture(texture);
