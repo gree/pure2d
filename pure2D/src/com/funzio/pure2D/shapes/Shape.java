@@ -291,7 +291,7 @@ public class Shape extends BaseDisplayObject {
 
         final String source = xmlParser.getAttributeValue(null, "source");
         if (source != null) {
-            setTexture(manager.getTextureManager().getUITexture(source));
+            setTexture(manager.getTextureManager().getUriTexture(source));
         }
     }
 

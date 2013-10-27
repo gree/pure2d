@@ -59,7 +59,7 @@ public class UITextureManager extends TextureManager {
         return mBitmapFonts.get(fontId);
     }
 
-    public Texture getUITexture(final String textureUri) {
+    public Texture getUriTexture(final String textureUri) {
         String actualPath = null;
 
         if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {

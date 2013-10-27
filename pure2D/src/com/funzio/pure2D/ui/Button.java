@@ -237,7 +237,7 @@ public class Button extends DisplayGroup implements UIObject {
                 final Texture[] textures = new Texture[sources.length];
                 int i = 0;
                 for (String s : sources) {
-                    textures[i++] = manager.getTextureManager().getUITexture(s);
+                    textures[i++] = manager.getTextureManager().getUriTexture(s);
                 }
                 setTextures(textures);
             }
