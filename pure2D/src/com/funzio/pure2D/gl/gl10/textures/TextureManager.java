@@ -244,6 +244,47 @@ public class TextureManager {
     }
 
     /**
+     * Create a new Texture from a URL and Cache synchronously
+     * 
+     * @param urlDir
+     * @param cacheDir
+     * @param filePath
+     * @param options
+     * @return
+     */
+    public URLCacheTexture createURLCacheTexture(final String urlDir, final String cacheDir, final String filePath, final TextureOptions options) {
+        Log.v(TAG, String.format("createURLCacheTexture(%s, %s, %s, %s)", urlDir, cacheDir, filePath, options));
+
+        final URLCacheTexture texture = new URLCacheTexture(mGLState, urlDir, cacheDir, filePath, options);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
+     * Create a new Texture from a URL and Cache asynchronously
+     * 
+     * @param urlDir
+     * @param cacheDir
+     * @param filePath
+     * @param options
+     * @param async
+     * @return
+     */
+    public URLCacheTexture createURLCacheTexture(final String urlDir, final String cacheDir, final String filePath, final TextureOptions options, final boolean async) {
+        Log.v(TAG, String.format("createURLCacheTexture(%s, %s, %s, %s, %b)", urlDir, cacheDir, filePath, options, async));
+
+        final URLCacheTexture texture = new URLCacheTexture(mGLState, urlDir, cacheDir, filePath, options, async);
+
+        // add to list
+        addTexture(texture);
+
+        return texture;
+    }
+
+    /**
      * Create a new Text Texture
      * 
      * @param text
