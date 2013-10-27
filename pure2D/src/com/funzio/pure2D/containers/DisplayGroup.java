@@ -11,6 +11,8 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
@@ -20,6 +22,7 @@ import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.DummyDrawer;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -58,10 +61,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         setAutoUpdateBounds(true);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
@@ -730,6 +729,21 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     public boolean isWrapContenHeight() {
         return mWrapContentHeight;
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String cacheEnabled = xmlParser.getAttributeValue(null, "cacheEnabled");
+        if (cacheEnabled != null) {
+            setCacheEnabled(Boolean.valueOf(cacheEnabled));
+        }
+
+        final String clippingEnabled = xmlParser.getAttributeValue(null, "clippingEnabled");
+        if (clippingEnabled != null) {
+            setClippingEnabled(Boolean.valueOf(clippingEnabled));
+        }
     }
 
     protected void onAddedChild(final DisplayObject child) {

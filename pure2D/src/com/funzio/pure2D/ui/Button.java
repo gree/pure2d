@@ -55,8 +55,10 @@ public class Button extends DisplayGroup implements UIObject {
     public void setTextures(final Texture... textures) {
         mTextures = textures;
 
-        // update
-        setState(mState);
+        // force update
+        final int currentState = mState;
+        mState = -1;
+        setState(currentState);
     }
 
     @Override
@@ -99,6 +101,11 @@ public class Button extends DisplayGroup implements UIObject {
     }
 
     protected void setState(final int state) {
+        // diff check
+        if (mState == state) {
+            return;
+        }
+
         mState = state;
         // go to the state's frame
         final Texture texture = mTextures == null || mTextures.length == 0 ? null : mTextures[Math.min(state, mTextures.length - 1)];
@@ -107,8 +114,11 @@ public class Button extends DisplayGroup implements UIObject {
         // dim it if there is missing frame
         setColor((texture == null || state >= mTextures.length) ? DIMMED_COLOR : null);
 
-        // match the size
-        setSize(mButtonSprite.getSize());
+        // match the size with diff check for perf
+        final PointF size = mButtonSprite.getSize();
+        if (size.x != mSize.x || size.y != mSize.y) {
+            setSize(size);
+        }
     }
 
     public boolean isEnabled() {
