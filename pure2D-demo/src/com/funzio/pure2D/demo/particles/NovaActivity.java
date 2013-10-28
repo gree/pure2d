@@ -63,10 +63,6 @@ public class NovaActivity extends StageActivity {
         return mScene.getNumGrandChildren();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
-     */
     @Override
     protected int getLayout() {
         return R.layout.stage_nova;
@@ -138,10 +134,6 @@ public class NovaActivity extends StageActivity {
         });
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.samples.activities.StageActivity#onStop()
-     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -151,10 +143,6 @@ public class NovaActivity extends StageActivity {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#finish()
-     */
     @Override
     public void finish() {
         super.finish();

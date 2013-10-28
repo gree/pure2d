@@ -1,4 +1,4 @@
-package com.funzio.pure2D.demo.ui;
+package com.funzio.pure2D.demo.pui;
 
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -9,18 +9,22 @@ import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.Pure2DDemoApplication;
-import com.funzio.pure2D.demo.R;
+import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UITextureManager;
 
-public class XUIActivity extends StageActivity {
+public class PUIActivity extends StageActivity {
     private UIManager mUIManager = Pure2DDemoApplication.getInstance().getUIManager();
+    private int mXmlFileId;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final String xmlName = getIntent().getExtras().getString(MenuActivity.EXTRA_TAG);
+        mXmlFileId = getResources().getIdentifier(xmlName, "xml", getApplicationContext().getPackageName());
 
         mScene.setColor(COLOR_GREEN);
         mScene.setUIEnabled(true);
@@ -53,13 +57,13 @@ public class XUIActivity extends StageActivity {
 
     @Override
     protected BaseScene createScene() {
-        return new XUIScene(mUIManager);
+        return new PUIScene(mUIManager);
     }
 
     private void addObject(final float x, final float y) {
 
         // create object
-        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(R.xml.test_button));
+        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(mXmlFileId));
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();
 

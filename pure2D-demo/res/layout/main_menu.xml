@@ -52,12 +52,27 @@
             android:text="@string/buffers" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_ui"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/ui_components" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_ui"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickButton"
+            android:text="@string/ui_components" />
+
+        <Button
+            android:id="@+id/btn_pui_layouts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickButton"
+            android:text="@string/pui_layouts" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_camera"

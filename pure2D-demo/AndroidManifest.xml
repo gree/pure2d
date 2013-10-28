@@ -166,7 +166,12 @@
         </activity>
         <activity
             android:name=".ui.UIMenuActivity"
-            android:label="@string/display_objects"
+            android:label="@string/ui_components"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".pui.PUIMenuActivity"
+            android:label="@string/pui_xml_layouts"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -190,7 +195,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.XUIActivity"
+            android:name="com.funzio.pure2D.demo.pui.PUIActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>

@@ -184,5 +184,7 @@
     <string name="fps">FPS</string>
     <string name="xml_uis">XML UIs</string>
     <string name="multi_atlases">Multi Atlases</string>
+    <string name="pui_layouts">PUI Layouts</string>
+    <string name="pui_xml_layouts">PUI XML Layouts</string>
 
 </resources>

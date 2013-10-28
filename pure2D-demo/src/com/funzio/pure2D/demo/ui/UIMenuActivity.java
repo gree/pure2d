@@ -31,6 +31,5 @@ public class UIMenuActivity extends MenuActivity {
         addMenu(R.id.btn_lists, ListActivity.class);
         addMenu(R.id.btn_bitmap_font, BitmapFontActivity.class);
         addMenu(R.id.btn_korean_bitmap_font, KoreanCharsetActivity.class);
-        addMenu(R.id.btn_xml_ui, XUIActivity.class);
     }
 }

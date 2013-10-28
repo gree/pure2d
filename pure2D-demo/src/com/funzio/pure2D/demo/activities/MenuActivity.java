@@ -22,7 +22,7 @@ public abstract class MenuActivity extends Activity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         setContentView(getLayout());
-        mLayout = (LinearLayout) findViewById(R.id.nova_menu_layout);
+        mLayout = (LinearLayout) findViewById(R.id.menu_layout);
 
         getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
 
