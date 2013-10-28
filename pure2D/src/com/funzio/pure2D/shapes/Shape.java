@@ -31,7 +31,7 @@ public class Shape extends BaseDisplayObject {
     protected VertexBuffer mVertexBuffer;
 
     protected Texture mTexture;
-    protected boolean mTextureLoaded;
+    private boolean mTextureLoaded;
     protected TextureCoordBuffer mTextureCoordBuffer;
     protected TextureCoordBuffer mTextureCoordBufferScaled;
     protected ColorBuffer mColorBuffer;
@@ -69,15 +69,14 @@ public class Shape extends BaseDisplayObject {
         if (!mTextureLoaded && mTexture != null && mTexture.isLoaded()) {
             // flag
             mTextureLoaded = true;
+
+            // internal callback
+            onTextureLoaded(mTexture);
         }
 
         return super.update(deltaTime);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#drawStart(com.funzio.pure2D.gl.gl10.GLState)
-     */
     @Override
     protected void drawStart(final GLState glState) {
         // texture coordinates changed?
@@ -301,4 +300,9 @@ public class Shape extends BaseDisplayObject {
 
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
+
+    protected void onTextureLoaded(final Texture texture) {
+        // TODO Auto-generated method stub
+    }
+
 }

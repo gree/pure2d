@@ -27,6 +27,7 @@ public class Sprite9 extends Rectangular {
 
     private boolean m9PatchEnabled = true;
     private boolean mHasPatches = false;
+    private boolean mSizeToTexture = false;
 
     public void set9Patches(final float left, final float right, final float top, final float bottom) {
         if (m9Patches == null) {
@@ -54,14 +55,17 @@ public class Sprite9 extends Rectangular {
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    @Override
-    public boolean update(final int deltaTime) {
-        // texture loaded detection and auto size
-        if (!mTextureLoaded && mTexture != null && mTexture.isLoaded()) {
+    public boolean isSizeToTexture() {
+        return mSizeToTexture;
+    }
+
+    public void setSizeToTexture(final boolean value) {
+        mSizeToTexture = value;
+
+        // fit size to texture
+        if (mSizeToTexture && mTexture != null && mTexture.isLoaded()) {
             setSize(mTexture.getSize());
         }
-
-        return super.update(deltaTime);
     }
 
     @Override
@@ -69,8 +73,21 @@ public class Sprite9 extends Rectangular {
         super.setTexture(texture);
 
         // auto set size if it's not set
-        if (texture != null && texture.isLoaded() && mSize.x <= 1 && mSize.y <= 1) {
+        if ((mSizeToTexture || (mSize.x <= 1 && mSize.y <= 1)) && texture != null && texture.isLoaded()) {
             setSize(texture.getSize());
+        }
+    }
+
+    @Override
+    protected void onTextureLoaded(final Texture texture) {
+        super.onTextureLoaded(texture);
+
+        // match size
+        if (mSizeToTexture || (mSize.x <= 1 && mSize.y <= 1)) {
+            setSize(texture.getSize());
+        } else {
+            // invalidate the 9 patches
+            invalidate(TEXTURE_COORDS);
         }
     }
 

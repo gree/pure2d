@@ -37,6 +37,9 @@ public class Button extends DisplayGroup implements UIObject {
 
     protected TouchListener mTouchListener;
 
+    private Texture mCurrentTexture;
+    private boolean mTextureLoaded;
+
     public Button() {
         super();
 
@@ -44,6 +47,23 @@ public class Button extends DisplayGroup implements UIObject {
         mWrapContentWidth = mWrapContentHeight = true;
 
         createChildren();
+    }
+
+    @Override
+    public boolean update(final int deltaTime) {
+        if (!mTextureLoaded && mCurrentTexture != null && mCurrentTexture.isLoaded()) {
+            // flag
+            mTextureLoaded = true;
+
+            final PointF size = mCurrentTexture.getSize();
+            final float w = Math.max(mSize.x, size.x);
+            final float h = Math.max(mSize.y, size.y);
+            if (w != mSize.x || h != mSize.y) {
+                setSize(w, h);
+            }
+        }
+
+        return super.update(deltaTime);
     }
 
     protected void createChildren() {
@@ -107,18 +127,15 @@ public class Button extends DisplayGroup implements UIObject {
         }
 
         mState = state;
-        // go to the state's frame
         final Texture texture = mTextures == null || mTextures.length == 0 ? null : mTextures[Math.min(state, mTextures.length - 1)];
-        mButtonSprite.setTexture(texture);
+        if (texture != mCurrentTexture) {
+            mCurrentTexture = texture;
+            mButtonSprite.setTexture(texture);
+            mTextureLoaded = false; // flag for update later
+        }
 
         // dim it if there is missing frame
         setColor((texture == null || state >= mTextures.length) ? DIMMED_COLOR : null);
-
-        // match the size with diff check for perf
-        final PointF size = mButtonSprite.getSize();
-        if (size.x != mSize.x || size.y != mSize.y) {
-            setSize(size);
-        }
     }
 
     public boolean isEnabled() {

@@ -24,21 +24,21 @@ public class Sprite extends Rectangular {
     }
 
     @Override
-    public boolean update(final int deltaTime) {
-        // texture loaded detection and auto size
-        if (!mTextureLoaded && mSizeToTexture && mTexture != null && mTexture.isLoaded()) {
-            setSize(mTexture.getSize());
-        }
-
-        return super.update(deltaTime);
-    }
-
-    @Override
     public void setTexture(final Texture texture) {
         super.setTexture(texture);
 
         // fit size to texture
-        if (texture != null && texture.isLoaded() && mSizeToTexture) {
+        if (mSizeToTexture && texture != null && texture.isLoaded()) {
+            setSize(texture.getSize());
+        }
+    }
+
+    @Override
+    protected void onTextureLoaded(final Texture texture) {
+        super.onTextureLoaded(texture);
+
+        // match size
+        if (mSizeToTexture) {
             setSize(texture.getSize());
         }
     }
@@ -51,7 +51,7 @@ public class Sprite extends Rectangular {
         mSizeToTexture = value;
 
         // fit size to texture
-        if (mTexture != null && mSizeToTexture) {
+        if (mSizeToTexture && mTexture != null && mTexture.isLoaded()) {
             setSize(mTexture.getSize());
         }
     }
