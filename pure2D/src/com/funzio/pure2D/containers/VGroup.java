@@ -70,6 +70,16 @@ public class VGroup extends LinearGroup implements UIObject {
         }
     }
 
+    protected void updateContentSize() {
+        mContentSize.x = mContentSize.y = 0;
+        for (int i = 0; i < mNumChildren; i++) {
+            final PointF childSize = mChildren.get(i).getSize();
+            mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
+            mContentSize.y += childSize.y + mGap;
+        }
+
+    }
+
     public int getStartIndex() {
         return mStartIndex;
     }
@@ -115,10 +125,6 @@ public class VGroup extends LinearGroup implements UIObject {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#drawChildren(javax.microedition.khronos.opengles.GL10)
-     */
     @Override
     protected boolean drawChildren(final GLState glState) {
         if (mTouchable) {
@@ -218,7 +224,17 @@ public class VGroup extends LinearGroup implements UIObject {
                 child.setPosition(child.getPosition().x, convertY(mStartY - child.getSize().y - mGap, child.getSize().y));
             }
         } else {
+            // update content size
+            updateContentSize();
             float nextY = -mScrollPosition.y;
+
+            // alignment
+            if ((mAlignment & Alignment.VERTICAL_CENTER) > 0) {
+                nextY += (mSize.y - mContentSize.y) * 0.5f;
+            } else if ((mAlignment & Alignment.TOP) != 0) {
+                nextY += (mSize.y - mContentSize.y);
+            }
+
             for (int i = 0; i < mNumChildren; i++) {
                 child = mChildren.get(i);
                 childSize = child.getSize();
@@ -235,10 +251,6 @@ public class VGroup extends LinearGroup implements UIObject {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setSize(float, float)
-     */
     @Override
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
@@ -250,10 +262,6 @@ public class VGroup extends LinearGroup implements UIObject {
         invalidateChildrenPosition();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.LinearGroup#setGap(float)
-     */
     @Override
     public void setGap(final float gap) {
         mContentSize.y += (gap - mGap) * mNumChildren;
@@ -261,10 +269,6 @@ public class VGroup extends LinearGroup implements UIObject {
         super.setGap(gap);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.LinearGroup#onAddedChild(com.funzio.pure2D.DisplayObject)
-     */
     @Override
     protected void onAddedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
@@ -278,10 +282,6 @@ public class VGroup extends LinearGroup implements UIObject {
         super.onAddedChild(child);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.LinearGroup#onRemovedChild(com.funzio.pure2D.DisplayObject)
-     */
     @Override
     protected void onRemovedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
@@ -294,19 +294,11 @@ public class VGroup extends LinearGroup implements UIObject {
         super.onRemovedChild(child);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.LinearGroup#getContentSize()
-     */
     @Override
     public PointF getContentSize() {
         return mContentSize;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.LinearGroup#getScrollMax()
-     */
     @Override
     public PointF getScrollMax() {
         return mScrollMax;

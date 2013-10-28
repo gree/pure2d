@@ -5,8 +5,12 @@ package com.funzio.pure2D.containers;
 
 import android.graphics.PointF;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.ui.UIConfig;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -23,12 +27,8 @@ public abstract class LinearGroup extends DisplayGroup {
     protected boolean mBoundsCheckEnabled = true;
     protected boolean mAutoSleepChildren = false;
 
-    protected boolean mChildrenPositionInvalidated = false;
+    private boolean mChildrenPositionInvalidated = false;
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         if (mChildrenPositionInvalidated) {
@@ -113,10 +113,6 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#onAddedChild(com.funzio.pure2D.DisplayObject)
-     */
     @Override
     protected void onAddedChild(final DisplayObject child) {
         super.onAddedChild(child);
@@ -124,10 +120,6 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#onRemovedChild(com.funzio.pure2D.DisplayObject)
-     */
     @Override
     protected void onRemovedChild(final DisplayObject child) {
         super.onRemovedChild(child);
@@ -169,6 +161,16 @@ public abstract class LinearGroup extends DisplayGroup {
         mAlignment = alignment;
 
         invalidateChildrenPosition();
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String align = xmlParser.getAttributeValue(null, "align");
+        if (align != null) {
+            setAlignment(UIConfig.getAlignment(align));
+        }
     }
 
     protected abstract void positionChildren();
