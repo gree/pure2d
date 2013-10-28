@@ -17,7 +17,7 @@ import com.funzio.pure2D.text.TextOptions;
  * @author long.ngo
  */
 public class FontVO {
-    public String id;
+    public String name;
 
     public String style;
     public String characters;
@@ -37,7 +37,7 @@ public class FontVO {
     public String stroke_color;
 
     public FontVO(final JSONObject json) throws JSONException {
-        id = json.getString("id");
+        name = json.getString("name");
 
         style = json.optString("style");
         characters = json.optString("characters");
@@ -60,7 +60,7 @@ public class FontVO {
     public TextOptions createTextOptions(final AssetManager assets) {
         final TextOptions options = TextOptions.getDefault();
 
-        options.id = id;
+        options.id = name;
         options.inCharacters = characters;
 
         try {
@@ -93,6 +93,19 @@ public class FontVO {
         }
 
         return options;
+    }
+
+    public void applyScale(final float scale) {
+
+        size *= scale;
+        padding_x *= scale;
+        padding_y *= scale;
+
+        shadow_radius *= scale;
+        shadow_dx *= scale;
+        shadow_dy *= scale;
+
+        stroke_size *= scale;
     }
 
 }

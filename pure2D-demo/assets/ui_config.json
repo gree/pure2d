@@ -3,7 +3,7 @@
 
 	"fonts": [
 		{
-			"id": "font1",
+			"name": "font1",
             "style": "bold",
             "characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!",
             "padding_x": 10,
@@ -19,7 +19,7 @@
 		},
 
 		{
-			"id": "font2",
+			"name": "font2",
             "style": "bold",
             "characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!",
             "padding_x": 5,
@@ -29,6 +29,10 @@
             "stroke_color": "#FF333333",
             "color": "#FFFFFFFF"
 		}
+	],
+
+	"animators": [
+
 	]
 }
 
