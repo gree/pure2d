@@ -35,7 +35,7 @@ public class PUIMenuActivity extends MenuActivity {
 
         int index = 0;
         for (String file : PUI_FILES) {
-            Button button = new Button(this);
+            final Button button = new Button(this);
             button.setId(button.hashCode());
             button.setText(file);
             button.setTag(file);

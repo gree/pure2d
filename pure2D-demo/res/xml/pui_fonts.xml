@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Group SYSTEM "../../pure2d-ui.dtd" >
 <Group
-    height="wrap_content"
-    width="wrap_content" >
+    height="400"
+    width="600" >
 
     <Sprite9
         blendMode="premultiplied_alpha"
-        height="400"
+        height="100%"
         patches="20,20,20,20"
         source="@drawable/panel_collection_reward"
-        width="600" />
+        width="100%" />
 
     <Sprite
         centerX="0"
