@@ -8,10 +8,12 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
-import com.funzio.pure2D.ui.xml.UIConfig;
-import com.funzio.pure2D.ui.xml.UILoader;
+import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
+import com.funzio.pure2D.ui.vo.UIConfigVO;
 
 /**
  * @author long.ngo
@@ -28,11 +30,11 @@ public class UIManager {
     private String mCacheDir;
 
     private UITextureManager mTextureManager;
-    private UIConfig mConfig;
     private UILoader mLoader;
 
+    private UIConfigVO mConfigVO;
+
     private UIManager() {
-        mConfig = new UIConfig(this);
         mLoader = new UILoader(this);
     }
 
@@ -52,9 +54,7 @@ public class UIManager {
             mResources = context.getResources();
             mPackageName = context.getApplicationContext().getPackageName();
             mCacheDir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
-            mConfig.reset(mResources);
         } else {
-            mConfig.reset(null);
             mTextureManager = null;
         }
     }
@@ -67,29 +67,36 @@ public class UIManager {
         return mCacheDir;
     }
 
-    public String getCdnUrl() {
-        return mConfig.getCdnUrl();
-    }
+    /**
+     * Load a config file, synchronously
+     * 
+     * @param assets
+     * @param filePath
+     */
+    public void loadConfig(final String filePath) {
+        Log.v(TAG, "load(): " + filePath);
 
-    public boolean loadConfig(final XmlPullParser parser) {
-        Log.v(TAG, "loadConfig()");
+        final ReadTextFileTask readTask = new ReadTextFileTask(mResources.getAssets(), filePath);
+        if (readTask.run()) {
+            Log.v(TAG, "Load success: " + filePath);
 
-        final boolean success = mConfig.load(parser);
+            try {
+                mConfigVO = new UIConfigVO(new JSONObject(readTask.getContent()));
+            } catch (JSONException e) {
+                Log.e(TAG, "Load failed: " + filePath, e);
+            }
 
-        // apply the config
-        if (mTextureManager != null) {
-            mTextureManager.loadBitmapFonts();
+        } else {
+            Log.e(TAG, "Load failed: " + filePath);
         }
-
-        return success;
     }
 
     public UILoader getLoader() {
         return mLoader;
     }
 
-    public UIConfig getConfig() {
-        return mConfig;
+    public UIConfigVO getConfig() {
+        return mConfigVO;
     }
 
     public void setTextureManager(final UITextureManager textureManager) {

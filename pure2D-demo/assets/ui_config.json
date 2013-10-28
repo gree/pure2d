@@ -1,0 +1,34 @@
+{
+	"cdn_url": "http://product.gree.net/share/",
+
+	"fonts": [
+		{
+			"id": "font1",
+            "style": "bold",
+            "characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!",
+            "padding_x": 10,
+            "padding_y": 10,
+            "shadow_dx": 5,
+            "shadow_dy": 5,
+            "shadow_radius": 5.5,
+            "size": 50,
+            "stroke_color": "#FFFF0000",
+            "stroke_size": 55,
+            "typeface": "fonts/foo.ttf",
+            "color": "#FFFFFF00"
+		},
+
+		{
+			"id": "font2",
+            "style": "bold",
+            "characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!",
+            "padding_x": 5,
+            "padding_y": 5,
+            "shadow_radius": 5.5,
+            "size": 30,
+            "stroke_color": "#FF333333",
+            "color": "#FFFFFFFF"
+		}
+	]
+}
+

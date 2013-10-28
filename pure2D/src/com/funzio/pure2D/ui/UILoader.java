@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.funzio.pure2D.ui.xml;
+package com.funzio.pure2D.ui;
 
 import java.io.StringReader;
 
@@ -13,7 +13,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.Container;
-import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long.ngo

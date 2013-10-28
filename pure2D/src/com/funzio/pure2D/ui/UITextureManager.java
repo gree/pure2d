@@ -12,7 +12,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
-import com.funzio.pure2D.ui.xml.UIConfig;
+import com.funzio.pure2D.ui.vo.FontVO;
 
 /**
  * @author long.ngo
@@ -44,10 +44,10 @@ public class UITextureManager extends TextureManager {
         reset();
 
         // make bitmap fonts
-        final List<TextOptions> fonts = mUIManager.getConfig().getFonts();
+        final List<FontVO> fonts = mUIManager.getConfig().fonts;
         final int size = fonts.size();
         for (int i = 0; i < size; i++) {
-            final TextOptions options = fonts.get(i);
+            final TextOptions options = fonts.get(i).createTextOptions(mAssets);
             final BitmapFont font = new BitmapFont(options.inCharacters, options);
             font.load(mGLState);
             // map it
@@ -87,7 +87,7 @@ public class UITextureManager extends TextureManager {
         } else {
             Texture texture = null;
             final TextureOptions textureOptions = mUIManager.getConfig().getTextureOptions();
-            final boolean async = mUIManager.getConfig().mTextureAsync;
+            final boolean async = mUIManager.getConfig().texture_async;
             // create
             if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard
@@ -105,7 +105,7 @@ public class UITextureManager extends TextureManager {
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from url or cache file
-                texture = createURLCacheTexture(mUIManager.getCdnUrl(), mUIManager.getCacheDir(), shortPath, textureOptions, async);
+                texture = createURLCacheTexture(mUIManager.getConfig().cdn_url, mUIManager.getCacheDir(), shortPath, textureOptions, async);
             }
 
             // and cache it if created

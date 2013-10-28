@@ -464,6 +464,5 @@ public final class R {
         public static final int test_button=0x7f040002;
         public static final int test_constraints=0x7f040003;
         public static final int test_fonts=0x7f040004;
-        public static final int ui_config=0x7f040005;
     }
 }

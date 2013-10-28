@@ -31,7 +31,8 @@ public class Pure2DDemoApplication extends Application {
 
         mUIManager.setContext(this);
         // load ui config
-        mUIManager.loadConfig(getResources().getXml(R.xml.ui_config));
+        // mUIManager.loadConfig(getResources().getXml(R.xml.ui_config));
+        mUIManager.loadConfig("ui_config.json");
     }
 
     public UIManager getUIManager() {
