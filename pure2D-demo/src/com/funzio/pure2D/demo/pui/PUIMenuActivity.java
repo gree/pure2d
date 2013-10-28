@@ -17,7 +17,7 @@ public class PUIMenuActivity extends MenuActivity {
     private static final String[] PUI_FILES = new String[] {
             "pui_constraints", //
             "pui_fonts", //
-            "pui_button", //
+            "pui_buttons", //
     };
 
     private LinearLayout mCol1;

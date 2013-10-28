@@ -17,14 +17,14 @@ import com.funzio.pure2D.ui.UITextureManager;
 
 public class PUIActivity extends StageActivity {
     private UIManager mUIManager = Pure2DDemoApplication.getInstance().getUIManager();
-    private int mXmlFileId;
+    private int mXmlResId;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         final String xmlName = getIntent().getExtras().getString(MenuActivity.EXTRA_TAG);
-        mXmlFileId = getResources().getIdentifier(xmlName, "xml", getApplicationContext().getPackageName());
+        mXmlResId = getResources().getIdentifier(xmlName, "xml", getApplicationContext().getPackageName());
 
         mScene.setColor(COLOR_GREEN);
         mScene.setUIEnabled(true);
@@ -36,6 +36,8 @@ public class PUIActivity extends StageActivity {
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
                     mUIManager.setTextureManager((UITextureManager) mScene.getTextureManager());
+
+                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
                 }
             }
         });
@@ -63,7 +65,7 @@ public class PUIActivity extends StageActivity {
     private void addObject(final float x, final float y) {
 
         // create object
-        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(mXmlFileId));
+        final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(mXmlResId));
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();
 

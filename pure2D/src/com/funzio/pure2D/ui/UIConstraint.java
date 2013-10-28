@@ -10,6 +10,8 @@ import org.xmlpull.v1.XmlPullParser;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
+import com.funzio.pure2D.containers.LinearGroup;
+import com.funzio.pure2D.containers.VGroup;
 
 /**
  * @author long.ngo
@@ -42,6 +44,9 @@ public class UIConstraint {
     public UNIT centerXUnit = UNIT.UNSET;
     public float centerY;
     public UNIT centerYUnit = UNIT.UNSET;
+
+    public float childrenGap;
+    public UNIT childrenGapUnit = UNIT.UNSET;
 
     private boolean mHasAttributes = false;
 
@@ -117,6 +122,12 @@ public class UIConstraint {
         centerYUnit = getAttributeUnit(xmlParser, "centerY");
         if (centerYUnit != UNIT.UNSET) {
             centerY = getAttributeValue(xmlParser, "centerY");
+            mHasAttributes = true;
+        }
+
+        childrenGapUnit = getAttributeUnit(xmlParser, "childrenGap");
+        if (childrenGapUnit != UNIT.UNSET) {
+            childrenGap = getAttributeValue(xmlParser, "childrenGap");
             mHasAttributes = true;
         }
     }
@@ -214,6 +225,17 @@ public class UIConstraint {
             h = ph * height;
         } else if (heightUnit == UNIT.WRAP && target instanceof DisplayGroup) {
             ((DisplayGroup) target).setWrapContentHeight(true);
+        }
+
+        // gap
+        if (childrenGapUnit != UNIT.UNSET && target instanceof LinearGroup) {
+            float g = 0;
+            if (childrenGapUnit == UNIT.PIXEL) {
+                g = childrenGap;
+            } else if (childrenGapUnit == UNIT.PERCENT) {
+                g = childrenGap * (target instanceof VGroup ? target.getHeight() : target.getWidth());
+            }
+            ((LinearGroup) target).setGap(g);
         }
 
         // x center

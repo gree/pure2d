@@ -8,6 +8,7 @@ import java.util.HashMap;
 import android.util.Log;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.HGroup;
 import com.funzio.pure2D.containers.HList;
@@ -74,5 +75,25 @@ public class UIConfig {
         }
 
         return null;
+    }
+
+    public static int getAlignment(final String align) {
+        if ("top".equalsIgnoreCase(align)) {
+            return Alignment.TOP;
+        } else if ("bottom".equalsIgnoreCase(align)) {
+            return Alignment.BOTTOM;
+        } else if ("left".equalsIgnoreCase(align)) {
+            return Alignment.LEFT;
+        } else if ("right".equalsIgnoreCase(align)) {
+            return Alignment.RIGHT;
+        } else if ("hcenter".equalsIgnoreCase(align)) {
+            return Alignment.HORIZONTAL_CENTER;
+        } else if ("vcenter".equalsIgnoreCase(align)) {
+            return Alignment.VERTICAL_CENTER;
+        } else if ("center".equalsIgnoreCase(align)) {
+            return Alignment.HORIZONTAL_CENTER | Alignment.VERTICAL_CENTER;
+        }
+
+        return Alignment.NONE;
     }
 }
