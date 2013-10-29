@@ -103,6 +103,7 @@ public class UIManager {
 
         // apply the config
         if (mTextureManager != null) {
+            mTextureManager.setUIManager(this); // 2-way link
             mTextureManager.loadBitmapFonts();
         }
     }

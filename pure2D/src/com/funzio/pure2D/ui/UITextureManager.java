@@ -6,6 +6,9 @@ package com.funzio.pure2D.ui;
 import java.util.HashMap;
 import java.util.List;
 
+import android.content.res.Resources;
+import android.util.Log;
+
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
@@ -28,20 +31,25 @@ public class UITextureManager extends TextureManager {
      * @param scene
      * @param res
      */
-    public UITextureManager(final Scene scene, final UIManager manager) {
-        super(scene, manager.getContext().getResources());
+    public UITextureManager(final Scene scene, final Resources res) {
+        super(scene, res);
 
-        mUIManager = manager;
         mGeneralTextures = new HashMap<String, Texture>();
     }
 
-    private void reset() {
-        // TODO Auto-generated method stub
+    public UIManager getUIManager() {
+        return mUIManager;
+    }
 
+    public void setUIManager(final UIManager uIManager) {
+        mUIManager = uIManager;
     }
 
     public void loadBitmapFonts() {
-        reset();
+        if (mUIManager == null) {
+            Log.e(TAG, "UIManager not found!", new Exception());
+            return;
+        }
 
         // make bitmap fonts
         final List<FontVO> fonts = mUIManager.getConfig().fonts;
@@ -60,6 +68,11 @@ public class UITextureManager extends TextureManager {
     }
 
     public Texture getUriTexture(final String textureUri, final boolean async) {
+        if (mUIManager == null) {
+            Log.e(TAG, "UIManager not found!", new Exception());
+            return null;
+        }
+
         String actualPath = null;
         String shortPath = null;
         int drawable = 0;

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.Pure2DDemoApplication;
@@ -55,11 +54,6 @@ public class PUIActivity extends StageActivity {
     @Override
     protected int getNumObjects() {
         return mScene.getNumGrandChildren();
-    }
-
-    @Override
-    protected BaseScene createScene() {
-        return new PUIScene(mUIManager);
     }
 
     private void addObject(final float x, final float y) {

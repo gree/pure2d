@@ -27,6 +27,7 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
+import com.funzio.pure2D.ui.UITextureManager;
 
 /**
  * @author long
@@ -180,7 +181,7 @@ public class BaseScene implements Scene {
     }
 
     protected TextureManager createDefaultTextureManager() {
-        return new TextureManager(this, mStage.getResources());
+        return new UITextureManager(this, mStage.getResources());
     }
 
     public void setTextureManager(final TextureManager textureManager) {
