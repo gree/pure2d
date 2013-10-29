@@ -79,6 +79,10 @@ public class HGroup extends LinearGroup implements UIObject {
             mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
         }
 
+        // update scroll max
+        mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
+        mScrollMax.y = Math.max(0, mContentSize.y - mSize.y);
+
     }
 
     public int getStartIndex() {

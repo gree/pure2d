@@ -73,21 +73,4 @@
             width="10%" />
     </Group>
 
-    <!--
-    testing 
-    <VGroup
-        id="vgroup_main"
-        height="100%"
-        width="100%" >
-        <Button
-            id="button_a"
-            height="50"
-            width="200" />
-        <Button
-            id="button_b"
-            height="50"
-            width="250" />
-    </VGroup>
-    -->
-
 </Group>
