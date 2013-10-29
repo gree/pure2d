@@ -57,7 +57,6 @@ public class PUIActivity extends StageActivity {
     }
 
     private void addObject(final float x, final float y) {
-
         // create object
         final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(mXmlResId));
         // Log.e("long", obj.getObjectTree(""));

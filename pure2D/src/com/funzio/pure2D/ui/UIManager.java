@@ -75,9 +75,9 @@ public class UIManager {
 
             try {
                 mConfigVO = new UIConfigVO(new JSONObject(readTask.getContent()));
-                if (mConfigVO.cache_dir == null || mConfigVO.cache_dir.length() == 0) {
+                if (mConfigVO.texture_manager.cache_dir == null || mConfigVO.texture_manager.cache_dir.length() == 0) {
                     // default cache dir
-                    mConfigVO.cache_dir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
+                    mConfigVO.texture_manager.cache_dir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
@@ -121,8 +121,8 @@ public class UIManager {
                 value = mResources.getString(mResources.getIdentifier(id, UIConfig.TYPE_STRING, mPackageName));
             } else {
                 // process variables
-                value = value.replace(UIConfig.$CACHE_DIR, mConfigVO.cache_dir);
-                value = value.replace(UIConfig.$CDN_URL, mConfigVO.cdn_url);
+                value = value.replace(UIConfig.$CACHE_DIR, mConfigVO.texture_manager.cache_dir);
+                value = value.replace(UIConfig.$CDN_URL, mConfigVO.texture_manager.cdn_url);
             }
         }
 

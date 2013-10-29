@@ -413,8 +413,7 @@ public class TextureManager {
     }
 
     /**
-     * For internal use only. Do NOT call!
-     * 
+     * @hide For internal use only. Do NOT call!
      * @param deltaTime
      */
     public void update(final int deltaTime) {
@@ -423,7 +422,6 @@ public class TextureManager {
 
             mExpirationCheckElapsedTime += deltaTime;
             if (mExpirationCheckElapsedTime >= mExpirationCheckInterval) {
-
                 // check every texture
                 final int len = mTextures.size();
                 for (int i = 0; i < len; i++) {

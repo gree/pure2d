@@ -240,8 +240,7 @@ public abstract class Texture {
     }
 
     /**
-     * For internal use only. Do not ever call this!
-     * 
+     * @hide For internal use only. Do not ever call this!
      * @param deltaTime
      */
     public void update(final int deltaTime) {

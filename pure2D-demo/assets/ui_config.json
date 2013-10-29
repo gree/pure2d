@@ -1,5 +1,8 @@
 {
-	"cdn_url": "http://product.gree.net/share/",
+	"texture_manager": {
+		"cdn_url": "http://product.gree.net/share/",
+		"texture_expiration_time": 60000
+	},
 
 	"fonts": [
 		{

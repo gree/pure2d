@@ -16,6 +16,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
 import com.funzio.pure2D.ui.vo.FontVO;
+import com.funzio.pure2D.ui.vo.UIConfigVO;
 
 /**
  * @author long.ngo
@@ -26,6 +27,7 @@ public class UITextureManager extends TextureManager {
     protected final HashMap<String, Texture> mGeneralTextures;
 
     protected UIManager mUIManager;
+    protected UIConfigVO mUIConfigVO;
 
     /**
      * @param scene
@@ -41,8 +43,14 @@ public class UITextureManager extends TextureManager {
         return mUIManager;
     }
 
-    public void setUIManager(final UIManager uIManager) {
-        mUIManager = uIManager;
+    public void setUIManager(final UIManager manager) {
+        mUIManager = manager;
+
+        if (manager != null) {
+            mUIConfigVO = manager.getConfig();
+            // texture expiration
+            setExpirationCheckInterval(manager.getConfig().texture_manager.expiration_check_interval);
+        }
     }
 
     public void loadBitmapFonts() {
@@ -52,7 +60,7 @@ public class UITextureManager extends TextureManager {
         }
 
         // make bitmap fonts
-        final List<FontVO> fonts = mUIManager.getConfig().fonts;
+        final List<FontVO> fonts = mUIConfigVO.fonts;
         final int size = fonts.size();
         for (int i = 0; i < size; i++) {
             final TextOptions options = fonts.get(i).createTextOptions(mAssets);
@@ -89,7 +97,7 @@ public class UITextureManager extends TextureManager {
             actualPath = textureUri; // keep
         } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
             shortPath = textureUri.substring(UIConfig.URI_CACHE.length());
-            actualPath = mUIManager.getConfig().cache_dir + shortPath;
+            actualPath = mUIConfigVO.texture_manager.cache_dir + shortPath;
         } else {
             actualPath = textureUri;
         }
@@ -99,7 +107,7 @@ public class UITextureManager extends TextureManager {
             return mGeneralTextures.get(actualPath);
         } else {
             Texture texture = null;
-            final TextureOptions textureOptions = mUIManager.getConfig().getTextureOptions();
+            final TextureOptions textureOptions = mUIConfigVO.getTextureOptions();
             // create
             if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard
@@ -117,11 +125,13 @@ public class UITextureManager extends TextureManager {
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from url or cache file
-                texture = createURLCacheTexture(mUIManager.getConfig().cdn_url, mUIManager.getConfig().cache_dir, shortPath, textureOptions, async);
+                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url, mUIConfigVO.texture_manager.cache_dir, shortPath, textureOptions, async);
             }
 
             // and cache it if created
             if (texture != null) {
+                // texture expiration
+                texture.setExpirationTime(mUIConfigVO.texture_manager.texture_expiration_time);
                 mGeneralTextures.put(actualPath, texture);
             }
 

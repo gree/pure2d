@@ -18,17 +18,16 @@ import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
  */
 public class UIConfigVO {
 
-    public String cdn_url;
-    public String cache_dir;
     public float scale = 1;
 
+    public TextureManagerVO texture_manager;
     public ArrayList<FontVO> fonts;
     public ArrayList<AnimatorVO> animators;
 
     protected HashMap<String, AnimatorVO> mAnimatorMap;
 
     public UIConfigVO(final JSONObject json) throws JSONException {
-        cdn_url = json.optString("cdn_url");
+        texture_manager = new TextureManagerVO(json.getJSONObject("texture_manager"));
         fonts = getFonts(json.getJSONArray("fonts"));
         animators = getAnimators(json.optJSONArray("animators"));
 
