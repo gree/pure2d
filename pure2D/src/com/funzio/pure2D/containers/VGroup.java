@@ -22,6 +22,11 @@ import com.funzio.pure2D.ui.UIObject;
  * @author long
  */
 public class VGroup extends LinearGroup implements UIObject {
+
+    // xml attributes
+    protected static final String ATT_SWIPE_ENABLED = "swipeEnabled";
+    protected static final String ATT_REVERSED = "reversed";
+
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 
@@ -449,12 +454,12 @@ public class VGroup extends LinearGroup implements UIObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String reversed = xmlParser.getAttributeValue(null, "reversed");
+        final String reversed = xmlParser.getAttributeValue(null, ATT_REVERSED);
         if (reversed != null) {
             setPositiveOrientation(!Boolean.valueOf(reversed));
         }
 
-        final String swipeEnabled = xmlParser.getAttributeValue(null, "swipeEnabled");
+        final String swipeEnabled = xmlParser.getAttributeValue(null, ATT_SWIPE_ENABLED);
         if (swipeEnabled != null) {
             setSwipeEnabled(Boolean.valueOf(swipeEnabled));
         }

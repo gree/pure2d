@@ -17,6 +17,9 @@ import com.funzio.pure2D.ui.UIManager;
  */
 public abstract class LinearGroup extends DisplayGroup {
 
+    protected static final String ATT_ALIGN = "align";
+    protected static final String ATT_REPEATING = "repeating";
+
     protected float mGap = 0;
     protected float mOffsetX = 0;
     protected float mOffsetY = 0;
@@ -167,12 +170,12 @@ public abstract class LinearGroup extends DisplayGroup {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String align = xmlParser.getAttributeValue(null, "align");
+        final String align = xmlParser.getAttributeValue(null, ATT_ALIGN);
         if (align != null) {
             setAlignment(UIConfig.getAlignment(align));
         }
 
-        final String repeating = xmlParser.getAttributeValue(null, "repeating");
+        final String repeating = xmlParser.getAttributeValue(null, ATT_REPEATING);
         if (repeating != null) {
             setRepeating(Boolean.valueOf(repeating));
         }

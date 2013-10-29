@@ -28,6 +28,10 @@ import com.funzio.pure2D.ui.UIManager;
 public class Shape extends BaseDisplayObject {
     public final static String TAG = Shape.class.getSimpleName();
 
+    // XML attributes
+    protected static final String ATT_ASYNC = "async";
+    protected static final String ATT_SOURCE = "source";
+
     protected VertexBuffer mVertexBuffer;
 
     protected Texture mTexture;
@@ -288,9 +292,9 @@ public class Shape extends BaseDisplayObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String source = xmlParser.getAttributeValue(null, "source");
+        final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
         if (source != null) {
-            final String async = xmlParser.getAttributeValue(null, "async");
+            final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
             setTexture(manager.getTextureManager().getUriTexture(source, async != null ? Boolean.valueOf(async) : true));
         }
     }

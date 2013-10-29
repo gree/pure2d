@@ -31,6 +31,13 @@ import com.funzio.pure2D.utils.Pure2DUtils;
 public abstract class BaseDisplayObject implements DisplayObject {
     public static final String TAG = BaseDisplayObject.class.getSimpleName();
 
+    // xml attributes
+    protected static final String ATT_COLOR = "color";
+    protected static final String ATT_ALPHA = "alpha";
+    protected static final String ATT_BLEND_MODE = "blendMode";
+    protected static final String ATT_ROTATION = "rotation";
+    protected static final String ATT_VISIBLE = "visible";
+
     // for debugging
     protected int mDebugFlags = 0;
 
@@ -1236,24 +1243,29 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // more attributes
-        final String color = xmlParser.getAttributeValue(null, "color");
+        final String color = xmlParser.getAttributeValue(null, ATT_COLOR);
         if (color != null) {
             mColor = new GLColor(Color.parseColor(color));
         }
 
-        final String alpha = xmlParser.getAttributeValue(null, "alpha");
+        final String alpha = xmlParser.getAttributeValue(null, ATT_ALPHA);
         if (alpha != null) {
             mAlpha = Float.valueOf(alpha);
         }
 
-        final String rotation = xmlParser.getAttributeValue(null, "rotation");
+        final String rotation = xmlParser.getAttributeValue(null, ATT_ROTATION);
         if (rotation != null) {
             mRotation = Float.valueOf(rotation);
         }
 
-        final String blendMode = xmlParser.getAttributeValue(null, "blendMode");
+        final String blendMode = xmlParser.getAttributeValue(null, ATT_BLEND_MODE);
         if (blendMode != null) {
             mBlendFunc = BlendModes.getBlendFunc(blendMode);
+        }
+
+        final String visible = xmlParser.getAttributeValue(null, ATT_VISIBLE);
+        if (visible != null) {
+            mVisible = Boolean.valueOf(visible);
         }
     }
 

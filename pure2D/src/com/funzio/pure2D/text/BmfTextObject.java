@@ -32,6 +32,12 @@ import com.funzio.pure2D.ui.UIManager;
  * @author long
  */
 public class BmfTextObject extends BaseDisplayObject implements Cacheable {
+
+    // xml attributes
+    protected static final String ATT_LETTER_SPACING = "letterSpacing";
+    protected static final String ATT_TEXT = "text";
+    protected static final String ATT_FONT = "font";
+
     protected BitmapFont mBitmapFont;
     protected TextOptions mTextOptions;
     protected BitmapFontMetrics mFontMetrics;
@@ -391,10 +397,6 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();
@@ -431,14 +433,14 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String font = xmlParser.getAttributeValue(null, "font");
+        final String font = xmlParser.getAttributeValue(null, ATT_FONT);
         if (font != null) {
             BitmapFont bitmapFont = manager.getTextureManager().getBitmapFont(font);
             if (bitmapFont != null) {
                 setBitmapFont(bitmapFont);
-                setText(manager.getStringValue(xmlParser, "text"));
+                setText(manager.getStringValue(xmlParser, ATT_TEXT));
 
-                final String letterSpacing = xmlParser.getAttributeValue(null, "letterSpacing");
+                final String letterSpacing = xmlParser.getAttributeValue(null, ATT_LETTER_SPACING);
                 if (letterSpacing != null) {
                     mFontMetrics.letterSpacing = Float.valueOf(letterSpacing);
                 }

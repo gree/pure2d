@@ -22,6 +22,9 @@ import com.funzio.pure2D.ui.UIObject;
  * @author long
  */
 public class HGroup extends LinearGroup implements UIObject {
+    // xml attributes
+    protected static final String ATT_SWIPE_ENABLED = "swipeEnabled";
+
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 
@@ -416,7 +419,7 @@ public class HGroup extends LinearGroup implements UIObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String swipeEnabled = xmlParser.getAttributeValue(null, "swipeEnabled");
+        final String swipeEnabled = xmlParser.getAttributeValue(null, ATT_SWIPE_ENABLED);
         if (swipeEnabled != null) {
             setSwipeEnabled(Boolean.valueOf(swipeEnabled));
         }

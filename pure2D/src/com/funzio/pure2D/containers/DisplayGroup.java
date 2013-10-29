@@ -29,6 +29,10 @@ import com.funzio.pure2D.ui.UIManager;
  */
 public class DisplayGroup extends BaseDisplayObject implements Container, Cacheable, Touchable {
 
+    protected static final String ATT_TOUCHABLE = "touchable";
+    protected static final String ATT_CLIPPING_ENABLED = "clippingEnabled";
+    protected static final String ATT_CACHE_ENABLED = "cacheEnabled";
+
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected ArrayList<DisplayObject> mChildrenDisplayOrder = mChildren;
     protected HashMap<String, DisplayObject> mChildrenIds = new HashMap<String, DisplayObject>();
@@ -735,17 +739,17 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String cacheEnabled = xmlParser.getAttributeValue(null, "cacheEnabled");
+        final String cacheEnabled = xmlParser.getAttributeValue(null, ATT_CACHE_ENABLED);
         if (cacheEnabled != null) {
             setCacheEnabled(Boolean.valueOf(cacheEnabled));
         }
 
-        final String clippingEnabled = xmlParser.getAttributeValue(null, "clippingEnabled");
+        final String clippingEnabled = xmlParser.getAttributeValue(null, ATT_CLIPPING_ENABLED);
         if (clippingEnabled != null) {
             setClippingEnabled(Boolean.valueOf(clippingEnabled));
         }
 
-        final String touchable = xmlParser.getAttributeValue(null, "touchable");
+        final String touchable = xmlParser.getAttributeValue(null, ATT_TOUCHABLE);
         if (touchable != null) {
             setTouchable(Boolean.valueOf(touchable));
         }
