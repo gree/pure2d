@@ -468,5 +468,6 @@ public final class R {
         public static final int pui_buttons=0x7f040002;
         public static final int pui_constraints=0x7f040003;
         public static final int pui_fonts=0x7f040004;
+        public static final int pui_groups=0x7f040005;
     }
 }

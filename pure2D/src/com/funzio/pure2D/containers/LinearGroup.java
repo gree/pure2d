@@ -171,6 +171,11 @@ public abstract class LinearGroup extends DisplayGroup {
         if (align != null) {
             setAlignment(UIConfig.getAlignment(align));
         }
+
+        final String repeating = xmlParser.getAttributeValue(null, "repeating");
+        if (repeating != null) {
+            setRepeating(Boolean.valueOf(repeating));
+        }
     }
 
     protected abstract void positionChildren();

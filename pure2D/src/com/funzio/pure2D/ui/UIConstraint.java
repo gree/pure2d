@@ -289,5 +289,6 @@ public class UIConstraint {
         if (cw != w || ch != h) {
             target.setSize(w, h);
         }
+
     }
 }

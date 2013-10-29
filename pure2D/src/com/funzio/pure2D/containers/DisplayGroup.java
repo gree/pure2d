@@ -744,6 +744,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         if (clippingEnabled != null) {
             setClippingEnabled(Boolean.valueOf(clippingEnabled));
         }
+
+        final String touchable = xmlParser.getAttributeValue(null, "touchable");
+        if (touchable != null) {
+            setTouchable(Boolean.valueOf(touchable));
+        }
     }
 
     protected void onAddedChild(final DisplayObject child) {

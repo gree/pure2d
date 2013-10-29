@@ -9,10 +9,13 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UIObject;
 
 /**
@@ -231,7 +234,7 @@ public class VGroup extends LinearGroup implements UIObject {
             // alignment
             if ((mAlignment & Alignment.VERTICAL_CENTER) > 0) {
                 nextY += (mSize.y - mContentSize.y) * 0.5f;
-            } else if ((mAlignment & Alignment.TOP) != 0) {
+            } else if ((mAlignment & Alignment.TOP) > 0) {
                 nextY += (mSize.y - mContentSize.y);
             }
 
@@ -440,5 +443,20 @@ public class VGroup extends LinearGroup implements UIObject {
     protected void onTouchDown(final MotionEvent event) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String reversed = xmlParser.getAttributeValue(null, "reversed");
+        if (reversed != null) {
+            setPositiveOrientation(!Boolean.valueOf(reversed));
+        }
+
+        final String swipeEnabled = xmlParser.getAttributeValue(null, "swipeEnabled");
+        if (swipeEnabled != null) {
+            setSwipeEnabled(Boolean.valueOf(swipeEnabled));
+        }
     }
 }

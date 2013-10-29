@@ -9,10 +9,13 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UIObject;
 
 /**
@@ -222,7 +225,7 @@ public class HGroup extends LinearGroup implements UIObject {
             // alignment
             if ((mAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
                 nextX += (mSize.x - mContentSize.x) * 0.5f;
-            } else if ((mAlignment & Alignment.RIGHT) != 0) {
+            } else if ((mAlignment & Alignment.RIGHT) > 0) {
                 nextX += (mSize.x - mContentSize.x);
             }
 
@@ -407,6 +410,16 @@ public class HGroup extends LinearGroup implements UIObject {
     protected void onTouchDown(final MotionEvent event) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String swipeEnabled = xmlParser.getAttributeValue(null, "swipeEnabled");
+        if (swipeEnabled != null) {
+            setSwipeEnabled(Boolean.valueOf(swipeEnabled));
+        }
     }
 
 }

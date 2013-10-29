@@ -18,6 +18,7 @@ public class PUIMenuActivity extends MenuActivity {
             "pui_constraints", //
             "pui_fonts", //
             "pui_buttons", //
+            "pui_groups", //
     };
 
     private LinearLayout mCol1;
