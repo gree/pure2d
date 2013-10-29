@@ -253,8 +253,9 @@ public class Button extends DisplayGroup implements UIObject {
             if (sources.length > 0) {
                 final Texture[] textures = new Texture[sources.length];
                 int i = 0;
+                final String async = xmlParser.getAttributeValue(null, "async");
                 for (String s : sources) {
-                    textures[i++] = manager.getTextureManager().getUriTexture(s);
+                    textures[i++] = manager.getTextureManager().getUriTexture(s, async != null ? Boolean.valueOf(async) : true);
                 }
                 setTextures(textures);
             }

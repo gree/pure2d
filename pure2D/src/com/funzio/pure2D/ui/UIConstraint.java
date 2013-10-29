@@ -12,6 +12,7 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.LinearGroup;
 import com.funzio.pure2D.containers.VGroup;
+import com.funzio.pure2D.ui.vo.UIConfigVO;
 
 /**
  * @author long.ngo
@@ -48,17 +49,19 @@ public class UIConstraint {
     public float childrenGap;
     public UNIT childrenGapUnit = UNIT.UNSET;
 
+    private UIConfigVO mUIConfigVO;
     private boolean mHasAttributes = false;
 
     public UIConstraint() {
         // TODO Auto-generated constructor stub
     }
 
-    public UIConstraint(final XmlPullParser xmlParser) {
-        setAttributes(xmlParser);
+    public UIConstraint(final XmlPullParser xmlParser, final UIConfigVO config) {
+        setAttributes(xmlParser, config);
     }
 
-    public void setAttributes(final XmlPullParser xmlParser) {
+    public void setAttributes(final XmlPullParser xmlParser, final UIConfigVO config) {
+        mUIConfigVO = config;
         mHasAttributes = false;
 
         widthUnit = getAttributeUnit(xmlParser, "width");
@@ -138,7 +141,7 @@ public class UIConstraint {
             if (valueSt.endsWith("%")) {
                 return Float.valueOf(valueSt.substring(0, valueSt.length() - 1).trim()) / 100; // pre-cal
             } else {
-                return Float.valueOf(valueSt.trim());
+                return Float.valueOf(valueSt.trim()) * mUIConfigVO.scale;
             }
         }
 

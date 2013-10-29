@@ -20,7 +20,7 @@ public class UIConfigVO {
 
     public String cdn_url;
     public String cache_dir;
-    public boolean texture_async = true;
+    public float scale = 1;
 
     public ArrayList<FontVO> fonts;
     public ArrayList<AnimatorVO> animators;
@@ -46,16 +46,17 @@ public class UIConfigVO {
     /**
      * Apply a screen's scale factor to some certain numbers such as x, y, dx, dy. This is used when you scale the texture.
      * 
-     * @param scale
+     * @param factor
      * @see TextureOptions
      */
-    public void applyScale(final float scale) {
+    public void applyScale(final float factor) {
+        scale *= factor;
 
         // scale animators
         if (fonts != null) {
             for (final FontVO vo : fonts) {
                 if (vo != null) {
-                    vo.applyScale(scale);
+                    vo.applyScale(factor);
                 }
             }
         }
@@ -64,7 +65,7 @@ public class UIConfigVO {
         if (animators != null) {
             for (final AnimatorVO vo : animators) {
                 if (vo != null) {
-                    vo.applyScale(scale);
+                    vo.applyScale(factor);
                 }
             }
         }

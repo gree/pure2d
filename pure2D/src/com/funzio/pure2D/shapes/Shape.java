@@ -290,7 +290,8 @@ public class Shape extends BaseDisplayObject {
 
         final String source = xmlParser.getAttributeValue(null, "source");
         if (source != null) {
-            setTexture(manager.getTextureManager().getUriTexture(source));
+            final String async = xmlParser.getAttributeValue(null, "async");
+            setTexture(manager.getTextureManager().getUriTexture(source, async != null ? Boolean.valueOf(async) : true));
         }
     }
 

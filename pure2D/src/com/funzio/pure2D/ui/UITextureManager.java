@@ -59,7 +59,7 @@ public class UITextureManager extends TextureManager {
         return mBitmapFonts.get(fontId);
     }
 
-    public Texture getUriTexture(final String textureUri) {
+    public Texture getUriTexture(final String textureUri, final boolean async) {
         String actualPath = null;
         String shortPath = null;
         int drawable = 0;
@@ -87,7 +87,6 @@ public class UITextureManager extends TextureManager {
         } else {
             Texture texture = null;
             final TextureOptions textureOptions = mUIManager.getConfig().getTextureOptions();
-            final boolean async = mUIManager.getConfig().texture_async;
             // create
             if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard

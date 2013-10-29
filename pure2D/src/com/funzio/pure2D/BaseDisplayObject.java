@@ -1230,9 +1230,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // get constraint
         if (mUIConstraint == null) {
-            mUIConstraint = new UIConstraint(xmlParser);
+            mUIConstraint = new UIConstraint(xmlParser, manager.getConfig());
         } else {
-            mUIConstraint.setAttributes(xmlParser);
+            mUIConstraint.setAttributes(xmlParser, manager.getConfig());
         }
 
         // more attributes
