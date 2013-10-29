@@ -11,9 +11,11 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
@@ -21,6 +23,7 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
 import com.funzio.pure2D.ui.UIConstraint;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.utils.Pure2DUtils;
@@ -35,8 +38,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected static final String ATT_COLOR = "color";
     protected static final String ATT_ALPHA = "alpha";
     protected static final String ATT_BLEND_MODE = "blendMode";
+    protected static final String ATT_ORIGIN_AT_CENTER = "originAtCenter";
     protected static final String ATT_ROTATION = "rotation";
     protected static final String ATT_VISIBLE = "visible";
+    protected static final String ATT_ANIMATOR = "animator";
 
     // for debugging
     protected int mDebugFlags = 0;
@@ -1243,6 +1248,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // more attributes
+        final String originAtCenter = xmlParser.getAttributeValue(null, ATT_ORIGIN_AT_CENTER);
+        if (originAtCenter != null) {
+            if (Boolean.valueOf(originAtCenter)) {
+                setOriginAtCenter();
+            }
+        }
+
         final String color = xmlParser.getAttributeValue(null, ATT_COLOR);
         if (color != null) {
             mColor = new GLColor(Color.parseColor(color));
@@ -1266,6 +1278,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
         final String visible = xmlParser.getAttributeValue(null, ATT_VISIBLE);
         if (visible != null) {
             mVisible = Boolean.valueOf(visible);
+        }
+
+        final String animator = xmlParser.getAttributeValue(null, ATT_ANIMATOR);
+        if (animator != null) {
+            final AnimatorVO animatorVO = manager.getConfig().getAnimatorVO(animator);
+            if (animatorVO != null) {
+                final Animator ani = animatorVO.createAnimator(0, this);
+                addManipulator(ani);
+                ani.start();
+            } else {
+                Log.e(TAG, "Animator not found: " + animator, new Exception());
+            }
         }
     }
 

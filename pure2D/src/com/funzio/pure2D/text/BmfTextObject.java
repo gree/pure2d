@@ -444,6 +444,8 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                 if (letterSpacing != null) {
                     mFontMetrics.letterSpacing = Float.valueOf(letterSpacing);
                 }
+            } else {
+                Log.e(TAG, "Font not found: " + font, new Exception());
             }
         }
 

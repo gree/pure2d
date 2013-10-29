@@ -13,15 +13,28 @@
         width="100%" />
 
     <Sprite
+        animator="ani_alpha"
         centerX="0"
         source="cache://img/header-logo-01.png"
         top="7%" />
-    <!--
     <Sprite
+        animator="ani_rotate"
         centerX="0"
-        source="http://product.gree.net/share/img/header-logo-01.png"
-        top="20%" />
-    -->
+        centerY="0"
+        originAtCenter="true"
+        source="@drawable/cc_128" />
+    <Sprite
+        animator="ani_rotate"
+        centerX="-200"
+        centerY="0"
+        originAtCenter="true"
+        source="@drawable/mw_128" />
+    <Sprite
+        animator="ani_rotate"
+        centerX="200"
+        centerY="0"
+        originAtCenter="true"
+        source="@drawable/ka_128" />
 
     <HGroup
         align="center"
@@ -31,6 +44,7 @@
         height="wrap_content"
         width="100%" >
         <Button
+            animator="ani_color"
             patches="20,20,0,0"
             source="@drawable/btn_up"
             width="30%" >
@@ -41,6 +55,7 @@
                 text="@string/cancel" />
         </Button>
         <Button
+            animator="ani_color"
             patches="20,20,0,0"
             source="@drawable/btn_up"
             width="30%" >

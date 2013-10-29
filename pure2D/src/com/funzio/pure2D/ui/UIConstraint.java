@@ -175,7 +175,7 @@ public class UIConstraint {
         final PointF targetPos = target.getPosition();
         final PointF targetSize = target.getSize();
         final PointF parentSize = container.getSize();
-        final float pw = parentSize.x, ph = parentSize.y;
+        final float parentW = parentSize.x, parentH = parentSize.y;
         final float cx = targetPos.x, cy = targetPos.y;
         final float cw = targetSize.x, ch = targetSize.y;
         float l = cx, r = 0, t = 0, b = cy, w = cw, h = ch;
@@ -184,39 +184,39 @@ public class UIConstraint {
         if (leftUnit == UNIT.PIXEL) {
             l = x;
         } else if (leftUnit == UNIT.PERCENT) {
-            l = pw * left;
+            l = parentW * left;
         }
         if (rightUnit == UNIT.PIXEL) {
             r = right;
         } else if (rightUnit == UNIT.PERCENT) {
-            r = pw * right;
+            r = parentW * right;
         }
         // implicit width
         if (leftUnit != UNIT.UNSET && rightUnit != UNIT.UNSET) {
-            w = pw - (l + r);
+            w = parentW - (l + r);
         }
 
         // top and bottom
         if (topUnit == UNIT.PIXEL) {
             t = top;
         } else if (topUnit == UNIT.PERCENT) {
-            t = ph * top;
+            t = parentH * top;
         }
         if (bottomUnit == UNIT.PIXEL) {
             b = bottom;
         } else if (bottomUnit == UNIT.PERCENT) {
-            b = ph * bottom;
+            b = parentH * bottom;
         }
         // implicit height
         if (topUnit != UNIT.UNSET && bottomUnit != UNIT.UNSET) {
-            h = ph - (t + b);
+            h = parentH - (t + b);
         }
 
         // explicit width
         if (widthUnit == UNIT.PIXEL) {
             w = width;
         } else if (widthUnit == UNIT.PERCENT) {
-            w = pw * width;
+            w = parentW * width;
         } else if (widthUnit == UNIT.WRAP && target instanceof DisplayGroup) {
             ((DisplayGroup) target).setWrapContentWidth(true);
         }
@@ -225,7 +225,7 @@ public class UIConstraint {
         if (heightUnit == UNIT.PIXEL) {
             h = height;
         } else if (heightUnit == UNIT.PERCENT) {
-            h = ph * height;
+            h = parentH * height;
         } else if (heightUnit == UNIT.WRAP && target instanceof DisplayGroup) {
             ((DisplayGroup) target).setWrapContentHeight(true);
         }
@@ -246,9 +246,9 @@ public class UIConstraint {
             if (centerXUnit == UNIT.PIXEL) {
                 l = centerX;
             } else if (xUnit == UNIT.PERCENT) {
-                l = pw * centerX;
+                l = parentW * centerX;
             }
-            l += (pw - w) * 0.5f;
+            l += (parentW - w) * 0.5f + target.getOrigin().x;
         }
 
         // y center
@@ -256,33 +256,33 @@ public class UIConstraint {
             if (centerYUnit == UNIT.PIXEL) {
                 b = centerY;
             } else if (yUnit == UNIT.PERCENT) {
-                b = ph * centerY;
+                b = parentH * centerY;
             }
-            b += (ph - h) * 0.5f;
+            b += (parentH - h) * 0.5f + target.getOrigin().y;
         }
 
         // implicit left base on right and width
         if (leftUnit == UNIT.UNSET && rightUnit != UNIT.UNSET) {
-            l = pw - r - w;
+            l = parentW - r - w;
         }
 
         // implicit bottom base on top and height
         if (bottomUnit == UNIT.UNSET && topUnit != UNIT.UNSET) {
-            b = ph - t - h;
+            b = parentH - t - h;
         }
 
         // explicit x
         if (xUnit == UNIT.PIXEL) {
             l = x;
         } else if (xUnit == UNIT.PERCENT) {
-            l = pw * x;
+            l = parentW * x;
         }
 
         // explicit y
         if (yUnit == UNIT.PIXEL) {
             b = y;
         } else if (yUnit == UNIT.PERCENT) {
-            b = ph * y;
+            b = parentH * y;
         }
 
         // apply with diff check for perf

@@ -32,7 +32,34 @@
 	],
 
 	"animators": [
+		{
+			"name": "ani_alpha",
+			"type": "alpha",
+			"from": 1,
+			"to": 0.5,
+			"duration": 500,
+			"interpolation": "decelerate",
+			"loop_mode": "reverse"
+		},
 
+		{
+			"name": "ani_color",
+			"type": "color",
+			"from": "#FFFFFFFF",
+			"to": "#FFFFFF00",
+			"duration": 1000,
+			"interpolation": "decelerate",
+			"loop_mode": "reverse"
+		},
+
+		{
+			"name": "ani_rotate",
+			"type": "rotate",
+			"from": 0,
+			"to": 360,
+			"duration": 2000,
+			"loop_mode": "repeat"
+		}
 	]
 }
 
