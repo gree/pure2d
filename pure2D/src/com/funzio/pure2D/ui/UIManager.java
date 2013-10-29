@@ -10,7 +10,6 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
@@ -27,7 +26,6 @@ public class UIManager {
     private Context mContext;
     private Resources mResources;
     private String mPackageName;
-    private String mCacheDir;
 
     private UITextureManager mTextureManager;
     private UILoader mLoader;
@@ -53,7 +51,6 @@ public class UIManager {
         if (context != null) {
             mResources = context.getResources();
             mPackageName = context.getApplicationContext().getPackageName();
-            mCacheDir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
         } else {
             mTextureManager = null;
         }
@@ -61,10 +58,6 @@ public class UIManager {
 
     public Context getContext() {
         return mContext;
-    }
-
-    public String getCacheDir() {
-        return mCacheDir;
     }
 
     /**
@@ -82,6 +75,10 @@ public class UIManager {
 
             try {
                 mConfigVO = new UIConfigVO(new JSONObject(readTask.getContent()));
+                if (mConfigVO.cache_dir == null || mConfigVO.cache_dir.length() == 0) {
+                    // default cache dir
+                    mConfigVO.cache_dir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
+                }
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
             }
@@ -114,13 +111,17 @@ public class UIManager {
         return mTextureManager;
     }
 
-    public String getStringValue(final XmlPullParser parser, final String name) {
-        String value = parser.getAttributeValue(null, name);
-
+    public String evalString(final String input) {
+        String value = input;
         if (value != null) {
             if (value.startsWith(UIConfig.URI_STRING)) {
+                // localized string
                 String id = value.substring(UIConfig.URI_STRING.length());
                 value = mResources.getString(mResources.getIdentifier(id, UIConfig.TYPE_STRING, mPackageName));
+            } else {
+                // process variables
+                value = value.replace(UIConfig.$CACHE_DIR, mConfigVO.cache_dir);
+                value = value.replace(UIConfig.$CDN_URL, mConfigVO.cdn_url);
             }
         }
 

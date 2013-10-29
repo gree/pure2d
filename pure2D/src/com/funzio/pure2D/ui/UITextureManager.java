@@ -76,7 +76,7 @@ public class UITextureManager extends TextureManager {
             actualPath = textureUri; // keep
         } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
             shortPath = textureUri.substring(UIConfig.URI_CACHE.length());
-            actualPath = mUIManager.getCacheDir() + shortPath;
+            actualPath = mUIManager.getConfig().cache_dir + shortPath;
         } else {
             actualPath = textureUri;
         }
@@ -104,7 +104,7 @@ public class UITextureManager extends TextureManager {
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from url or cache file
-                texture = createURLCacheTexture(mUIManager.getConfig().cdn_url, mUIManager.getCacheDir(), shortPath, textureOptions, async);
+                texture = createURLCacheTexture(mUIManager.getConfig().cdn_url, mUIManager.getConfig().cache_dir, shortPath, textureOptions, async);
             }
 
             // and cache it if created

@@ -13,7 +13,7 @@
 
     <Sprite
         centerX="0"
-        source="http://product.gree.net/share/img/header-logo-01.png"
+        source="$CDN_URL/img/header-logo-01.png"
         top="7%" />
 
     <Text

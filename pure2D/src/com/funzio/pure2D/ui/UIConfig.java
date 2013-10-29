@@ -37,6 +37,10 @@ public class UIConfig {
     public static final String URI_HTTP = "http://";
     public static final String URI_CACHE = "cache://";
 
+    // variables
+    public static final String $CDN_URL = "$CDN_URL";
+    public static final String $CACHE_DIR = "$CACHE_DIR";
+
     private static final HashMap<String, Class<? extends DisplayObject>> CLASS_MAP = new HashMap<String, Class<? extends DisplayObject>>();
     static {
         CLASS_MAP.put("Group", DisplayGroup.class);
