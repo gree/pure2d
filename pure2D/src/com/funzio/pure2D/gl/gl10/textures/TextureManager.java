@@ -432,4 +432,8 @@ public class TextureManager {
             }
         }
     }
+
+    public int getNumTextures() {
+        return mTextures.size();
+    }
 }

@@ -135,24 +135,26 @@ public class StageActivity extends Activity implements OnTouchListener {
     protected void startFrameRate() {
         mHandler.postDelayed(mFrameRateUpdater, 1000);
 
-        mScene.queueEvent(new Runnable() {
+        if (mScene.getTextureManager() != null) {
+            mScene.queueEvent(new Runnable() {
 
-            @Override
-            public void run() {
-                // get object count on GL thread
-                final int numObjs = getNumObjects();
+                @Override
+                public void run() {
+                    // get object count on GL thread
+                    final int numObjs = getNumObjects();
 
-                // update views on UI thread
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFrameRate.setText(mScene.getCurrentFps() + " fps");
-                        mObjects.setText(numObjs + " objs");
-                    }
-                });
+                    // update views on UI thread
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFrameRate.setText(mScene.getCurrentFps() + " fps");
+                            mObjects.setText(numObjs + " objs, " + mScene.getTextureManager().getNumTextures() + " txtrs");
+                        }
+                    });
 
-            }
-        });
+                }
+            });
+        }
 
     }
 
