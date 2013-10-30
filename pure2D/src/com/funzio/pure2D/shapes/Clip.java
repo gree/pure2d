@@ -91,7 +91,7 @@ public class Clip extends Sprite implements Playable {
     public boolean update(final int deltaTime) {
 
         // support async Atlas, do diff check
-        if (mFrameSet != null & mFrameSet.getNumFrames() != mNumFrames) {
+        if (mFrameSet != null && mFrameSet.getNumFrames() != mNumFrames) {
             setAtlasFrameSet(mFrameSet);
         }
 
