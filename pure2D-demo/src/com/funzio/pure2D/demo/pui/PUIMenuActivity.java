@@ -40,7 +40,7 @@ public class PUIMenuActivity extends MenuActivity {
         for (String file : PUI_FILES) {
             final Button button = new Button(this);
             button.setId(button.hashCode());
-            button.setText(file);
+            button.setText(file.replace("pui_", ""));
             button.setTag(file);
 
             addMenu((index % 2 == 0) ? mCol1 : mCol2, button, PUIActivity.class);
