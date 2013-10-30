@@ -21,7 +21,6 @@ import com.funzio.pure2D.particles.nova.NovaConfig;
 import com.funzio.pure2D.particles.nova.NovaDelegator;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaParticle;
-import com.funzio.pure2D.particles.nova.NovaTextureManager;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
 import com.funzio.pure2D.ui.vo.FontVO;
@@ -30,7 +29,7 @@ import com.funzio.pure2D.ui.vo.UIConfigVO;
 /**
  * @author long.ngo
  */
-public class UITextureManager extends TextureManager implements NovaTextureManager {
+public class UITextureManager extends TextureManager {
     protected static final String TAG = UITextureManager.class.getSimpleName();
 
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();

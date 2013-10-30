@@ -122,9 +122,9 @@ public class UIManager {
         if (mTextureManager != null) {
             mTextureManager.setUIManager(this); // 2-way link
             mTextureManager.loadBitmapFonts();
+            mNovaManager.setDelegator(mTextureManager.getNovaDelegator());
         }
 
-        mNovaManager.setTextureManager(mTextureManager);
     }
 
     public UITextureManager getTextureManager() {

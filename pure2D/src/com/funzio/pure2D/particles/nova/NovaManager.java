@@ -28,7 +28,7 @@ public class NovaManager implements NovaLoader.Listener {
     private NovaLoader mLoader;
 
     private final Map<String, NovaFactory> mNovaFactories;
-    private NovaTextureManager mTextureManager;
+    private NovaDelegator mDelegator;
     private float mScale = 1;
 
     public NovaManager(final AssetManager assets) {
@@ -37,12 +37,12 @@ public class NovaManager implements NovaLoader.Listener {
         mNovaFactories = new HashMap<String, NovaFactory>();
     }
 
-    public void setTextureManager(final NovaTextureManager textureManager) {
-        mTextureManager = textureManager;
+    public NovaDelegator getDelegator() {
+        return mDelegator;
     }
 
-    public NovaTextureManager getTextureManager() {
-        return mTextureManager;
+    public void setDelegator(final NovaDelegator delegator) {
+        mDelegator = delegator;
     }
 
     /**
@@ -98,11 +98,6 @@ public class NovaManager implements NovaLoader.Listener {
      * @param params
      */
     public List<NovaEmitter> addEmittersTo(final Container container, final String filePath, final PointF position, final Object... params) {
-        if (mTextureManager == null) {
-            Log.e(TAG, "Texture Manager not found!", new Exception());
-            return null;
-        }
-
         final List<NovaEmitter> emitters = createEmitters(filePath, position, params);
         // null check first
         if (emitters == null) {
@@ -183,7 +178,7 @@ public class NovaManager implements NovaLoader.Listener {
             novaVO.applyScale(mScale);
 
             // cache it
-            mNovaFactories.put(filePath, new NovaFactory(novaVO, mTextureManager.getNovaDelegator()));
+            mNovaFactories.put(filePath, new NovaFactory(novaVO, mDelegator));
         }
     }
 
