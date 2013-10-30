@@ -48,10 +48,6 @@ public class JsonAtlasActivity extends StageActivity {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.samples.activities.StageActivity#getLayout()
-     */
     @Override
     protected int getLayout() {
         return R.layout.stage_atlas;

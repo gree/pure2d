@@ -6,8 +6,12 @@ package com.funzio.pure2D.shapes;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
+import com.funzio.pure2D.ui.UIConfig;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long
@@ -190,5 +194,16 @@ public class Clip extends Sprite implements Playable {
 
     protected void onClipEnd(final AtlasFrameSet frameSet) {
         // TODO
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
+        if (source != null && source.endsWith(UIConfig.FILE_JSON)) {
+            final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
+            setAtlasFrameSet(manager.getTextureManager().getUriAtlas(manager.evalString(source), async != null ? Boolean.valueOf(async) : true));
+        }
     }
 }

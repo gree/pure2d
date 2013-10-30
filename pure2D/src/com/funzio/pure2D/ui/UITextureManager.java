@@ -5,11 +5,14 @@ package com.funzio.pure2D.ui;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import android.content.res.Resources;
 import android.util.Log;
 
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.atlas.AtlasFrameSet;
+import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
@@ -22,9 +25,11 @@ import com.funzio.pure2D.ui.vo.UIConfigVO;
  * @author long.ngo
  */
 public class UITextureManager extends TextureManager {
+    protected static final String TAG = UITextureManager.class.getSimpleName();
 
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();
     protected final HashMap<String, Texture> mGeneralTextures;
+    protected final HashMap<String, AtlasFrameSet> mAtlasFrames;
 
     protected UIManager mUIManager;
     protected UIConfigVO mUIConfigVO;
@@ -37,6 +42,7 @@ public class UITextureManager extends TextureManager {
         super(scene, res);
 
         mGeneralTextures = new HashMap<String, Texture>();
+        mAtlasFrames = new HashMap<String, AtlasFrameSet>();
     }
 
     public UIManager getUIManager() {
@@ -76,6 +82,8 @@ public class UITextureManager extends TextureManager {
     }
 
     public Texture getUriTexture(final String textureUri, final boolean async) {
+        Log.v(TAG, "getUriTexture(): " + textureUri);
+
         if (mUIManager == null) {
             Log.e(TAG, "UIManager not found!", new Exception());
             return null;
@@ -138,4 +146,70 @@ public class UITextureManager extends TextureManager {
             return texture;
         }
     }
+
+    /**
+     * Load a Json atlas file
+     * 
+     * @param assets
+     * @param jsonUri
+     * @return
+     */
+    public AtlasFrameSet getUriAtlas(final String jsonUri, final boolean async) {
+        Log.v(TAG, "getUriAtlas(): " + jsonUri);
+
+        String actualPath = null;
+        if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
+            actualPath = jsonUri.substring(UIConfig.URI_ASSET.length());
+        } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
+            actualPath = jsonUri.substring(UIConfig.URI_FILE.length());
+        } else {
+            actualPath = jsonUri;
+        }
+
+        if (mAtlasFrames.containsKey(actualPath)) {
+            // reuse it
+            return mAtlasFrames.get(actualPath);
+        } else if (actualPath.endsWith(UIConfig.FILE_JSON)) {
+            try {
+                // create new
+                final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
+                // load from sdcard / assets
+                if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
+                    atlas.load(mAssets, actualPath, mUIConfigVO.scale);
+                } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
+                    atlas.load(null, actualPath, mUIConfigVO.scale);
+                }
+
+                final AtlasFrameSet multiFrames = atlas.getMasterFrameSet();
+                multiFrames.setTexture(getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), async));
+
+                // cache it
+                mAtlasFrames.put(actualPath, multiFrames);
+                return multiFrames;
+            } catch (Exception e) {
+                Log.e(TAG, "Atlas Loading Error! " + actualPath, e);
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Clear and reset everything for memory saving
+     */
+    public void reset() {
+        Log.w(TAG, "reset()");
+
+        synchronized (mAtlasFrames) {
+            // also release the textures
+            Set<String> keys = mAtlasFrames.keySet();
+            for (String key : keys) {
+                mAtlasFrames.get(key).setTexture(null);
+            }
+
+            mAtlasFrames.clear();
+        }
+    }
+
 }

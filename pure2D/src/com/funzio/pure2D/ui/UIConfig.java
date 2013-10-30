@@ -41,8 +41,12 @@ public class UIConfig {
     public static final String $CDN_URL = "$CDN_URL";
     public static final String $CACHE_DIR = "$CACHE_DIR";
 
+    public static final String FILE_JSON = ".json";
+    public static final String FILE_PNG = ".png";
+
     private static final HashMap<String, Class<? extends DisplayObject>> CLASS_MAP = new HashMap<String, Class<? extends DisplayObject>>();
     static {
+        CLASS_MAP.put("DisplayGroup", DisplayGroup.class);
         CLASS_MAP.put("Group", DisplayGroup.class);
         CLASS_MAP.put("VGroup", VGroup.class);
         CLASS_MAP.put("HGroup", HGroup.class);

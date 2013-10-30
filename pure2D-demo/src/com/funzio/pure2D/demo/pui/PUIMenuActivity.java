@@ -20,6 +20,7 @@ public class PUIMenuActivity extends MenuActivity {
             "pui_buttons", //
             "pui_groups", //
             "pui_animators", //
+            "pui_clips", //
     };
 
     private LinearLayout mCol1;

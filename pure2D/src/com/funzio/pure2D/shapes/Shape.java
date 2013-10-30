@@ -20,6 +20,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.ui.UIConfig;
 import com.funzio.pure2D.ui.UIManager;
 
 /**
@@ -293,7 +294,7 @@ public class Shape extends BaseDisplayObject {
         super.setXMLAttributes(xmlParser, manager);
 
         final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
-        if (source != null) {
+        if (source != null && !source.endsWith(UIConfig.FILE_JSON)) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
             setTexture(manager.getTextureManager().getUriTexture(manager.evalString(source), async != null ? Boolean.valueOf(async) : true));
         }
