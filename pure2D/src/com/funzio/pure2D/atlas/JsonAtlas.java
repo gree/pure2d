@@ -46,7 +46,7 @@ public class JsonAtlas extends Atlas {
         mAxisSystem = axisSystem;
     }
 
-    public void load(final InputStream stream, final float scale) throws IOException, JSONException {
+    protected void load(final InputStream stream, final float scale) throws IOException, JSONException {
         Log.v(TAG, "load()");
 
         final StringBuilder sb = new StringBuilder();
@@ -77,6 +77,11 @@ public class JsonAtlas extends Atlas {
         } else {
             load(assets.open(filePath), scale);
         }
+
+        // listener
+        if (mListener != null) {
+            mListener.onAtlasLoad(JsonAtlas.this);
+        }
     }
 
     /**
@@ -91,6 +96,11 @@ public class JsonAtlas extends Atlas {
         Log.v(TAG, "load(): " + filePath);
 
         load(new FileInputStream(new File(filePath)), scale);
+
+        // listener
+        if (mListener != null) {
+            mListener.onAtlasLoad(JsonAtlas.this);
+        }
     }
 
     public void loadAsync(final AssetManager assets, final String filePath, final float scale) {
@@ -105,10 +115,6 @@ public class JsonAtlas extends Atlas {
                 try {
                     load(assets, filePath, scale);
 
-                    // listener
-                    if (mListener != null) {
-                        mListener.onAtlasLoad(JsonAtlas.this);
-                    }
                 } catch (IOException e) {
                     Log.e(TAG, "Load failed: " + filePath, e);
                 } catch (JSONException e) {
@@ -135,6 +141,12 @@ public class JsonAtlas extends Atlas {
             final ReadTextFileTask readTask = new ReadTextFileTask(cachePath);
             if (readTask.run()) {
                 parse(readTask.getContent(), scale);
+
+                // listener
+                if (mListener != null) {
+                    mListener.onAtlasLoad(JsonAtlas.this);
+                }
+
                 return true;
             }
         }
@@ -144,6 +156,12 @@ public class JsonAtlas extends Atlas {
         if (urlTask.run()) {
             final String json = urlTask.getStringBuilder().toString();
             parse(json, scale);
+
+            // listener
+            if (mListener != null) {
+                mListener.onAtlasLoad(JsonAtlas.this);
+            }
+
             // cache it
             if (cachePath != null && cachePath.length() > 0) {
                 final WriteTextFileTask fileTask = new WriteTextFileTask(json, cachePath, false);
@@ -167,11 +185,6 @@ public class JsonAtlas extends Atlas {
             public void run() {
                 try {
                     loadURL(urlPath, cachePath, scale);
-
-                    // listener
-                    if (mListener != null) {
-                        mListener.onAtlasLoad(JsonAtlas.this);
-                    }
                 } catch (JSONException e) {
                     Log.e(TAG, "Load JSON failed: " + urlPath, e);
                 }
