@@ -19,6 +19,7 @@ public class TextureManagerVO {
     public TextureManagerVO(final JSONObject json) throws JSONException {
         cdn_url = json.optString("cdn_url");
         texture_expiration_time = json.optInt("texture_expiration_time", 0);
+
         // expiration_check_interval = json.optInt("expiration_check_interval", 0);
         expiration_check_interval = texture_expiration_time / 2; // default value, has to be < texture_expiration_time
     }

@@ -13,9 +13,15 @@ import android.util.Log;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
+import com.funzio.pure2D.atlas.SingleFrameSet;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+import com.funzio.pure2D.particles.nova.NovaConfig;
+import com.funzio.pure2D.particles.nova.NovaDelegator;
+import com.funzio.pure2D.particles.nova.NovaEmitter;
+import com.funzio.pure2D.particles.nova.NovaParticle;
+import com.funzio.pure2D.particles.nova.NovaTextureManager;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
 import com.funzio.pure2D.ui.vo.FontVO;
@@ -24,7 +30,7 @@ import com.funzio.pure2D.ui.vo.UIConfigVO;
 /**
  * @author long.ngo
  */
-public class UITextureManager extends TextureManager {
+public class UITextureManager extends TextureManager implements NovaTextureManager {
     protected static final String TAG = UITextureManager.class.getSimpleName();
 
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();
@@ -33,6 +39,8 @@ public class UITextureManager extends TextureManager {
 
     protected UIManager mUIManager;
     protected UIConfigVO mUIConfigVO;
+
+    private NovaDelegator mNovaDelegator;
 
     /**
      * @param scene
@@ -81,7 +89,7 @@ public class UITextureManager extends TextureManager {
         return mBitmapFonts.get(fontId);
     }
 
-    public Texture getUriTexture(final String textureUri, final boolean async) {
+    public Texture getUriTexture(String textureUri, final boolean async) {
         Log.v(TAG, "getUriTexture(): " + textureUri);
 
         if (mUIManager == null) {
@@ -89,25 +97,10 @@ public class UITextureManager extends TextureManager {
             return null;
         }
 
-        String actualPath = null;
-        String shortPath = null;
-        int drawable = 0;
-
-        if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
-            actualPath = textureUri.substring(UIConfig.URI_DRAWABLE.length());
-            drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mUIManager.getContext().getApplicationContext().getPackageName());
-            actualPath = String.valueOf(drawable);
-        } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
-            actualPath = textureUri.substring(UIConfig.URI_ASSET.length());
-        } else if (textureUri.startsWith(UIConfig.URI_FILE)) {
-            actualPath = textureUri.substring(UIConfig.URI_FILE.length());
-        } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
-            actualPath = textureUri; // keep
-        } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
-            shortPath = textureUri.substring(UIConfig.URI_CACHE.length());
-            actualPath = mUIConfigVO.texture_manager.cache_dir + shortPath;
-        } else {
-            actualPath = textureUri;
+        final String actualPath = mUIManager.getPathFromUri(textureUri);
+        // XXX HACK for nova backward compatibility
+        if (!actualPath.startsWith(UIConfig.URI_HTTP) && textureUri.equals(actualPath)) {
+            textureUri = UIConfig.URI_ASSET + actualPath;
         }
 
         if (mGeneralTextures.containsKey(actualPath)) {
@@ -119,6 +112,7 @@ public class UITextureManager extends TextureManager {
             // create
             if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard
+                final int drawable = Integer.valueOf(actualPath);
                 if (drawable > 0) {
                     texture = createDrawableTexture(drawable, textureOptions, async);
                 }
@@ -133,7 +127,7 @@ public class UITextureManager extends TextureManager {
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from url or cache file
-                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url, mUIConfigVO.texture_manager.cache_dir, shortPath, textureOptions, async);
+                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url, mUIConfigVO.texture_manager.cache_dir, textureUri.substring(UIConfig.URI_CACHE.length()), textureOptions, async);
             }
 
             // and cache it if created
@@ -154,20 +148,17 @@ public class UITextureManager extends TextureManager {
      * @param jsonUri
      * @return
      */
-    public AtlasFrameSet getUriAtlas(final String jsonUri, final boolean async) {
+    public AtlasFrameSet getUriAtlas(String jsonUri, final boolean async) {
         Log.v(TAG, "getUriAtlas(): " + jsonUri);
 
-        String actualPath = null;
-        if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
-            actualPath = jsonUri.substring(UIConfig.URI_ASSET.length());
-        } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
-            actualPath = jsonUri.substring(UIConfig.URI_FILE.length());
-        } else {
-            actualPath = jsonUri;
+        final String actualPath = mUIManager.getPathFromUri(jsonUri);
+        // XXX HACK for nova backward compatibility
+        if (!actualPath.startsWith(UIConfig.URI_HTTP) && jsonUri.equals(actualPath)) {
+            jsonUri = UIConfig.URI_ASSET + actualPath;
         }
 
         if (mAtlasFrames.containsKey(actualPath)) {
-            // reuse it
+            // reuse cache
             return mAtlasFrames.get(actualPath);
         } else if (actualPath.endsWith(UIConfig.FILE_JSON)) {
             try {
@@ -190,9 +181,58 @@ public class UITextureManager extends TextureManager {
                 Log.e(TAG, "Atlas Loading Error! " + actualPath, e);
                 return null;
             }
+        } else {
+            final SingleFrameSet singleFrame = new SingleFrameSet(actualPath, getUriTexture(jsonUri, async));
+            // cache it
+            mAtlasFrames.put(actualPath, singleFrame);
+            return singleFrame;
+        }
+    }
+
+    public NovaDelegator getNovaDelegator() {
+        if (mNovaDelegator != null) {
+            return mNovaDelegator;
         }
 
-        return null;
+        // this is how you assign texture to the sprite to a particle
+        mNovaDelegator = new NovaDelegator() {
+            @Override
+            public void delegateEmitter(final NovaEmitter emitter, final Object... params) {
+
+            }
+
+            @Override
+            public void delegateParticle(final NovaParticle particle, final Object... params) {
+                final String sprite = NovaConfig.getString(particle.getParticleVO().sprite, -1);
+
+                if (sprite == null) {
+                    return;
+                }
+
+                final String formattedSprite = sprite.replace(NovaConfig.$SD, mUIConfigVO.texture_manager.cache_dir);
+                // get the loaded frames
+                AtlasFrameSet frames = null;
+
+                // apply the texture
+                if (formattedSprite.startsWith(NovaConfig.$TEXT)) {
+                    // set floatie text texture
+                    // frames.setTexture(getFloatieTextTexture((String) NovaConfig.getParamValue($TEXT, formattedSprite, params)));
+                } else if (formattedSprite.startsWith(NovaConfig.$SPRITE)) {
+                    final String decodedSprite = (String) NovaConfig.getParamValue(NovaConfig.$SPRITE, formattedSprite, params);
+                    // load the frames
+                    frames = getUriAtlas(decodedSprite, true);
+                    // frames.setTexture(getUriTexture(decodedSprite.replaceFirst(UIConfig.FILE_JSON, UIConfig.FILE_PNG), true));
+                } else {
+                    frames = getUriAtlas(formattedSprite, true);
+                    // frames.setTexture(getUriTexture(formattedSprite.replaceFirst(UIConfig.FILE_JSON, UIConfig.FILE_PNG), true));
+                }
+
+                // apply the frames
+                particle.setAtlasFrameSet(frames);
+            }
+        };
+
+        return mNovaDelegator;
     }
 
     /**

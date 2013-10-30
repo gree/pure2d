@@ -48,7 +48,7 @@ public class PUIActivity extends StageActivity {
         super.onDestroy();
 
         // clear everything
-        mUIManager.setTextureManager(null);
+        mUIManager.reset();
     }
 
     @Override

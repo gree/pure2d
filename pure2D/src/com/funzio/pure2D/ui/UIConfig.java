@@ -60,6 +60,7 @@ public class UIConfig {
         CLASS_MAP.put("Clip", Clip.class);
         CLASS_MAP.put("Button", Button.class);
         CLASS_MAP.put("Text", BmfTextObject.class);
+        CLASS_MAP.put("Nova", NovaContainer.class);
     }
 
     @SuppressWarnings("unchecked")

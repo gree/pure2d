@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Group SYSTEM "../../pure2d-ui.dtd" >
+<Group
+    height="600"
+    width="600" >
+
+    <Nova
+        centerX="0"
+        centerY="0"
+        source="asset://nova/circling_stars.json" />
+
+    <Sprite9
+        blendMode="premultiplied_alpha"
+        height="100%"
+        patches="20,20,20,20"
+        source="@drawable/panel_collection_reward"
+        touchable="true"
+        width="100%" />
+
+    <Sprite
+        centerX="0"
+        source="cache://img/header-logo-01.png"
+        top="7%" />
+
+    <HGroup
+        align="center"
+        bottom="5%"
+        centerX="0"
+        childrenGap="20"
+        height="wrap_content"
+        width="100%" >
+        <Button
+            patches="20,20,0,0"
+            source="@drawable/btn_up"
+            width="30%" >
+            <Text
+                centerX="0"
+                centerY="0"
+                font="font2"
+                text="@string/cancel" />
+        </Button>
+        <Button
+            patches="20,20,0,0"
+            source="@drawable/btn_up"
+            width="30%" >
+            <Text
+                centerX="0"
+                centerY="0"
+                font="font2"
+                text="@string/okay" />
+        </Button>
+    </HGroup>
+
+    <VWheel>
+    </VWheel>
+
+</Group>

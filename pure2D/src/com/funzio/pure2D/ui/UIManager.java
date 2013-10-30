@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
+import com.funzio.pure2D.particles.nova.NovaManager;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
 
 /**
@@ -28,6 +29,7 @@ public class UIManager {
     private String mPackageName;
 
     private UITextureManager mTextureManager;
+    private NovaManager mNovaManager;
     private UILoader mLoader;
 
     private UIConfigVO mConfigVO;
@@ -51,6 +53,7 @@ public class UIManager {
         if (context != null) {
             mResources = context.getResources();
             mPackageName = context.getApplicationContext().getPackageName();
+            mNovaManager = new NovaManager(mResources.getAssets());
         } else {
             mTextureManager = null;
         }
@@ -58,6 +61,19 @@ public class UIManager {
 
     public Context getContext() {
         return mContext;
+    }
+
+    public void reset() {
+        Log.w(TAG, "reset()");
+
+        // release all textures
+        if (mTextureManager != null) {
+            mTextureManager.reset();
+            mTextureManager = null;
+        }
+
+        // reset and clear pools
+        mNovaManager.reset();
     }
 
     /**
@@ -79,6 +95,7 @@ public class UIManager {
                     // default cache dir
                     mConfigVO.texture_manager.cache_dir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
                 }
+                // Log.e("long", mConfigVO.texture_manager.cache_dir);
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
             }
@@ -97,7 +114,7 @@ public class UIManager {
     }
 
     public void setTextureManager(final UITextureManager textureManager) {
-        Log.v(TAG, "setTextureManager(): " + textureManager);
+        Log.i(TAG, "setTextureManager(): " + textureManager);
 
         mTextureManager = textureManager;
 
@@ -106,10 +123,16 @@ public class UIManager {
             mTextureManager.setUIManager(this); // 2-way link
             mTextureManager.loadBitmapFonts();
         }
+
+        mNovaManager.setTextureManager(mTextureManager);
     }
 
     public UITextureManager getTextureManager() {
         return mTextureManager;
+    }
+
+    public NovaManager getNovaManager() {
+        return mNovaManager;
     }
 
     public String evalString(final String input) {
@@ -127,6 +150,29 @@ public class UIManager {
         }
 
         return value;
+    }
+
+    public String getPathFromUri(final String uri) {
+        String actualPath = null;
+
+        if (uri.startsWith(UIConfig.URI_DRAWABLE)) {
+            actualPath = uri.substring(UIConfig.URI_DRAWABLE.length());
+            final int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mPackageName);
+            actualPath = String.valueOf(drawable);
+        } else if (uri.startsWith(UIConfig.URI_ASSET)) {
+            actualPath = uri.substring(UIConfig.URI_ASSET.length());
+        } else if (uri.startsWith(UIConfig.URI_FILE)) {
+            actualPath = uri.substring(UIConfig.URI_FILE.length());
+        } else if (uri.startsWith(UIConfig.URI_HTTP)) {
+            actualPath = uri; // keep
+        } else if (uri.startsWith(UIConfig.URI_CACHE)) {
+            final String shortPath = uri.substring(UIConfig.URI_CACHE.length());
+            actualPath = mConfigVO.texture_manager.cache_dir + shortPath;
+        } else {
+            actualPath = uri;
+        }
+
+        return actualPath;
     }
 
 }

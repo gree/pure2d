@@ -28,6 +28,10 @@ public class NovaConfig {
 
     public static final Random RANDOM = new Random();
 
+    public static final String $SD = "$sd"; // location on sdcard
+    public static final String $TEXT = "$text";
+    public static final String $SPRITE = "$sprite";
+
     // interpolators
     private static final String INTER_ST_ACCELERATE = "accelerate";
     private static final String INTER_ST_ACCELERATE_DECELERATE = "accelerate_decelerate";
