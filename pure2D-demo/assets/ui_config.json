@@ -40,8 +40,8 @@
 			"type": "alpha",
 			"from": 0,
 			"to": 1,
-			"duration": 3000,
-			"interpolation": "decelerate"
+			"interpolation": "decelerate",
+			"duration": 3000
 		},
 
 		{
@@ -70,6 +70,15 @@
 			"from": 0,
 			"to": 360,
 			"duration": 2000,
+			"loop_mode": "repeat"
+		},
+
+		{
+			"name": "ani_heart_beat",
+			"type": "scale",
+			"from": 1,
+			"to": 1.25,
+			"duration": 500,
 			"loop_mode": "repeat"
 		}
 	]

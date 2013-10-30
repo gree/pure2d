@@ -6,7 +6,6 @@
     width="600" >
 
     <Sprite9
-        blendMode="premultiplied_alpha"
         height="100%"
         patches="20,20,20,20"
         source="@drawable/panel_collection_reward"
@@ -14,8 +13,9 @@
         width="100%" />
 
     <Sprite
-        animator="ani_alpha"
+        animator="ani_heart_beat"
         centerX="0"
+        originAtCenter="true"
         source="cache://img/header-logo-01.png"
         top="7%" />
     <Sprite
