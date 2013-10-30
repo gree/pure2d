@@ -126,7 +126,7 @@ public class UITextureManager extends TextureManager {
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from url or cache file
-                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url, mUIConfigVO.texture_manager.cache_dir, actualPath, textureOptions, async);
+                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, textureOptions, async);
             }
 
             // and cache it if created

@@ -19,47 +19,44 @@ import com.funzio.pure2D.utils.Pure2DUtils;
  * @author long
  */
 public class URLCacheTexture extends Texture {
-    private String mUrlDir;
-    private String mCacheDir;
-    private String mFilePath;
+    private String mFileUrl;
+    private String mCachePath;
     private TextureOptions mOptions;
     private boolean mIsAsync = false;
 
-    protected URLCacheTexture(final GLState glState, final String urlDir, final String cacheDir, final String filePath, final TextureOptions options) {
+    protected URLCacheTexture(final GLState glState, final String fileUrl, final String cachePath, final TextureOptions options) {
         super(glState);
 
-        load(urlDir, cacheDir, filePath, options);
+        load(fileUrl, cachePath, options);
     }
 
-    protected URLCacheTexture(final GLState glState, final String urlDir, final String cacheDir, final String filePath, final TextureOptions options, final boolean async) {
+    protected URLCacheTexture(final GLState glState, final String fileUrl, final String cachePath, final TextureOptions options, final boolean async) {
         super(glState);
 
         if (async) {
-            loadAsync(urlDir, cacheDir, filePath, options);
+            loadAsync(fileUrl, cachePath, options);
         } else {
-            load(urlDir, cacheDir, filePath, options);
+            load(fileUrl, cachePath, options);
         }
     }
 
-    public void load(final String urlDir, final String cacheDir, final String filePath, final TextureOptions options) {
+    public void load(final String fileUrl, final String cachePath, final TextureOptions options) {
         mIsAsync = false;
-        mUrlDir = urlDir;
-        mCacheDir = cacheDir;
-        mFilePath = filePath;
+        mFileUrl = fileUrl;
+        mCachePath = cachePath;
+        // mFilePath = filePath;
         mOptions = options;
 
-        final String fullPath = cacheDir + filePath;
         int[] dimensions = new int[2];
         Bitmap bitmap = null;
 
-        final File file = new File(fullPath);
+        final File file = new File(mCachePath);
         if (file.exists()) {
-            bitmap = Pure2DUtils.getFileBitmap(fullPath, options, dimensions);
-        } else if (urlDir != null && urlDir.length() > 0) {
+            bitmap = Pure2DUtils.getFileBitmap(mCachePath, options, dimensions);
+        } else if (fileUrl != null && fileUrl.length() > 0) {
             // try to download and cache
-            final String fullUrl = urlDir + filePath;
-            if (new DownloadTask(fullUrl, fullPath).run()) {
-                bitmap = Pure2DUtils.getFileBitmap(fullPath, options, dimensions);
+            if (new DownloadTask(mFileUrl, mCachePath).run()) {
+                bitmap = Pure2DUtils.getFileBitmap(mCachePath, options, dimensions);
             }
         }
 
@@ -67,7 +64,7 @@ public class URLCacheTexture extends Texture {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
         } else {
-            Log.e(TAG, "Unable to load bitmap: " + fullPath, new Exception());
+            Log.e(TAG, "Unable to load bitmap: " + mCachePath, new Exception());
             // callback, regardless whether it's successful or not
             if (mListener != null) {
                 mListener.onTextureLoad(this);
@@ -78,9 +75,9 @@ public class URLCacheTexture extends Texture {
     @Override
     public void reload() {
         if (mIsAsync) {
-            loadAsync(mUrlDir, mCacheDir, mFilePath, mOptions);
+            loadAsync(mFileUrl, mCachePath, mOptions);
         } else {
-            load(mUrlDir, mCacheDir, mFilePath, mOptions);
+            load(mFileUrl, mCachePath, mOptions);
         }
     }
 
@@ -92,11 +89,10 @@ public class URLCacheTexture extends Texture {
      * @param po2
      */
     @SuppressLint("NewApi")
-    public void loadAsync(final String urlDir, final String cacheDir, final String filePath, final TextureOptions options) {
+    public void loadAsync(final String fileUrl, final String cachePath, final TextureOptions options) {
         mIsAsync = true;
-        mUrlDir = urlDir;
-        mCacheDir = cacheDir;
-        mFilePath = filePath;
+        mFileUrl = fileUrl;
+        mCachePath = cachePath;
         mOptions = options;
 
         // AsyncTask can only be initialized on UI Thread, especially on Android 2.2
@@ -117,17 +113,15 @@ public class URLCacheTexture extends Texture {
     private class AsyncLoader extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(final Void... params) {
-            final String fullPath = mCacheDir + mFilePath;
             final int[] dimensions = new int[2];
             Bitmap bitmap = null;
-            final File file = new File(fullPath);
+            final File file = new File(mCachePath);
             if (file.exists()) {
-                bitmap = Pure2DUtils.getFileBitmap(fullPath, mOptions, dimensions);
-            } else if (mUrlDir != null && mUrlDir.length() > 0) {
+                bitmap = Pure2DUtils.getFileBitmap(mCachePath, mOptions, dimensions);
+            } else if (mFileUrl != null && mFileUrl.length() > 0) {
                 // try to download and cache
-                final String fullUrl = mUrlDir + mFilePath;
-                if (new DownloadTask(fullUrl, fullPath).run()) {
-                    bitmap = Pure2DUtils.getFileBitmap(fullPath, mOptions, dimensions);
+                if (new DownloadTask(mFileUrl, mCachePath).run()) {
+                    bitmap = Pure2DUtils.getFileBitmap(mCachePath, mOptions, dimensions);
                 }
             }
             final Bitmap finalBitmap = bitmap;
@@ -140,7 +134,7 @@ public class URLCacheTexture extends Texture {
                         load(finalBitmap, dimensions[0], dimensions[1], mOptions != null ? mOptions.inMipmaps : 0);
                         finalBitmap.recycle();
                     } else {
-                        Log.e(TAG, "Unable to load bitmap: " + fullPath, new Exception());
+                        Log.e(TAG, "Unable to load bitmap: " + mCachePath, new Exception());
                         // callback, regardless whether it's successful or not
                         if (mListener != null) {
                             mListener.onTextureLoad(URLCacheTexture.this);
@@ -155,6 +149,6 @@ public class URLCacheTexture extends Texture {
 
     @Override
     public String toString() {
-        return mFilePath;
+        return mFileUrl;
     }
 }
