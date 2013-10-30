@@ -181,70 +181,72 @@ public class JsonAtlas extends Atlas {
 
     protected void parse(final String json, final float scale) throws JSONException {
 
-        removeAllFrames();
+        synchronized (mMasterFrameSet) {
+            removeAllFrames();
 
-        final JSONObject jsonObject = new JSONObject(json);
-        final JSONObject meta = jsonObject.getJSONObject("meta");
-        // final float scale = (float) jsonObject.getDouble("scale");
-        final JSONObject size = meta.getJSONObject("size");
-        mWidth = size.getInt("w") * scale;
-        mHeight = size.getInt("h") * scale;
-        mImage = meta.getString("image");
+            final JSONObject jsonObject = new JSONObject(json);
+            final JSONObject meta = jsonObject.getJSONObject("meta");
+            // final float scale = (float) jsonObject.getDouble("scale");
+            final JSONObject size = meta.getJSONObject("size");
+            mWidth = size.getInt("w") * scale;
+            mHeight = size.getInt("h") * scale;
+            mImage = meta.getString("image");
 
-        // Long Ngo added: framerate
-        getMasterFrameSet().setFps(meta.optInt("fps"));
-        String loopMode = meta.optString("loop_mode", null);
-        if (loopMode != null) {
-            getMasterFrameSet().setLoopMode(NovaConfig.getLoopMode(loopMode));
-        }
+            // Long Ngo added: framerate
+            getMasterFrameSet().setFps(meta.optInt("fps"));
+            String loopMode = meta.optString("loop_mode", null);
+            if (loopMode != null) {
+                getMasterFrameSet().setLoopMode(NovaConfig.getLoopMode(loopMode));
+            }
 
-        // create the master frame set
-        final JSONArray frames = jsonObject.getJSONArray("frames");
-        final int totalFrames = frames.length();
-        for (int i = 0; i < totalFrames; i++) {
-            addFrame(parseFrame(i, frames.getJSONObject(i), scale));
-        }
+            // create the master frame set
+            final JSONArray frames = jsonObject.getJSONArray("frames");
+            final int totalFrames = frames.length();
+            for (int i = 0; i < totalFrames; i++) {
+                addFrame(parseFrame(i, frames.getJSONObject(i), scale));
+            }
 
-        // Long Ngo added: check for sub frame sets
-        final JSONObject frameSets = jsonObject.optJSONObject("frame_sets");
-        if (frameSets != null) {
-            final JSONArray names = frameSets.names();
-            if (names != null) {
-                final int numSets = names.length();
-                for (int i = 0; i < numSets; i++) {
-                    final String setName = names.getString(i);
-                    final JSONObject set = frameSets.optJSONObject(setName);
-                    // Log.e(TAG, "New set: " + setName);
-                    if (set != null) {
-                        final JSONArray subFrames = set.optJSONArray("frames");
-                        if (subFrames != null) {
-                            // create new subset
-                            final AtlasFrameSet newSet = new AtlasFrameSet(setName);
-                            // add the frames
-                            final int numFrames = subFrames.length();
-                            for (int j = 0; j < numFrames; j++) {
-                                final int frameIndex = subFrames.getInt(j);
-                                if (frameIndex < totalFrames) {
-                                    // Log.e(TAG, j + ": " + getFrame(frameIndex));
-                                    newSet.addFrame(getFrame(frameIndex));
+            // Long Ngo added: check for sub frame sets
+            final JSONObject frameSets = jsonObject.optJSONObject("frame_sets");
+            if (frameSets != null) {
+                final JSONArray names = frameSets.names();
+                if (names != null) {
+                    final int numSets = names.length();
+                    for (int i = 0; i < numSets; i++) {
+                        final String setName = names.getString(i);
+                        final JSONObject set = frameSets.optJSONObject(setName);
+                        // Log.e(TAG, "New set: " + setName);
+                        if (set != null) {
+                            final JSONArray subFrames = set.optJSONArray("frames");
+                            if (subFrames != null) {
+                                // create new subset
+                                final AtlasFrameSet newSet = new AtlasFrameSet(setName);
+                                // add the frames
+                                final int numFrames = subFrames.length();
+                                for (int j = 0; j < numFrames; j++) {
+                                    final int frameIndex = subFrames.getInt(j);
+                                    if (frameIndex < totalFrames) {
+                                        // Log.e(TAG, j + ": " + getFrame(frameIndex));
+                                        newSet.addFrame(getFrame(frameIndex));
+                                    }
                                 }
-                            }
 
-                            // check optional loop mode
-                            loopMode = set.optString("loop_mode", null);
-                            if (loopMode != null) {
-                                newSet.setLoopMode(NovaConfig.getLoopMode(loopMode));
-                            }
+                                // check optional loop mode
+                                loopMode = set.optString("loop_mode", null);
+                                if (loopMode != null) {
+                                    newSet.setLoopMode(NovaConfig.getLoopMode(loopMode));
+                                }
 
-                            // add to the subsets
-                            addSubFrameSet(newSet);
+                                // add to the subsets
+                                addSubFrameSet(newSet);
+                            }
                         }
                     }
                 }
             }
-        }
 
-        Log.v(TAG, "parse(): frames: " + totalFrames + ", subsets: " + getNumSubFrameSets());
+            Log.v(TAG, "parse(): frames: " + totalFrames + ", subsets: " + getNumSubFrameSets());
+        }
     }
 
     protected AtlasFrame parseFrame(final int index, final JSONObject frameJson, final float scale) throws JSONException {
