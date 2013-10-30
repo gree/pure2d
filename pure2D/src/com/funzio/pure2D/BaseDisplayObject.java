@@ -42,6 +42,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected static final String ATT_ROTATION = "rotation";
     protected static final String ATT_VISIBLE = "visible";
     protected static final String ATT_ANIMATOR = "animator";
+    protected static final String ATT_DEBUG = "debug";
 
     // for debugging
     protected int mDebugFlags = 0;
@@ -1248,6 +1249,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // more attributes
+        final String debug = xmlParser.getAttributeValue(null, ATT_DEBUG);
+        if (debug != null) {
+            mDebugFlags = Boolean.valueOf(debug) ? Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS | Pure2D.DEBUG_FLAG_WIREFRAME : 0;
+        }
+
         final String originAtCenter = xmlParser.getAttributeValue(null, ATT_ORIGIN_AT_CENTER);
         if (originAtCenter != null) {
             if (Boolean.valueOf(originAtCenter)) {
