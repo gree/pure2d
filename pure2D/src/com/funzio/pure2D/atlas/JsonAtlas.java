@@ -20,7 +20,11 @@ import org.json.JSONObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.loaders.AsyncTaskExecuter;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
+import com.funzio.pure2D.loaders.tasks.RunnableTask;
 import com.funzio.pure2D.loaders.tasks.Task;
+import com.funzio.pure2D.loaders.tasks.URLLoadJsonTask;
+import com.funzio.pure2D.loaders.tasks.URLLoadTextTask;
+import com.funzio.pure2D.loaders.tasks.WriteTextFileTask;
 import com.funzio.pure2D.particles.nova.NovaConfig;
 
 /**
@@ -42,27 +46,6 @@ public class JsonAtlas extends Atlas {
         mAxisSystem = axisSystem;
     }
 
-    @Deprecated
-    public JsonAtlas(final InputStream stream, final float scale) throws IOException, JSONException {
-        super();
-
-        load(stream, scale);
-    }
-
-    @Deprecated
-    public JsonAtlas(final AssetManager assets, final String filePath, final float scale) throws IOException, JSONException {
-        super();
-
-        load(assets.open(filePath), scale);
-    }
-
-    @Deprecated
-    public JsonAtlas(final String filePath, final float scale) throws IOException, JSONException {
-        super();
-
-        load(new FileInputStream(new File(filePath)), scale);
-    }
-
     public void load(final InputStream stream, final float scale) throws IOException, JSONException {
         Log.v(TAG, "load()");
 
@@ -77,6 +60,15 @@ public class JsonAtlas extends Atlas {
         parse(sb.toString(), scale);
     }
 
+    /**
+     * Load from assets
+     * 
+     * @param assets
+     * @param filePath
+     * @param scale
+     * @throws IOException
+     * @throws JSONException
+     */
     public void load(final AssetManager assets, final String filePath, final float scale) throws IOException, JSONException {
         Log.v(TAG, "load(): " + filePath);
 
@@ -87,41 +79,108 @@ public class JsonAtlas extends Atlas {
         }
     }
 
+    /**
+     * Load from file system
+     * 
+     * @param filePath
+     * @param scale
+     * @throws IOException
+     * @throws JSONException
+     */
+    public void load(final String filePath, final float scale) throws IOException, JSONException {
+        Log.v(TAG, "load(): " + filePath);
+
+        load(new FileInputStream(new File(filePath)), scale);
+    }
+
     public void loadAsync(final AssetManager assets, final String filePath, final float scale) {
         Log.v(TAG, "loadAsync(): " + filePath);
 
-        final ReadTextFileTask readTask = new ReadTextFileTask(assets, filePath);
         final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
-        executer.setTaskListener(new Task.TaskListener() {
+        // start loading
+        executer.executeOnPool(new RunnableTask(new Runnable() {
 
             @Override
-            public void onTaskComplete(final Task task) {
+            public void run() {
+                try {
+                    load(assets, filePath, scale);
 
-                if (task.isSucceeded()) {
-                    Log.v(TAG, "Load success: " + filePath);
-
-                    try {
-                        parse(((ReadTextFileTask) task).getContent(), scale);
-
-                        if (mListener != null) {
-                            mListener.onAtlasLoad(JsonAtlas.this);
-                        }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Load failed: " + filePath, e);
+                    // listener
+                    if (mListener != null) {
+                        mListener.onAtlasLoad(JsonAtlas.this);
                     }
-
-                } else {
-                    Log.e(TAG, "Load failed: " + filePath);
+                } catch (IOException e) {
+                    Log.e(TAG, "Load failed: " + filePath, e);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Load JSON failed: " + filePath, e);
                 }
-
             }
-        });
-
-        // start loading
-        executer.executeOnPool(readTask);
+        }));
     }
 
-    public void parse(final String json, final float scale) throws JSONException {
+    /**
+     * Load from a url and cache as an option
+     * 
+     * @param urlPath
+     * @param cachePath
+     * @param scale
+     * @return
+     * @throws JSONException
+     */
+    public boolean loadURL(final String urlPath, final String cachePath, final float scale) throws JSONException {
+        Log.v(TAG, "loadURL(): " + urlPath + ", " + cachePath);
+
+        // read cache first
+        if (cachePath != null && cachePath.length() > 0) {
+            final ReadTextFileTask readTask = new ReadTextFileTask(cachePath);
+            if (readTask.run()) {
+                parse(readTask.getContent(), scale);
+                return true;
+            }
+        }
+
+        // load from url
+        final URLLoadTextTask urlTask = new URLLoadJsonTask(urlPath);
+        if (urlTask.run()) {
+            final String json = urlTask.getStringBuilder().toString();
+            parse(json, scale);
+            // cache it
+            if (cachePath != null && cachePath.length() > 0) {
+                final WriteTextFileTask fileTask = new WriteTextFileTask(json, cachePath, false);
+                fileTask.run();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public void loadURLAsync(final String urlPath, final String cachePath, final float scale) {
+        Log.v(TAG, "loadURLAsync(): " + urlPath + ", " + cachePath);
+
+        final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
+        // start loading
+        executer.executeOnPool(new RunnableTask(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    loadURL(urlPath, cachePath, scale);
+
+                    // listener
+                    if (mListener != null) {
+                        mListener.onAtlasLoad(JsonAtlas.this);
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Load JSON failed: " + urlPath, e);
+                }
+            }
+        }));
+    }
+
+    protected void parse(final String json, final float scale) throws JSONException {
+
         removeAllFrames();
 
         final JSONObject jsonObject = new JSONObject(json);

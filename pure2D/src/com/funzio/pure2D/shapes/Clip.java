@@ -87,12 +87,14 @@ public class Clip extends Sprite implements Playable {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
+
+        // support async Atlas, do diff check
+        if (mFrameSet != null & mFrameSet.getNumFrames() != mNumFrames) {
+            setAtlasFrameSet(mFrameSet);
+        }
+
         // update current frame
         if (mCurrentFrame != mPreviousFrame && mFrameSet != null) {
             mPreviousFrame = mCurrentFrame;

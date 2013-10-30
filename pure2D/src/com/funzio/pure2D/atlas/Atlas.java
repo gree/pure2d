@@ -15,9 +15,9 @@ public class Atlas {
     protected float mWidth;
     protected float mHeight;
 
-    private AtlasFrameSet mMasterFrameSet = new AtlasFrameSet("");
-    private Map<String, AtlasFrameSet> mSubFrameSets = new HashMap<String, AtlasFrameSet>();
-    private int mNumSubFrameSets = 0;
+    protected final AtlasFrameSet mMasterFrameSet = new AtlasFrameSet("");
+    protected final Map<String, AtlasFrameSet> mSubFrameSets = new HashMap<String, AtlasFrameSet>();
+    protected int mNumSubFrameSets = 0;
 
     protected Listener mListener;
 
@@ -93,7 +93,7 @@ public class Atlas {
 
     public void removeAllFrames() {
         mMasterFrameSet.removeAllFrames();
-        mSubFrameSets = new HashMap<String, AtlasFrameSet>();
+        mSubFrameSets.clear();
         mNumSubFrameSets = 0;
     }
 

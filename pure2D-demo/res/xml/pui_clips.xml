@@ -14,17 +14,17 @@
 
     <Sprite
         centerX="0"
-        source="cache://img/header-logo-01.png"
+        source="cache://global/global_hd/tag_sale_detail.png"
         top="7%" />
 
     <Clip
         centerX="0"
         centerY="0"
-        source="asset://atlas/coin_01_60.json" />
+        source="cache://animations/animations/chip_spin.json" />
     <Clip
         centerX="-200"
         centerY="0"
-        source="asset://atlas/star_03_60.json" />
+        source="asset://atlas/coin_01_60.json" />
     <Clip
         centerX="200"
         centerY="0"

@@ -126,7 +126,7 @@ public class UITextureManager extends TextureManager {
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
                 // load from url or cache file
-                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url, mUIConfigVO.texture_manager.cache_dir, textureUri.substring(UIConfig.URI_CACHE.length()), textureOptions, async);
+                texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url, mUIConfigVO.texture_manager.cache_dir, actualPath, textureOptions, async);
             }
 
             // and cache it if created
@@ -163,19 +163,42 @@ public class UITextureManager extends TextureManager {
             try {
                 // create new
                 final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
+
                 // load from sdcard / assets
                 if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
-                    atlas.load(mAssets, actualPath, mUIConfigVO.scale);
+                    if (async) {
+                        atlas.loadAsync(mAssets, actualPath, mUIConfigVO.scale);
+                    } else {
+                        atlas.load(mAssets, actualPath, mUIConfigVO.scale);
+                    }
                 } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
-                    atlas.load(null, actualPath, mUIConfigVO.scale);
+                    if (async) {
+                        atlas.loadAsync(null, actualPath, mUIConfigVO.scale);
+                    } else {
+                        atlas.load(actualPath, mUIConfigVO.scale);
+                    }
+                } else if (jsonUri.startsWith(UIConfig.URI_HTTP)) {
+                    if (async) {
+                        atlas.loadURLAsync(actualPath, null, mUIConfigVO.scale);
+                    } else {
+                        atlas.loadURL(actualPath, null, mUIConfigVO.scale);
+                    }
+                } else if (jsonUri.startsWith(UIConfig.URI_CACHE)) {
+                    if (async) {
+                        atlas.loadURLAsync(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.scale);
+                    } else {
+                        atlas.loadURL(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.scale);
+                    }
                 }
 
+                // now load texture
                 final AtlasFrameSet multiFrames = atlas.getMasterFrameSet();
                 multiFrames.setTexture(getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), async));
 
                 // cache it
                 mAtlasFrames.put(actualPath, multiFrames);
                 return multiFrames;
+
             } catch (Exception e) {
                 Log.e(TAG, "Atlas Loading Error! " + actualPath, e);
                 return null;

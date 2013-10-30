@@ -13,7 +13,7 @@ public class URLLoadTextTask extends URLRetriableTask {
     public static final String CLASS_NAME = URLLoadTextTask.class.getName();
     public static final String INTENT_COMPLETE = CLASS_NAME + ".INTENT_COMPLETE";
 
-    private StringBuilder mStringBuilder = new StringBuilder();
+    protected StringBuilder mStringBuilder = new StringBuilder();
 
     /**
      * @param srcURL
@@ -39,10 +39,6 @@ public class URLLoadTextTask extends URLRetriableTask {
         super(srcURL, retryMax, retryDelay);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.URLRetriableTask#reset()
-     */
     @Override
     public void reset() {
         super.reset();
@@ -51,10 +47,6 @@ public class URLLoadTextTask extends URLRetriableTask {
         mStringBuilder.setLength(0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.URLTask#onProgress(byte[], int)
-     */
     @Override
     protected void onProgress(final byte[] data, final int count) throws Exception {
         // append to the string

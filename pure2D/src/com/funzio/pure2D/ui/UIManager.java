@@ -142,19 +142,22 @@ public class UIManager {
                 // localized string
                 String id = value.substring(UIConfig.URI_STRING.length());
                 value = mResources.getString(mResources.getIdentifier(id, UIConfig.TYPE_STRING, mPackageName));
-            } else {
-                // process variables
-                value = value.replace(UIConfig.$CACHE_DIR, mConfigVO.texture_manager.cache_dir);
-                value = value.replace(UIConfig.$CDN_URL, mConfigVO.texture_manager.cdn_url);
             }
+
+            // process variables
+            value = value.replace(UIConfig.$CACHE_DIR, mConfigVO.texture_manager.cache_dir);
+            value = value.replace(UIConfig.$CDN_URL, mConfigVO.texture_manager.cdn_url);
         }
 
         return value;
     }
 
     public String getPathFromUri(final String uri) {
-        String actualPath = null;
+        if (uri == null) {
+            return null;
+        }
 
+        String actualPath = null;
         if (uri.startsWith(UIConfig.URI_DRAWABLE)) {
             actualPath = uri.substring(UIConfig.URI_DRAWABLE.length());
             final int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mPackageName);
@@ -163,13 +166,10 @@ public class UIManager {
             actualPath = uri.substring(UIConfig.URI_ASSET.length());
         } else if (uri.startsWith(UIConfig.URI_FILE)) {
             actualPath = uri.substring(UIConfig.URI_FILE.length());
-        } else if (uri.startsWith(UIConfig.URI_HTTP)) {
-            actualPath = uri; // keep
         } else if (uri.startsWith(UIConfig.URI_CACHE)) {
-            final String shortPath = uri.substring(UIConfig.URI_CACHE.length());
-            actualPath = mConfigVO.texture_manager.cache_dir + shortPath;
+            actualPath = uri.substring(UIConfig.URI_CACHE.length());
         } else {
-            actualPath = uri;
+            actualPath = uri; // keep
         }
 
         return actualPath;

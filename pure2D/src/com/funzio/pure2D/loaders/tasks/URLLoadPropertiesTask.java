@@ -37,10 +37,6 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
         super(srcURL, retryMax, retryDelay);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.URLTask#readStream(java.io.InputStream)
-     */
     @Override
     protected int readStream(final InputStream stream) throws Exception {
         if (mContent == null) {
@@ -53,10 +49,6 @@ public class URLLoadPropertiesTask extends URLRetriableTask {
         return mContentLength;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.loaders.tasks.URLTask#onProgress(byte[], int)
-     */
     @Override
     protected void onProgress(final byte[] data, final int count) throws Exception {
         // nothing

@@ -14,7 +14,7 @@
 
     <Sprite
         centerX="0"
-        source="cache://img/header-logo-01.png"
+        source="cache://global/global_hd/tag_sale_detail.png"
         top="7%" />
 
     <VGroup
