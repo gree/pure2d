@@ -64,6 +64,7 @@ public class BitmapFont {
                     final int[] dimensions = new int[2];
                     final Bitmap bitmap = createBitmap(dimensions);
                     mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
+                    bitmap.recycle();
                 }
             }, null);
 

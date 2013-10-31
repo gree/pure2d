@@ -110,11 +110,11 @@ public class UIManager {
         return mConfigVO;
     }
 
-    public DisplayObject loadLayout(final XmlPullParser parser) {
+    public DisplayObject load(final XmlPullParser parser) {
         return mLoader.load(parser);
     }
 
-    public DisplayObject loadLayout(final String xmlString) {
+    public DisplayObject load(final String xmlString) {
         return mLoader.load(xmlString);
     }
 
