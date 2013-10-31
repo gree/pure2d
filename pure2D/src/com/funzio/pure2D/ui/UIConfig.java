@@ -30,10 +30,11 @@ public class UIConfig {
 
     public static final boolean DEFAULT_ASYNC = true;
 
-    public static final String URI_STRING = "@string/";
     public static final String TYPE_STRING = "string";
-    public static final String URI_DRAWABLE = "@drawable/";
     public static final String TYPE_DRAWABLE = "drawable";
+
+    public static final String URI_STRING = "@string/";
+    public static final String URI_DRAWABLE = "@drawable/";
     public static final String URI_ASSET = "asset://";
     public static final String URI_FILE = "file://";
     public static final String URI_HTTP = "http://";
@@ -108,5 +109,14 @@ public class UIConfig {
         }
 
         return Alignment.NONE;
+    }
+
+    public static boolean isUnknownUri(final String uri) {
+        return !uri.startsWith(URI_HTTP) //
+                && !uri.startsWith(URI_DRAWABLE) //
+                && !uri.startsWith(URI_ASSET) //
+                && !uri.startsWith(URI_FILE) //
+                && !uri.startsWith(URI_STRING) //
+                && !uri.startsWith(URI_CACHE);
     }
 }

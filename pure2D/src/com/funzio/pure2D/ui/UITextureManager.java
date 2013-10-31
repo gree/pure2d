@@ -100,11 +100,11 @@ public class UITextureManager extends TextureManager {
             return null;
         }
 
-        final String actualPath = mUIManager.getPathFromUri(textureUri);
         // XXX HACK for bingo backward compatibility
-        if (!actualPath.startsWith(UIConfig.URI_HTTP) && textureUri.equals(actualPath)) {
-            textureUri = UIConfig.URI_ASSET + actualPath;
+        if (UIConfig.isUnknownUri(textureUri)) {
+            textureUri = UIConfig.URI_ASSET + textureUri; // make it asset://
         }
+        final String actualPath = mUIManager.getPathFromUri(textureUri);
 
         if (mGeneralTextures.containsKey(actualPath)) {
             // use cache
@@ -154,11 +154,11 @@ public class UITextureManager extends TextureManager {
     public AtlasFrameSet getUriAtlas(String jsonUri, final boolean async) {
         Log.v(TAG, "getUriAtlas(): " + jsonUri);
 
-        final String actualPath = mUIManager.getPathFromUri(jsonUri);
-        // XXX HACK for nova backward compatibility
-        if (!actualPath.startsWith(UIConfig.URI_HTTP) && jsonUri.equals(actualPath)) {
-            jsonUri = UIConfig.URI_ASSET + actualPath;
+        // XXX HACK for bingo backward compatibility
+        if (UIConfig.isUnknownUri(jsonUri)) {
+            jsonUri = UIConfig.URI_ASSET + jsonUri; // make it asset://
         }
+        final String actualPath = mUIManager.getPathFromUri(jsonUri);
 
         if (mAtlasFrames.containsKey(actualPath)) {
             // reuse cache
@@ -290,9 +290,15 @@ public class UITextureManager extends TextureManager {
                 } else if (formattedSprite.startsWith(NovaConfig.$SPRITE)) {
                     final String decodedSprite = (String) NovaConfig.getParamValue(NovaConfig.$SPRITE, formattedSprite, params);
                     // load the frames
-                    frames = getUriAtlas(decodedSprite, true);
+                    frames = getUriAtlas(decodedSprite, false); // FIXME make async
+
+                    if (frames instanceof SingleFrameSet) {
+                        if (!((SingleFrameSet) frames).isTextureLoaded()) {
+                            frames.setTexture(frames.getTexture()); // refresh
+                        }
+                    }
                 } else {
-                    frames = getUriAtlas(formattedSprite, false);
+                    frames = getUriAtlas(formattedSprite, false); // FIXME make async
 
                     if (frames instanceof SingleFrameSet) {
                         if (!((SingleFrameSet) frames).isTextureLoaded()) {
