@@ -11,6 +11,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
 
@@ -28,6 +29,7 @@ public class UIManager {
     private String mPackageName;
 
     private UITextureManager mTextureManager;
+    private TextureOptions mTextureOptions = TextureOptions.getDefault();
     private UILoader mLoader;
 
     private UIConfigVO mConfigVO;
@@ -89,6 +91,9 @@ public class UIManager {
                     // default cache dir
                     mConfigVO.texture_manager.cache_dir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
                 }
+
+                // apply scale to texture options
+                mTextureOptions.inScaleX = mTextureOptions.inScaleY = mConfigVO.scale;
                 // Log.e("long", mConfigVO.texture_manager.cache_dir);
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
@@ -105,6 +110,10 @@ public class UIManager {
 
     public UIConfigVO getConfig() {
         return mConfigVO;
+    }
+
+    public TextureOptions getTextureOptions() {
+        return mTextureOptions;
     }
 
     public void setTextureManager(final UITextureManager textureManager) {

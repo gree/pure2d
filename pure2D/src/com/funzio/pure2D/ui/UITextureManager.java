@@ -111,7 +111,7 @@ public class UITextureManager extends TextureManager {
             return mGeneralTextures.get(actualPath);
         } else {
             Texture texture = null;
-            final TextureOptions textureOptions = mUIConfigVO.getTextureOptions();
+            final TextureOptions textureOptions = mUIManager.getTextureOptions();
             // create
             if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
                 // load from file / sdcard

@@ -100,11 +100,6 @@ public class UIConfigVO {
         return result;
     }
 
-    public TextureOptions getTextureOptions() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public AnimatorVO getAnimatorVO(final String name) {
         return mAnimatorMap != null ? mAnimatorMap.get(name) : null;
     }
