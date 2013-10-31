@@ -271,8 +271,8 @@ public class JsonAtlas extends Atlas {
         final int top = frame.getInt("y");
         final int w = frame.getInt("w");
         final int h = frame.getInt("h");
-        final int right = left + (rotated ? h : w) - 1;
-        final int bottom = top + (rotated ? w : h) - 1;
+        final int right = left + (rotated ? h : w);
+        final int bottom = top + (rotated ? w : h);
 
         final AtlasFrame atlasFrame = new AtlasFrame(this, index, frameJson.getString("filename"), new RectF(left * scale, top * scale, right * scale, bottom * scale));
         if (trimmed) {
