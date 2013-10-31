@@ -28,6 +28,8 @@ import com.funzio.pure2D.text.BmfTextObject;
 public class UIConfig {
     private static final String TAG = UIConfig.class.getSimpleName();
 
+    public static final boolean DEFAULT_ASYNC = true;
+
     public static final String URI_STRING = "@string/";
     public static final String TYPE_STRING = "string";
     public static final String URI_DRAWABLE = "@drawable/";
@@ -60,7 +62,7 @@ public class UIConfig {
         CLASS_MAP.put("Clip", Clip.class);
         CLASS_MAP.put("Button", Button.class);
         CLASS_MAP.put("Text", BmfTextObject.class);
-        CLASS_MAP.put("Nova", NovaContainer.class);
+        CLASS_MAP.put("NovaGroup", NovaGroup.class);
     }
 
     @SuppressWarnings("unchecked")

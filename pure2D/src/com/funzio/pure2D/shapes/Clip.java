@@ -73,10 +73,6 @@ public class Clip extends Sprite implements Playable {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setOriginAtCenter()
-     */
     @Override
     public void setOriginAtCenter() {
         if (mFrameSet != null) {
@@ -205,7 +201,7 @@ public class Clip extends Sprite implements Playable {
         final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
         if (source != null && source.endsWith(UIConfig.FILE_JSON)) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
-            setAtlasFrameSet(manager.getTextureManager().getUriAtlas(manager.evalString(source), async != null ? Boolean.valueOf(async) : true));
+            setAtlasFrameSet(manager.getTextureManager().getUriAtlas(manager.evalString(source), async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
         }
     }
 }
