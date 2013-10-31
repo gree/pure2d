@@ -18,12 +18,13 @@ public class PUIMenuActivity extends MenuActivity {
             "pui_constraints", //
             "pui_fonts", //
             "pui_buttons", //
-            "pui_groups", //
+            "pui_include", //
+            "pui_vgroups", //
+            "pui_hgroups", //
             "pui_animators", //
             "pui_clips", //
             "pui_nova", //
             "pui_my_dialog", //
-            "pui_include", //
     };
 
     private LinearLayout mCol1;
