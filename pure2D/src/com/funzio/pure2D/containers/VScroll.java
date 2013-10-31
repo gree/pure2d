@@ -10,10 +10,10 @@ import com.funzio.pure2D.animators.Animator;
  * 
  * @author long
  */
-public class VList extends VWheel implements List {
+public class VScroll extends VWheel implements List {
     protected boolean mSnapping = false;
 
-    public VList() {
+    public VScroll() {
         super();
 
         // default values
@@ -22,10 +22,6 @@ public class VList extends VWheel implements List {
         setRepeating(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.HWheel#startSwipe()
-     */
     @Override
     protected void startSwipe() {
         super.startSwipe();
@@ -33,10 +29,6 @@ public class VList extends VWheel implements List {
         mSnapping = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.HWheel#stopSwipe()
-     */
     @Override
     protected void stopSwipe() {
         super.stopSwipe();
@@ -44,10 +36,6 @@ public class VList extends VWheel implements List {
         mSnapping = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.LinearGroup#scrollTo(float, float)
-     */
     @Override
     public void scrollTo(final float x, float y) {
 
@@ -61,10 +49,6 @@ public class VList extends VWheel implements List {
         super.scrollTo(x, y);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.VWheel#onAnimationUpdate(com.funzio.pure2D.animators.Animator, float)
-     */
     @Override
     public void onAnimationUpdate(final Animator animator, final float value) {
         super.onAnimationUpdate(animator, value);
@@ -77,10 +61,6 @@ public class VList extends VWheel implements List {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.HWheel#onAnimationEnd(com.funzio.pure2D.animators.Animator)
-     */
     @Override
     public void onAnimationEnd(final Animator animator) {
         super.onAnimationEnd(animator);

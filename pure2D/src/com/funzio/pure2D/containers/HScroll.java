@@ -10,10 +10,10 @@ import com.funzio.pure2D.animators.Animator;
  * 
  * @author long
  */
-public class HList extends HWheel implements List {
+public class HScroll extends HWheel implements List {
     protected boolean mSnapping = false;
 
-    public HList() {
+    public HScroll() {
         super();
 
         // default values

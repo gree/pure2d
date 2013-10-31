@@ -30,12 +30,11 @@
         <Sprite source="@drawable/ka_128" />
     </VGroup>
 
-    <VList
+    <VScroll
         bottom="20%"
         childrenGap="2%"
         clippingEnabled="true"
         right="5%"
-        swipeEnabled="true"
         top="10%"
         width="wrap_content" >
         <Sprite source="@drawable/cc_128" />
@@ -44,7 +43,7 @@
         <Sprite source="@drawable/cc_128" />
         <Sprite source="@drawable/mw_128" />
         <Sprite source="@drawable/ka_128" />
-    </VList>
+    </VScroll>
 
     <HGroup
         align="center"

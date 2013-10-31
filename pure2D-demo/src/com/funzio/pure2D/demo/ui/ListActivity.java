@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.atlas.FunzioAtlas;
-import com.funzio.pure2D.containers.HList;
-import com.funzio.pure2D.containers.VList;
+import com.funzio.pure2D.containers.HScroll;
+import com.funzio.pure2D.containers.VScroll;
 import com.funzio.pure2D.containers.Wheel;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
@@ -23,8 +23,8 @@ public class ListActivity extends StageActivity {
     private String[] mFrameSetNames;
     private Texture mTexture;
 
-    private VList mVList;
-    private HList mHList;
+    private VScroll mVList;
+    private HScroll mHList;
 
     /*
      * (non-Javadoc)
@@ -69,7 +69,7 @@ public class ListActivity extends StageActivity {
     }
 
     private void addVList() {
-        mVList = new VList();
+        mVList = new VScroll();
         // mVList.setCacheEnabled(true);
         mVList.setClippingEnabled(true);
         // mVList.setPositiveOrientation(false);
@@ -91,7 +91,7 @@ public class ListActivity extends StageActivity {
     }
 
     private void addHList() {
-        mHList = new HList();
+        mHList = new HScroll();
         // mHList.setCacheEnabled(true);
         mHList.setClippingEnabled(true);
         mHList.setGap(10);
