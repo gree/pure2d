@@ -22,6 +22,9 @@ public class PUIActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // just to include the class
+        // MyDialog.class.getSimpleName();
+
         final String xmlName = getIntent().getExtras().getString(MenuActivity.EXTRA_TAG);
         mXmlResId = getResources().getIdentifier(xmlName, "xml", getApplicationContext().getPackageName());
 
@@ -59,6 +62,10 @@ public class PUIActivity extends StageActivity {
     private void addObject(final float x, final float y) {
         // create object
         final DisplayObject obj = mUIManager.getLoader().load(getResources().getXml(mXmlResId));
+        if (obj == null) {
+            return;
+        }
+
         // Log.e("long", obj.getObjectTree(""));
         obj.setOriginAtCenter();
 

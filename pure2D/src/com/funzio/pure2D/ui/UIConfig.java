@@ -75,7 +75,9 @@ public class UIConfig {
 
             try {
                 Class<?> theClass = Class.forName(name);
-                if (theClass.isAssignableFrom(DisplayObject.class)) {
+                if (theClass == null) {
+                    Log.e(TAG, "Class not found: " + name, new Exception());
+                } else if (DisplayObject.class.isAssignableFrom(theClass)) {
                     return (Class<? extends DisplayObject>) theClass;
                 } else {
                     Log.e(TAG, "Class is NOT a DisplayObject: " + name, new Exception());

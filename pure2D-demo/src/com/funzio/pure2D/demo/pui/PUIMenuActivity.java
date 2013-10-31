@@ -22,6 +22,7 @@ public class PUIMenuActivity extends MenuActivity {
             "pui_animators", //
             "pui_clips", //
             "pui_nova", //
+            "pui_my_dialog", //
     };
 
     private LinearLayout mCol1;
