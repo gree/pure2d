@@ -18,6 +18,21 @@ import com.funzio.pure2D.ui.vo.UIConfigVO;
  * @author long.ngo
  */
 public class UIConstraint {
+    protected static final String ATT_X = "x";
+    protected static final String ATT_Y = "y";
+    protected static final String ATT_HEIGHT = "height";
+    protected static final String ATT_WIDTH = "width";
+    protected static final String ATT_LEFT = "left";
+    protected static final String ATT_RIGHT = "right";
+    protected static final String ATT_TOP = "top";
+    protected static final String ATT_BOTTOM = "bottom";
+    protected static final String ATT_CENTER_X = "centerX";
+    protected static final String ATT_CENTER_Y = "centerY";
+    protected static final String ATT_CHILDREN_GAP = "childrenGap";
+
+    protected static final String VAL_WRAP_CONTENT = "wrap_content";
+    protected static final String VAL_PERCENT = "%";
+
     public static enum UNIT {
         UNSET, PIXEL, PERCENT, WRAP
     }
@@ -56,89 +71,184 @@ public class UIConstraint {
         // TODO Auto-generated constructor stub
     }
 
-    public UIConstraint(final XmlPullParser xmlParser, final UIConfigVO config) {
-        setAttributes(xmlParser, config);
+    public UIConstraint(final XmlPullParser parser, final UIConfigVO config) {
+        setAttributes(parser, config);
     }
 
-    public void setAttributes(final XmlPullParser xmlParser, final UIConfigVO config) {
+    public void setAttributes(final XmlPullParser parser, final UIConfigVO config) {
         mUIConfigVO = config;
         mHasAttributes = false;
 
-        widthUnit = getAttributeUnit(xmlParser, "width");
+        widthUnit = getAttributeUnit(parser, ATT_WIDTH);
         if (widthUnit != UNIT.UNSET) {
             if (widthUnit != UNIT.WRAP) {
-                width = getAttributeValue(xmlParser, "width");
+                width = getAttributeValue(parser, ATT_WIDTH);
             }
             mHasAttributes = true;
         }
 
-        heightUnit = getAttributeUnit(xmlParser, "height");
+        heightUnit = getAttributeUnit(parser, ATT_HEIGHT);
         if (heightUnit != UNIT.UNSET) {
             if (heightUnit != UNIT.WRAP) {
-                height = getAttributeValue(xmlParser, "height");
+                height = getAttributeValue(parser, ATT_HEIGHT);
             }
             mHasAttributes = true;
         }
 
-        xUnit = getAttributeUnit(xmlParser, "x");
+        xUnit = getAttributeUnit(parser, ATT_X);
         if (xUnit != UNIT.UNSET) {
-            x = getAttributeValue(xmlParser, "x");
+            x = getAttributeValue(parser, ATT_X);
             mHasAttributes = true;
         }
 
-        yUnit = getAttributeUnit(xmlParser, "y");
+        yUnit = getAttributeUnit(parser, ATT_Y);
         if (yUnit != UNIT.UNSET) {
-            y = getAttributeValue(xmlParser, "y");
+            y = getAttributeValue(parser, ATT_Y);
             mHasAttributes = true;
         }
 
-        leftUnit = getAttributeUnit(xmlParser, "left");
+        leftUnit = getAttributeUnit(parser, ATT_LEFT);
         if (leftUnit != UNIT.UNSET) {
-            left = getAttributeValue(xmlParser, "left");
+            left = getAttributeValue(parser, ATT_LEFT);
             mHasAttributes = true;
         }
 
-        rightUnit = getAttributeUnit(xmlParser, "right");
+        rightUnit = getAttributeUnit(parser, ATT_RIGHT);
         if (rightUnit != UNIT.UNSET) {
-            right = getAttributeValue(xmlParser, "right");
+            right = getAttributeValue(parser, ATT_RIGHT);
             mHasAttributes = true;
         }
 
-        topUnit = getAttributeUnit(xmlParser, "top");
+        topUnit = getAttributeUnit(parser, ATT_TOP);
         if (topUnit != UNIT.UNSET) {
-            top = getAttributeValue(xmlParser, "top");
+            top = getAttributeValue(parser, ATT_TOP);
             mHasAttributes = true;
         }
 
-        bottomUnit = getAttributeUnit(xmlParser, "bottom");
+        bottomUnit = getAttributeUnit(parser, ATT_BOTTOM);
         if (bottomUnit != UNIT.UNSET) {
-            bottom = getAttributeValue(xmlParser, "bottom");
+            bottom = getAttributeValue(parser, ATT_BOTTOM);
             mHasAttributes = true;
         }
 
-        centerXUnit = getAttributeUnit(xmlParser, "centerX");
+        centerXUnit = getAttributeUnit(parser, ATT_CENTER_X);
         if (centerXUnit != UNIT.UNSET) {
-            centerX = getAttributeValue(xmlParser, "centerX");
+            centerX = getAttributeValue(parser, ATT_CENTER_X);
             mHasAttributes = true;
         }
 
-        centerYUnit = getAttributeUnit(xmlParser, "centerY");
+        centerYUnit = getAttributeUnit(parser, ATT_CENTER_Y);
         if (centerYUnit != UNIT.UNSET) {
-            centerY = getAttributeValue(xmlParser, "centerY");
+            centerY = getAttributeValue(parser, ATT_CENTER_Y);
             mHasAttributes = true;
         }
 
-        childrenGapUnit = getAttributeUnit(xmlParser, "childrenGap");
+        childrenGapUnit = getAttributeUnit(parser, ATT_CHILDREN_GAP);
         if (childrenGapUnit != UNIT.UNSET) {
-            childrenGap = getAttributeValue(xmlParser, "childrenGap");
+            childrenGap = getAttributeValue(parser, ATT_CHILDREN_GAP);
             mHasAttributes = true;
         }
     }
 
-    protected float getAttributeValue(final XmlPullParser xmlParser, final String att) {
-        final String valueSt = xmlParser.getAttributeValue(null, att);
-        if (valueSt != null && !valueSt.equals("")) {
-            if (valueSt.endsWith("%")) {
+    public void mergeAttributes(final XmlPullParser parser) {
+
+        if (parser.getAttributeValue(null, ATT_WIDTH) != null) {
+            widthUnit = getAttributeUnit(parser, ATT_WIDTH);
+            if (widthUnit != UNIT.UNSET) {
+                if (widthUnit != UNIT.WRAP) {
+                    width = getAttributeValue(parser, ATT_WIDTH);
+                }
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_HEIGHT) != null) {
+            heightUnit = getAttributeUnit(parser, ATT_HEIGHT);
+            if (heightUnit != UNIT.UNSET) {
+                if (heightUnit != UNIT.WRAP) {
+                    height = getAttributeValue(parser, ATT_HEIGHT);
+                }
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_X) != null) {
+            xUnit = getAttributeUnit(parser, ATT_X);
+            if (xUnit != UNIT.UNSET) {
+                x = getAttributeValue(parser, ATT_X);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_Y) != null) {
+            yUnit = getAttributeUnit(parser, ATT_Y);
+            if (yUnit != UNIT.UNSET) {
+                y = getAttributeValue(parser, ATT_Y);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_LEFT) != null) {
+            leftUnit = getAttributeUnit(parser, ATT_LEFT);
+            if (leftUnit != UNIT.UNSET) {
+                left = getAttributeValue(parser, ATT_LEFT);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_RIGHT) != null) {
+            rightUnit = getAttributeUnit(parser, ATT_RIGHT);
+            if (rightUnit != UNIT.UNSET) {
+                right = getAttributeValue(parser, ATT_RIGHT);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_TOP) != null) {
+            topUnit = getAttributeUnit(parser, ATT_TOP);
+            if (topUnit != UNIT.UNSET) {
+                top = getAttributeValue(parser, ATT_TOP);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_BOTTOM) != null) {
+            bottomUnit = getAttributeUnit(parser, ATT_BOTTOM);
+            if (bottomUnit != UNIT.UNSET) {
+                bottom = getAttributeValue(parser, ATT_BOTTOM);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_CENTER_X) != null) {
+            centerXUnit = getAttributeUnit(parser, ATT_CENTER_X);
+            if (centerXUnit != UNIT.UNSET) {
+                centerX = getAttributeValue(parser, ATT_CENTER_X);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_CENTER_Y) != null) {
+            centerYUnit = getAttributeUnit(parser, ATT_CENTER_Y);
+            if (centerYUnit != UNIT.UNSET) {
+                centerY = getAttributeValue(parser, ATT_CENTER_Y);
+                mHasAttributes = true;
+            }
+        }
+
+        if (parser.getAttributeValue(null, ATT_CHILDREN_GAP) != null) {
+            childrenGapUnit = getAttributeUnit(parser, ATT_CHILDREN_GAP);
+            if (childrenGapUnit != UNIT.UNSET) {
+                childrenGap = getAttributeValue(parser, ATT_CHILDREN_GAP);
+                mHasAttributes = true;
+            }
+        }
+    }
+
+    protected float getAttributeValue(final XmlPullParser parser, final String att) {
+        final String valueSt = parser.getAttributeValue(null, att);
+        if (valueSt != null && valueSt.length() > 0) {
+            if (valueSt.endsWith(VAL_PERCENT)) {
                 return Float.valueOf(valueSt.substring(0, valueSt.length() - 1).trim()) / 100; // pre-cal
             } else {
                 return Float.valueOf(valueSt.trim()) * mUIConfigVO.screen_scale;
@@ -148,12 +258,12 @@ public class UIConstraint {
         return 0;
     }
 
-    protected UNIT getAttributeUnit(final XmlPullParser xmlParser, final String att) {
-        final String valueSt = xmlParser.getAttributeValue(null, att);
-        if (valueSt != null && !valueSt.equals("")) {
-            if (valueSt.endsWith("wrap_content")) {
+    protected UNIT getAttributeUnit(final XmlPullParser parser, final String att) {
+        final String valueSt = parser.getAttributeValue(null, att);
+        if (valueSt != null && valueSt.length() > 0) {
+            if (valueSt.equals(VAL_WRAP_CONTENT)) {
                 return UNIT.WRAP;
-            } else if (valueSt.endsWith("%")) {
+            } else if (valueSt.endsWith(VAL_PERCENT)) {
                 return UNIT.PERCENT;
             } else {
                 return UNIT.PIXEL;

@@ -165,6 +165,11 @@ public class UIManager {
         return value;
     }
 
+    public XmlPullParser getXMLByName(final String xmlName) {
+        final int id = mResources.getIdentifier(xmlName, "xml", mPackageName);
+        return mResources.getXml(id);
+    }
+
     public String getPathFromUri(final String uri) {
         if (uri == null) {
             return null;

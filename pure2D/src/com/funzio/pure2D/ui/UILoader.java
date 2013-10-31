@@ -18,8 +18,10 @@ import com.funzio.pure2D.containers.Container;
  * @author long.ngo
  */
 public class UILoader {
-
     protected static final String TAG = UILoader.class.getSimpleName();
+
+    private static final String INCLUDE = "include";
+    private static final String ATT_LAYOUT = "layout";
 
     private XmlPullParserFactory mFactory;
 
@@ -80,17 +82,29 @@ public class UILoader {
 
         DisplayObject displayObject = null;
         if (eventType == XmlResourceParser.START_TAG) {
-            final Class<? extends DisplayObject> theClass = UIConfig.getClassByName(nodeName);
-
-            if (theClass != null) {
-                try {
-                    displayObject = theClass.newInstance();
-                    // set the attributes
-                    displayObject.setXMLAttributes(parser, mUIManager);
-                } catch (Exception e) {
-                    Log.e(TAG, "Class Instantiating Error!", e);
+            if (nodeName.equals(INCLUDE)) {
+                // include other xml layout
+                final String layout = parser.getAttributeValue(null, ATT_LAYOUT);
+                if (layout != null) {
+                    displayObject = mUIManager.load(mUIManager.getXMLByName(layout.substring(UIConfig.URI_XML.length())));
+                    if (displayObject != null) {
+                        // you can also override the attributes
+                        displayObject.setXMLAttributes(parser, mUIManager);
+                    }
                 }
+            } else {
+                // create by class name
+                final Class<? extends DisplayObject> theClass = UIConfig.getClassByName(nodeName);
+                if (theClass != null) {
+                    try {
+                        displayObject = theClass.newInstance();
+                        // set the attributes
+                        displayObject.setXMLAttributes(parser, mUIManager);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Class Instantiating Error!", e);
+                    }
 
+                }
             }
 
             // find children, recursively

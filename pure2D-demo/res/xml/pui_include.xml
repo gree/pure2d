@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Group SYSTEM "../../pure2d-ui.dtd" >
+<Group
+    height="400"
+    width="600" >
+
+    <Sprite9
+        blendMode="premultiplied_alpha"
+        height="100%"
+        patches="20,20,20,20"
+        source="@drawable/panel_collection_reward"
+        touchable="true"
+        width="100%" />
+
+    <Sprite
+        centerX="0"
+        source="cache://global/global_hd/tag_sale_detail.png"
+        top="7%" />
+
+    <include
+        centerY="0"
+        layout="@xml/pui_button_bar" />
+
+</Group>

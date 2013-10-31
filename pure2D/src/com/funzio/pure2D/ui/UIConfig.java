@@ -35,6 +35,7 @@ public class UIConfig {
 
     public static final String URI_STRING = "@string/";
     public static final String URI_DRAWABLE = "@drawable/";
+    public static final String URI_XML = "@xml/";
     public static final String URI_ASSET = "asset://";
     public static final String URI_FILE = "file://";
     public static final String URI_HTTP = "http://";
@@ -117,6 +118,7 @@ public class UIConfig {
                 && !uri.startsWith(URI_ASSET) //
                 && !uri.startsWith(URI_FILE) //
                 && !uri.startsWith(URI_STRING) //
-                && !uri.startsWith(URI_CACHE);
+                && !uri.startsWith(URI_CACHE) //
+                && !uri.startsWith(URI_XML);
     }
 }
