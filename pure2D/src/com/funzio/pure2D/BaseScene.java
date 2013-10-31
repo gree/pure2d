@@ -659,7 +659,24 @@ public class BaseScene implements Scene {
     }
 
     public DisplayObject getChildById(final String id) {
-        return mChildrenIds.get(id);
+        DisplayObject child = mChildrenIds.get(id);
+        if (child != null) {
+            return child;
+        }
+
+        // into the grand children
+        for (int i = 0; i < mNumChildren; i++) {
+            child = mChildren.get(i);
+
+            if (child instanceof Container) {
+                final DisplayObject grandChild = ((Container) child).getChildById(id);
+                if (grandChild != null) {
+                    return grandChild;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

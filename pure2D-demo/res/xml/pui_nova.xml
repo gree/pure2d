@@ -21,6 +21,15 @@
         centerX="0"
         centerY="0"
         source="cache://nova/nova/luckyball_vegas.json" />
+    <!--
+    <NovaGroup
+        centerX="0"
+        centerY="0"
+        container="$SCENE"
+        param0="asset://atlas/coin_01_60.json"
+        paramNum="1"
+        source="cache://nova/nova/currency_drop.json" />
+    -->
 
     <HGroup
         align="center"

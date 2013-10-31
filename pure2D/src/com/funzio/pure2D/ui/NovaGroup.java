@@ -10,6 +10,7 @@ import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
 import com.funzio.pure2D.particles.nova.NovaFactory;
@@ -23,10 +24,16 @@ public class NovaGroup extends DisplayGroup {
     protected static final String ATT_SOURCE = "source";
     protected static final String ATT_ASYNC = "async";
     protected static final String ATT_AUTO_PLAY = "autoStart";
+    protected static final String ATT_PARAM_NUM = "paramNum";
+    protected static final String ATT_CONTAINER = "container";
 
     protected NovaFactory mNovaFactory;
     protected boolean mNovaLoaded = false;
     protected boolean mAutoStart = true;
+    protected boolean mStarted = false;
+
+    protected String[] mParams;
+    protected String mContainerId;
 
     public NovaGroup() {
         super();
@@ -35,11 +42,14 @@ public class NovaGroup extends DisplayGroup {
     @Override
     public boolean update(final int deltaTime) {
         // async support and diff check
-        if (!mNovaLoaded && mNovaFactory != null && mNovaFactory.getNovaVO() != null) {
-            mNovaLoaded = true; // flag now
+        if (mAutoStart && !mStarted) {
 
-            if (mAutoStart) {
-                addEmiters(null);
+            if (!mNovaLoaded && mNovaFactory != null && mNovaFactory.getNovaVO() != null) {
+                mNovaLoaded = true; // flag now
+            }
+
+            if (mNovaLoaded) {
+                addEmiters();
             }
         }
 
@@ -50,6 +60,21 @@ public class NovaGroup extends DisplayGroup {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
+        // nova params
+        final String paramNum = xmlParser.getAttributeValue(null, ATT_PARAM_NUM);
+        if (paramNum != null) {
+            final int num = Integer.valueOf(paramNum);
+            mParams = new String[num];
+            for (int i = 0; i < num; i++) {
+                mParams[i] = xmlParser.getAttributeValue(null, "param" + i);
+            }
+        }
+
+        final String container = xmlParser.getAttributeValue(null, ATT_CONTAINER);
+        if (container != null) {
+            mContainerId = container;
+        }
+
         final String autoPlay = xmlParser.getAttributeValue(null, ATT_AUTO_PLAY);
         if (autoPlay != null) {
             mAutoStart = Boolean.valueOf(autoPlay);
@@ -59,15 +84,7 @@ public class NovaGroup extends DisplayGroup {
         if (source != null) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
             mNovaFactory = manager.getTextureManager().getUriNova(source, async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC); // async by default
-            if (mNovaFactory.getNovaVO() != null) {
-                mNovaLoaded = true; // flag
-
-                if (mAutoStart) {
-                    addEmiters(null);
-                }
-            } else {
-                mNovaLoaded = false;
-            }
+            mNovaLoaded = (mNovaFactory.getNovaVO() != null);
         }
     }
 
@@ -78,15 +95,41 @@ public class NovaGroup extends DisplayGroup {
      * @param y
      * @param params
      */
-    protected List<NovaEmitter> addEmiters(final PointF position, final Object... params) {
-        Log.v(TAG, "addEmitters(): " + params);
+    protected List<NovaEmitter> addEmiters() {
+        Log.v(TAG, "addEmitters()");
 
-        final List<NovaEmitter> emitters = mNovaFactory.createEmitters(position, params);
+        // find container
+        Container container = null;
+        if (mContainerId != null && mContainerId.length() > 0) {
+            if (mContainerId.equals(UIConfig.LAYER_PARENT)) {
+                container = mParent;
+            } else if (mContainerId.equals(UIConfig.LAYER_SCENE)) {
+                container = getScene();
+            } else if (getScene() != null) {
+                container = (Container) getScene().getChildById(mContainerId);
+            }
+        }
+        final Container finalContainer = container == null ? this : container;
+
+        // find position
+        PointF position = null;
+        if (finalContainer != this) {
+            final PointF global = new PointF(), newLocal = new PointF();
+            // translate position to the container's
+            mParent.localToGlobal(mPosition, global);
+            finalContainer.globalToLocal(global, newLocal);
+            position = newLocal;
+        }
+
+        final List<NovaEmitter> emitters = mNovaFactory.createEmitters(position, (Object[]) mParams);
         // null check first
         if (emitters == null) {
             Log.e(TAG, "Emiters not created!", new Exception());
             return null;
         }
+
+        // flag
+        mStarted = true;
 
         // queue to add later
         final Runnable runnable = new Runnable() {
@@ -95,7 +138,7 @@ public class NovaGroup extends DisplayGroup {
             public void run() {
                 final int size = emitters.size();
                 for (int i = 0; i < size; i++) {
-                    addChild(emitters.get(i));
+                    finalContainer.addChild(emitters.get(i));
                 }
             }
         };
@@ -115,12 +158,12 @@ public class NovaGroup extends DisplayGroup {
     }
 
     public boolean start() {
-        if (mNovaLoaded) {
-            addEmiters(null);
-
-            return true;
+        if (!mNovaLoaded) {
+            return false;
         }
 
-        return false;
+        addEmiters();
+
+        return true;
     }
 }
