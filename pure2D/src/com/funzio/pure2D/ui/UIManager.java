@@ -10,7 +10,9 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
@@ -102,12 +104,16 @@ public class UIManager {
         }
     }
 
-    public UILoader getLoader() {
-        return mLoader;
-    }
-
     public UIConfigVO getConfig() {
         return mConfigVO;
+    }
+
+    public DisplayObject loadLayout(final XmlPullParser parser) {
+        return mLoader.load(parser);
+    }
+
+    public DisplayObject loadLayout(final String xmlString) {
+        return mLoader.load(xmlString);
     }
 
     public TextureOptions getTextureOptions() {
