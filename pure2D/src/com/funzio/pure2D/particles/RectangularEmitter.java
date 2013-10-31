@@ -22,20 +22,12 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
 
     protected Listener mListener;
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#drawChildren(com.funzio.pure2D.gl.gl10.GLState)
-     */
     @Override
     protected boolean drawChildren(final GLState glState) {
         // draw nothing
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#dispose()
-     */
     @Override
     public void dispose() {
 
@@ -186,10 +178,6 @@ public class RectangularEmitter extends BaseDisplayObject implements ParticleEmi
         });
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#onRemoved()
-     */
     @Override
     public void onRemoved() {
         super.onRemoved();
