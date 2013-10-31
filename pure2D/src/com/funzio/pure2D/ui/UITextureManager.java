@@ -93,7 +93,9 @@ public class UITextureManager extends TextureManager {
     }
 
     public Texture getUriTexture(String textureUri, final boolean async) {
-        Log.v(TAG, "getUriTexture(): " + textureUri);
+        if (Texture.LOG_ENABLED) {
+            Log.v(TAG, "getUriTexture(): " + textureUri);
+        }
 
         if (mUIManager == null) {
             Log.e(TAG, "UIManager not found!", new Exception());
@@ -157,7 +159,9 @@ public class UITextureManager extends TextureManager {
      * @return
      */
     public AtlasFrameSet getUriAtlas(String jsonUri, final boolean async) {
-        Log.v(TAG, "getUriAtlas(): " + jsonUri);
+        if (Texture.LOG_ENABLED) {
+            Log.v(TAG, "getUriAtlas(): " + jsonUri);
+        }
 
         // XXX HACK for bingo backward compatibility
         if (UIConfig.isUnknownUri(jsonUri)) {
@@ -221,7 +225,9 @@ public class UITextureManager extends TextureManager {
     }
 
     public NovaFactory getUriNova(final String jsonUri, final boolean async) {
-        Log.v(TAG, "getUriNova(): " + jsonUri);
+        if (Texture.LOG_ENABLED) {
+            Log.v(TAG, "getUriNova(): " + jsonUri);
+        }
 
         final String actualPath = mUIManager.getPathFromUri(jsonUri);
 
