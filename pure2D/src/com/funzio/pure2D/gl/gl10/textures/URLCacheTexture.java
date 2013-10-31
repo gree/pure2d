@@ -149,6 +149,6 @@ public class URLCacheTexture extends Texture {
 
     @Override
     public String toString() {
-        return mFileUrl;
+        return mCachePath;
     }
 }

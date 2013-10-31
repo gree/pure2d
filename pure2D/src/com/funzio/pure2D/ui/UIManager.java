@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
-import com.funzio.pure2D.particles.nova.NovaManager;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
 
 /**
@@ -29,7 +28,6 @@ public class UIManager {
     private String mPackageName;
 
     private UITextureManager mTextureManager;
-    private NovaManager mNovaManager;
     private UILoader mLoader;
 
     private UIConfigVO mConfigVO;
@@ -53,7 +51,6 @@ public class UIManager {
         if (context != null) {
             mResources = context.getResources();
             mPackageName = context.getApplicationContext().getPackageName();
-            mNovaManager = new NovaManager(mResources.getAssets());
         } else {
             mTextureManager = null;
         }
@@ -71,9 +68,6 @@ public class UIManager {
             mTextureManager.reset();
             mTextureManager = null;
         }
-
-        // reset and clear pools
-        mNovaManager.reset();
     }
 
     /**
@@ -122,17 +116,12 @@ public class UIManager {
         if (mTextureManager != null) {
             mTextureManager.setUIManager(this); // 2-way link
             mTextureManager.loadBitmapFonts();
-            mNovaManager.setDelegator(mTextureManager.getNovaDelegator());
         }
 
     }
 
     public UITextureManager getTextureManager() {
         return mTextureManager;
-    }
-
-    public NovaManager getNovaManager() {
-        return mNovaManager;
     }
 
     public String evalString(final String input) {

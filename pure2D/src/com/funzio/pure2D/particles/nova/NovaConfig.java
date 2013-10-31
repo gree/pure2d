@@ -28,7 +28,7 @@ public class NovaConfig {
 
     public static final Random RANDOM = new Random();
 
-    public static final String $SD = "$sd"; // location on sdcard
+    public static final String $SD = "$sd/"; // location on sdcard, bingo compatibility
     public static final String $TEXT = "$text";
     public static final String $SPRITE = "$sprite";
 

@@ -4,11 +4,6 @@
     height="600"
     width="600" >
 
-    <Nova
-        centerX="0"
-        centerY="0"
-        source="asset://nova/circling_stars.json" />
-
     <Sprite9
         blendMode="premultiplied_alpha"
         height="100%"
@@ -21,6 +16,11 @@
         centerX="0"
         source="cache://global/global_hd/tag_sale_detail.png"
         top="7%" />
+
+    <NovaGroup
+        centerX="0"
+        centerY="0"
+        source="cache://nova/nova/luckyball_vegas.json" />
 
     <HGroup
         align="center"

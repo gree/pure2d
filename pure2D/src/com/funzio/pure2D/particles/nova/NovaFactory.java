@@ -36,15 +36,42 @@ public class NovaFactory {
     protected HashMap<String, ObjectPool<Animator>> mAnimatorPools;
     protected HashMap<String, ObjectPool<MotionTrail>> mMotionTrailPools;
 
-    public NovaFactory(final NovaVO novaVO, final NovaDelegator NovaDelegator) {
-        this(novaVO, NovaDelegator, novaVO.pool_size);
+    public NovaFactory(final NovaLoader loader, final NovaDelegator novaDelegator, final float scale) {
+        mNovaDelegator = novaDelegator;
+
+        loader.setListener(new NovaLoader.Listener() {
+
+            @Override
+            public void onLoad(final NovaLoader loader, final String filePath, final NovaVO vo) {
+                vo.releaseSource(); // save some memory
+
+                vo.applyScale(scale); // apply scale
+                setNovaVO(vo, vo.pool_size);
+            }
+
+            @Override
+            public void onError(final NovaLoader loader, final String filePath) {
+                Log.e(TAG, "onError(): " + filePath, new Exception());
+            }
+        });
     }
 
-    public NovaFactory(final NovaVO novaVO, final NovaDelegator NovaDelegator, final int poolSize) {
+    public NovaFactory(final NovaVO novaVO, final NovaDelegator novaDelegator) {
+        setNovaVO(novaVO, novaVO.pool_size);
+        mNovaDelegator = novaDelegator;
+    }
+
+    public NovaFactory(final NovaVO novaVO, final NovaDelegator novaDelegator, final int poolSize) {
+        Log.v(TAG, "NovaFactory(): " + novaVO);
+
+        setNovaVO(novaVO, poolSize);
+        mNovaDelegator = novaDelegator;
+    }
+
+    private void setNovaVO(final NovaVO novaVO, final int poolSize) {
         Log.v(TAG, "NovaFactory(): " + novaVO);
 
         mNovaVO = novaVO;
-        mNovaDelegator = NovaDelegator;
 
         // pool is optional
         if (poolSize > 0) {
@@ -68,6 +95,11 @@ public class NovaFactory {
     public ArrayList<NovaEmitter> createEmitters(final PointF position, final Object... params) {
         Log.v(TAG, "createEmitters(): " + params);
 
+        // null check
+        if (mNovaVO == null) {
+            return null;
+        }
+
         final int size = mNovaVO.emitters.size();
         final ArrayList<NovaEmitter> emitters = new ArrayList<NovaEmitter>();
         NovaEmitterVO vo;
@@ -90,6 +122,11 @@ public class NovaFactory {
      */
     public NovaEmitter createEmitter(final String name, final PointF position, final Object... params) {
         Log.v(TAG, "createEmitters(): " + name + ", " + params);
+
+        // null check
+        if (mNovaVO == null) {
+            return null;
+        }
 
         final NovaEmitterVO vo = mNovaVO.getEmitterVO(name);
         return vo == null ? null : createEmitter(vo, position, params);

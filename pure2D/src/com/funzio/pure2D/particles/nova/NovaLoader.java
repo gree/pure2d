@@ -25,6 +25,9 @@ public class NovaLoader {
 
     protected Listener mListener;
 
+    public NovaLoader() {
+    }
+
     public NovaLoader(final Listener listener) {
         mListener = listener;
     }
@@ -83,7 +86,7 @@ public class NovaLoader {
         }
     }
 
-    public boolean loadURL(final String urlPath, final String cachePath, final float scale) {
+    public boolean loadURL(final String urlPath, final String cachePath) {
         Log.v(TAG, "loadURL(): " + urlPath + ", " + cachePath);
 
         // read cache first
@@ -132,7 +135,7 @@ public class NovaLoader {
         return false;
     }
 
-    public void loadURLAsync(final String urlPath, final String cachePath, final float scale) {
+    public void loadURLAsync(final String urlPath, final String cachePath) {
         Log.v(TAG, "loadURLAsync(): " + urlPath + ", " + cachePath);
 
         final AsyncTaskExecuter<Task> executer = new AsyncTaskExecuter<Task>();
@@ -141,7 +144,7 @@ public class NovaLoader {
 
             @Override
             public void run() {
-                loadURL(urlPath, cachePath, scale);
+                loadURL(urlPath, cachePath);
             }
         }));
     }

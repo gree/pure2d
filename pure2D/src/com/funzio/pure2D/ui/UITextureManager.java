@@ -20,6 +20,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.particles.nova.NovaConfig;
 import com.funzio.pure2D.particles.nova.NovaDelegator;
 import com.funzio.pure2D.particles.nova.NovaEmitter;
+import com.funzio.pure2D.particles.nova.NovaFactory;
+import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.NovaParticle;
 import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
@@ -35,6 +37,7 @@ public class UITextureManager extends TextureManager {
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();
     protected final HashMap<String, Texture> mGeneralTextures;
     protected final HashMap<String, AtlasFrameSet> mAtlasFrames;
+    protected final HashMap<String, NovaFactory> mNovaFactories;
 
     protected UIManager mUIManager;
     protected UIConfigVO mUIConfigVO;
@@ -50,6 +53,7 @@ public class UITextureManager extends TextureManager {
 
         mGeneralTextures = new HashMap<String, Texture>();
         mAtlasFrames = new HashMap<String, AtlasFrameSet>();
+        mNovaFactories = new HashMap<String, NovaFactory>();
     }
 
     public UIManager getUIManager() {
@@ -97,7 +101,7 @@ public class UITextureManager extends TextureManager {
         }
 
         final String actualPath = mUIManager.getPathFromUri(textureUri);
-        // XXX HACK for nova backward compatibility
+        // XXX HACK for bingo backward compatibility
         if (!actualPath.startsWith(UIConfig.URI_HTTP) && textureUri.equals(actualPath)) {
             textureUri = UIConfig.URI_ASSET + actualPath;
         }
@@ -204,10 +208,54 @@ public class UITextureManager extends TextureManager {
                 return null;
             }
         } else {
-            final SingleFrameSet singleFrame = new SingleFrameSet(actualPath, getUriTexture(jsonUri, async));
+            final SingleFrameSet singleFrame = new SingleFrameSet(actualPath, getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), async));
             // cache it
             mAtlasFrames.put(actualPath, singleFrame);
             return singleFrame;
+        }
+    }
+
+    public NovaFactory getUriNova(final String jsonUri, final boolean async) {
+        Log.v(TAG, "getUriNova(): " + jsonUri);
+
+        final String actualPath = mUIManager.getPathFromUri(jsonUri);
+
+        if (mNovaFactories.containsKey(actualPath)) {
+            // reuse cache
+            return mNovaFactories.get(actualPath);
+        } else {
+            final NovaLoader novaLoader = new NovaLoader();
+            final NovaFactory novaFactory = new NovaFactory(novaLoader, getNovaDelegator(), mUIConfigVO.scale);
+            // load from sdcard / assets
+            if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
+                if (async) {
+                    novaLoader.loadAsync(mAssets, actualPath);
+                } else {
+                    novaLoader.load(mAssets, actualPath);
+                }
+            } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
+                if (async) {
+                    novaLoader.loadAsync(null, actualPath);
+                } else {
+                    novaLoader.load(null, actualPath);
+                }
+            } else if (jsonUri.startsWith(UIConfig.URI_HTTP)) {
+                if (async) {
+                    novaLoader.loadURLAsync(actualPath, null);
+                } else {
+                    novaLoader.loadURL(actualPath, null);
+                }
+            } else if (jsonUri.startsWith(UIConfig.URI_CACHE)) {
+                if (async) {
+                    novaLoader.loadURLAsync(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath);
+                } else {
+                    novaLoader.loadURL(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath);
+                }
+            }
+
+            // cache it
+            mNovaFactories.put(actualPath, novaFactory);
+            return novaFactory;
         }
     }
 
@@ -231,22 +279,26 @@ public class UITextureManager extends TextureManager {
                     return;
                 }
 
-                final String formattedSprite = sprite.replace(NovaConfig.$SD, mUIConfigVO.texture_manager.cache_dir);
+                final String formattedSprite = sprite.replace(NovaConfig.$SD, UIConfig.URI_CACHE); // bingo compatibility
                 // get the loaded frames
                 AtlasFrameSet frames = null;
 
                 // apply the texture
                 if (formattedSprite.startsWith(NovaConfig.$TEXT)) {
-                    // set floatie text texture
+                    // FIXME set floatie text texture
                     // frames.setTexture(getFloatieTextTexture((String) NovaConfig.getParamValue($TEXT, formattedSprite, params)));
                 } else if (formattedSprite.startsWith(NovaConfig.$SPRITE)) {
                     final String decodedSprite = (String) NovaConfig.getParamValue(NovaConfig.$SPRITE, formattedSprite, params);
                     // load the frames
                     frames = getUriAtlas(decodedSprite, true);
-                    // frames.setTexture(getUriTexture(decodedSprite.replaceFirst(UIConfig.FILE_JSON, UIConfig.FILE_PNG), true));
                 } else {
-                    frames = getUriAtlas(formattedSprite, true);
-                    // frames.setTexture(getUriTexture(formattedSprite.replaceFirst(UIConfig.FILE_JSON, UIConfig.FILE_PNG), true));
+                    frames = getUriAtlas(formattedSprite, false);
+
+                    if (frames instanceof SingleFrameSet) {
+                        if (!((SingleFrameSet) frames).isTextureLoaded()) {
+                            frames.setTexture(frames.getTexture()); // refresh
+                        }
+                    }
                 }
 
                 // apply the frames
@@ -265,12 +317,22 @@ public class UITextureManager extends TextureManager {
 
         synchronized (mAtlasFrames) {
             // also release the textures
-            Set<String> keys = mAtlasFrames.keySet();
+            final Set<String> keys = mAtlasFrames.keySet();
             for (String key : keys) {
                 mAtlasFrames.get(key).setTexture(null);
             }
 
             mAtlasFrames.clear();
+        }
+
+        synchronized (mNovaFactories) {
+            // only clear the pools but keep everything else
+            final Set<String> keys = mNovaFactories.keySet();
+            for (String key : keys) {
+                mNovaFactories.get(key).clearPools();
+            }
+
+            mNovaFactories.clear();
         }
     }
 
