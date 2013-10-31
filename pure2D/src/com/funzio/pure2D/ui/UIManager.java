@@ -29,7 +29,7 @@ public class UIManager {
     private String mPackageName;
 
     private UITextureManager mTextureManager;
-    private TextureOptions mTextureOptions = TextureOptions.getDefault();
+    private TextureOptions mTextureOptions;
     private UILoader mLoader;
 
     private UIConfigVO mConfigVO;
@@ -92,8 +92,6 @@ public class UIManager {
                     mConfigVO.texture_manager.cache_dir = Environment.getExternalStorageDirectory() + "/Android/data/" + mPackageName + "/";
                 }
 
-                // apply scale to texture options
-                mTextureOptions.inScaleX = mTextureOptions.inScaleY = mConfigVO.scale;
                 // Log.e("long", mConfigVO.texture_manager.cache_dir);
             } catch (JSONException e) {
                 Log.e(TAG, "Load failed: " + filePath, e);
@@ -113,6 +111,15 @@ public class UIManager {
     }
 
     public TextureOptions getTextureOptions() {
+        if (mTextureOptions == null) {
+            mTextureOptions = TextureOptions.getDefault();
+
+            if (mConfigVO != null) {
+                // apply scale to texture options
+                mTextureOptions.inScaleX = mTextureOptions.inScaleY = mConfigVO.scale;
+            }
+        }
+
         return mTextureOptions;
     }
 
