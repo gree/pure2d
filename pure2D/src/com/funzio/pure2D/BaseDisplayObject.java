@@ -577,7 +577,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     /**
-     * @param scale the scale to set
+     * @param screen_scale the scale to set
      */
     public void setScale(final float sx, final float sy) {
         mScale.x = sx;

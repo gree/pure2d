@@ -18,7 +18,7 @@ import com.funzio.pure2D.particles.nova.vo.AnimatorVO;
  */
 public class UIConfigVO {
 
-    public float scale = 1;
+    public float screen_scale = 1;
 
     public TextureManagerVO texture_manager;
     public ArrayList<FontVO> fonts;
@@ -40,6 +40,7 @@ public class UIConfigVO {
                 }
             }
         }
+
     }
 
     /**
@@ -49,7 +50,7 @@ public class UIConfigVO {
      * @see TextureOptions
      */
     public void applyScale(final float factor) {
-        scale *= factor;
+        screen_scale *= factor;
 
         // scale animators
         if (fonts != null) {

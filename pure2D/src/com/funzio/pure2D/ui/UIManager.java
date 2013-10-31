@@ -80,7 +80,7 @@ public class UIManager {
      * @param assets
      * @param filePath
      */
-    public void loadConfig(final String filePath) {
+    public UIConfigVO loadConfig(final String filePath) {
         Log.v(TAG, "load(): " + filePath);
 
         final ReadTextFileTask readTask = new ReadTextFileTask(mResources.getAssets(), filePath);
@@ -102,6 +102,8 @@ public class UIManager {
         } else {
             Log.e(TAG, "Load failed: " + filePath);
         }
+
+        return mConfigVO;
     }
 
     public UIConfigVO getConfig() {
@@ -122,7 +124,7 @@ public class UIManager {
 
             if (mConfigVO != null) {
                 // apply scale to texture options
-                mTextureOptions.inScaleX = mTextureOptions.inScaleY = mConfigVO.scale;
+                mTextureOptions.inScaleX = mTextureOptions.inScaleY = mConfigVO.screen_scale;
             }
         }
 

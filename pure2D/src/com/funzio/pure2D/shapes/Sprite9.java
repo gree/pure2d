@@ -238,7 +238,7 @@ public class Sprite9 extends Rectangular {
 
         if (xmlParser.getAttributeValue(null, "patches") != null) {
             final String[] patches = xmlParser.getAttributeValue(null, "patches").split(",");
-            final float configScale = manager.getConfig().scale;
+            final float configScale = manager.getConfig().screen_scale;
             final float left = patches.length >= 1 ? Float.valueOf(patches[0].trim()) * configScale : 0;
             final float right = patches.length >= 2 ? Float.valueOf(patches[1].trim()) * configScale : 0;
             final float top = patches.length >= 3 ? Float.valueOf(patches[2].trim()) * configScale : 0;

@@ -171,27 +171,27 @@ public class UITextureManager extends TextureManager {
                 // load from sdcard / assets
                 if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
                     if (async) {
-                        atlas.loadAsync(mAssets, actualPath, mUIConfigVO.scale);
+                        atlas.loadAsync(mAssets, actualPath, mUIConfigVO.screen_scale);
                     } else {
-                        atlas.load(mAssets, actualPath, mUIConfigVO.scale);
+                        atlas.load(mAssets, actualPath, mUIConfigVO.screen_scale);
                     }
                 } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
                     if (async) {
-                        atlas.loadAsync(null, actualPath, mUIConfigVO.scale);
+                        atlas.loadAsync(null, actualPath, mUIConfigVO.screen_scale);
                     } else {
-                        atlas.load(actualPath, mUIConfigVO.scale);
+                        atlas.load(actualPath, mUIConfigVO.screen_scale);
                     }
                 } else if (jsonUri.startsWith(UIConfig.URI_HTTP)) {
                     if (async) {
-                        atlas.loadURLAsync(actualPath, null, mUIConfigVO.scale);
+                        atlas.loadURLAsync(actualPath, null, mUIConfigVO.screen_scale);
                     } else {
-                        atlas.loadURL(actualPath, null, mUIConfigVO.scale);
+                        atlas.loadURL(actualPath, null, mUIConfigVO.screen_scale);
                     }
                 } else if (jsonUri.startsWith(UIConfig.URI_CACHE)) {
                     if (async) {
-                        atlas.loadURLAsync(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.scale);
+                        atlas.loadURLAsync(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.screen_scale);
                     } else {
-                        atlas.loadURL(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.scale);
+                        atlas.loadURL(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.screen_scale);
                     }
                 }
 
@@ -225,7 +225,7 @@ public class UITextureManager extends TextureManager {
             return mNovaFactories.get(actualPath);
         } else {
             final NovaLoader novaLoader = new NovaLoader();
-            final NovaFactory novaFactory = new NovaFactory(novaLoader, getNovaDelegator(), mUIConfigVO.scale);
+            final NovaFactory novaFactory = new NovaFactory(novaLoader, getNovaDelegator(), mUIConfigVO.screen_scale);
             // load from sdcard / assets
             if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
                 if (async) {

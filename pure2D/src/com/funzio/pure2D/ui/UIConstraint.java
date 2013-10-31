@@ -141,7 +141,7 @@ public class UIConstraint {
             if (valueSt.endsWith("%")) {
                 return Float.valueOf(valueSt.substring(0, valueSt.length() - 1).trim()) / 100; // pre-cal
             } else {
-                return Float.valueOf(valueSt.trim()) * mUIConfigVO.scale;
+                return Float.valueOf(valueSt.trim()) * mUIConfigVO.screen_scale;
             }
         }
 
