@@ -16,20 +16,16 @@ import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 
-public class ListActivity extends StageActivity {
+public class ScrollActivity extends StageActivity {
     private static final int LIST_WIDTH = 150;
 
     private FunzioAtlas mAtlas;
     private String[] mFrameSetNames;
     private Texture mTexture;
 
-    private VScroll mVList;
-    private HScroll mHList;
+    private VScroll mVScroll;
+    private HScroll mHScroll;
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.demo.activities.StageActivity#getLayout()
-     */
     @Override
     protected int getLayout() {
         return R.layout.stage_test;
@@ -52,8 +48,8 @@ public class ListActivity extends StageActivity {
                     loadTextures();
 
                     // generate the lists
-                    addHList();
-                    addVList();
+                    addHScroll();
+                    addVScroll();
                 }
             }
         });
@@ -68,13 +64,13 @@ public class ListActivity extends StageActivity {
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.atlas, null);
     }
 
-    private void addVList() {
-        mVList = new VScroll();
-        // mVList.setCacheEnabled(true);
-        mVList.setClippingEnabled(true);
-        // mVList.setPositiveOrientation(false);
-        mVList.setGap(10);
-        mVList.setSize(LIST_WIDTH, mDisplaySize.y - LIST_WIDTH);
+    private void addVScroll() {
+        mVScroll = new VScroll();
+        // mVScroll.setCacheEnabled(true);
+        mVScroll.setClippingEnabled(true);
+        // mVScroll.setPositiveOrientation(false);
+        mVScroll.setGap(10);
+        mVScroll.setSize(LIST_WIDTH, mDisplaySize.y - LIST_WIDTH);
 
         for (int n = 0; n < mFrameSetNames.length * 2; n++) {
             // create object
@@ -82,20 +78,20 @@ public class ListActivity extends StageActivity {
             obj.setTexture(mTexture);
 
             // add to container
-            mVList.addChild(obj);
+            mVScroll.addChild(obj);
         }
-        mVList.setPosition(0, LIST_WIDTH);
+        mVScroll.setPosition(0, LIST_WIDTH);
 
         // add to scene
-        mScene.addChild(mVList);
+        mScene.addChild(mVScroll);
     }
 
-    private void addHList() {
-        mHList = new HScroll();
-        // mHList.setCacheEnabled(true);
-        mHList.setClippingEnabled(true);
-        mHList.setGap(10);
-        mHList.setSize(mDisplaySize.x, LIST_WIDTH);
+    private void addHScroll() {
+        mHScroll = new HScroll();
+        // mHScroll.setCacheEnabled(true);
+        mHScroll.setClippingEnabled(true);
+        mHScroll.setGap(10);
+        mHScroll.setSize(mDisplaySize.x, LIST_WIDTH);
 
         for (int n = 0; n < mFrameSetNames.length * 2; n++) {
             // create object
@@ -103,12 +99,12 @@ public class ListActivity extends StageActivity {
             obj.setTexture(mTexture);
 
             // add to container
-            mHList.addChild(obj);
+            mHScroll.addChild(obj);
         }
-        mHList.setPosition(0, 0);
+        mHScroll.setPosition(0, 0);
 
         // add to scene
-        mScene.addChild(mHList);
+        mScene.addChild(mHScroll);
     }
 
     @Override
@@ -125,9 +121,9 @@ public class ListActivity extends StageActivity {
     }
 
     public void onClickTest(final View view) {
-        if (mVList != null || mHList != null) {
-            mVList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
-            mHList.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
+        if (mVScroll != null || mHScroll != null) {
+            mVScroll.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
+            mHScroll.spinToEnd(Wheel.DEFAULT_SPIN_ACCELERATION, 300);
         }
     }
 }

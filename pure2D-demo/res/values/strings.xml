@@ -187,5 +187,6 @@
     <string name="multi_atlases">Multi Atlases</string>
     <string name="pui_layouts">PUI Layouts</string>
     <string name="pui_xml_layouts">PUI XML Layouts</string>
+    <string name="scroll_groups">Scroll Groups</string>
 
 </resources>
