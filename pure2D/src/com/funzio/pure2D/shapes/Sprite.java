@@ -28,7 +28,7 @@ public class Sprite extends Rectangular {
         super.setTexture(texture);
 
         // fit size to texture
-        if (mSizeToTexture && texture != null && texture.isLoaded()) {
+        if (mSizeToTexture && texture != null) { // do not do: && texture.isLoaded(), because texture can be loaded and later expired
             setSize(texture.getSize());
         }
     }

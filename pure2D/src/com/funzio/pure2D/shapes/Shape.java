@@ -71,6 +71,7 @@ public class Shape extends BaseDisplayObject {
 
     @Override
     public boolean update(final int deltaTime) {
+        // async support: texture loaded detection
         if (!mTextureLoaded && mTexture != null && mTexture.isLoaded()) {
             // flag
             mTextureLoaded = true;

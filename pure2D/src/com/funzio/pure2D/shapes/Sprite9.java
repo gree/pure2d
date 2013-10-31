@@ -63,7 +63,7 @@ public class Sprite9 extends Rectangular {
         mSizeToTexture = value;
 
         // fit size to texture
-        if (mSizeToTexture && mTexture != null && mTexture.isLoaded()) {
+        if (mSizeToTexture && mTexture != null) {
             setSize(mTexture.getSize());
         }
     }
@@ -73,7 +73,7 @@ public class Sprite9 extends Rectangular {
         super.setTexture(texture);
 
         // auto set size if it's not set
-        if ((mSizeToTexture || (mSize.x <= 1 && mSize.y <= 1)) && texture != null && texture.isLoaded()) {
+        if ((mSizeToTexture || (mSize.x <= 1 && mSize.y <= 1)) && texture != null) {
             setSize(texture.getSize());
         }
     }

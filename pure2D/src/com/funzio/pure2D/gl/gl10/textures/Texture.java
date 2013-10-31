@@ -180,6 +180,10 @@ public abstract class Texture {
         // if previously expired, auto reload it!
         if (mExpired && mTextureID == 0) {
             reload();
+
+            // unexpire
+            mExpired = false;
+            mIdleTime = 0;
         }
 
         if (mTextureID != 0) {
@@ -188,6 +192,9 @@ public abstract class Texture {
 
             // no longer idle
             mIdleTime = 0;
+        } else {
+            // texture is not ready, notify the glstate
+            mGLState.unbindTexture();
         }
     }
 

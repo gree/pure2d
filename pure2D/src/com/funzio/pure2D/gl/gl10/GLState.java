@@ -231,6 +231,7 @@ public class GLState {
         // bind to gl
         mTexture = texture;
         mGL.glBindTexture(GL10.GL_TEXTURE_2D, mTexture.mTextureID);
+
         return true;
     }
 
