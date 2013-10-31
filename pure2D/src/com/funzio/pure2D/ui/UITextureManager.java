@@ -137,6 +137,11 @@ public class UITextureManager extends TextureManager {
             if (texture != null) {
                 // texture expiration
                 texture.setExpirationTime(mUIConfigVO.texture_manager.texture_expiration_time);
+                // set filter
+                final int filter = mUIConfigVO.texture_manager.texture_options.filter;
+                if (filter > 0) {
+                    texture.setFilters(filter, filter);
+                }
                 mGeneralTextures.put(actualPath, texture);
             }
 

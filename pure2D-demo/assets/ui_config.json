@@ -1,7 +1,11 @@
 {
 	"texture_manager": {
 		"cdn_url": "http://static-cdn-jband.gree-apps.net/jband/",
-		"texture_expiration_time": 60000
+		"texture_expiration_time": 60000,
+
+		"texture_options": {
+			"filter": "linear"
+		}
 	},
 
 	"fonts": [
