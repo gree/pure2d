@@ -16,42 +16,7 @@
         centerX="0"
         source="cache://global/global_hd/tag_sale_detail.png"
         top="7%" />
-    <!--
-    <Sprite
-        centerX="0"
-        source="http://product.gree.net/share/global/global_hd/tag_sale_detail.png"
-        top="20%" />
-    -->
 
-    <HGroup
-        align="center"
-        bottom="5%"
-        centerX="0"
-        childrenGap="20"
-        height="wrap_content"
-        width="100%" >
-        <Button
-            id="btn_cancel"
-            patches="20,20,0,0"
-            source="@drawable/btn_up"
-            width="30%" >
-            <Text
-                centerX="0"
-                centerY="0"
-                font="font2"
-                text="@string/cancel" />
-        </Button>
-        <Button
-            id="btn_okay"
-            patches="20,20,0,0"
-            source="@drawable/btn_up"
-            width="30%" >
-            <Text
-                centerX="0"
-                centerY="0"
-                font="font2"
-                text="@string/okay" />
-        </Button>
-    </HGroup>
+    <include layout="@xml/pui_button_bar" />
 
 </com.funzio.pure2D.demo.pui.MyDialog>

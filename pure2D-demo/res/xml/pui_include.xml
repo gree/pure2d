@@ -17,8 +17,6 @@
         source="cache://global/global_hd/tag_sale_detail.png"
         top="7%" />
 
-    <include
-        centerY="0"
-        layout="@xml/pui_button_bar" />
+    <include layout="@xml/pui_button_bar" />
 
 </Group>
