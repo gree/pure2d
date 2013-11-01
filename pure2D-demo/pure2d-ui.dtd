@@ -1,75 +1,83 @@
+<!ENTITY % ALIGN "align (center|left|right|top|bottom|vcenter|hcenter)  #IMPLIED">
+<!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
+
+<!ENTITY % OBJ_ATTRS
+ 	"id CDATA #IMPLIED
+	width CDATA #IMPLIED
+	height CDATA #IMPLIED
+	left CDATA #IMPLIED
+	right CDATA #IMPLIED
+	top CDATA #IMPLIED
+	bottom CDATA #IMPLIED
+	centerX CDATA #IMPLIED
+	centerY CDATA #IMPLIED
+	animator CDATA #IMPLIED
+	color CDATA #IMPLIED
+	alpha CDATA #IMPLIED">
+	
+<!ENTITY % GROUP_ATTRS
+ 	"%OBJ_ATTRS;
+ 	clippingEnabled (false|true) #IMPLIED
+	cacheEnabled (false|true) #IMPLIED">
+	
+<!ENTITY % LGROUP_ATTRS
+	"%GROUP_ATTRS;
+ 	%ALIGN;
+ 	">
+
 <!ELEMENT Group ANY>
 <!ATTLIST Group 
-	id CDATA ""
-	width CDATA ""
-	height CDATA ""
-	left CDATA "0"
-	right CDATA "0"
-	top CDATA "0"
-	bottom CDATA "0"
-	centerX CDATA "0"
-	centerY CDATA "0"
-	clippingEnabled (true|false) "false"
-	cacheEnabled (true|false) "false">
+	%GROUP_ATTRS;>
+	
+<!ELEMENT VGroup ANY>
+<!ATTLIST VGroup 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT HGroup ANY>
+<!ATTLIST HGroup 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT VScroll ANY>
+<!ATTLIST VScroll 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT HScroll ANY>
+<!ATTLIST HScroll 
+	%LGROUP_ATTRS;>
 	
 <!ELEMENT Rect EMPTY>
 <!ATTLIST Rect 
-	id CDATA ""
-	width CDATA ""
-	height CDATA ""
-	left CDATA "0"
-	right CDATA "0"
-	top CDATA "0"
-	bottom CDATA "0"
-	centerX CDATA "0"
-	centerY CDATA "0"
-	color CDATA "#FFFFFFFF"
-	alpha CDATA "1">
+	%OBJ_ATTRS;>
 
 <!ELEMENT Sprite EMPTY>
 <!ATTLIST Sprite 
-	id CDATA ""
-	width CDATA ""
-	height CDATA ""
-	left CDATA "0"
-	right CDATA "0"
-	top CDATA "0"
-	bottom CDATA "0"
-	centerX CDATA "0"
-	centerY CDATA "0"
-	color CDATA "#FFFFFFFF"
-	alpha CDATA "1"
-	source CDATA "">
+	%OBJ_ATTRS;
+	%SOURCE;>
 	
 <!ELEMENT Sprite9 EMPTY>
 <!ATTLIST Sprite9 
-	id CDATA ""
-	width CDATA ""
-	height CDATA ""
-	left CDATA "0"
-	right CDATA "0"
-	top CDATA "0"
-	bottom CDATA "0"
-	centerX CDATA "0"
-	centerY CDATA "0"
-	color CDATA "#FFFFFFFF"
-	alpha CDATA "1"
-	source CDATA ""
+	%OBJ_ATTRS;
+	%SOURCE;
 	patches CDATA "">
+	
+<!ELEMENT Clip EMPTY>
+<!ATTLIST Clip 
+	%OBJ_ATTRS;
+	%SOURCE;>
+	
+<!ELEMENT NovaGroup ANY>
+<!ATTLIST NovaGroup 
+	%OBJ_ATTRS;
+	%SOURCE;>
+	
+<!ELEMENT Text EMPTY>
+<!ATTLIST Text 
+	%OBJ_ATTRS;
+	font CDATA ""
+	text CDATA "">
 
 <!ELEMENT Button ANY>
 <!ATTLIST Button 
-	id CDATA ""
-	width CDATA ""
-	height CDATA ""
-	left CDATA "0"
-	right CDATA "0"
-	top CDATA "0"
-	bottom CDATA "0"
-	centerX CDATA "0"
-	centerY CDATA "0"
-	color CDATA "#FFFFFFFF"
-	alpha CDATA "1"
-	clippingEnabled (true|false) "false"
-	cacheEnabled (true|false) "false"
-	source CDATA "">
+	%GROUP_ATTRS;
+	%SOURCE;
+	patches CDATA "">
