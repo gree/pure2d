@@ -308,13 +308,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
 
+        // now update children
+        updateChildren(deltaTime);
+
+        // finally update bounds
         if (mAutoUpdateBounds && (mInvalidateFlags & BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
         }
-
-        // now update children
-        updateChildren(deltaTime);
 
         // validate transform AFTER updateBounds()
         mInvalidateFlags &= ~(BOUNDS | TRANSFORM_MATRIX);

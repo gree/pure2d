@@ -33,13 +33,21 @@ public abstract class LinearGroup extends DisplayGroup {
     private boolean mChildrenPositionInvalidated = false;
 
     @Override
-    public boolean update(final int deltaTime) {
+    public boolean updateChildren(final int deltaTime) {
+        super.updateChildren(deltaTime);
+
+        // adjust the positions when necessary
         if (mChildrenPositionInvalidated) {
             positionChildren();
             mChildrenPositionInvalidated = false;
+
+            // only apply constraints when size or parent changed
+            if ((mInvalidateFlags & (SIZE | PARENT)) != 0) {
+                mUIConstraint.apply(this, mParent);
+            }
         }
 
-        return super.update(deltaTime);
+        return true;
     }
 
     protected void invalidateChildrenPosition() {
