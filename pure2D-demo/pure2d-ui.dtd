@@ -15,7 +15,8 @@
 	animator CDATA #IMPLIED
 	color CDATA #IMPLIED
 	alpha CDATA #IMPLIED
-	%BLEND_MODE;">
+	%BLEND_MODE;
+	debug (false|true) #IMPLIED">
 	
 <!ENTITY % GROUP_ATTRS
  	"%OBJ_ATTRS;
