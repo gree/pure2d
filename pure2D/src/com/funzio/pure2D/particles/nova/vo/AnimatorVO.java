@@ -37,6 +37,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
     public static final String ROTATE = "rotate";
     public static final String SCALE = "scale";
     public static final String SKEW = "skew";
+    public static final String RESIZE = "resize";
     public static final String TRAJECTORY = "trajectory";
     public static final String RECURSIVE_TRAJECTORY = "recursive_trajectory";
     public static final String SIN_WAVE = "sin_wave";
@@ -130,6 +131,8 @@ public abstract class AnimatorVO extends NovaEntryVO {
             return new ScaleAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SKEW)) {
             return new SkewAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(RESIZE)) {
+            return new ResizeAnimatorVO(json);
         } else if (type.equalsIgnoreCase(ALPHA)) {
             return new AlphaAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TRAJECTORY)) {
