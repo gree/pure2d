@@ -14,7 +14,7 @@
 
     <Sprite
         centerX="0"
-        source="cache://global/global_hd/tag_sale_detail.png"
+        source="@drawable/pure2d_logo_64"
         top="7%" />
 
     <include layout="@xml/pui_button_bar" />
