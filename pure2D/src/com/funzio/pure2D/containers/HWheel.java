@@ -39,10 +39,6 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         mSwipeDelta = delta;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
-     */
     @Override
     protected void stopSwipe() {
         super.stopSwipe();
@@ -126,10 +122,6 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         spinTo(mScrollMax.x, acceleration, duration);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.HGroup#startSwipe()
-     */
     @Override
     protected void startSwipe() {
         // stop animation first
@@ -171,10 +163,6 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         scrollBy(-value, 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.HGroup#onTouchDown(android.view.MotionEvent)
-     */
     @Override
     protected void onTouchDown(final MotionEvent event) {
         super.onTouchDown(event);

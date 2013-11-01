@@ -208,10 +208,6 @@ public class Shape extends BaseDisplayObject {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#drawWireframe(com.funzio.pure2D.gl.gl10.GLState)
-     */
     @Override
     protected void drawWireframe(final GLState glState) {
         // null check
@@ -238,10 +234,6 @@ public class Shape extends BaseDisplayObject {
         mVertexBuffer.setPrimitive(primitive);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();

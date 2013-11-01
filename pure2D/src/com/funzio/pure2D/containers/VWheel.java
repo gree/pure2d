@@ -38,10 +38,6 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         mSwipeDelta = delta;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.VGroup#stopSwipe(float)
-     */
     @Override
     protected void stopSwipe() {
         super.stopSwipe();
@@ -126,10 +122,6 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         spinTo(mScrollMax.y, acceleration, duration);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.VGroup#startSwipe()
-     */
     @Override
     protected void startSwipe() {
         // stop animation first
@@ -171,10 +163,6 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         scrollBy(0, -value);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.VGroup#onTouchDown(android.view.MotionEvent)
-     */
     @Override
     protected void onTouchDown(final MotionEvent event) {
         super.onTouchDown(event);
