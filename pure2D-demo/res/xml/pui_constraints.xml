@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group
-    height="wrap_content"
-    width="wrap_content" >
+    animator="ani_resize"
+    height="600"
+    width="600" >
 
     <Sprite9
         blendMode="premultiplied_alpha"
-        height="500"
+        height="100%"
         patches="20,20,20,20"
         source="@drawable/panel_collection_reward"
-        width="600" />
+        width="100%" />
 
     <Sprite
         bottom="5%"
@@ -29,48 +30,48 @@
         <Sprite
             centerX="0"
             centerY="0"
-            height="10%"
-            width="10%" />
+            height="30"
+            width="30" />
         <Sprite
-            height="10%"
+            height="30"
             left="5%"
             top="5%"
-            width="10%" />
+            width="30" />
         <Sprite
-            height="10%"
+            height="30"
             right="5%"
             top="5%"
-            width="10%" />
+            width="30" />
         <Sprite
             bottom="5%"
-            height="10%"
+            height="30"
             left="5%"
-            width="10%" />
+            width="30" />
         <Sprite
             bottom="5%"
-            height="10%"
+            height="30"
             right="5%"
-            width="10%" />
+            width="30" />
         <Sprite
             bottom="5%"
             centerX="0"
-            height="10%"
-            width="10%" />
+            height="30"
+            width="30" />
         <Sprite
             centerY="0"
-            height="10%"
+            height="30"
             left="5%"
-            width="10%" />
+            width="30" />
         <Sprite
             centerX="0"
-            height="10%"
+            height="30"
             top="5%"
-            width="10%" />
+            width="30" />
         <Sprite
             centerY="0"
-            height="10%"
+            height="30"
             right="5%"
-            width="10%" />
+            width="30" />
     </Group>
 
 </Group>
