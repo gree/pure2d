@@ -27,47 +27,56 @@
             width="100%"
             color="#66FFFF00" />
 
-        <Sprite
+        <!-- center -->
+        <Rect
             centerX="0"
             centerY="0"
             height="30"
             width="30" />
-        <Sprite
+        <!-- top left -->
+        <Rect
             height="30"
             left="5%"
             top="5%"
             width="30" />
-        <Sprite
+        <!-- top right -->
+        <Rect
             height="30"
             right="5%"
             top="5%"
             width="30" />
-        <Sprite
+        <!-- bottom left -->
+        <Rect
             bottom="5%"
             height="30"
             left="5%"
             width="30" />
-        <Sprite
+        <!-- bottom right -->
+        <Rect
             bottom="5%"
             height="30"
             right="5%"
             width="30" />
-        <Sprite
+        <!-- bottom center -->
+        <Rect
             bottom="5%"
             centerX="0"
             height="30"
             width="30" />
-        <Sprite
+        <!-- left center -->
+        <Rect
             centerY="0"
             height="30"
             left="5%"
             width="30" />
-        <Sprite
+        <!-- top center -->
+        <Rect
             centerX="0"
             height="30"
             top="5%"
             width="30" />
-        <Sprite
+        <!-- center right -->
+        <Rect
             centerY="0"
             height="30"
             right="5%"
