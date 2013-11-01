@@ -40,6 +40,17 @@
 
 	"animators": [
 		{
+			"name": "ani_resize",
+			"type": "resize",
+			"width_from": 400,
+			"width_to": 600,
+			"height_from": 400,
+			"height_to": 600,
+			"duration": 3000,
+			"loop_mode": "reverse"
+		},
+
+		{
 			"name": "ani_fade_in",
 			"type": "alpha",
 			"from": 0,
