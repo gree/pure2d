@@ -127,10 +127,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return (scene != null) ? scene.getSize() : null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
-     */
     @Override
     public boolean draw(final GLState glState) {
         drawStart(glState);
@@ -272,6 +268,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     @Override
     public boolean update(final int deltaTime) {
+
+        // check constraints first
         if (mUIConstraint != null) {
             // only apply constraints when size or parent changed
             if ((mInvalidateFlags & (SIZE | PARENT)) != 0) {
@@ -315,10 +313,18 @@ public abstract class BaseDisplayObject implements DisplayObject {
             updateBounds();
         }
 
+        // now update children
+        updateChildren(deltaTime);
+
         // validate transform AFTER updateBounds()
         mInvalidateFlags &= ~(BOUNDS | TRANSFORM_MATRIX);
 
         return mNumManipulators > 0;
+    }
+
+    protected boolean updateChildren(final int deltaTime) {
+        // TODO nothing
+        return false;
     }
 
     /**
@@ -362,38 +368,22 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mAlive = value;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#getAlive()
-     */
     @Override
     final public boolean isAlive() {
         return mAlive;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#setVisible(boolean)
-     */
     @Override
     public void setVisible(final boolean value) {
         mVisible = value;
         invalidate(VISIBILITY);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#getVisible()
-     */
     @Override
     final public boolean isVisible() {
         return mVisible;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#shouldDraw()
-     */
     @Override
     public boolean shouldDraw() {
         return mVisible && mAlpha > 0;
@@ -1160,10 +1150,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(PERSPECTIVE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#dispose()
-     */
     @Override
     public void dispose() {
         mTransformMatrix = null;

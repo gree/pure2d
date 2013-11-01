@@ -67,10 +67,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     }
 
     @Override
-    public boolean update(final int deltaTime) {
+    public boolean updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
-        // super here
-        boolean ret = super.update(deltaTime);
 
         DisplayObject child;
         float temp, sx = mSize.x, sy = mSize.y;
@@ -107,13 +105,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             setSize(sx, sy);
         }
 
-        return ret || mNumChildren >= 0;
+        return mNumChildren >= 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#updateBounds()
-     */
     @Override
     public RectF updateBounds() {
         final RectF rect = super.updateBounds();
@@ -130,10 +124,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         return rect;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
-     */
     @Override
     public boolean draw(final GLState glState) {
         if (mNumChildren == 0) {
@@ -303,10 +293,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         final PointF pos = child.getPosition();
         final PointF size = child.getSize();
         return Rectangle.intersects(pos.x, pos.y, pos.x + size.x - 1, pos.y + size.y - 1, 0, 0, mSize.x - 1, mSize.y - 1);
-        // return ((pos.x >= 0 && pos.x < mSize.x) && (pos.y >= 0 && pos.y < mSize.y)) // TL
-        // || ((pos.x + size.x >= 0 && pos.x + size.x < mSize.x) && (pos.y >= 0 && pos.y < mSize.y)) // TR
-        // || ((pos.x + size.x >= 0 && pos.x + size.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y))// BR
-        // || ((pos.x >= 0 && pos.x < mSize.x) && (pos.y + size.y >= 0 && pos.y + size.y < mSize.y)); // BL
     }
 
     protected void initCache(final GLState glState, final PointF size) {
@@ -336,10 +322,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();
