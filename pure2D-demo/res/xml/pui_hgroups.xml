@@ -46,33 +46,17 @@
         <Sprite source="@drawable/ka_128" />
     </HScroll>
 
-    <HGroup
-        align="center"
+    <Button
         bottom="5%"
         centerX="0"
-        childrenGap="20"
-        height="wrap_content"
-        width="100%" >
-        <Button
-            patches="20,20,0,0"
-            source="@drawable/btn_up"
-            width="30%" >
-            <Text
-                centerX="0"
-                centerY="0"
-                font="font2"
-                text="@string/cancel" />
-        </Button>
-        <Button
-            patches="20,20,0,0"
-            source="@drawable/btn_up"
-            width="30%" >
-            <Text
-                centerX="0"
-                centerY="0"
-                font="font2"
-                text="@string/okay" />
-        </Button>
-    </HGroup>
+        patches="20,20,0,0"
+        source="@drawable/btn_up"
+        width="30%" >
+        <Text
+            centerX="0"
+            centerY="0"
+            font="font2"
+            text="@string/okay" />
+    </Button>
 
 </Group>

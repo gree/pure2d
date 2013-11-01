@@ -17,34 +17,43 @@
         source="@drawable/pure2d_logo_64"
         top="7%" />
 
-    <Text
-        centerX="0"
+    <VGroup
+        align="center"
         centerY="0"
-        font="font1"
-        text="@string/hello_text" />
+        height="wrap_content"
+        reversed="true"
+        width="100%" >
+        <Text
+            centerX="0"
+            centerY="0"
+            font="font1"
+            text="@string/hello_text" />
+        <Text
+            centerX="0"
+            centerY="0"
+            font="font2"
+            text="Happy Friday!" />
+    </VGroup>
+
     <Text
         font="font2"
         left="5%"
         text="TL"
-        top="5%"
-        color="#FFFFFF00" />
+        top="5%" />
     <Text
         font="font2"
         right="5%"
         text="TR"
-        top="5%"
-        color="#FFFFFF00" />
+        top="5%" />
     <Text
         bottom="5%"
         font="font2"
         left="5%"
-        text="BL"
-        color="#FFFFFF00" />
+        text="BL" />
     <Text
         bottom="5%"
         font="font2"
         right="5%"
-        text="BR"
-        color="#FFFFFF00" />
+        text="BR" />
 
 </Group>
