@@ -16,22 +16,17 @@
         centerX="0"
         source="cache://global/global_hd/tag_sale_detail.png"
         top="5%" />
-    <Sprite
-        bottom="5%"
-        left="5%"
-        right="5%"
-        top="20%"
-        color="#33000000" />
 
     <Group
         bottom="10%"
         left="10%"
         right="10%"
         top="25%" >
-        <Sprite
+        <Rect
             height="100%"
             width="100%"
-            color="#33FFFF00" />
+            color="#66FFFF00" />
+
         <Sprite
             centerX="0"
             centerY="0"
