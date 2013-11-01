@@ -14,6 +14,7 @@
 
     <Sprite
         animator="ani_heart_beat"
+        blendMode="premultiplied_alpha"
         centerX="0"
         originAtCenter="true"
         source="@drawable/pure2d_logo_64"

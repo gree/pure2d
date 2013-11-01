@@ -12,6 +12,7 @@
         width="100%" />
 
     <Sprite
+        blendMode="premultiplied_alpha"
         centerX="0"
         source="@drawable/pure2d_logo_64"
         top="7%" />
@@ -20,7 +21,7 @@
         centerX="0"
         centerY="0"
         font="font1"
-        text="Hello Pure2D UI!" />
+        text="@string/hello_text" />
     <Text
         font="font2"
         left="5%"

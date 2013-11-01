@@ -14,6 +14,7 @@
         width="100%" />
 
     <Sprite
+        blendMode="premultiplied_alpha"
         centerX="0"
         source="@drawable/pure2d_logo_64"
         top="5%" />

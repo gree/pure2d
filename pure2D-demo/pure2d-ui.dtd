@@ -1,5 +1,6 @@
 <!ENTITY % ALIGN "align (center|left|right|top|bottom|vcenter|hcenter)  #IMPLIED">
 <!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
+<!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
 
 <!ENTITY % OBJ_ATTRS
  	"id CDATA #IMPLIED
@@ -13,7 +14,8 @@
 	centerY CDATA #IMPLIED
 	animator CDATA #IMPLIED
 	color CDATA #IMPLIED
-	alpha CDATA #IMPLIED">
+	alpha CDATA #IMPLIED
+	%BLEND_MODE;">
 	
 <!ENTITY % GROUP_ATTRS
  	"%OBJ_ATTRS;
