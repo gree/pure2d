@@ -3,12 +3,11 @@
  */
 package com.funzio.pure2D.demo.pui;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.ui.Button;
 import com.funzio.pure2D.ui.TouchListener;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long.ngo
@@ -23,8 +22,8 @@ public class MyDialog extends DisplayGroup {
     }
 
     @Override
-    public void onCreateChildren(final XmlPullParser xmlParser) {
-        super.onCreateChildren(xmlParser);
+    public void onCreateChildren(final UIManager manager) {
+        super.onCreateChildren(manager);
 
         mButtonCancel = (Button) getChildById("btn_cancel");
         mButtonCancel.setTouchListener(new TouchListener() {

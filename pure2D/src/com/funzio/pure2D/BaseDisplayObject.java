@@ -1285,7 +1285,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @hide For internal use
      */
-    public void onCreateChildren(final XmlPullParser xmlParser) {
+    public void onCreateChildren(final UIManager manager) {
         // TODO override this
     }
 

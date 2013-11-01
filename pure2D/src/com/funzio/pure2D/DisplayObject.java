@@ -149,5 +149,5 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
     /**
      * @hide For internal use
      */
-    public void onCreateChildren(XmlPullParser xmlParser);
+    public void onCreateChildren(final UIManager manager);
 }

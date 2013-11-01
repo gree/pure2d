@@ -132,7 +132,7 @@ public class UILoader {
 
         if (displayObject != null) {
             // callback
-            displayObject.onCreateChildren(parser);
+            displayObject.onCreateChildren(mUIManager);
         }
 
         return displayObject;
