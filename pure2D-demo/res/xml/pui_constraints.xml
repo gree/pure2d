@@ -9,20 +9,25 @@
         height="100%"
         patches="20,20,20,20"
         source="@drawable/panel_collection_reward"
+        touchable="true"
         width="100%" />
 
+    <Sprite
+        centerX="0"
+        source="cache://global/global_hd/tag_sale_detail.png"
+        top="5%" />
     <Sprite
         bottom="5%"
         left="5%"
         right="5%"
-        top="10%"
+        top="20%"
         color="#33000000" />
 
     <Group
         bottom="10%"
         left="10%"
         right="10%"
-        top="15%" >
+        top="25%" >
         <Sprite
             height="100%"
             width="100%"

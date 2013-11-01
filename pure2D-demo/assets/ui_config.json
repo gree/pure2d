@@ -44,8 +44,8 @@
 			"type": "resize",
 			"width_from": 400,
 			"width_to": 600,
-			"height_from": 400,
-			"height_to": 600,
+			"height_from": 600,
+			"height_to": 400,
 			"duration": 3000,
 			"loop_mode": "reverse"
 		},
