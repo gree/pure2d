@@ -117,7 +117,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             if (child.isAutoUpdateBounds()) {
-                child.updateBounds();
+                child.updateBounds(); // TODO: optimize
             }
         }
 
