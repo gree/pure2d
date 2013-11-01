@@ -67,7 +67,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     }
 
     @Override
-    public boolean updateChildren(final int deltaTime) {
+    public void updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
         DisplayObject child;
@@ -104,8 +104,6 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             // apply
             setSize(sx, sy);
         }
-
-        return mNumChildren >= 0;
     }
 
     @Override

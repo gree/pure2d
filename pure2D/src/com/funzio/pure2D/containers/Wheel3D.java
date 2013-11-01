@@ -63,15 +63,19 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
         addManipulator(mAnimator);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#update(int)
-     */
     @Override
-    public boolean update(final int deltaTime) {
+    public void updateChildren(final int deltaTime) {
+        super.updateChildren(deltaTime);
+
+        // adjust the positions when necessary
         if (mChildrenPositionInvalidated) {
             positionChildren();
             mChildrenPositionInvalidated = false;
+
+            // only apply constraints when size or parent changed
+            if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT)) != 0) {
+                mUIConstraint.apply(this, mParent);
+            }
         }
 
         if (mTouchBounds == null) {
@@ -91,7 +95,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
             mTouchBounds.intersect(mClipStageRect);
         }
 
-        return super.update(deltaTime);
     }
 
     protected void invalidateChildrenPosition() {
@@ -256,10 +259,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
         invalidateChildrenPosition();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#onAddedChild(com.funzio.pure2D.DisplayObject)
-     */
     @Override
     protected void onAddedChild(final DisplayObject child) {
         super.onAddedChild(child);
@@ -270,10 +269,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
         invalidateChildrenPosition();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#onRemovedChild(com.funzio.pure2D.DisplayObject)
-     */
     @Override
     protected void onRemovedChild(final DisplayObject child) {
         super.onRemovedChild(child);
@@ -453,10 +448,6 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
         scrollByAngle(value);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.containers.DisplayGroup#onTouchEvent(android.view.MotionEvent)
-     */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         if (mNumChildren == 0) {

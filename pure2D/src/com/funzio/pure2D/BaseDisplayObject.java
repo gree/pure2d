@@ -269,12 +269,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
     @Override
     public boolean update(final int deltaTime) {
 
-        // check constraints first
-        if (mUIConstraint != null) {
-            // only apply constraints when size or parent changed
-            if ((mInvalidateFlags & (SIZE | PARENT)) != 0) {
-                mUIConstraint.apply(this, mParent);
-            }
+        // check constraints first ,only apply it when size or parent changed
+        if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT)) != 0) {
+            mUIConstraint.apply(this, mParent);
         }
 
         // update the manipulators if there's any
@@ -323,9 +320,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mNumManipulators > 0;
     }
 
-    protected boolean updateChildren(final int deltaTime) {
+    protected void updateChildren(final int deltaTime) {
         // TODO nothing
-        return false;
     }
 
     /**
