@@ -118,6 +118,10 @@ public class UIManager {
         return mLoader.load(xmlString);
     }
 
+    public DisplayObject load(final int xmlResource) {
+        return mLoader.load(mResources.getXml(xmlResource));
+    }
+
     public TextureOptions getTextureOptions() {
         if (mTextureOptions == null) {
             mTextureOptions = TextureOptions.getDefault();
