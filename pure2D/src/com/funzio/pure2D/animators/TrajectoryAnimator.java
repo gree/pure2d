@@ -5,6 +5,7 @@ package com.funzio.pure2D.animators;
 
 import android.graphics.PointF;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
@@ -30,6 +31,9 @@ public class TrajectoryAnimator extends BaseAnimator {
     // rotation
     protected boolean mTargetAngleFixed = true;
     protected float mTargetAngleOffset = 0;
+
+    // axis system
+    protected int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
 
     public TrajectoryAnimator() {
         super();
@@ -69,12 +73,22 @@ public class TrajectoryAnimator extends BaseAnimator {
         }
 
         // pre-cals
-        final float vcos = mVelocity * mCos;
-        final float vsin = mVelocity * mSin;
         final float absGravity = Math.abs(mGravity);
-        mDistance = (vcos / absGravity) * (vsin + (float) Math.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
-        // mDistance = (vcos / mGravity) * (vsin + (float)Math.sqrt(vsin * vsin + 2 * mGravity * (mSrcY - mGround)));
-        mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
+
+        if (mAxisSystem == Scene.AXIS_BOTTOM_LEFT) {
+            final float vcos = mVelocity * mCos;
+            final float vsin = mVelocity * mSin;
+
+            mDistance = (vcos / absGravity) * (vsin + (float) Math.sqrt(vsin * vsin + 2 * absGravity * (mSrcY - mGround)));
+            mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
+        } else {
+            // Calculate distance and duration by flipping coordinate system.
+            final float vcos = mVelocity * mCos;
+            final float vsin = mVelocity * -mSin;
+
+            mDistance = (vcos / absGravity) * (vsin + (float) Math.sqrt(vsin * vsin + 2 * absGravity * (mGround - mSrcY)));
+            mDuration = TIME_FACTOR * mDistance / (vcos == 0 ? 1 : vcos);
+        }
     }
 
     public void setValues(final float velocity, final float angle) {
@@ -204,5 +218,9 @@ public class TrajectoryAnimator extends BaseAnimator {
 
     public void setCurrentVelocity(final PointF currentVelocity) {
         mCurrentVelocity = currentVelocity;
+    }
+
+    public void setAxisSystem(final int axisSystem) {
+        mAxisSystem = axisSystem;
     }
 }
