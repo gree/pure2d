@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.animators;
 
+import com.funzio.pure2D.Scene;
+
 /**
  * @author long
  */
@@ -29,7 +31,11 @@ public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
             stop();
 
             // and restart
-            start(newVelocity, mSin < 0 ? -mAngle : mAngle);
+            if (mAxisSystem == Scene.AXIS_BOTTOM_LEFT) {
+                start(newVelocity, mSin < 0.0f ? -mAngle : mAngle);
+            } else {
+                start(newVelocity, mSin > 0.0f ? -mAngle : mAngle);
+            }
         } else {
             super.end();
         }
