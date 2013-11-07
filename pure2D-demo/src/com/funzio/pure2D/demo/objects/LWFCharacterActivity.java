@@ -2,8 +2,6 @@ package com.funzio.pure2D.demo.objects;
 
 import java.io.InputStream;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,6 +9,7 @@ import android.view.View;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.lwf.LWF;
 import com.funzio.pure2D.lwf.LWFData;
@@ -27,8 +26,9 @@ public class LWFCharacterActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!LWF.loadLibrary())
+        if (!LWF.loadLibrary()) {
             Log.e("LWFCharacterActivity", "ERROR: loadLibrary");
+        }
 
         mLWFManager = new LWFManager();
 
@@ -37,25 +37,27 @@ public class LWFCharacterActivity extends StageActivity {
 
         mScene.setListener(new Scene.Listener() {
 
-             @Override
-             public void onSurfaceCreated(final GL10 gl) {
-                try {
-                    InputStream stream = getAssets().open("lwf/YetiBlue/YetiBlue.lwf");
-                    mLWFData = mLWFManager.createLWFData(stream);
-                } catch (Exception e) {
-                    Log.e("LWFCharacterActivity", "ERROR: " + e);
-                }
-        
-                int textureNum = mLWFData.getTextureNum();
-                Texture[] textures = new Texture[textureNum];
-                for (int i = 0; i < textureNum; ++i) {
-                    String name = mLWFData.getTextureName(i);
-                    textures[i] = mScene.getTextureManager().createAssetTexture("lwf/YetiBlue/" + name, null);
-                }
-                mLWFData.setTextures(textures);
+            @Override
+            public void onSurfaceCreated(final GLState gl, final boolean firstTime) {
+                if (firstTime) {
+                    try {
+                        InputStream stream = getAssets().open("lwf/YetiBlue/YetiBlue.lwf");
+                        mLWFData = mLWFManager.createLWFData(stream);
+                    } catch (Exception e) {
+                        Log.e("LWFCharacterActivity", "ERROR: " + e);
+                    }
 
-                attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-             }
+                    int textureNum = mLWFData.getTextureNum();
+                    Texture[] textures = new Texture[textureNum];
+                    for (int i = 0; i < textureNum; ++i) {
+                        String name = mLWFData.getTextureName(i);
+                        textures[i] = mScene.getTextureManager().createAssetTexture("lwf/YetiBlue/" + name, null);
+                    }
+                    mLWFData.setTextures(textures);
+
+                    attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
+            }
         });
     }
 
@@ -66,8 +68,9 @@ public class LWFCharacterActivity extends StageActivity {
     }
 
     private void attachLWF(final float x, final float y) {
-        if (mLWFData == null)
+        if (mLWFData == null) {
             return;
+        }
 
         // attach lwf
         LWF lwf = mLWFObject.attachLWF(mLWFData);

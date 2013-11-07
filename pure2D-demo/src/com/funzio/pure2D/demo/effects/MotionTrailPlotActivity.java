@@ -1,8 +1,5 @@
 package com.funzio.pure2D.demo.effects;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,12 +12,11 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
-import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 
 public class MotionTrailPlotActivity extends StageActivity {
 
-    private List<Texture> mTextures = new ArrayList<Texture>();
+    // private List<Texture> mTextures = new ArrayList<Texture>();
     private AssetTexture mTestTexture;
 
     @Override

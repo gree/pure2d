@@ -2,8 +2,6 @@ package com.funzio.pure2D.demo.objects;
 
 import java.io.InputStream;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,6 +9,7 @@ import android.view.View;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.lwf.LWF;
 import com.funzio.pure2D.lwf.LWFData;
@@ -29,8 +28,9 @@ public class LWFCinematicActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!LWF.loadLibrary())
+        if (!LWF.loadLibrary()) {
             Log.e(TAG, "ERROR: loadLibrary");
+        }
 
         mLWFManager = new LWFManager();
 
@@ -39,25 +39,27 @@ public class LWFCinematicActivity extends StageActivity {
 
         mScene.setListener(new Scene.Listener() {
 
-             @Override
-             public void onSurfaceCreated(final GL10 gl) {
-                try {
-                    InputStream stream = getAssets().open("lwf/evolve/evolve.lwf");
-                    mLWFData = mLWFManager.createLWFData(stream);
-                } catch (Exception e) {
-                    Log.e(TAG, "ERROR: " + e);
-                }
+            @Override
+            public void onSurfaceCreated(final GLState gl, final boolean firstTime) {
+                if (firstTime) {
+                    try {
+                        InputStream stream = getAssets().open("lwf/evolve/evolve.lwf");
+                        mLWFData = mLWFManager.createLWFData(stream);
+                    } catch (Exception e) {
+                        Log.e(TAG, "ERROR: " + e);
+                    }
 
-                int textureNum = mLWFData.getTextureNum();
-                Texture[] textures = new Texture[textureNum];
-                for (int i = 0; i < textureNum; ++i) {
-                    String name = mLWFData.getTextureName(i);
-                    textures[i] = mScene.getTextureManager().createAssetTexture("lwf/evolve/" + name, null);
-                }
-                mLWFData.setTextures(textures);
+                    int textureNum = mLWFData.getTextureNum();
+                    Texture[] textures = new Texture[textureNum];
+                    for (int i = 0; i < textureNum; ++i) {
+                        String name = mLWFData.getTextureName(i);
+                        textures[i] = mScene.getTextureManager().createAssetTexture("lwf/evolve/" + name, null);
+                    }
+                    mLWFData.setTextures(textures);
 
-                attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-             }
+                    attachLWF(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                }
+            }
         });
     }
 
@@ -98,8 +100,9 @@ public class LWFCinematicActivity extends StageActivity {
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (mLWF != null)
+            if (mLWF != null) {
                 mLWF.gotoAndPlay("_root", "start");
+            }
         }
 
         return true;
