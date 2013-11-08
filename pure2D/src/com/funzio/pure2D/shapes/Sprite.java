@@ -14,6 +14,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  */
 public class Sprite extends Rectangular {
     private boolean mSizeToTexture = true;
+    private boolean mSizeToFrame = true;
 
     protected AtlasFrame mAtlasFrame;
     protected float mOffsetX = 0;
@@ -47,12 +48,25 @@ public class Sprite extends Rectangular {
         return mSizeToTexture;
     }
 
-    public void setSizeToTexture(final boolean value) {
-        mSizeToTexture = value;
+    public void setSizeToTexture(final boolean sizeToTexture) {
+        mSizeToTexture = sizeToTexture;
 
         // fit size to texture
         if (mSizeToTexture && mTexture != null && mTexture.isLoaded()) {
             setSize(mTexture.getSize());
+        }
+    }
+
+    public boolean isSizeToFrame() {
+        return mSizeToFrame;
+    }
+
+    public void setSizeToFrame(final boolean sizeToFrame) {
+        mSizeToFrame = sizeToFrame;
+
+        // fit size to texture
+        if (mAtlasFrame != null && sizeToFrame) {
+            setSize(mAtlasFrame.getSize());
         }
     }
 
@@ -81,7 +95,7 @@ public class Sprite extends Rectangular {
 
             // size changed?
             final PointF newSize = frame.getSize();
-            if (newSize.x != mSize.x || newSize.y != mSize.y) {
+            if (mSizeToFrame && (newSize.x != mSize.x || newSize.y != mSize.y)) {
                 setSize(newSize.x, newSize.y);
             } else {
                 invalidate(FRAME);
