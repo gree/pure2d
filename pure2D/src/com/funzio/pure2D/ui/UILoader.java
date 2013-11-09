@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.containers.Container;
 
 /**
@@ -86,7 +87,7 @@ public class UILoader {
                 // include other xml layout
                 final String layout = parser.getAttributeValue(null, ATT_LAYOUT);
                 if (layout != null) {
-                    displayObject = mUIManager.load(mUIManager.getXMLByName(layout.substring(UIConfig.URI_XML.length())));
+                    displayObject = mUIManager.load(mUIManager.getXMLByName(layout.substring(Pure2DURI.XML.length())));
                     if (displayObject != null) {
                         // you can also override the attributes
                         displayObject.setXMLAttributes(parser, mUIManager);

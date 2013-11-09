@@ -8,6 +8,7 @@ import java.util.HashMap;
 import android.util.Log;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.HGroup;
@@ -32,14 +33,6 @@ public class UIConfig {
 
     public static final String TYPE_STRING = "string";
     public static final String TYPE_DRAWABLE = "drawable";
-
-    public static final String URI_STRING = "@string/";
-    public static final String URI_DRAWABLE = "@drawable/";
-    public static final String URI_XML = "@xml/";
-    public static final String URI_ASSET = "asset://";
-    public static final String URI_FILE = "file://";
-    public static final String URI_HTTP = "http://";
-    public static final String URI_CACHE = "cache://";
 
     public static final String LAYER_SCENE = "$SCENE";
     public static final String LAYER_PARENT = "$PARENT";
@@ -116,12 +109,12 @@ public class UIConfig {
     }
 
     public static boolean isUnknownUri(final String uri) {
-        return !uri.startsWith(URI_HTTP) //
-                && !uri.startsWith(URI_DRAWABLE) //
-                && !uri.startsWith(URI_ASSET) //
-                && !uri.startsWith(URI_FILE) //
-                && !uri.startsWith(URI_STRING) //
-                && !uri.startsWith(URI_CACHE) //
-                && !uri.startsWith(URI_XML);
+        return !uri.startsWith(Pure2DURI.HTTP) //
+                && !uri.startsWith(Pure2DURI.DRAWABLE) //
+                && !uri.startsWith(Pure2DURI.ASSET) //
+                && !uri.startsWith(Pure2DURI.FILE) //
+                && !uri.startsWith(Pure2DURI.STRING) //
+                && !uri.startsWith(Pure2DURI.CACHE) //
+                && !uri.startsWith(Pure2DURI.XML);
     }
 }

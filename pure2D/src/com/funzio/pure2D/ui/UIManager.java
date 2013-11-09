@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
@@ -154,9 +155,9 @@ public class UIManager {
     public String evalString(final String input) {
         String value = input;
         if (value != null) {
-            if (value.startsWith(UIConfig.URI_STRING)) {
+            if (value.startsWith(Pure2DURI.STRING)) {
                 // localized string
-                String id = value.substring(UIConfig.URI_STRING.length());
+                String id = value.substring(Pure2DURI.STRING.length());
                 value = mResources.getString(mResources.getIdentifier(id, UIConfig.TYPE_STRING, mPackageName));
             }
 
@@ -179,16 +180,16 @@ public class UIManager {
         }
 
         String actualPath = null;
-        if (uri.startsWith(UIConfig.URI_DRAWABLE)) {
-            actualPath = uri.substring(UIConfig.URI_DRAWABLE.length());
+        if (uri.startsWith(Pure2DURI.DRAWABLE)) {
+            actualPath = uri.substring(Pure2DURI.DRAWABLE.length());
             final int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mPackageName);
             actualPath = String.valueOf(drawable);
-        } else if (uri.startsWith(UIConfig.URI_ASSET)) {
-            actualPath = uri.substring(UIConfig.URI_ASSET.length());
-        } else if (uri.startsWith(UIConfig.URI_FILE)) {
-            actualPath = uri.substring(UIConfig.URI_FILE.length());
-        } else if (uri.startsWith(UIConfig.URI_CACHE)) {
-            actualPath = uri.substring(UIConfig.URI_CACHE.length());
+        } else if (uri.startsWith(Pure2DURI.ASSET)) {
+            actualPath = uri.substring(Pure2DURI.ASSET.length());
+        } else if (uri.startsWith(Pure2DURI.FILE)) {
+            actualPath = uri.substring(Pure2DURI.FILE.length());
+        } else if (uri.startsWith(Pure2DURI.CACHE)) {
+            actualPath = uri.substring(Pure2DURI.CACHE.length());
         } else {
             actualPath = uri; // keep
         }

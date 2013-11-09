@@ -10,6 +10,7 @@ import java.util.Set;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
@@ -69,7 +70,7 @@ public class UITextureManager extends TextureManager {
             setExpirationCheckInterval(manager.getConfig().texture_manager.expiration_check_interval);
         }
     }
-    
+
     public void preloadAssets() {
         loadBitmapFonts();
     }
@@ -108,7 +109,7 @@ public class UITextureManager extends TextureManager {
 
         // XXX HACK for bingo backward compatibility
         if (UIConfig.isUnknownUri(textureUri)) {
-            textureUri = UIConfig.URI_ASSET + textureUri; // make it asset://
+            textureUri = Pure2DURI.ASSET + textureUri; // make it asset://
         }
         final String actualPath = mUIManager.getPathFromUri(textureUri);
 
@@ -119,22 +120,22 @@ public class UITextureManager extends TextureManager {
             Texture texture = null;
             final TextureOptions textureOptions = mUIManager.getTextureOptions();
             // create
-            if (textureUri.startsWith(UIConfig.URI_DRAWABLE)) {
+            if (textureUri.startsWith(Pure2DURI.DRAWABLE)) {
                 // load from file / sdcard
                 final int drawable = Integer.valueOf(actualPath);
                 if (drawable > 0) {
                     texture = createDrawableTexture(drawable, textureOptions, async);
                 }
-            } else if (textureUri.startsWith(UIConfig.URI_FILE)) {
+            } else if (textureUri.startsWith(Pure2DURI.FILE)) {
                 // load from file / sdcard
                 texture = createFileTexture(actualPath, textureOptions, async);
-            } else if (textureUri.startsWith(UIConfig.URI_ASSET)) {
+            } else if (textureUri.startsWith(Pure2DURI.ASSET)) {
                 // load from bundle assets
                 texture = createAssetTexture(actualPath, textureOptions, async);
-            } else if (textureUri.startsWith(UIConfig.URI_HTTP)) {
+            } else if (textureUri.startsWith(Pure2DURI.HTTP)) {
                 // load from bundle assets
                 texture = createURLTexture(actualPath, textureOptions, async);
-            } else if (textureUri.startsWith(UIConfig.URI_CACHE)) {
+            } else if (textureUri.startsWith(Pure2DURI.CACHE)) {
                 // load from url or cache file
                 texture = createURLCacheTexture(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, textureOptions, async);
             }
@@ -169,7 +170,7 @@ public class UITextureManager extends TextureManager {
 
         // XXX HACK for bingo backward compatibility
         if (UIConfig.isUnknownUri(jsonUri)) {
-            jsonUri = UIConfig.URI_ASSET + jsonUri; // make it asset://
+            jsonUri = Pure2DURI.ASSET + jsonUri; // make it asset://
         }
         final String actualPath = mUIManager.getPathFromUri(jsonUri);
 
@@ -182,25 +183,25 @@ public class UITextureManager extends TextureManager {
                 final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
 
                 // load from sdcard / assets
-                if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
+                if (jsonUri.startsWith(Pure2DURI.ASSET)) {
                     if (async) {
                         atlas.loadAsync(mAssets, actualPath, mUIConfigVO.screen_scale);
                     } else {
                         atlas.load(mAssets, actualPath, mUIConfigVO.screen_scale);
                     }
-                } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
+                } else if (jsonUri.startsWith(Pure2DURI.FILE)) {
                     if (async) {
                         atlas.loadAsync(null, actualPath, mUIConfigVO.screen_scale);
                     } else {
                         atlas.load(actualPath, mUIConfigVO.screen_scale);
                     }
-                } else if (jsonUri.startsWith(UIConfig.URI_HTTP)) {
+                } else if (jsonUri.startsWith(Pure2DURI.HTTP)) {
                     if (async) {
                         atlas.loadURLAsync(actualPath, null, mUIConfigVO.screen_scale);
                     } else {
                         atlas.loadURL(actualPath, null, mUIConfigVO.screen_scale);
                     }
-                } else if (jsonUri.startsWith(UIConfig.URI_CACHE)) {
+                } else if (jsonUri.startsWith(Pure2DURI.CACHE)) {
                     if (async) {
                         atlas.loadURLAsync(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath, mUIConfigVO.screen_scale);
                     } else {
@@ -242,25 +243,25 @@ public class UITextureManager extends TextureManager {
             final NovaLoader novaLoader = new NovaLoader();
             final NovaFactory novaFactory = new NovaFactory(novaLoader, getNovaDelegator(), mUIConfigVO.screen_scale);
             // load from sdcard / assets
-            if (jsonUri.startsWith(UIConfig.URI_ASSET)) {
+            if (jsonUri.startsWith(Pure2DURI.ASSET)) {
                 if (async) {
                     novaLoader.loadAsync(mAssets, actualPath);
                 } else {
                     novaLoader.load(mAssets, actualPath);
                 }
-            } else if (jsonUri.startsWith(UIConfig.URI_FILE)) {
+            } else if (jsonUri.startsWith(Pure2DURI.FILE)) {
                 if (async) {
                     novaLoader.loadAsync(null, actualPath);
                 } else {
                     novaLoader.load(null, actualPath);
                 }
-            } else if (jsonUri.startsWith(UIConfig.URI_HTTP)) {
+            } else if (jsonUri.startsWith(Pure2DURI.HTTP)) {
                 if (async) {
                     novaLoader.loadURLAsync(actualPath, null);
                 } else {
                     novaLoader.loadURL(actualPath, null);
                 }
-            } else if (jsonUri.startsWith(UIConfig.URI_CACHE)) {
+            } else if (jsonUri.startsWith(Pure2DURI.CACHE)) {
                 if (async) {
                     novaLoader.loadURLAsync(mUIConfigVO.texture_manager.cdn_url + actualPath, mUIConfigVO.texture_manager.cache_dir + actualPath);
                 } else {
@@ -294,7 +295,7 @@ public class UITextureManager extends TextureManager {
                     return;
                 }
 
-                final String formattedSprite = sprite.replace(NovaConfig.$SD, UIConfig.URI_CACHE); // bingo compatibility
+                final String formattedSprite = sprite.replace(NovaConfig.$SD, Pure2DURI.CACHE); // bingo compatibility
                 // get the loaded frames
                 AtlasFrameSet frames = null;
 
