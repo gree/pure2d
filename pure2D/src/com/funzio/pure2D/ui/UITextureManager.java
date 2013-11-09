@@ -69,8 +69,12 @@ public class UITextureManager extends TextureManager {
             setExpirationCheckInterval(manager.getConfig().texture_manager.expiration_check_interval);
         }
     }
+    
+    public void preloadAssets() {
+        loadBitmapFonts();
+    }
 
-    public void loadBitmapFonts() {
+    protected void loadBitmapFonts() {
         if (mUIManager == null) {
             Log.e(TAG, "UIManager not found!", new Exception());
             return;

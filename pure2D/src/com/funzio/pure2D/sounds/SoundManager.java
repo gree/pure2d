@@ -39,7 +39,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     protected volatile SparseIntArray mStreamIds;
 
-    protected SoundManager(final Context context, final int maxStream) {
+    public SoundManager(final Context context, final int maxStream) {
         mContext = context;
         mSoundMap = new SparseArray<Soundable>();
         mStreamIds = new SparseIntArray();

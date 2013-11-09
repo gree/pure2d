@@ -3,18 +3,14 @@
  */
 package com.funzio.pure2D.demo;
 
-import android.app.Application;
-
-import com.funzio.pure2D.ui.UIManager;
+import com.funzio.pure2D.app.Pure2DAppplication;
 
 /**
  * @author long.ngo
  */
-public class Pure2DDemoApplication extends Application {
+public class Pure2DDemoApplication extends Pure2DAppplication {
 
     private static Pure2DDemoApplication sInstance;
-
-    private UIManager mUIManager = UIManager.getInstance();
 
     public Pure2DDemoApplication() {
         // singleton
@@ -29,13 +25,7 @@ public class Pure2DDemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        mUIManager.setContext(this);
-        // load ui config
-        mUIManager.loadConfig("ui_config.json");// .applyScale(0.5f);
-    }
-
-    public UIManager getUIManager() {
-        return mUIManager;
+        // TODO
     }
 
 }

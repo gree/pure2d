@@ -37,8 +37,13 @@ public class PUIActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
-                    mUIManager.setTextureManager((UITextureManager) mScene.getTextureManager());
+                    final UITextureManager textureManager = (UITextureManager) mScene.getTextureManager();
+                    mUIManager.setTextureManager(textureManager);
 
+                    // preload some assets
+                    textureManager.preloadAssets();
+
+                    // add a sample object
                     addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
                 }
             }
