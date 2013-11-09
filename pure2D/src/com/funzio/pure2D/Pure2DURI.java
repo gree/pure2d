@@ -16,6 +16,27 @@ public class Pure2DURI {
     public static final String HTTP = "http://";
     public static final String CACHE = "cache://";
 
+    public static String getPathFromUri(final String uri) {
+        if (uri == null) {
+            return null;
+        }
+
+        String actualPath = null;
+        if (uri.startsWith(Pure2DURI.DRAWABLE)) {
+            actualPath = uri.substring(Pure2DURI.DRAWABLE.length());
+        } else if (uri.startsWith(Pure2DURI.ASSET)) {
+            actualPath = uri.substring(Pure2DURI.ASSET.length());
+        } else if (uri.startsWith(Pure2DURI.FILE)) {
+            actualPath = uri.substring(Pure2DURI.FILE.length());
+        } else if (uri.startsWith(Pure2DURI.CACHE)) {
+            actualPath = uri.substring(Pure2DURI.CACHE.length());
+        } else {
+            actualPath = uri; // keep
+        }
+
+        return actualPath;
+    }
+
     public static final String string(final String path) {
         return STRING + path;
     }

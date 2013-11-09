@@ -64,6 +64,10 @@ public class UIManager {
     public Context getContext() {
         return mContext;
     }
+    
+    public String getPackageName() {
+        return mPackageName;
+    }
 
     public void reset() {
         Log.w(TAG, "reset()");
@@ -172,29 +176,6 @@ public class UIManager {
     public XmlPullParser getXMLByName(final String xmlName) {
         final int id = mResources.getIdentifier(xmlName, "xml", mPackageName);
         return mResources.getXml(id);
-    }
-
-    public String getPathFromUri(final String uri) {
-        if (uri == null) {
-            return null;
-        }
-
-        String actualPath = null;
-        if (uri.startsWith(Pure2DURI.DRAWABLE)) {
-            actualPath = uri.substring(Pure2DURI.DRAWABLE.length());
-            final int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mPackageName);
-            actualPath = String.valueOf(drawable);
-        } else if (uri.startsWith(Pure2DURI.ASSET)) {
-            actualPath = uri.substring(Pure2DURI.ASSET.length());
-        } else if (uri.startsWith(Pure2DURI.FILE)) {
-            actualPath = uri.substring(Pure2DURI.FILE.length());
-        } else if (uri.startsWith(Pure2DURI.CACHE)) {
-            actualPath = uri.substring(Pure2DURI.CACHE.length());
-        } else {
-            actualPath = uri; // keep
-        }
-
-        return actualPath;
     }
 
 }

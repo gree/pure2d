@@ -111,7 +111,7 @@ public class UITextureManager extends TextureManager {
         if (UIConfig.isUnknownUri(textureUri)) {
             textureUri = Pure2DURI.ASSET + textureUri; // make it asset://
         }
-        final String actualPath = mUIManager.getPathFromUri(textureUri);
+        final String actualPath = Pure2DURI.getPathFromUri(textureUri);
 
         if (mGeneralTextures.containsKey(actualPath)) {
             // use cache
@@ -122,7 +122,7 @@ public class UITextureManager extends TextureManager {
             // create
             if (textureUri.startsWith(Pure2DURI.DRAWABLE)) {
                 // load from file / sdcard
-                final int drawable = Integer.valueOf(actualPath);
+                final int drawable = mResources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, mUIManager.getPackageName());
                 if (drawable > 0) {
                     texture = createDrawableTexture(drawable, textureOptions, async);
                 }
@@ -172,7 +172,7 @@ public class UITextureManager extends TextureManager {
         if (UIConfig.isUnknownUri(jsonUri)) {
             jsonUri = Pure2DURI.ASSET + jsonUri; // make it asset://
         }
-        final String actualPath = mUIManager.getPathFromUri(jsonUri);
+        final String actualPath = Pure2DURI.getPathFromUri(jsonUri);
 
         if (mAtlasFrames.containsKey(actualPath)) {
             // reuse cache
@@ -234,7 +234,7 @@ public class UITextureManager extends TextureManager {
             Log.v(TAG, "getUriNova(): " + jsonUri);
         }
 
-        final String actualPath = mUIManager.getPathFromUri(jsonUri);
+        final String actualPath = Pure2DURI.getPathFromUri(jsonUri);
 
         if (mNovaFactories.containsKey(actualPath)) {
             // reuse cache
