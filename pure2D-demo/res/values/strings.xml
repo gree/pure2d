@@ -191,4 +191,7 @@
     <string name="pui_xml_layouts">PUI XML Layouts</string>
     <string name="scroll_groups">Scroll Groups</string>
 
+    <!-- charater sets -->
+    <string name="charset_basic_latin">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!</string>
+
 </resources>

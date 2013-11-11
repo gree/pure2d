@@ -3,7 +3,6 @@
  */
 package com.funzio.pure2D.ui.vo;
 
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextPaint;
@@ -12,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.funzio.pure2D.text.TextOptions;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * @author long.ngo
@@ -57,14 +57,14 @@ public class FontVO {
         stroke_color = json.optString("stroke_color", "");
     }
 
-    public TextOptions createTextOptions(final AssetManager assets) {
+    public TextOptions createTextOptions(final UIManager manager) {
         final TextOptions options = TextOptions.getDefault();
 
         options.id = name;
-        options.inCharacters = characters;
+        options.inCharacters = manager.evalString(characters);
 
         try {
-            options.inTextPaint.setTypeface(Typeface.createFromAsset(assets, typeface));
+            options.inTextPaint.setTypeface(Typeface.createFromAsset(manager.getContext().getAssets(), manager.evalString(typeface)));
         } catch (Exception e) {
             // Log.e(TAG, "Creating Typeface Error: " + typeface, e);
             // fallback solution

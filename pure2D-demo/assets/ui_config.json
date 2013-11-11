@@ -12,7 +12,7 @@
 		{
 			"name": "font1",
             "style": "bold",
-            "characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!",
+            "characters": "@string/charset_basic_latin",
             "padding_x": 10,
             "padding_y": 10,
             "shadow_dx": 5,
@@ -28,7 +28,7 @@
 		{
 			"name": "font2",
             "style": "bold",
-            "characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!",
+            "characters": "@string/charset_basic_latin",
             "padding_x": 5,
             "padding_y": 5,
             "shadow_radius": 5.5,

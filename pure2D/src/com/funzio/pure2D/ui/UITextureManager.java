@@ -85,7 +85,7 @@ public class UITextureManager extends TextureManager {
         final List<FontVO> fonts = mUIConfigVO.fonts;
         final int size = fonts.size();
         for (int i = 0; i < size; i++) {
-            final TextOptions options = fonts.get(i).createTextOptions(mAssets);
+            final TextOptions options = fonts.get(i).createTextOptions(mUIManager);
             final BitmapFont font = new BitmapFont(options.inCharacters, options);
             font.load(mGLState);
             // map it
