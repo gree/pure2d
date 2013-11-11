@@ -278,6 +278,8 @@ public class BaseScene implements Scene {
         } else {
             // reload with new gl
             mGLState.reset(gl);
+            final long idleTime = SystemClock.elapsedRealtime() - mStartTime;
+            mTextureManager.update((int) idleTime);
             // reload all textures
             mTextureManager.reload(mGLState, mStage.getResources());
 

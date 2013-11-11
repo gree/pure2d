@@ -426,7 +426,8 @@ public class TextureManager {
                     mTextures.get(i).update(mExpirationCheckElapsedTime);
                 }
 
-                mExpirationCheckElapsedTime -= mExpirationCheckInterval;
+                // reset
+                mExpirationCheckElapsedTime = 0;
             }
         }
     }
