@@ -1,6 +1,7 @@
 <!ENTITY % ALIGN "align (center|left|right|top|bottom|vcenter|hcenter)  #IMPLIED">
 <!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
 <!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
+<!ENTITY % ASYNC "async (true|false)  #IMPLIED">
 
 <!ENTITY % OBJ_ATTRS
  	"id CDATA #IMPLIED
@@ -56,23 +57,27 @@
 <!ELEMENT Sprite EMPTY>
 <!ATTLIST Sprite 
 	%OBJ_ATTRS;
-	%SOURCE;>
+	%SOURCE;
+	%ASYNC;>
 	
 <!ELEMENT Sprite9 EMPTY>
 <!ATTLIST Sprite9 
 	%OBJ_ATTRS;
 	%SOURCE;
+	%ASYNC;
 	patches CDATA "">
 	
 <!ELEMENT Clip EMPTY>
 <!ATTLIST Clip 
 	%OBJ_ATTRS;
-	%SOURCE;>
+	%SOURCE;
+	%ASYNC;>
 	
 <!ELEMENT NovaGroup ANY>
 <!ATTLIST NovaGroup 
 	%OBJ_ATTRS;
-	%SOURCE;>
+	%SOURCE;
+	%ASYNC;>
 	
 <!ELEMENT Text EMPTY>
 <!ATTLIST Text 
@@ -84,4 +89,5 @@
 <!ATTLIST Button 
 	%GROUP_ATTRS;
 	%SOURCE;
+	%ASYNC;
 	patches CDATA "">
