@@ -10,10 +10,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 
 /**
  * @author sajjadtabib
- *
  */
 public class BitmapUtils {
 
@@ -28,7 +31,7 @@ public class BitmapUtils {
     public static Bitmap getSubSampledBitmap(final InputStream is, final int reqWidth, final int reqHeight, final Options options) {
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
 
-        options.inSampleSize = sampleSize; //use sample size
+        options.inSampleSize = sampleSize; // use sample size
         options.inJustDecodeBounds = false;
         options.inPurgeable = true;
         return BitmapFactory.decodeStream(is, null, options);
@@ -43,7 +46,7 @@ public class BitmapUtils {
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
 
-        options.inSampleSize = sampleSize; //use sample size
+        options.inSampleSize = sampleSize; // use sample size
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeResource(res, resourceId, options);
@@ -57,7 +60,7 @@ public class BitmapUtils {
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
 
-        options.inSampleSize = sampleSize; //use sample size
+        options.inSampleSize = sampleSize; // use sample size
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFile(fileName, options);
@@ -71,7 +74,7 @@ public class BitmapUtils {
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
 
-        options.inSampleSize = sampleSize; //use sample size
+        options.inSampleSize = sampleSize; // use sample size
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFileDescriptor(fd, null, options);
@@ -85,7 +88,7 @@ public class BitmapUtils {
 
         int sampleSize = BitmapUtils.calculateSampleSize(reqWidth, reqHeight, options);
 
-        options.inSampleSize = sampleSize; //use sample size
+        options.inSampleSize = sampleSize; // use sample size
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeStream(is, null, options);
@@ -106,5 +109,14 @@ public class BitmapUtils {
             }
         }
         return sampleSize;
+    }
+
+    public static Drawable getSubSampledDrawable(final Resources res, final int resourceId, final int reqWidth, final int reqHeight) {
+        Bitmap bitmap = getSubSampledBitmap(res, resourceId, reqWidth, reqHeight);
+        if (bitmap.getNinePatchChunk() != null) {
+            return new NinePatchDrawable(res, bitmap, bitmap.getNinePatchChunk(), new Rect(), null);
+        }
+
+        return new BitmapDrawable(res, bitmap);
     }
 }
