@@ -51,10 +51,6 @@ public class Sprite9 extends Rectangular {
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#setTexture(com.funzio.pure2D.gl.gl10.textures.Texture)
-     */
     @Override
     public void setTexture(final Texture texture) {
         super.setTexture(texture);
@@ -65,10 +61,6 @@ public class Sprite9 extends Rectangular {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#validateTextureCoordBuffer()
-     */
     @Override
     protected void validateTextureCoordBuffer() {
         if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
@@ -173,10 +165,6 @@ public class Sprite9 extends Rectangular {
         validate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Rectangular#setSize(float, float)
-     */
     @Override
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
@@ -185,10 +173,6 @@ public class Sprite9 extends Rectangular {
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#drawChildren(com.funzio.pure2D.gl.gl10.GLState)
-     */
     @Override
     protected boolean drawChildren(final GLState glState) {
         // texture check
@@ -196,8 +180,13 @@ public class Sprite9 extends Rectangular {
             return super.drawChildren(glState);
         }
 
-        // no color buffer supported
-        glState.setColorArrayEnabled(false);
+        // color buffer
+        if (mColorBuffer == null) {
+            glState.setColorArrayEnabled(false);
+        } else {
+            // apply color buffer
+            mColorBuffer.apply(glState);
+        }
 
         // bind the texture
         mTexture.bind();
@@ -217,10 +206,6 @@ public class Sprite9 extends Rectangular {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();
