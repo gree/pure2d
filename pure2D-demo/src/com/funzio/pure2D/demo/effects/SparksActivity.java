@@ -24,7 +24,8 @@ public class SparksActivity extends StageActivity {
         color2.a = 0;
 
         // create object
-        SparkGroup obj = new SparkGroup(TriangleSpark.class, 20, 200, 250, 50, 70, color1, color2, color2);
+        SparkGroup obj = new SparkGroup(TriangleSpark.class, 10, 200, 250, 50, 100, color1, color2, color2);
+        obj.setAnimationStyle(RANDOM.nextInt(SparkGroup.STYLE_FAN_REVERSED + 1));
 
         // position
         obj.setPosition(x, y);
