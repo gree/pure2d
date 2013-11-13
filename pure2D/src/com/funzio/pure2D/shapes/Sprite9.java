@@ -214,6 +214,9 @@ public class Sprite9 extends Rectangular {
             return super.drawChildren(glState);
         }
 
+        // no color buffer supported
+        glState.setColorArrayEnabled(false);
+
         // bind the texture
         mTexture.bind();
 
