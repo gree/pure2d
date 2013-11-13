@@ -7,8 +7,6 @@ import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.funzio.pure2D.Playable;
-import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
@@ -25,11 +23,6 @@ public class TriangleSpark extends Shape implements Sparkable {
     protected static final GLColor[] DEFAULT_COLORS = new GLColor[] {
             new GLColor(1f, 1f, 1f, 1f), new GLColor(1f, 1f, 1f, 0f), new GLColor(1f, 1f, 1f, 0f)
     };
-    // protected static final BlendFunc DEFAULT_BF = BlendFunc.getAdd();
-
-    protected RotateAnimator mRotateAnimator;
-
-    // protected ScaleAnimator mScaleAnimator;
 
     public TriangleSpark() {
         super();
@@ -39,23 +32,8 @@ public class TriangleSpark extends Shape implements Sparkable {
 
         // default colors
         setColorBuffer(new ColorBuffer(DEFAULT_COLORS));
-        // setBlendFunc(DEFAULT_BF);
-
-        // initial angle
-        setRotation(RANDOM.nextInt(360));
-
-        // animators
-        mRotateAnimator = new RotateAnimator(null);
-        mRotateAnimator.setLoop(Playable.LOOP_REPEAT);
-        mRotateAnimator.setDuration(2000 + RANDOM.nextInt(2000));
-        addManipulator(mRotateAnimator);
-        mRotateAnimator.start(mRotation + (RANDOM.nextInt(2) == 0 ? -360 : 360));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#setSize(android.graphics.PointF)
-     */
     @Override
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
