@@ -203,10 +203,6 @@ public class Sprite9 extends Rectangular {
         invalidate(InvalidateFlags.TEXTURE_COORDS);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#drawChildren(com.funzio.pure2D.gl.gl10.GLState)
-     */
     @Override
     protected boolean drawChildren(final GLState glState) {
         // texture check
@@ -214,8 +210,13 @@ public class Sprite9 extends Rectangular {
             return super.drawChildren(glState);
         }
 
-        // no color buffer supported
-        glState.setColorArrayEnabled(false);
+        // color buffer
+        if (mColorBuffer == null) {
+            glState.setColorArrayEnabled(false);
+        } else {
+            // apply color buffer
+            mColorBuffer.apply(glState);
+        }
 
         // bind the texture
         mTexture.bind();
