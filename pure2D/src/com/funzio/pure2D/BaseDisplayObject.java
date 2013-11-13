@@ -876,13 +876,17 @@ public abstract class BaseDisplayObject implements DisplayObject {
             // use the adapter
             if (Pure2D.ADAPTER.getSurface() != null) {
                 Pure2D.ADAPTER.getSurface().queueEvent(r);
-                return true;
             } else {
-                return false;
+                // run directly
+                r.run();
             }
+        } else {
+            // run directly
+            r.run();
         }
 
-        return false;
+        // always success now
+        return true;
     }
 
     public boolean removeFromParent() {
