@@ -18,6 +18,7 @@ import com.funzio.pure2D.gl.GLColor;
 public class SparkGroup extends DisplayGroup {
     public static final int STYLE_RANDOM = 0;
     public static final int STYLE_FAN = 1;
+    public static final int STYLE_FAN_REVERSED = 2;
 
     protected static final Random RANDOM = new Random();
 
@@ -98,36 +99,50 @@ public class SparkGroup extends DisplayGroup {
         queueEvent(new Runnable() {
             @Override
             public void run() {
-                final float rotationStep = 360 / (float) mNumChildren;
-                for (int i = 0; i < mNumChildren; i++) {
-                    final Sparkable spark = ((Sparkable) getChildAt(i));
-                    spark.removeAllManipulators();
+                // clear animator
+                removeAllManipulators();
 
-                    if (style == STYLE_RANDOM) {
+                if (style == STYLE_RANDOM) {
+                    for (int i = 0; i < mNumChildren; i++) {
+                        final Sparkable spark = ((Sparkable) getChildAt(i));
+                        // clear animator
+                        spark.removeAllManipulators();
+
                         // initial angle
                         final float degree = RANDOM.nextInt(360);
                         spark.setRotation(degree);
 
-                        // animators
+                        // individual animator
                         final RotateAnimator rotateAnimator = new RotateAnimator(null);
                         rotateAnimator.setLoop(Playable.LOOP_REPEAT);
                         rotateAnimator.setDuration(mAnimationDuration + RANDOM.nextInt(mAnimationDuration));
                         rotateAnimator.setValues(degree, degree + (RANDOM.nextInt(2) == 0 ? -359 : 359));
                         spark.addManipulator(rotateAnimator);
                         rotateAnimator.start();
-                    } else if (style == STYLE_FAN) {
-                        // initial angle
-                        final float degree = i * rotationStep;
-                        spark.setRotation(degree);
-
-                        // animators
-                        final RotateAnimator rotateAnimator = new RotateAnimator(null);
-                        rotateAnimator.setLoop(Playable.LOOP_REPEAT);
-                        rotateAnimator.setDuration(mAnimationDuration);
-                        rotateAnimator.setValues(degree, degree + 359);
-                        spark.addManipulator(rotateAnimator);
-                        rotateAnimator.start();
                     }
+                } else if (style == STYLE_FAN || style == STYLE_FAN_REVERSED) {
+                    final float rotationStep = 360 / (float) mNumChildren;
+                    // reposition children
+                    for (int i = 0; i < mNumChildren; i++) {
+                        final Sparkable spark = ((Sparkable) getChildAt(i));
+                        // clear animator
+                        spark.removeAllManipulators();
+
+                        // initial angle
+                        spark.setRotation(i * rotationStep);
+                    }
+
+                    // global animator
+                    final RotateAnimator rotateAnimator = new RotateAnimator(null);
+                    rotateAnimator.setLoop(Playable.LOOP_REPEAT);
+                    rotateAnimator.setDuration(mAnimationDuration);
+                    if (style == STYLE_FAN) {
+                        rotateAnimator.setValues(0, 359);
+                    } else {
+                        rotateAnimator.setValues(0, -359);
+                    }
+                    addManipulator(rotateAnimator);
+                    rotateAnimator.start();
                 }
             }
         });
@@ -141,9 +156,19 @@ public class SparkGroup extends DisplayGroup {
         }
 
         mAnimationDuration = duration;
-        for (int i = 0; i < mNumChildren; i++) {
-            final Sparkable spark = ((Sparkable) getChildAt(i));
-            final Manipulator manipulator = spark.getManipulator(0);
+
+        if (mAnimationStyle == STYLE_RANDOM) {
+            for (int i = 0; i < mNumChildren; i++) {
+                final Sparkable spark = ((Sparkable) getChildAt(i));
+                final Manipulator manipulator = spark.getManipulator(0);
+                // update individual animator
+                if (manipulator != null && manipulator instanceof TweenAnimator) {
+                    ((TweenAnimator) manipulator).setDuration(duration);
+                }
+            }
+        } else if (mAnimationStyle == STYLE_FAN || mAnimationStyle == STYLE_FAN_REVERSED) {
+            // update global animator
+            final Manipulator manipulator = getManipulator(0);
             if (manipulator != null && manipulator instanceof TweenAnimator) {
                 ((TweenAnimator) manipulator).setDuration(duration);
             }
