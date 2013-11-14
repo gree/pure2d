@@ -36,6 +36,8 @@ public class FontVO {
     public float stroke_size;
     public String stroke_color;
 
+    public int texture_size;
+
     public FontVO(final JSONObject json) throws JSONException {
         name = json.getString("name");
 
@@ -55,6 +57,8 @@ public class FontVO {
 
         stroke_size = (float) json.optDouble("stroke_size", 0);
         stroke_color = json.optString("stroke_color", "");
+
+        texture_size = json.optInt("texture_size", 512);
     }
 
     public TextOptions createTextOptions(final UIManager manager) {

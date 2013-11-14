@@ -17,6 +17,7 @@ import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.utils.RectPacker;
 
 /**
@@ -56,8 +57,18 @@ public class BitmapFont {
      * @return
      */
     public Texture load(final GLState glState) {
+        return load(glState.getTextureManager());
+    }
+
+    /**
+     * This can only called on GL Thread
+     * 
+     * @param textureManager
+     * @return
+     */
+    public Texture load(final TextureManager textureManager) {
         if (mTexture == null) {
-            mTexture = glState.getTextureManager().createDynamicTexture(new Runnable() {
+            mTexture = textureManager.createDynamicTexture(new Runnable() {
 
                 @Override
                 public void run() {
