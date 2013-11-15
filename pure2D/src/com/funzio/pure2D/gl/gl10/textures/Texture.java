@@ -235,9 +235,15 @@ public abstract class Texture {
 
     public void reload(final GLState glState) {
         mGLState = glState;
-        mGL = mGLState.mGL;
 
-        reload();
+        // diff check
+        if (mGL != mGLState.mGL) {
+            mGL = mGLState.mGL;
+            mTextureID = 0; // clear the previous id
+
+            // reload now
+            reload();
+        }
     }
 
     public abstract void reload();
