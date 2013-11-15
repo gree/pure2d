@@ -66,7 +66,7 @@ public class Shape extends BaseDisplayObject {
         mTexture = texture;
         mTextureLoaded = mTexture != null ? mTexture.isLoaded() : false;
 
-        invalidate(InvalidateFlags.TEXTURE | InvalidateFlags.TEXTURE_COORDS);
+        invalidate(mTextureLoaded ? (TEXTURE | TEXTURE_COORDS) : TEXTURE);
     }
 
     @Override
@@ -75,6 +75,7 @@ public class Shape extends BaseDisplayObject {
         if (!mTextureLoaded && mTexture != null && mTexture.isLoaded()) {
             // flag
             mTextureLoaded = true;
+            invalidate(TEXTURE_COORDS);
 
             // internal callback
             onTextureLoaded(mTexture);
@@ -86,7 +87,7 @@ public class Shape extends BaseDisplayObject {
     @Override
     protected void drawStart(final GLState glState) {
         // texture coordinates changed?
-        if ((mInvalidateFlags & InvalidateFlags.TEXTURE_COORDS) != 0) {
+        if ((mInvalidateFlags & TEXTURE_COORDS) != 0) {
             validateTextureCoordBuffer();
         }
 
@@ -125,7 +126,7 @@ public class Shape extends BaseDisplayObject {
         }
 
         // clear flag: texture coords
-        validate(InvalidateFlags.TEXTURE_COORDS);
+        validate(TEXTURE_COORDS);
     }
 
     protected boolean setTextureCoordBuffer(final float[] values) {
@@ -143,7 +144,7 @@ public class Shape extends BaseDisplayObject {
         // invalidate texture coords
         mTextureFlippedForAxis = false;
 
-        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        invalidate(TEXTURE_COORDS);
 
         return true;
     }
@@ -159,7 +160,7 @@ public class Shape extends BaseDisplayObject {
         // invalidate texture coords
         mTextureFlippedForAxis = false;
 
-        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        invalidate(TEXTURE_COORDS);
     }
 
     public TextureCoordBuffer getTextureCoordBuffer() {
@@ -278,7 +279,7 @@ public class Shape extends BaseDisplayObject {
         }
 
         if (flipped) {
-            invalidate(InvalidateFlags.TEXTURE_COORDS);
+            invalidate(TEXTURE_COORDS);
         }
     }
 
@@ -297,7 +298,7 @@ public class Shape extends BaseDisplayObject {
     public void onAdded(final Container parent) {
         super.onAdded(parent);
 
-        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        invalidate(TEXTURE_COORDS);
     }
 
     protected void onTextureLoaded(final Texture texture) {
