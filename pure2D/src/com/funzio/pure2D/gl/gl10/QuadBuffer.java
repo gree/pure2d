@@ -79,6 +79,14 @@ public class QuadBuffer extends VertexBuffer {
         return mWidth != 0 && mHeight != 0;
     }
 
+    public float getWidth() {
+        return mWidth;
+    }
+
+    public float getHeight() {
+        return mHeight;
+    }
+
     public static boolean compare(final QuadBuffer a, final QuadBuffer b) {
         if (a == b) {
             return true;
