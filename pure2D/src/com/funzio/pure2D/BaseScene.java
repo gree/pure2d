@@ -261,6 +261,7 @@ public class BaseScene implements Scene {
         boolean firstTime;
         if (mGLState == null) {
             mGLState = new GLState(gl, mStage);
+            mGLState.setAxisSystem(mAxisSystem);
             mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
             mGLState.setCamera(mCamera);
 

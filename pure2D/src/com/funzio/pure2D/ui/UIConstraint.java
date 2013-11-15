@@ -4,10 +4,12 @@
 package com.funzio.pure2D.ui;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.LinearGroup;
@@ -65,18 +67,20 @@ public class UIConstraint {
     public UNIT childrenGapUnit = UNIT.UNSET;
 
     private UIConfigVO mUIConfigVO;
+    private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     private boolean mHasAttributes = false;
 
     public UIConstraint() {
         // TODO Auto-generated constructor stub
     }
 
-    public UIConstraint(final XmlPullParser parser, final UIConfigVO config) {
-        setAttributes(parser, config);
+    public UIConstraint(final XmlPullParser parser, final UIManager manager) {
+        setAttributes(parser, manager);
     }
 
-    public void setAttributes(final XmlPullParser parser, final UIConfigVO config) {
-        mUIConfigVO = config;
+    public void setAttributes(final XmlPullParser parser, final UIManager manager) {
+        mUIConfigVO = manager.getConfig();
+        mAxisSystem = manager.getTextureManager().getGLState().getAxisSystem();
         mHasAttributes = false;
 
         widthUnit = getAttributeUnit(parser, ATT_WIDTH);
@@ -289,7 +293,7 @@ public class UIConstraint {
         final float cx = targetPos.x, cy = targetPos.y;
         final float cw = targetSize.x, ch = targetSize.y;
         float l = cx, r = 0, t = 0, b = cy, w = cw, h = ch;
-
+        
         // left and right
         if (leftUnit == UNIT.PIXEL) {
             l = x;
