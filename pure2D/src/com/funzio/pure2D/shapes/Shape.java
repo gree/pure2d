@@ -10,7 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
