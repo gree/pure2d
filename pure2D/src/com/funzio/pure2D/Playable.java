@@ -8,7 +8,7 @@ import android.graphics.RectF;
 /**
  * @author long
  */
-public interface Playable extends DisplayObject, LoopModes {
+public interface Playable extends LoopModes {
 
     public void play();
 

@@ -7,9 +7,9 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.funzio.pure2D.Playable;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.animation.PlayableObject;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.BufferTexture;
@@ -27,9 +27,9 @@ public class CacheAtlas extends Atlas {
     private FrameBuffer mFrameBuffer;
 
     private RectPacker mPacker;
-    private Playable mTarget;
+    private PlayableObject mTarget;
 
-    public CacheAtlas(final GLState glState, final Playable target, final int maxWidth) {
+    public CacheAtlas(final GLState glState, final PlayableObject target, final int maxWidth) {
         Log.v(TAG, "CacheAtlas()");
 
         mGLState = glState;
