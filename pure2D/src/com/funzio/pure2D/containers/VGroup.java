@@ -209,8 +209,8 @@ public class VGroup extends LinearGroup implements UIObject {
         DisplayObject child;
         PointF childSize;
 
+        findStartIndex();
         if (mRepeating) {
-            findStartIndex();
             float nextY = mStartY;
             for (int i = 0; i < mNumChildren; i++) {
                 child = mChildren.get((i + mStartIndex) % mNumChildren);

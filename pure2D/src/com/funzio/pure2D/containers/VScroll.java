@@ -3,7 +3,10 @@
  */
 package com.funzio.pure2D.containers;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * List is an extended Wheel that also handles masking and snapping. Mainly used for UI.
@@ -11,7 +14,8 @@ import com.funzio.pure2D.animators.Animator;
  * @author long
  */
 public class VScroll extends VWheel implements List {
-    protected boolean mSnapping = false;
+    protected boolean mSnapEnabled = false;
+    protected boolean mSnapping2Bound = false;
 
     public VScroll() {
         super();
@@ -26,14 +30,22 @@ public class VScroll extends VWheel implements List {
     protected void startSwipe() {
         super.startSwipe();
 
-        mSnapping = false;
+        mSnapping2Bound = false;
     }
 
     @Override
     protected void stopSwipe() {
         super.stopSwipe();
 
-        mSnapping = false;
+        mSnapping2Bound = false;
+    }
+
+    public boolean isSnapEnabled() {
+        return mSnapEnabled;
+    }
+
+    public void setSnapEnabled(final boolean snapEnabled) {
+        mSnapEnabled = snapEnabled;
     }
 
     @Override
@@ -53,7 +65,7 @@ public class VScroll extends VWheel implements List {
     public void onAnimationUpdate(final Animator animator, final float value) {
         super.onAnimationUpdate(animator, value);
 
-        if (!mSnapping) {
+        if (!mSnapping2Bound) {
             // out of range?
             if (mScrollPosition.y < 0 || mScrollPosition.y > mScrollMax.y) {
                 stop();
@@ -65,14 +77,28 @@ public class VScroll extends VWheel implements List {
     public void onAnimationEnd(final Animator animator) {
         super.onAnimationEnd(animator);
 
-        if (!mSnapping) {
+        if (mSnapEnabled) {
+            // TODO put snapping logic here
+        }
+
+        if (!mSnapping2Bound) {
             if (mScrollPosition.y < 0) {
-                mSnapping = true;
+                mSnapping2Bound = true;
                 spinDistance(-mScrollPosition.y, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
             } else if (mScrollPosition.y > mScrollMax.y) {
-                mSnapping = true;
+                mSnapping2Bound = true;
                 spinDistance(-mScrollPosition.y + mScrollMax.y, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
             }
+        }
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String snapEnabled = xmlParser.getAttributeValue(null, ATT_SNAP_ENABLED);
+        if (snapEnabled != null) {
+            setSnapEnabled(Boolean.valueOf(snapEnabled));
         }
     }
 

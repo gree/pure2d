@@ -44,11 +44,13 @@
 	
 <!ELEMENT VScroll ANY>
 <!ATTLIST VScroll 
-	%LGROUP_ATTRS;>
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) "">
 	
 <!ELEMENT HScroll ANY>
 <!ATTLIST HScroll 
-	%LGROUP_ATTRS;>
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) "">
 	
 <!ELEMENT Rect EMPTY>
 <!ATTLIST Rect 

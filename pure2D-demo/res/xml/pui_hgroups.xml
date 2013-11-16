@@ -37,7 +37,14 @@
         clippingEnabled="true"
         height="wrap_content"
         left="5%"
-        right="5%" >
+        right="5%"
+        snapEnabled="true" >
+        <Sprite source="@drawable/cc_128" />
+        <Sprite source="@drawable/mw_128" />
+        <Sprite source="@drawable/ka_128" />
+        <Sprite source="@drawable/cc_128" />
+        <Sprite source="@drawable/mw_128" />
+        <Sprite source="@drawable/ka_128" />
         <Sprite source="@drawable/cc_128" />
         <Sprite source="@drawable/mw_128" />
         <Sprite source="@drawable/ka_128" />
