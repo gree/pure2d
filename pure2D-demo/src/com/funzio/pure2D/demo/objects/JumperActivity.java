@@ -4,34 +4,55 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
-import com.funzio.pure2D.shapes.Rectangular;
+import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.uni.QuadUniGroup;
 
 public class JumperActivity extends StageActivity {
+    private QuadUniGroup mUniGroup;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // generate a lot of objs
-        addObjects(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y, OBJ_INIT_NUM);
+        mScene.setListener(new Scene.Listener() {
+
+            @Override
+            public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
+                if (firstTime) {
+                    mUniGroup = new QuadUniGroup();
+                    mUniGroup.setSize(mDisplaySize.x, mDisplaySize.y);
+                    mScene.addChild(mUniGroup);
+                    // generate a lot of squares
+                    addObjects(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y, OBJ_INIT_NUM);
+                }
+            }
+        });
     }
 
-    private void addObjects(final float x, final float y, final int num) {
+    @Override
+    protected int getNumObjects() {
+        return mScene.getNumGrandChildren();
+    }
+
+    private void addObjects(final float screenX, final float screenY, final int num) {
+        mScene.screenToGlobal(screenX, screenY, mTempPoint);
+
         // generate a lot of squares
         for (int i = 0; i < num; i++) {
 
             // create object
-            Rectangular sq = new Jumper();
+            Jumper sq = new Jumper();
             sq.setSize(30, 30);
             sq.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), 0.7f));
 
             // random positions
-            sq.setPosition(x + mRandom.nextInt(201) - 100, y + mRandom.nextInt(201) - 100);
+            sq.setPosition(mTempPoint.x + mRandom.nextInt(201) - 100, mTempPoint.y + mRandom.nextInt(201) - 100);
 
             // add to scene
-            mScene.addChild(sq);
+            mUniGroup.addChild(sq);
         }
     }
 
@@ -42,7 +63,7 @@ public class JumperActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addObjects(event.getX(), mDisplaySize.y - event.getY(), OBJ_STEP_NUM);
+                    addObjects(event.getX(), event.getY(), OBJ_STEP_NUM * 5);
                 }
             });
         }

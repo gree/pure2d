@@ -5,12 +5,12 @@ package com.funzio.pure2D.demo.objects;
 
 import java.util.Random;
 
-import com.funzio.pure2D.shapes.Rectangular;
+import com.funzio.pure2D.uni.UniRect;
 
 /**
  * @author long
  */
-public class Jumper extends Rectangular {
+public class Jumper extends UniRect {
 
     private Random mRandom = new Random();
 

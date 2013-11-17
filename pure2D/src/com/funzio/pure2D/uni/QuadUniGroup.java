@@ -38,8 +38,11 @@ public class QuadUniGroup extends UniGroup {
         // check and allocate
         if (mNumChildren > mMeshBuffer.getNumCells()) {
             mMeshBuffer.setNumCells(mNumChildren);
-            mTextureCoordBuffer.setNumCells(mNumChildren);
             mColorBuffer.setNumCells(mNumChildren);
+
+            if (mTexture != null) {
+                mTextureCoordBuffer.setNumCells(mNumChildren);
+            }
         }
 
         super.drawChildren(glState);
@@ -78,7 +81,10 @@ public class QuadUniGroup extends UniGroup {
     @Override
     protected void stackChildAt(final UniObject child, final int index) {
         mMeshBuffer.setValuesAt(index, child.getVertices());
-        mTextureCoordBuffer.setRectAt(index, child.getTextureCoords());
         mColorBuffer.setColorAt(index, child.getInheritedColor());
+
+        if (mTexture != null) {
+            mTextureCoordBuffer.setRectAt(index, child.getTextureCoords());
+        }
     }
 }
