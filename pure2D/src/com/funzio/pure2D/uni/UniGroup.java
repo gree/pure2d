@@ -286,7 +286,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return mNumStackedChildren > 0;
     }
 
-    abstract protected void stackChildAt(final Uniable child, final int index);
+    abstract protected int stackChildAt(final Uniable child, final int index);
 
     public Texture getTexture() {
         return mTexture;

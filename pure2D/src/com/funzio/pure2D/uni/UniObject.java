@@ -553,6 +553,18 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         return mParent;
     }
 
+    final public boolean queueEvent(final Runnable r) {
+        if (mParent != null) {
+            return mParent.queueEvent(r);
+        } else {
+            // run directly
+            r.run();
+        }
+
+        // always success now
+        return true;
+    }
+
     public boolean removeFromParent() {
         if (mParent != null) {
             return mParent.removeChild(this);
