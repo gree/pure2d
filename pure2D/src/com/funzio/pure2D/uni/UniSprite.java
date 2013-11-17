@@ -98,7 +98,7 @@ public class UniSprite extends UniRect {
     }
 
     @Override
-    public void onAdded(final UniGroup container) {
+    public void onAdded(final UniContainer container) {
         super.onAdded(container);
 
         if (mSizeToTexture) {

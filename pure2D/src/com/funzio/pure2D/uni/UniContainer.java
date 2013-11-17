@@ -6,25 +6,31 @@ package com.funzio.pure2D.uni;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 
+import com.funzio.pure2D.gl.gl10.textures.Texture;
+
 /**
  * @author long
  */
 public interface UniContainer {
-    public boolean addChild(final UniObject child);
+    public Texture getTexture();
 
-    public boolean addChild(final UniObject child, final int index);
+    public void setTexture(final Texture texture);
 
-    public boolean removeChild(final UniObject child);
+    public boolean addChild(final Uniable child);
+
+    public boolean addChild(final Uniable child, final int index);
+
+    public boolean removeChild(final Uniable child);
 
     public void removeAllChildren();
 
-    public UniObject getChildAt(final int index);
+    public Uniable getChildAt(final int index);
 
-    public int getChildIndex(final UniObject child);
+    public int getChildIndex(final Uniable child);
 
-    public UniObject getChildById(final String id);
+    public Uniable getChildById(final String id);
 
-    public boolean swapChildren(final UniObject child1, final UniObject child2);
+    public boolean swapChildren(final Uniable child1, final Uniable child2);
 
     public boolean swapChildren(final int index1, final int index2);
 

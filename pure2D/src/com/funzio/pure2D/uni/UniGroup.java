@@ -36,9 +36,9 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
     protected static final String ATT_CLIPPING_ENABLED = "clippingEnabled";
     protected static final String ATT_CACHE_ENABLED = "cacheEnabled";
 
-    protected ArrayList<UniObject> mChildren = new ArrayList<UniObject>();
-    protected ArrayList<UniObject> mChildrenDisplayOrder = mChildren;
-    protected HashMap<String, UniObject> mChildrenIds = new HashMap<String, UniObject>();
+    protected ArrayList<Uniable> mChildren = new ArrayList<Uniable>();
+    protected ArrayList<Uniable> mChildrenDisplayOrder = mChildren;
+    protected HashMap<String, Uniable> mChildrenIds = new HashMap<String, Uniable>();
     protected int mNumChildren = 0;
     protected int mNumStackedChildren = 0;
 
@@ -75,7 +75,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
     public void updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
-        UniObject child;
+        Uniable child;
         float temp, sx = mSize.x, sy = mSize.y;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
@@ -116,7 +116,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         final RectF rect = super.updateBounds();
 
         // if bounds changed, all children's bounds should also be changed
-        UniObject child;
+        Uniable child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             if (child.isAutoUpdateBounds()) {
@@ -256,7 +256,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         // draw the children
         int numVisibles = 0;
         final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
-        UniObject child;
+        Uniable child;
         final int numChildren = mChildrenDisplayOrder.size();
         int stackIndex = 0;
         for (int i = 0; i < numChildren; i++) {
@@ -272,7 +272,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
                 if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
                     int j = numVisibles;
-                    while (j > 0 && ((UniObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                    while (j > 0 && ((Uniable) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
@@ -286,7 +286,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return mNumStackedChildren > 0;
     }
 
-    abstract protected void stackChildAt(final UniObject child, final int index);
+    abstract protected void stackChildAt(final Uniable child, final int index);
 
     public Texture getTexture() {
         return mTexture;
@@ -332,7 +332,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
      * @param child
      * @return true if at least one of the corners of the child is in this container's rect.
      */
-    protected boolean isChildInBounds(final UniObject child) {
+    protected boolean isChildInBounds(final Uniable child) {
         // null check
         if (child == null) {
             return false;
@@ -383,7 +383,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         }
     }
 
-    public boolean addChild(final UniObject child) {
+    public boolean addChild(final Uniable child) {
         if (mChildren.indexOf(child) < 0) {
 
             // check id
@@ -410,7 +410,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return false;
     }
 
-    public boolean addChild(final UniObject child, final int index) {
+    public boolean addChild(final Uniable child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
 
             // check id
@@ -436,7 +436,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return false;
     }
 
-    public boolean removeChild(final UniObject child) {
+    public boolean removeChild(final Uniable child) {
         if (mChildren.indexOf(child) >= 0) {
 
             // child callback
@@ -459,7 +459,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
 
     public boolean removeChild(final int index) {
         if (index < mNumChildren) {
-            final UniObject child = mChildren.get(index);
+            final Uniable child = mChildren.get(index);
 
             // child callback
             // child.onPreRemoved();
@@ -487,7 +487,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         // child.onPreRemoved();
         // }
 
-        UniObject child;
+        Uniable child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             // callback
@@ -501,16 +501,16 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         invalidate(CHILDREN);
     }
 
-    public UniObject getChildAt(final int index) {
+    public Uniable getChildAt(final int index) {
         return index < mChildren.size() ? mChildren.get(index) : null;
     }
 
-    public int getChildIndex(final UniObject child) {
+    public int getChildIndex(final Uniable child) {
         return mChildren.indexOf(child);
     }
 
-    public UniObject getChildById(final String id) {
-        UniObject child = mChildrenIds.get(id);
+    public Uniable getChildById(final String id) {
+        Uniable child = mChildrenIds.get(id);
         if (child != null) {
             return child;
         }
@@ -525,7 +525,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
      * @param child2
      * @return
      */
-    public boolean swapChildren(final UniObject child1, final UniObject child2) {
+    public boolean swapChildren(final Uniable child1, final Uniable child2) {
         // check child 1
         final int index1 = mChildren.indexOf(child1);
         if (index1 < 0) {
@@ -553,12 +553,12 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
      */
     public boolean swapChildren(final int index1, final int index2) {
         // check child 1
-        final UniObject child1 = mChildren.get(index1);
+        final Uniable child1 = mChildren.get(index1);
         if (child1 == null) {
             return false;
         }
         // check child 2
-        final UniObject child2 = mChildren.get(index2);
+        final Uniable child2 = mChildren.get(index2);
         if (child2 == null) {
             return false;
         }
@@ -570,7 +570,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return true;
     }
 
-    public boolean sendChildToTop(final UniObject child) {
+    public boolean sendChildToTop(final Uniable child) {
         if (mNumChildren < 2) {
             return false;
         }
@@ -590,7 +590,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return true;
     }
 
-    public boolean sendChildToBottom(final UniObject child) {
+    public boolean sendChildToBottom(final Uniable child) {
         if (mNumChildren < 2) {
             return false;
         }
@@ -626,7 +626,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
      */
     public int getNumGrandChildren() {
         int n = mNumChildren;
-        UniObject child;
+        Uniable child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             if (child instanceof Container) {
@@ -741,7 +741,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
     // return mChildrenDisplayOrder;
     // }
 
-    public void setChildrenDisplayOrder(final ArrayList<UniObject> childrenDisplayOrder) {
+    public void setChildrenDisplayOrder(final ArrayList<Uniable> childrenDisplayOrder) {
         if (childrenDisplayOrder.size() != mNumChildren) {
             Log.e(TAG, "Invalid Children array!");
             return;
@@ -792,11 +792,11 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         }
     }
 
-    protected void onAddedChild(final UniObject child) {
+    protected void onAddedChild(final Uniable child) {
         // TODO
     }
 
-    protected void onRemovedChild(final UniObject child) {
+    protected void onRemovedChild(final Uniable child) {
         // TODO
     }
 
@@ -819,7 +819,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         sb.append(super.getObjectTree(prefix));
         sb.append("\n");
 
-        UniObject child;
+        Uniable child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             sb.append(child.getObjectTree(prefix + "   "));

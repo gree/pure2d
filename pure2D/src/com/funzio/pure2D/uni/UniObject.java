@@ -42,7 +42,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     protected float mFrameDuration = 0; // ms per frame
 
     // reference to the parent container
-    protected UniGroup mParent;
+    protected UniContainer mParent;
 
     // extra
     protected GLColor mColor;
@@ -447,7 +447,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
         // multiply by parent's attributes
         if (mParent != null && mParent instanceof UniGroup) {
-            final UniGroup parent = mParent;
+            final UniGroup parent = (UniGroup) mParent;
             final GLColor parentColor = parent.getInheritedColor();
             if (parentColor != null) {
                 mBlendColor.multiply(parentColor);
@@ -549,7 +549,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         return mNumManipulators;
     }
 
-    final public UniGroup getParent() {
+    final public UniContainer getParent() {
         return mParent;
     }
 
@@ -558,6 +558,52 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
             return mParent.removeChild(this);
         }
         return false;
+    }
+
+    /**
+     * Converts a local point to a global point, without allocating new PointF
+     * 
+     * @param local
+     * @param result
+     */
+    final public void localToGlobal(final PointF local, final PointF result) {
+        result.x = (local == null ? 0 : local.x) + mPosition.x;
+        result.y = (local == null ? 0 : local.y) + mPosition.y;
+        if (mParent != null && !(mParent instanceof Scene)) {
+            mParent.localToGlobal(result, result);
+
+            if (mParent instanceof DisplayObject) {
+                // apply parent's origin
+                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                result.x -= parentOrigin.x;
+                result.y -= parentOrigin.y;
+            }
+        }
+    }
+
+    /**
+     * Converts a global point to a local point, without allocating new PointF
+     * 
+     * @param global
+     * @param result
+     */
+    final public void globalToLocal(final PointF global, final PointF result) {
+        if (mParent != null && !(mParent instanceof Scene)) {
+            mParent.globalToLocal(global, result);
+
+            if (mParent instanceof DisplayObject) {
+                // apply parent's origin
+                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                result.x += parentOrigin.x;
+                result.y += parentOrigin.y;
+            }
+        } else {
+            result.x = global.x;
+            result.y = global.y;
+        }
+
+        result.x -= mPosition.x;
+        result.y -= mPosition.y;
     }
 
     /**
@@ -706,7 +752,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     /**
      * This is called after this object is added to a UnifiedContainer
      */
-    public void onAdded(final UniGroup container) {
+    public void onAdded(final UniContainer container) {
         mParent = container;
 
         // flag the bounds are changed now

@@ -79,9 +79,9 @@ public class QuadUniGroup extends UniGroup {
     }
 
     @Override
-    protected void stackChildAt(final UniObject child, final int index) {
+    protected void stackChildAt(final Uniable child, final int index) {
         mMeshBuffer.setValuesAt(index, child.getVertices());
-        mColorBuffer.setColorAt(index, child.getInheritedColor());
+        mColorBuffer.setColorAt(index, ((UniObject) child).getInheritedColor());
 
         if (mTexture != null) {
             mTextureCoordBuffer.setRectAt(index, child.getTextureCoords());

@@ -8,7 +8,7 @@ import java.util.Random;
 import android.graphics.Point;
 import android.graphics.PointF;
 
-import com.funzio.pure2D.uni.UniGroup;
+import com.funzio.pure2D.uni.UniContainer;
 import com.funzio.pure2D.uni.UniSprite;
 
 /**
@@ -54,7 +54,7 @@ public class UniBouncer extends UniSprite {
     }
 
     @Override
-    public void onAdded(final UniGroup parent) {
+    public void onAdded(final UniContainer parent) {
         super.onAdded(parent);
 
         if (mParent != null && mBoundary == null) {
