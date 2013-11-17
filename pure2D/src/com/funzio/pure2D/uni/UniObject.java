@@ -6,11 +6,14 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 
 /**
  * @author long
@@ -42,7 +45,9 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     protected UniGroup mParent;
 
     // extra
-    protected GLColor mColor = null;
+    protected GLColor mColor;
+    protected GLColor mBlendColor;
+    protected BlendFunc mBlendFunc;
     protected float mAlpha = 1;
 
     protected boolean mHasOrigin = false;
@@ -393,6 +398,73 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     public void setColor(final GLColor color) {
         mColor = color;
         invalidate(COLOR);
+    }
+
+    /**
+     * @return the blendFunc
+     */
+    public BlendFunc getBlendFunc() {
+        return mBlendFunc;
+    }
+
+    /**
+     * @param blendFunc the blendFunc to set
+     */
+    public void setBlendFunc(final BlendFunc blendFunc) {
+        mBlendFunc = blendFunc;
+        invalidate(BLEND);
+    }
+
+    /**
+     * @return the final color which takes parent's color and alpha into account
+     */
+    final protected GLColor getInheritedColor() {
+        if (BlendModes.isInterpolate(mBlendFunc)) {
+            if (mBlendColor == null) {
+                // init
+                mBlendColor = (mColor == null) ? new GLColor(1f, 1f, 1f, mAlpha) : new GLColor(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
+            } else {
+                if (mColor == null) {
+                    mBlendColor.setValues(1f, 1f, 1f, mAlpha);
+                } else {
+                    mBlendColor.setValues(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
+                }
+            }
+
+        } else {
+
+            if (mBlendColor == null) {
+                // init
+                mBlendColor = (mColor == null) ? new GLColor(mAlpha, mAlpha, mAlpha, mAlpha) : new GLColor(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
+            } else {
+                if (mColor == null) {
+                    mBlendColor.setValues(mAlpha, mAlpha, mAlpha, mAlpha);
+                } else {
+                    mBlendColor.setValues(mColor.r * mAlpha, mColor.g * mAlpha, mColor.b * mAlpha, mColor.a * mAlpha);
+                }
+            }
+        }
+
+        // multiply by parent's attributes
+        // if (mParent != null && mParent instanceof BaseDisplayObject) {
+        // final BaseDisplayObject parent = mParent;
+        // final GLColor parentColor = parent.getInheritedColor();
+        // if (parentColor != null) {
+        // mBlendColor.multiply(parentColor);
+        // }
+        // }
+
+        return mBlendColor;
+    }
+
+    final protected BlendFunc getInheritedBlendFunc() {
+        if (mBlendFunc != null) {
+            return mBlendFunc;
+        } else if (mParent != null && mParent instanceof DisplayObject) {
+            return ((DisplayObject) mParent).getBlendFunc();
+        } else {
+            return null;
+        }
     }
 
     /**

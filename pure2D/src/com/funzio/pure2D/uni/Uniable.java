@@ -4,6 +4,7 @@
 package com.funzio.pure2D.uni;
 
 import com.funzio.pure2D.Manipulatable;
+import com.funzio.pure2D.gl.GLColor;
 
 /**
  * @author long.ngo
@@ -13,5 +14,5 @@ public interface Uniable extends Manipulatable {
 
     public float[] getTextureCoords();
 
-    // public GLColor[] getColors();
+    public GLColor getColor();
 }

@@ -23,7 +23,7 @@ public class QuadUniGroup extends UniGroup {
 
         mMeshBuffer = new QuadMeshBuffer(0);
         mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(0);
-        // mColorBuffer = new QuadMeshColorBuffer(0);
+        mColorBuffer = new QuadMeshColorBuffer(0);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class QuadUniGroup extends UniGroup {
         if (mNumChildren > mMeshBuffer.getNumCells()) {
             mMeshBuffer.setNumCells(mNumChildren);
             mTextureCoordBuffer.setNumCells(mNumChildren);
+            mColorBuffer.setNumCells(mNumChildren);
         }
 
         super.drawChildren(glState);
@@ -57,7 +58,6 @@ public class QuadUniGroup extends UniGroup {
             mTexture.bind();
 
             // apply coords
-            mTextureCoordBuffer.validate();
             mTextureCoordBuffer.apply(glState);
         } else {
             // unbind the texture
@@ -66,16 +66,19 @@ public class QuadUniGroup extends UniGroup {
         }
 
         // draw
-        mMeshBuffer.validate();
-        mMeshBuffer.setIndicesNumUsed(mNumStackedChildren * QuadMeshBuffer.NUM_INDICES_PER_CELL);
-        mMeshBuffer.draw(glState);
+        if (mNumStackedChildren > 0) {
+            mMeshBuffer.setIndicesNumUsed(mNumStackedChildren * QuadMeshBuffer.NUM_INDICES_PER_CELL);
+            mMeshBuffer.draw(glState);
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     @Override
     protected void stackChildAt(final UniObject child, final int index) {
         mMeshBuffer.setValuesAt(index, child.getVertices());
         mTextureCoordBuffer.setRectAt(index, child.getTextureCoords());
+        mColorBuffer.setColorAt(index, child.getInheritedColor());
     }
 }
