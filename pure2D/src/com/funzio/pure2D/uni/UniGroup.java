@@ -20,6 +20,7 @@ import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.geom.Rectangle;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
@@ -237,6 +238,7 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         return true;
     }
 
+    @Override
     protected boolean drawChildren(final GLState glState) {
         if (mNumChildren == 0) {
             mNumStackedChildren = 0;
@@ -302,6 +304,11 @@ abstract public class UniGroup extends BaseDisplayObject implements UniContainer
         if (mTextureLoaded) {
             onTextureLoaded(texture);
         }
+    }
+
+    @Override
+    protected GLColor getInheritedColor() {
+        return super.getInheritedColor();
     }
 
     @Override

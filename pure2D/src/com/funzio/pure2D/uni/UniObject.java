@@ -446,13 +446,13 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         }
 
         // multiply by parent's attributes
-        // if (mParent != null && mParent instanceof BaseDisplayObject) {
-        // final BaseDisplayObject parent = mParent;
-        // final GLColor parentColor = parent.getInheritedColor();
-        // if (parentColor != null) {
-        // mBlendColor.multiply(parentColor);
-        // }
-        // }
+        if (mParent != null && mParent instanceof UniGroup) {
+            final UniGroup parent = mParent;
+            final GLColor parentColor = parent.getInheritedColor();
+            if (parentColor != null) {
+                mBlendColor.multiply(parentColor);
+            }
+        }
 
         return mBlendColor;
     }

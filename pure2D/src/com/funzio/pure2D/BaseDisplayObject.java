@@ -678,7 +678,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    final protected GLColor getInheritedColor() {
+    protected GLColor getInheritedColor() {
         if (BlendModes.isInterpolate(mBlendFunc)) {
             if (mBlendColor == null) {
                 // init
