@@ -85,7 +85,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected Maskable mMask;
 
     // extra
-    protected GLColor mColor = null;
+    protected GLColor mColor;
     protected float mAlpha = 1;
     protected BlendFunc mBlendFunc;
     // protected boolean mDepthTestEnabled = false;
@@ -101,7 +101,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     // rect and bounds
     protected int mInvalidateFlags = 0;
-    protected Matrix mMatrix = new Matrix();
+    protected Matrix mMatrix;
     protected boolean mAutoUpdateBounds = false;
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
@@ -1027,6 +1027,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public RectF updateBounds() {
         // init
+        if (mMatrix == null) {
+            mMatrix = new Matrix();
+        }
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
         boolean changed = false;
 
