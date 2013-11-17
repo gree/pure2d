@@ -24,11 +24,18 @@ public class TextureCoordBuffer extends GLFloatBuffer {
     public TextureCoordBuffer(final float... textCoords) {
         super(textCoords);
     }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.gl.GLFloatBuffer#setValues(float[])
-     */
+    
+    public static void setDefault(float[] values) {
+        values[0] = DEFAULT_COORDS[0];
+        values[1] = DEFAULT_COORDS[1];
+        values[2] = DEFAULT_COORDS[2];
+        values[3] = DEFAULT_COORDS[3];
+        values[4] = DEFAULT_COORDS[4];
+        values[5] = DEFAULT_COORDS[5];
+        values[6] = DEFAULT_COORDS[6];
+        values[7] = DEFAULT_COORDS[7];
+    }
+    
     @Override
     public void setValues(final float... values) {
         super.setValues(values);

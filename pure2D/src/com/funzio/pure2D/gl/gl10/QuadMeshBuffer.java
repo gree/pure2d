@@ -105,6 +105,21 @@ public class QuadMeshBuffer extends VertexBuffer {
 
         mInvalidated = true;
     }
+    
+    public void setValuesAt(final int index, float[] values) {
+
+        final int start = index * NUM_VERTICES_PER_CELL * mVertexPointerSize;
+        mVertices[start] = values[0];
+        mVertices[start + 1] = values[1];
+        mVertices[start + 2] = values[2];
+        mVertices[start + 3] = values[3];
+        mVertices[start + 4] = values[4];
+        mVertices[start + 5] = values[5];
+        mVertices[start + 6] = values[6];
+        mVertices[start + 7] = values[7];
+
+        mInvalidated = true;
+    }
 
     /**
      * Applies the values set by {@link #setRectAt(int, float...)}

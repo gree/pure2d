@@ -28,6 +28,7 @@ import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.ui.UITextureManager;
+import com.funzio.pure2D.uni.UniContainer;
 
 /**
  * @author long
@@ -752,6 +753,8 @@ public class BaseScene implements Scene {
             DisplayObject child = mChildren.get(i);
             if (child instanceof Container) {
                 n += ((Container) child).getNumGrandChildren();
+            } else if (child instanceof UniContainer) {
+                n += ((UniContainer) child).getNumGrandChildren();
             }
         }
 

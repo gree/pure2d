@@ -62,4 +62,18 @@
         android:onClick="onClickButton"
         android:text="@string/grid_group" />
 
+    <Button
+        android:id="@+id/btn_uni_groups"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/uni_groups" />
+
+    <Button
+        android:id="@+id/btn_uni_clips"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/uni_clips" />
+
 </LinearLayout>

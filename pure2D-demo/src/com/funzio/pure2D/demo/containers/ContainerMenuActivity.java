@@ -20,6 +20,8 @@ public class ContainerMenuActivity extends MenuActivity {
         addMenu(R.id.btn_vwheel_3d, VWheel3DActivity.class);
         addMenu(R.id.btn_hwheel_3d, HWheel3DActivity.class);
         addMenu(R.id.btn_grid_group, GridGroupActivity.class);
+        addMenu(R.id.btn_uni_groups, UniGroupActivity.class);
+        addMenu(R.id.btn_uni_clips, UniGroupClipActivity.class);
     }
 
 }

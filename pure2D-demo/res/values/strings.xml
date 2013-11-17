@@ -193,5 +193,7 @@
 
     <!-- charater sets -->
     <string name="charset_basic_latin">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!</string>
+    <string name="uni_groups">Uni Groups</string>
+    <string name="uni_clips">Uni Clips</string>
 
 </resources>
