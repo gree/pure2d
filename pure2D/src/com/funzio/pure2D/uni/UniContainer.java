@@ -38,6 +38,8 @@ public interface UniContainer {
 
     public int getNumGrandChildren();
 
+    public int getNumDrawingChildren();
+
     public void invalidate();
 
     public void invalidate(int flags);

@@ -10,13 +10,13 @@ import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.uni.QuadUniGroup;
 import com.funzio.pure2D.uni.UniClip;
+import com.funzio.pure2D.uni.UniGroup;
 
 public class UniGroupClipActivity extends StageActivity {
     private Texture mTexture;
     private JsonAtlas mAtlas;
-    private QuadUniGroup mUniGroup;
+    private UniGroup mUniGroup;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class UniGroupClipActivity extends StageActivity {
                     // load the textures
                     loadTexture();
 
-                    mUniGroup = new QuadUniGroup();
+                    mUniGroup = new UniGroup();
                     // generate a lot of squares
                     mUniGroup.setTexture(mTexture);
                     mScene.addChild(mUniGroup);

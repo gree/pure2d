@@ -8,10 +8,10 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.uni.QuadUniGroup;
+import com.funzio.pure2D.uni.UniGroup;
 
 public class JumperActivity extends StageActivity {
-    private QuadUniGroup mUniGroup;
+    private UniGroup mUniGroup;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class JumperActivity extends StageActivity {
             @Override
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
-                    mUniGroup = new QuadUniGroup();
+                    mUniGroup = new UniGroup();
                     mUniGroup.setSize(mDisplaySize.x, mDisplaySize.y);
                     mScene.addChild(mUniGroup);
                     // generate a lot of squares

@@ -13,7 +13,7 @@ import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.UniBouncer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.uni.QuadUniGroup;
+import com.funzio.pure2D.uni.UniGroup;
 
 public class UniGroupActivity extends StageActivity {
     private List<Texture> mTextures = new ArrayList<Texture>();
@@ -53,7 +53,7 @@ public class UniGroupActivity extends StageActivity {
 
     private void addGroup(final float screenX, final float screenY) {
         // generate a lot of squares
-        final QuadUniGroup container = new QuadUniGroup();
+        final UniGroup container = new UniGroup();
         int random = mRandom.nextInt(mTextures.size());
         Texture texture = mTextures.get(random);
         container.setTexture(texture);
