@@ -132,13 +132,20 @@ public class QuadMeshBuffer extends VertexBuffer {
     /**
      * Applies the values set by {@link #setRectAt(int, float...)}
      */
-    public void validate() {
+    protected void validate() {
         if (mInvalidated) {
             setValues(mVertices);
 
             // unflag
             mInvalidated = false;
         }
+    }
+
+    @Override
+    public void draw(final GLState glState) {
+        validate();
+
+        super.draw(glState);
     }
 
 }

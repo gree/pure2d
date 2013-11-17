@@ -3,6 +3,8 @@
  */
 package com.funzio.pure2D.gl.gl10.textures;
 
+import com.funzio.pure2D.gl.gl10.GLState;
+
 /**
  * @author long.ngo
  */
@@ -108,7 +110,7 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
     /**
      * Applies the values set by {@link #setRectAt(int, float...)}
      */
-    public void validate() {
+    protected void validate() {
         if (mInvalidated) {
             setValues(mValues);
 
@@ -138,6 +140,13 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
 
         // unflag
         mInvalidated = false;
+    }
+
+    @Override
+    public void apply(final GLState glState) {
+        validate();
+
+        super.apply(glState);
     }
 
 }

@@ -245,17 +245,17 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
                 // apply values to the vertex buffer
                 mMeshBuffer.setIndicesNumUsed(mNumPoints * QuadMeshBuffer.NUM_INDICES_PER_CELL);
-                mMeshBuffer.validate();
+                // mMeshBuffer.validate();
 
                 // apply coords
-                if (mTexture != null && mTextureCoordBuffer != null) {
-                    mTextureCoordBuffer.validate();
-                }
+                // if (mTexture != null && mTextureCoordBuffer != null) {
+                // mTextureCoordBuffer.validate();
+                // }
 
                 // apply colors
-                if (mColor1 != mColor2 && mColorBuffer != null) {
-                    mColorBuffer.validate();
-                }
+                // if (mColor1 != mColor2 && mColorBuffer != null) {
+                // mColorBuffer.validate();
+                // }
 
             }
         }

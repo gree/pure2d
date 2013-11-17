@@ -103,12 +103,19 @@ public class QuadMeshColorBuffer extends ColorBuffer {
     /**
      * Applies the values set by {@link #setColorAt(int, float...)}
      */
-    public void validate() {
+    protected void validate() {
         if (mInvalidated) {
             setValues(mValues);
 
             mInvalidated = false;
         }
+    }
+
+    @Override
+    public void apply(final GLState glState) {
+        validate();
+
+        super.apply(glState);
     }
 
 }

@@ -353,10 +353,10 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             }
 
             // apply
-            mTextureCoordBuffer.validate();
+            // mTextureCoordBuffer.validate();
             // and the vertex buffer
             mMeshBuffer.setIndicesNumUsed(meshIndex * QuadMeshBuffer.NUM_INDICES_PER_CELL);
-            mMeshBuffer.validate();
+            // mMeshBuffer.validate();
         }
 
         // draw now
