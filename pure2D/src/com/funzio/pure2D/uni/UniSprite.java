@@ -79,7 +79,7 @@ public class UniSprite extends UniRect {
             }
         } else {
             // default coord
-            TextureCoordBuffer.setDefault(mTextureCoords);
+            TextureCoordBuffer.getDefault(mTextureCoords);
 
             if (mOffsetX != 0 || mOffsetY != 0) {
                 // cancel previous offset

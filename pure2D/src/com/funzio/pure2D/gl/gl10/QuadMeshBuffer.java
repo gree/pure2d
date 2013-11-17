@@ -25,8 +25,16 @@ public class QuadMeshBuffer extends VertexBuffer {
 
     public void setNumCells(final int numCells) {
         if (numCells > mNumCells) {
+            // final float[] currentVertices = mVertices;
             mVertices = new float[numCells * NUM_VERTICES_PER_CELL * mVertexPointerSize];
             mIndices = new short[numCells * NUM_INDICES_PER_CELL];
+
+            // restore values
+            // if (currentVertices != null) {
+            // for (int i = 0; i < currentVertices.length; i++) {
+            // mVertices[i] = currentVertices[i];
+            // }
+            // }
 
             // indices is always fixed
             int start = 0;
@@ -105,8 +113,8 @@ public class QuadMeshBuffer extends VertexBuffer {
 
         mInvalidated = true;
     }
-    
-    public void setValuesAt(final int index, float[] values) {
+
+    public void setValuesAt(final int index, final float[] values) {
 
         final int start = index * NUM_VERTICES_PER_CELL * mVertexPointerSize;
         mVertices[start] = values[0];

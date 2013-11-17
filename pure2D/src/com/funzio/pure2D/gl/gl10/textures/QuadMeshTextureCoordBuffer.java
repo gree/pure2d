@@ -23,7 +23,15 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
 
     public void setNumCells(final int numCells) {
         if (numCells > mNumCells) {
+            // final float[] currentValues = mValues;
             mValues = new float[numCells * NUM_COORD_PER_CELL];
+
+            // restore values
+            // if (currentValues != null) {
+            // for (int i = 0; i < currentValues.length; i++) {
+            // mValues[i] = currentValues[i];
+            // }
+            // }
 
             mInvalidated = true;
         }

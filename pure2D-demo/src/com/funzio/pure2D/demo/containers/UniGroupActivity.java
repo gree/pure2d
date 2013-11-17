@@ -51,7 +51,7 @@ public class UniGroupActivity extends StageActivity {
         }
     }
 
-    private void addGroup(final float x, final float y) {
+    private void addGroup(final float screenX, final float screenY) {
         // generate a lot of squares
         final QuadUniGroup container = new QuadUniGroup();
         int random = mRandom.nextInt(mTextures.size());
@@ -61,7 +61,8 @@ public class UniGroupActivity extends StageActivity {
         container.setSize(500, 500);
         container.setOriginAtCenter();
         // random positions
-        container.setPosition(x, y);
+        mScene.screenToGlobal(screenX, screenY, mTempPoint);
+        container.setPosition(mTempPoint);
 
         for (int n = 0; n < 100; n++) {
             // create object
@@ -90,7 +91,7 @@ public class UniGroupActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    addGroup(event.getX(), mDisplaySize.y - event.getY());
+                    addGroup(event.getX(), event.getY());
                 }
             });
         }

@@ -25,7 +25,7 @@ public class TextureCoordBuffer extends GLFloatBuffer {
         super(textCoords);
     }
     
-    public static void setDefault(float[] values) {
+    public static void getDefault(float[] values) {
         values[0] = DEFAULT_COORDS[0];
         values[1] = DEFAULT_COORDS[1];
         values[2] = DEFAULT_COORDS[2];

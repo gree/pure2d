@@ -16,7 +16,7 @@ public class UniRect extends UniObject {
 
         mVertices = new float[NUM_VERTICES * 2];
         mTextureCoords = new float[NUM_VERTICES * 2];
-        TextureCoordBuffer.setDefault(mTextureCoords);
+        TextureCoordBuffer.getDefault(mTextureCoords);
     }
 
     protected void setTextureCoords(final float[] source) {

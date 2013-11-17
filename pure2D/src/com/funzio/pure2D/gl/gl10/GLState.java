@@ -278,10 +278,10 @@ public class GLState {
     }
 
     public boolean setVertexBuffer(final VertexBuffer buffer) {
-        // diff check
-        if (mVertexBuffer == buffer) {
-            return false;
-        }
+        // diff check, nope! doesn't work for Uni stuff
+        // if (mVertexBuffer == buffer) {
+        // return false;
+        // }
 
         // values check
         final boolean same = mVertexBuffer instanceof QuadBuffer && buffer instanceof QuadBuffer && QuadBuffer.compare((QuadBuffer) mVertexBuffer, (QuadBuffer) buffer);
@@ -323,10 +323,10 @@ public class GLState {
     }
 
     public boolean setTextureCoordBuffer(final TextureCoordBuffer buffer) {
-        // diff check
-        if (mTextureCoordBuffer == buffer) {
-            return false;
-        }
+        // diff check, nope!  doesn't work for Uni stuff
+        // if (mTextureCoordBuffer == buffer) {
+        // return false;
+        // }
 
         // values check
         if (buffer != null) { // && !TextureCoordBuffer.compare(mTextureCoordBuffer, buffer) // not correct for all cases

@@ -56,6 +56,7 @@ public class QuadUniGroup extends UniGroup {
             // bind the texture
             mTexture.bind();
 
+            // apply coords
             mTextureCoordBuffer.validate();
             mTextureCoordBuffer.apply(glState);
         } else {
