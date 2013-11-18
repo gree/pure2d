@@ -17,8 +17,10 @@ import org.xmlpull.v1.XmlPullParser;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.geom.Rectangle;
 import com.funzio.pure2D.gl.GLColor;
@@ -818,8 +820,25 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         }
     }
 
+    @Override
+    public void onAdded(final Container container) {
+        super.onAdded(container);
+
+        // find the scene
+        if (container instanceof DisplayObject) {
+            mScene = ((DisplayObject) container).getScene();
+        } else if (container instanceof AbstractUniGroup) {
+            mScene = ((AbstractUniGroup) container).getScene();
+            // use parent's texture
+            setTexture(((AbstractUniGroup) container).getTexture());
+        }
+    }
+
     protected void onAddedChild(final Uniable child) {
-        // TODO
+        // pass in the scene
+        if (child instanceof AbstractUniGroup) {
+            ((AbstractUniGroup) child).mScene = getScene();
+        }
     }
 
     protected void onRemovedChild(final Uniable child) {

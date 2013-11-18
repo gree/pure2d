@@ -5,7 +5,6 @@ package com.funzio.pure2D.uni;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -135,13 +134,4 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
         return (mParent instanceof UniContainer) ? (UniContainer) mParent : null;
     }
 
-    @Override
-    public void onAdded(final UniContainer container) {
-        if (container instanceof BaseDisplayObject) {
-            mScene = ((BaseDisplayObject) container).getScene();
-        }
-
-        // use parent's texture
-        setTexture(container.getTexture());
-    }
 }
