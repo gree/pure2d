@@ -14,12 +14,18 @@ import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
+import com.funzio.pure2D.gl.gl10.GLState;
 
 /**
  * @author long
  */
 public abstract class UniObject implements Uniable, InvalidateFlags {
     public static final String TAG = UniObject.class.getSimpleName();
+
+    // for debugging
+    protected int mDebugFlags = 0;
+
+    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode());
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);
@@ -66,9 +72,16 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     // interface
     protected float[] mVertices;
 
-    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode());
-
     abstract protected void resetVertices();
+
+    public UniObject() {
+        // TODO nothing
+    }
+
+    protected void drawWireframe(final GLState glState) {
+        // TODO
+        // Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
+    }
 
     public boolean update(final int deltaTime) {
         // update the manipulators if there's any
@@ -733,6 +746,23 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
     public void dispose() {
         // TODO
+    }
+
+    /**
+     * @return
+     * @see Pure2D.DEBUG_FLAG_LOCAL_SHAPE, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS
+     */
+    public int getDebugFlags() {
+        return mDebugFlags;
+    }
+
+    /**
+     * @param flags
+     * @see Pure2D.DEBUG_FLAG_SHAPE, Pure2D.DEBUG_FLAG_BOUNDS
+     */
+    public void setDebugFlags(final int flags) {
+        mDebugFlags = flags;
+        invalidate(VISUAL);
     }
 
     /**

@@ -3,6 +3,9 @@
  */
 package com.funzio.pure2D.uni;
 
+import javax.microedition.khronos.opengles.GL10;
+
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
@@ -63,6 +66,21 @@ public class UniRect extends UniObject {
         // optional
         if (coordBuffer != null) {
             ((QuadMeshTextureCoordBuffer) coordBuffer).setRectAt(index, mTextureCoords);
+        }
+
+        // for debugging
+        final int debugFlags = Pure2D.DEBUG_FLAGS | mDebugFlags;
+        // local rect
+        if ((debugFlags & Pure2D.DEBUG_FLAG_WIREFRAME) != 0 && mSize.x > 0 && mSize.y > 0) {
+            drawWireframe(glState);
+        }
+        // debug global bounds
+        if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
+            final GL10 gl = glState.mGL;
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+            gl.glPopMatrix();
         }
 
         return 1; // just me
