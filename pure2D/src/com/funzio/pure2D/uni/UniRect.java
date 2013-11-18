@@ -3,6 +3,12 @@
  */
 package com.funzio.pure2D.uni;
 
+import com.funzio.pure2D.gl.gl10.ColorBuffer;
+import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
+import com.funzio.pure2D.gl.gl10.QuadMeshColorBuffer;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
@@ -10,6 +16,8 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  */
 public class UniRect extends UniObject {
     public static final int NUM_VERTICES = 4;
+
+    protected float[] mTextureCoords;
 
     public UniRect() {
         super();
@@ -45,5 +53,18 @@ public class UniRect extends UniObject {
         mVertices[5] = y + height;
         mVertices[6] = x + width;
         mVertices[7] = y;
+    }
+
+    @Override
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+        ((QuadMeshBuffer) vertexBuffer).setValuesAt(index, mVertices);
+        ((QuadMeshColorBuffer) colorBuffer).setColorAt(index, getInheritedColor());
+
+        // optional
+        if (coordBuffer != null) {
+            ((QuadMeshTextureCoordBuffer) coordBuffer).setRectAt(index, mTextureCoords);
+        }
+
+        return 1; // just me
     }
 }

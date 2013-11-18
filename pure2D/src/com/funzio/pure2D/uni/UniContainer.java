@@ -6,6 +6,7 @@ package com.funzio.pure2D.uni;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 /**
@@ -55,6 +56,8 @@ public interface UniContainer {
     public void globalToLocal(final PointF global, final PointF result);
 
     public Matrix getMatrix();
+
+    public Scene getScene();
 
     public boolean queueEvent(Runnable r);
 }

@@ -65,6 +65,13 @@ public class QuadMeshBuffer extends VertexBuffer {
     }
 
     /**
+     * @return
+     */
+    public float[] getVertices() {
+        return mVertices;
+    }
+
+    /**
      * Sets a Rect at a specified index but doesn't apply untill applyValues() gets called
      * 
      * @param index
@@ -114,17 +121,24 @@ public class QuadMeshBuffer extends VertexBuffer {
         mInvalidated = true;
     }
 
-    public void setValuesAt(final int index, final float[] values) {
+    public void setValuesAt(final int index, final float... values) {
 
         final int start = index * NUM_VERTICES_PER_CELL * mVertexPointerSize;
-        mVertices[start] = values[0];
-        mVertices[start + 1] = values[1];
-        mVertices[start + 2] = values[2];
-        mVertices[start + 3] = values[3];
-        mVertices[start + 4] = values[4];
-        mVertices[start + 5] = values[5];
-        mVertices[start + 6] = values[6];
-        mVertices[start + 7] = values[7];
+        final int length = values.length;
+        for (int i = 0; i < length; i++) {
+            mVertices[start + i] = values[i];
+        }
+
+        mInvalidated = true;
+    }
+
+    public void setValuesAt(final int index, final int numCells, final float... values) {
+
+        final int start = index * NUM_VERTICES_PER_CELL * mVertexPointerSize;
+        final int length = numCells * NUM_VERTICES_PER_CELL * mVertexPointerSize;
+        for (int i = 0; i < length; i++) {
+            mVertices[start + i] = values[i];
+        }
 
         mInvalidated = true;
     }

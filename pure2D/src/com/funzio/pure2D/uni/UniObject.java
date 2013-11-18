@@ -65,19 +65,10 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
     // interface
     protected float[] mVertices;
-    protected float[] mTextureCoords;
 
     protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode());
 
     abstract protected void resetVertices();
-
-    public float[] getVertices() {
-        return mVertices;
-    }
-
-    public float[] getTextureCoords() {
-        return mTextureCoords;
-    }
 
     public boolean update(final int deltaTime) {
         // update the manipulators if there's any
@@ -549,7 +540,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         return mNumManipulators;
     }
 
-    final public UniContainer getParent() {
+    final public UniContainer getUniParent() {
         return mParent;
     }
 
@@ -622,13 +613,14 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
      * Find the global bounds of this object that takes position, scale, rotation, skew... into account. Used mainly for Camera clipping and bounds hit-testing.
      */
     protected void updateVertices() {
-        if (mMatrix == null) {
-            mMatrix = new Matrix();
-        }
+        boolean changed = false;
 
         // init
+        if (mMatrix == null) {
+            mMatrix = new Matrix();
+            changed = true;
+        }
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
-        boolean changed = false;
 
         // skew
         if (mSkew != null) {
@@ -733,6 +725,10 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
      */
     public void setAutoUpdateBounds(final boolean autoUpdateBounds) {
         mAutoUpdateBounds = autoUpdateBounds;
+    }
+
+    public int getNumDrawingChildren() {
+        return 1;
     }
 
     public void dispose() {

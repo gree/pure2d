@@ -47,6 +47,10 @@ public class QuadMeshColorBuffer extends ColorBuffer {
         return mNumCells;
     }
 
+    public float[] getValues() {
+        return mValues;
+    }
+
     /**
      * Set color at the specified cell
      * 
@@ -95,6 +99,17 @@ public class QuadMeshColorBuffer extends ColorBuffer {
             mValues[start + 3] = alpha;
 
             start += NUM_COLOR_PER_CELL;
+        }
+
+        mInvalidated = true;
+    }
+
+    public void setValuesAt(final int index, final int numCells, final float... values) {
+
+        int start = index * NUM_CHANNEL_PER_COLOR * NUM_COLOR_PER_CELL;
+        final int length = numCells * NUM_CHANNEL_PER_COLOR * NUM_COLOR_PER_CELL;
+        for (int i = 0; i < length; i++) {
+            mValues[start + i] = values[i];
         }
 
         mInvalidated = true;

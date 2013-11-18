@@ -6,6 +6,7 @@ package com.funzio.pure2D.uni;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
@@ -63,6 +64,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected boolean mWrapContentHeight = false;
     protected Texture mTexture;
     protected boolean mTextureLoaded;
+
+    protected Matrix mMatrixWithoutParents;
 
     public AbstractUniGroup() {
         super();
@@ -245,8 +248,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return true;
     }
 
-    @Override
-    protected boolean drawChildren(final GLState glState) {
+    protected boolean stackChildren(final GLState glState) {
         if (mNumDrawingChildren == 0) {
             return false;
         }
@@ -261,7 +263,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         // draw the children
         int numVisibles = 0;
-        final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
+        final Scene scene = getScene();
+        final boolean uiEnabled = scene.isUIEnabled() && mTouchable;
         Uniable child;
         final int numChildren = mChildrenDisplayOrder.size();
         int stackIndex = 0;
@@ -271,7 +274,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
                 // draw frame, check alpha for optimization
                 if (child.getAlpha() > 0) {
-                    stackChildAt(child, stackIndex++);
+                    stackIndex += stackChildAt(glState, child, stackIndex);
                 }
 
                 // stack the visible child
@@ -290,7 +293,18 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return true;
     }
 
-    abstract protected int stackChildAt(final Uniable child, final int index);
+    abstract protected int stackChildAt(GLState glState, final Uniable child, final int index);
+
+    @Override
+    protected void onPreConcatParentMatrix() {
+        super.onPreConcatParentMatrix();
+
+        if (mMatrixWithoutParents == null) {
+            mMatrixWithoutParents = new Matrix(mMatrix);
+        } else {
+            mMatrixWithoutParents.set(mMatrix);
+        }
+    }
 
     public Texture getTexture() {
         return mTexture;

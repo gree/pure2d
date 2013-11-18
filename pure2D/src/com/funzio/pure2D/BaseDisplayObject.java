@@ -1026,12 +1026,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * Find the global bounds of this object that takes position, scale, rotation, skew... into account. Used mainly for Camera clipping and bounds hit-testing.
      */
     public RectF updateBounds() {
+        boolean changed = false;
+
         // init
         if (mMatrix == null) {
             mMatrix = new Matrix();
+            changed = true;
         }
         final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
-        boolean changed = false;
 
         if (mHasTransformValues) {
             mMatrix.setTranslate(-mOrigin.x - mPivot.x, -mOrigin.y - mPivot.y);
@@ -1076,6 +1078,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 changed = true;
 
                 if (parentMatrix == null) {
+                    onPreConcatParentMatrix();
                     // easy case: only translation needs to be applied. No need to use matrix!
                     mBounds.left = mPosition.x - mOrigin.x;
                     mBounds.top = mPosition.y - mOrigin.y;
@@ -1100,6 +1103,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // find the bounds
         if (changed || parentMatrix != null) {
+            onPreConcatParentMatrix();
+
             // apply the parent's matrix
             if (parentMatrix != null) {
                 mMatrix.postConcat(parentMatrix);
@@ -1110,6 +1115,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         return mBounds;
+    }
+
+    protected void onPreConcatParentMatrix() {
+        // TODO override
     }
 
     final public Matrix getMatrix() {

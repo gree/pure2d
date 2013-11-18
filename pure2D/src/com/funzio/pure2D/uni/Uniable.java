@@ -10,14 +10,16 @@ import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.ColorBuffer;
+import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
  * @author long.ngo
  */
 public interface Uniable extends Manipulatable {
-    public float[] getVertices();
-
-    public float[] getTextureCoords();
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer);
 
     public boolean update(final int deltaTime);
 
@@ -97,7 +99,7 @@ public interface Uniable extends Manipulatable {
 
     public int getNumManipulators();
 
-    public UniContainer getParent();
+    public UniContainer getUniParent();
 
     public boolean removeFromParent();
 
@@ -114,6 +116,8 @@ public interface Uniable extends Manipulatable {
     public boolean isAutoUpdateBounds();
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
+
+    public int getNumDrawingChildren();
 
     public String getObjectTree(final String prefix);
 
