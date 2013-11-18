@@ -860,7 +860,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(VISIBILITY);
     }
 
-    private Scene findScene() {
+    protected Scene findScene() {
         if (mParent instanceof Scene) {
             return (Scene) mParent;
         } else if (mParent instanceof DisplayObject) {

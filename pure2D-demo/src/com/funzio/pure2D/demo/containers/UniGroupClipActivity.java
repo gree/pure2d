@@ -6,12 +6,17 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
+import com.funzio.pure2D.LoopModes;
+import com.funzio.pure2D.Pure2D;
+import com.funzio.pure2D.animators.RotateAnimator;
+import com.funzio.pure2D.animators.ScaleAnimator;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.uni.UniClip;
 import com.funzio.pure2D.uni.UniGroup;
+import com.funzio.pure2D.uni.UniSprite;
 
 public class UniGroupClipActivity extends StageActivity {
     private Texture mTexture;
@@ -70,33 +75,33 @@ public class UniGroupClipActivity extends StageActivity {
             mUniGroup.addChild(obj);
         }
 
-        // UniGroup sub = new UniGroup();
-        // sub.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
-        // sub.setSize(200, 200);
-        // sub.setOriginAtCenter();
-        // sub.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
-        // mUniGroup.addChild(sub);
-        // for (int i = 0; i < 3; i++) {
-        // UniSprite child = new UniSprite();
-        // // child.setAtlasFrameSet(mAtlas.getMasterFrameSet());
-        // // child.setSize(200, 200);
-        // // child.setPosition(100, 100);
-        // child.setPosition(mRandom.nextInt(200), mRandom.nextInt(200));
-        // child.setColor(COLOR_GREEN);
-        // child.setOriginAtCenter();
-        // sub.addChild(child);
-        //
-        // ScaleAnimator scaler = new ScaleAnimator(null);
-        // scaler.setDuration(1000);
-        // scaler.setLoop(LoopModes.LOOP_REVERSE);
-        // child.addManipulator(scaler);
-        // scaler.start(1.5f, 1.5f);
-        // }
-        // RotateAnimator rotator = new RotateAnimator(null);
-        // rotator.setDuration(5000);
-        // rotator.start(0, 360);
-        // rotator.setLoop(LoopModes.LOOP_REPEAT);
-        // sub.addManipulator(rotator);
+        UniGroup sub = new UniGroup();
+        sub.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+        sub.setSize(200, 200);
+        sub.setOriginAtCenter();
+        sub.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+        mUniGroup.addChild(sub);
+        for (int i = 0; i < 3; i++) {
+            UniSprite child = new UniSprite();
+            // child.setAtlasFrameSet(mAtlas.getMasterFrameSet());
+            // child.setSize(200, 200);
+            // child.setPosition(100, 100);
+            child.setPosition(mRandom.nextInt(200), mRandom.nextInt(200));
+            child.setColor(COLOR_GREEN);
+            child.setOriginAtCenter();
+            sub.addChild(child);
+
+            ScaleAnimator scaler = new ScaleAnimator(null);
+            scaler.setDuration(1000);
+            scaler.setLoop(LoopModes.LOOP_REVERSE);
+            child.addManipulator(scaler);
+            scaler.start(1.5f, 1.5f);
+        }
+        RotateAnimator rotator = new RotateAnimator(null);
+        rotator.setDuration(5000);
+        rotator.start(0, 360);
+        rotator.setLoop(LoopModes.LOOP_REPEAT);
+        sub.addManipulator(rotator);
     }
 
     @Override
