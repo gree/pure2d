@@ -22,6 +22,7 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
     protected boolean mPageFloating = false;
 
     public Page() {
+        super();
 
         mTransitionAnimator = new MoveAnimator(NovaConfig.INTER_DECELERATE);
         mTransitionAnimator.setDuration(TRANSITION_DURATION);
