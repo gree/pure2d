@@ -45,7 +45,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     // UI
     protected ArrayList<Touchable> mVisibleTouchables;
-    protected boolean mTouchable = true; // true by default
+    protected boolean mTouchable = false; // false by default
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
@@ -264,7 +264,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         // draw the children
         int numVisibles = 0;
         final Scene scene = getScene();
-        final boolean uiEnabled = scene.isUIEnabled() && mTouchable;
+        final boolean uiEnabled = mTouchable && scene.isUIEnabled();
         Uniable child;
         final int numChildren = mChildrenDisplayOrder.size();
         int stackIndex = 0;
