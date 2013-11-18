@@ -827,11 +827,18 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         // find the scene
         if (container instanceof DisplayObject) {
             mScene = ((DisplayObject) container).getScene();
-        } else if (container instanceof AbstractUniGroup) {
-            mScene = ((AbstractUniGroup) container).getScene();
-            // use parent's texture
-            setTexture(((AbstractUniGroup) container).getTexture());
         }
+    }
+
+    public void onAdded(final UniContainer container) {
+        if (container instanceof BaseDisplayObject) {
+            mScene = ((BaseDisplayObject) container).getScene();
+        } else {
+            mScene = container.getScene();
+        }
+
+        // use parent's texture
+        setTexture(container.getTexture());
     }
 
     protected void onAddedChild(final Uniable child) {
