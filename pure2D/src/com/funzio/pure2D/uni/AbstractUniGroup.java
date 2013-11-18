@@ -16,9 +16,9 @@ import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
+import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
-import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.geom.Rectangle;
 import com.funzio.pure2D.gl.GLColor;
@@ -78,6 +78,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     public void updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
+        final Scene scene = getScene();
+        final Camera camera = scene != null ? scene.getCamera() : null;
         mNumDrawingChildren = 0;
         Uniable child;
         float temp, sx = mSize.x, sy = mSize.y;
@@ -96,7 +98,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             if (child instanceof UniContainer) {
                 mNumDrawingChildren += ((UniContainer) child).getNumDrawingChildren();
             } else {
-                mNumDrawingChildren++;
+                if (child.shouldDraw() && (camera == null || camera.isViewable(child))) {
+                    mNumDrawingChildren++;
+                }
             }
 
             // match content size
@@ -647,8 +651,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         Uniable child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
-            if (child instanceof Container) {
-                n += ((Container) child).getNumGrandChildren();
+            if (child instanceof UniContainer) {
+                n += ((UniContainer) child).getNumGrandChildren();
             }
         }
 
