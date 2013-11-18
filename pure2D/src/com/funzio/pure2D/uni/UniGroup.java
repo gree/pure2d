@@ -54,7 +54,7 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
 
     @Override
     protected int stackChildAt(final GLState glState, final Uniable child, final int index) {
-        return child.stack(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
+        return child.updateBuffers(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
     }
 
     @Override
@@ -92,12 +92,7 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
     }
 
     @Override
-    public UniContainer getUniParent() {
-        return (mParent instanceof UniContainer) ? (UniContainer) mParent : null;
-    }
-
-    @Override
-    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         // stack all sub children
         stackChildren(glState);
 
@@ -115,6 +110,11 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
         }
 
         return mNumDrawingChildren;
+    }
+
+    @Override
+    public UniContainer getUniParent() {
+        return (mParent instanceof UniContainer) ? (UniContainer) mParent : null;
     }
 
     @Override

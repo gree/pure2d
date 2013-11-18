@@ -32,6 +32,7 @@ public class UniGroupClipActivity extends StageActivity {
                     loadTexture();
 
                     mUniGroup = new UniGroup();
+                    mUniGroup.setId("Main Uni Group");
                     // generate a lot of squares
                     mUniGroup.setTexture(mTexture);
                     mScene.addChild(mUniGroup);
@@ -68,6 +69,34 @@ public class UniGroupClipActivity extends StageActivity {
             // add to container
             mUniGroup.addChild(obj);
         }
+
+        // UniGroup sub = new UniGroup();
+        // sub.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+        // sub.setSize(200, 200);
+        // sub.setOriginAtCenter();
+        // sub.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+        // mUniGroup.addChild(sub);
+        // for (int i = 0; i < 3; i++) {
+        // UniSprite child = new UniSprite();
+        // // child.setAtlasFrameSet(mAtlas.getMasterFrameSet());
+        // // child.setSize(200, 200);
+        // // child.setPosition(100, 100);
+        // child.setPosition(mRandom.nextInt(200), mRandom.nextInt(200));
+        // child.setColor(COLOR_GREEN);
+        // child.setOriginAtCenter();
+        // sub.addChild(child);
+        //
+        // ScaleAnimator scaler = new ScaleAnimator(null);
+        // scaler.setDuration(1000);
+        // scaler.setLoop(LoopModes.LOOP_REVERSE);
+        // child.addManipulator(scaler);
+        // scaler.start(1.5f, 1.5f);
+        // }
+        // RotateAnimator rotator = new RotateAnimator(null);
+        // rotator.setDuration(5000);
+        // rotator.start(0, 360);
+        // rotator.setLoop(LoopModes.LOOP_REPEAT);
+        // sub.addManipulator(rotator);
     }
 
     @Override

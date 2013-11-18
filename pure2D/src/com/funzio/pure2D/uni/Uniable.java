@@ -19,9 +19,10 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
  * @author long.ngo
  */
 public interface Uniable extends Manipulatable {
-    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer);
 
     public boolean update(final int deltaTime);
+
+    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer);
 
     public void setX(final float x);
 

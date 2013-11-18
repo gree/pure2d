@@ -56,7 +56,7 @@ public class UniRect extends UniObject {
     }
 
     @Override
-    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         ((QuadMeshBuffer) vertexBuffer).setValuesAt(index, mVertices);
         ((QuadMeshColorBuffer) colorBuffer).setColorAt(index, getInheritedColor());
 
