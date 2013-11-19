@@ -79,7 +79,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     public void updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
-        mNumDrawingChildren = 0;
+        int numDrawingChildren = 0;
         Uniable child;
         float temp, sx = mSize.x, sy = mSize.y;
         for (int i = 0; i < mNumChildren; i++) {
@@ -96,9 +96,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
             if (child.shouldDraw() && child.checkCameraClipping(mScene != null ? mScene.getCamera() : null)) {
                 if (child instanceof UniContainer) {
-                    mNumDrawingChildren += ((UniContainer) child).getNumDrawingChildren();
+                    numDrawingChildren += ((UniContainer) child).getNumDrawingChildren();
                 } else {
-                    mNumDrawingChildren++;
+                    numDrawingChildren++;
                 }
             }
 
@@ -116,6 +116,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 }
             }
         }
+
+        setNumDrawingChildren(numDrawingChildren);
 
         // diff check
         if (sx != mSize.x || sy != mSize.y) {
@@ -658,6 +660,10 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     public int getNumDrawingChildren() {
         return mNumDrawingChildren;
+    }
+
+    protected void setNumDrawingChildren(final int num) {
+        mNumDrawingChildren = num;
     }
 
     /**

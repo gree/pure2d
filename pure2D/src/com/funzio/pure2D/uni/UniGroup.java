@@ -40,18 +40,18 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
     }
 
     @Override
-    protected boolean stackChildren(final GLState glState) {
+    protected void setNumDrawingChildren(final int num) {
+        super.setNumDrawingChildren(num);
+
         // check and allocate
-        if (mNumDrawingChildren > mMeshBuffer.getNumCells()) {
-            mMeshBuffer.setNumCells(mNumDrawingChildren);
-            mColorBuffer.setNumCells(mNumDrawingChildren);
+        if (num > mMeshBuffer.getNumCells()) {
+            mMeshBuffer.setNumCells(num);
+            mColorBuffer.setNumCells(num);
 
             if (mTexture != null) {
-                mTextureCoordBuffer.setNumCells(mNumDrawingChildren);
+                mTextureCoordBuffer.setNumCells(num);
             }
         }
-
-        return super.stackChildren(glState);
     }
 
     @Override
