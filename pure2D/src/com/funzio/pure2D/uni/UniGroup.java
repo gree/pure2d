@@ -61,7 +61,7 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
 
     @Override
     protected boolean drawChildren(final GLState glState) {
-        if (!stackChildren(glState)) {
+        if (!super.drawChildren(glState)) {
             return false;
         }
 

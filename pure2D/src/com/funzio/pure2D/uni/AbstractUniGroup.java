@@ -254,6 +254,17 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return true;
     }
 
+    @Override
+    protected boolean drawChildren(final GLState glState) {
+        if (!stackChildren(glState)) {
+            return false;
+        }
+
+        // TODO override this
+
+        return true;
+    }
+
     protected boolean stackChildren(final GLState glState) {
         if (mNumDrawingChildren == 0) {
             return false;
