@@ -267,7 +267,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         // draw the children
         int numVisibles = 0;
-        final boolean uiEnabled = mTouchable && mScene.isUIEnabled();
+        final boolean uiEnabled = mTouchable && mScene != null && mScene.isUIEnabled();
         Uniable child;
         final int numChildren = mChildrenDisplayOrder.size();
         int stackIndex = 0;

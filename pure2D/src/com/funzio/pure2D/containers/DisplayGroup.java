@@ -247,7 +247,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
         // draw the children
         int numVisibles = 0;
-        final boolean uiEnabled = mScene.isUIEnabled() && mTouchable;
+        final boolean uiEnabled = mTouchable && mScene != null && mScene.isUIEnabled();
         DisplayObject child;
         final int numChildren = mChildrenDisplayOrder.size();
         for (int i = 0; i < numChildren; i++) {
