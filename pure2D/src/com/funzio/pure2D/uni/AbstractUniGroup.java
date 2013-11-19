@@ -836,6 +836,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         // use parent's texture
         setTexture(container.getTexture());
 
+        // flag the bounds are changed now
+        invalidate(PARENT);
+
         // only one parent
         mParent = null;
     }
