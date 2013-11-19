@@ -16,7 +16,6 @@ import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
-import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.containers.Container;
@@ -80,7 +79,6 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     public void updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
-        final Camera camera = mScene != null ? mScene.getCamera() : null;
         mNumDrawingChildren = 0;
         Uniable child;
         float temp, sx = mSize.x, sy = mSize.y;
@@ -96,7 +94,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 child.update(deltaTime);
             }
 
-            if (child.shouldDraw() && child.checkCameraClipping(camera)) {
+            if (child.shouldDraw() && child.checkCameraClipping(mScene != null ? mScene.getCamera() : null)) {
                 if (child instanceof UniContainer) {
                     mNumDrawingChildren += ((UniContainer) child).getNumDrawingChildren();
                 } else {
@@ -274,7 +272,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && child.checkCameraClipping(glState.mCamera)) {
+            if (child.isVisible() && child.checkCameraClipping(mScene != null ? mScene.getCamera() : null)) {
                 // draw frame, check alpha for optimization
                 if (child.getAlpha() > 0) {
                     stackIndex += stackChildAt(glState, child, stackIndex);
