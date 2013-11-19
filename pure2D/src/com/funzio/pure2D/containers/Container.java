@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 
 /**
  * @author long
@@ -49,6 +50,8 @@ public interface Container {
     public void globalToLocal(final PointF global, final PointF result);
 
     public Matrix getMatrix();
+    
+    public Scene getScene();
 
     public boolean queueEvent(Runnable r);
 }

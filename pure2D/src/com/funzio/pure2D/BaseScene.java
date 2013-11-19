@@ -1177,6 +1177,11 @@ public class BaseScene implements Scene {
     }
 
     @Override
+    public Scene getScene() {
+        return this;
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
     }

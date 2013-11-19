@@ -1201,8 +1201,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void onAdded(final Container container) {
         mParent = container;
 
-        if (container instanceof Scene) {
-            onAddedToScene((Scene) container);
+        final Scene scene = container.getScene();
+        if (scene != null) {
+            onAddedToScene(scene);
         }
 
         // flag the bounds are changed now
