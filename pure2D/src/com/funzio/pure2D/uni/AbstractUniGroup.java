@@ -17,7 +17,6 @@ import org.xmlpull.v1.XmlPullParser;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.Camera;
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.containers.Container;
@@ -81,8 +80,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     public void updateChildren(final int deltaTime) {
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
-        final Scene scene = getScene();
-        final Camera camera = scene != null ? scene.getCamera() : null;
+        final Camera camera = mScene != null ? mScene.getCamera() : null;
         mNumDrawingChildren = 0;
         Uniable child;
         float temp, sx = mSize.x, sy = mSize.y;
@@ -178,10 +176,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 mClipStageRect = new RectF();
             }
 
-            final Scene scene = getScene();
-            if (scene != null) {
+            if (mScene != null) {
                 // find the rect on stage, needed when there is a Camera!
-                scene.globalToStage(mBounds, mClipStageRect);
+                mScene.globalToStage(mBounds, mClipStageRect);
             } else {
                 mClipStageRect.set(mBounds);
             }
@@ -270,8 +267,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         // draw the children
         int numVisibles = 0;
-        final Scene scene = getScene();
-        final boolean uiEnabled = mTouchable && scene.isUIEnabled();
+        final boolean uiEnabled = mTouchable && mScene.isUIEnabled();
         Uniable child;
         final int numChildren = mChildrenDisplayOrder.size();
         int stackIndex = 0;
@@ -825,19 +821,22 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     public void onAdded(final Container container) {
         super.onAdded(container);
 
-        // find the scene
-        if (container instanceof DisplayObject) {
-            mScene = ((DisplayObject) container).getScene();
-        }
-
+        // only one parent
         mUniParent = null;
     }
 
     public void onAdded(final UniContainer container) {
         mUniParent = container;
+
+        final Scene scene = container.getScene();
+        if (scene != null) {
+            onAddedToScene(scene);
+        }
+
         // use parent's texture
         setTexture(container.getTexture());
 
+        // only one parent
         mParent = null;
     }
 
@@ -854,6 +853,30 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     protected void onRemovedChild(final Uniable child) {
         // TODO
+    }
+
+    @Override
+    public void onAddedToScene(final Scene scene) {
+        super.onAddedToScene(scene);
+
+        // forward to all children
+        Uniable child;
+        for (int i = 0; i < mNumChildren; i++) {
+            child = mChildren.get(i);
+            child.onAddedToScene(scene);
+        }
+    }
+
+    @Override
+    public void onRemovedFromScene() {
+        super.onRemovedFromScene();
+
+        // forward to all children
+        Uniable child;
+        for (int i = 0; i < mNumChildren; i++) {
+            child = mChildren.get(i);
+            child.onRemovedFromScene();
+        }
     }
 
     @Override

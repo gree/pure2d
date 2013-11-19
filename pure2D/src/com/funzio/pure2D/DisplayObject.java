@@ -148,6 +148,16 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
      * @hide For internal use
      */
     public void onRemoved();
+    
+    /**
+     * @hide For internal use
+     */
+    public void onAddedToScene(Scene scene);
+
+    /**
+     * @hide For internal use
+     */
+    public void onRemovedFromScene();
 
     /**
      * @hide For internal use

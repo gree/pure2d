@@ -8,6 +8,7 @@ import android.graphics.RectF;
 
 import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Manipulatable;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
@@ -138,4 +139,14 @@ public interface Uniable extends Manipulatable {
      * @hide For internal use
      */
     public void onRemoved();
+
+    /**
+     * @hide For internal use
+     */
+    public void onAddedToScene(Scene scene);
+
+    /**
+     * @hide For internal use
+     */
+    public void onRemovedFromScene();
 }

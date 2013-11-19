@@ -124,8 +124,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @see #setPerspectiveEnabled(boolean)
      */
     protected PointF getSceneSize() {
-        final Scene scene = getScene();
-        return (scene != null) ? scene.getSize() : null;
+        return (mScene != null) ? mScene.getSize() : null;
     }
 
     @Override
@@ -865,21 +864,17 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(VISIBILITY);
     }
 
-    protected Scene findScene() {
-        if (mParent instanceof Scene) {
-            return (Scene) mParent;
-        } else if (mParent instanceof DisplayObject) {
-            return ((DisplayObject) mParent).getScene();
-        }
-
-        return null;
-    }
+    // protected Scene findScene() {
+    // if (mParent instanceof Scene) {
+    // return (Scene) mParent;
+    // } else if (mParent instanceof DisplayObject) {
+    // return ((DisplayObject) mParent).getScene();
+    // }
+    //
+    // return null;
+    // }
 
     final public Scene getScene() {
-        if (mScene == null) {
-            mScene = findScene();
-        }
-
         return mScene;
     }
 
@@ -888,7 +883,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     final public boolean queueEvent(final Runnable r) {
-        if (getScene() != null) {
+        if (mScene != null) {
             return mScene.queueEvent(r);
         } else if (Pure2D.ADAPTER != null) {
             // use the adapter
@@ -1205,7 +1200,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     public void onAdded(final Container container) {
         mParent = container;
-        mScene = findScene();
+
+        if (container instanceof Scene) {
+            onAddedToScene((Scene) container);
+        }
 
         // flag the bounds are changed now
         invalidate(PARENT);
@@ -1215,7 +1213,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * This is called after this object is removed from a Container
      */
     public void onRemoved() {
+        if (mScene != null) {
+            onRemovedFromScene();
+        }
+
         mParent = null;
+    }
+
+    /**
+     * @hide For internal use
+     */
+    public void onAddedToScene(final Scene scene) {
+        mScene = scene;
+    }
+
+    /**
+     * @hide For internal use
+     */
+    public void onRemovedFromScene() {
         mScene = null;
     }
 

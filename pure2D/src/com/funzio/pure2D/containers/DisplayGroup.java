@@ -149,10 +149,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 mClipStageRect = new RectF();
             }
 
-            final Scene scene = getScene();
-            if (scene != null) {
+            if (mScene != null) {
                 // find the rect on stage, needed when there is a Camera!
-                scene.globalToStage(mBounds, mClipStageRect);
+                mScene.globalToStage(mBounds, mClipStageRect);
             } else {
                 mClipStageRect.set(mBounds);
             }
@@ -248,7 +247,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
         // draw the children
         int numVisibles = 0;
-        final boolean uiEnabled = getScene().isUIEnabled() && mTouchable;
+        final boolean uiEnabled = mScene.isUIEnabled() && mTouchable;
         DisplayObject child;
         final int numChildren = mChildrenDisplayOrder.size();
         for (int i = 0; i < numChildren; i++) {
@@ -760,6 +759,30 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     protected void onRemovedChild(final DisplayObject child) {
         // TODO
+    }
+
+    @Override
+    public void onAddedToScene(final Scene scene) {
+        super.onAddedToScene(scene);
+
+        // forward to all children
+        DisplayObject child;
+        for (int i = 0; i < mNumChildren; i++) {
+            child = mChildren.get(i);
+            child.onAddedToScene(scene);
+        }
+    }
+
+    @Override
+    public void onRemovedFromScene() {
+        super.onRemovedFromScene();
+
+        // forward to all children
+        DisplayObject child;
+        for (int i = 0; i < mNumChildren; i++) {
+            child = mChildren.get(i);
+            child.onRemovedFromScene();
+        }
     }
 
     /**

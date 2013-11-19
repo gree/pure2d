@@ -50,6 +50,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
     // reference to the parent container
     protected UniContainer mParent;
+    protected Scene mScene;
 
     // extra
     protected GLColor mColor;
@@ -801,21 +802,48 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         mId = id;
     }
 
+    public Scene getScene() {
+        return mScene;
+    }
+
     /**
-     * This is called after this object is added to a UnifiedContainer
+     * This is called after this object is added to a Container
      */
     public void onAdded(final UniContainer container) {
         mParent = container;
+
+        final Scene scene = container.getScene();
+        if (scene != null) {
+            onAddedToScene(scene);
+        }
 
         // flag the bounds are changed now
         invalidate(PARENT);
     }
 
     /**
-     * This is called after this object is removed from a UnifiedContainer
+     * This is called after this object is removed from a Container
      */
     public void onRemoved() {
+        if (mScene != null) {
+            onRemovedFromScene();
+        }
+
         mParent = null;
+    }
+
+    /**
+     * @hide For internal use
+     */
+    public void onAddedToScene(final Scene scene) {
+        mScene = scene;
+    }
+
+    /**
+     * @hide For internal use
+     */
+    public void onRemovedFromScene() {
+        mScene = null;
     }
 
 }
