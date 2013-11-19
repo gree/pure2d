@@ -104,9 +104,9 @@ public class NovaGroup extends DisplayGroup {
             if (mContainerId.equals(UIConfig.LAYER_PARENT)) {
                 container = mParent;
             } else if (mContainerId.equals(UIConfig.LAYER_SCENE)) {
-                container = getScene();
-            } else if (getScene() != null) {
-                container = (Container) getScene().getChildById(mContainerId);
+                container = mScene;
+            } else if (mScene != null) {
+                container = (Container) mScene.getChildById(mContainerId);
             }
         }
         final Container finalContainer = container == null ? this : container;

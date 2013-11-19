@@ -88,13 +88,13 @@ public class Rectangular extends Shape implements UIObject {
      */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (!mTouchable || !mAlive) {
+        if (!mTouchable || !mAlive || mScene == null) {
             return false;
         }
 
         final int action = event.getActionMasked();
         final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final PointF touchedPoint = getScene().getTouchedPoint(pointerIndex);
+        final PointF touchedPoint = mScene.getTouchedPoint(pointerIndex);
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (!mFocus && hitTest(touchedPoint.x, touchedPoint.y)) {

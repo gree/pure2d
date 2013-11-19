@@ -208,8 +208,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
                 PointF point;
                 final float scaleStep = (mScale2 - mScale1) / mNumPoints;
                 float width = mTextureWidth, height = mTextureHeight, scale = mScale1;
-                final Scene scene = getScene();
-                final boolean flippedAxis = scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT;
+                final boolean flippedAxis = mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT;
                 final float dr = changedColors ? (mColor2.r - mColor1.r) / mNumPoints : 0;
                 final float dg = changedColors ? (mColor2.g - mColor1.g) / mNumPoints : 0;
                 final float db = changedColors ? (mColor2.b - mColor1.b) / mNumPoints : 0;

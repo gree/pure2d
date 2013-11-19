@@ -186,13 +186,13 @@ public class Button extends DisplayGroup implements UIObject {
      */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (!mEnabled) {
+        if (!mEnabled || mScene == null) {
             return false;
         }
 
         final int action = event.getActionMasked();
         final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final PointF touchedPoint = getScene().getTouchedPoint(pointerIndex);
+        final PointF touchedPoint = mScene.getTouchedPoint(pointerIndex);
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (!mFocus && hitTest(touchedPoint.x, touchedPoint.y)) {
@@ -231,7 +231,7 @@ public class Button extends DisplayGroup implements UIObject {
         } else if (action == MotionEvent.ACTION_MOVE) {
             final int touchPointerIndex = event.findPointerIndex(mTouchPointerID);
             if (mFocus && touchPointerIndex >= 0) {
-                final PointF movePoint = getScene().getTouchedPoint(touchPointerIndex);
+                final PointF movePoint = mScene.getTouchedPoint(touchPointerIndex);
                 if (hitTest(movePoint.x, movePoint.y)) {
                     setState(STATE_DOWN);
                 } else {

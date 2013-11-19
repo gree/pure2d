@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
@@ -353,8 +352,7 @@ public class HGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            final Scene scene = getScene();
-            if (scene == null) {
+            if (mScene == null) {
                 return controlled;
             }
 
@@ -363,7 +361,7 @@ public class HGroup extends LinearGroup implements UIObject {
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
-                final PointF global = scene.getTouchedPoint(pointerIndex);
+                final PointF global = mScene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         mSwipeAnchor = event.getX(pointerIndex);

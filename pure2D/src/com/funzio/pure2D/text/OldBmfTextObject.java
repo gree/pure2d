@@ -27,6 +27,7 @@ import com.funzio.pure2D.shapes.DummyDrawer;
 /**
  * @author long
  */
+@Deprecated
 public class OldBmfTextObject extends BaseDisplayObject implements Cacheable {
     protected BitmapFont mBitmapFont;
     protected TextOptions mTextOptions;

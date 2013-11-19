@@ -379,8 +379,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            final Scene scene = getScene();
-            if (scene == null) {
+            if (mScene == null) {
                 return controlled;
             }
 
@@ -389,7 +388,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
-                final PointF global = scene.getTouchedPoint(pointerIndex);
+                final PointF global = mScene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         mSwipeAnchor = event.getY(pointerIndex);
@@ -405,7 +404,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
                 if (swipePointerIndex >= 0) {
                     float deltaY = event.getY(swipePointerIndex) - mSwipeAnchor;
-                    if (scene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                    if (mScene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
                         // flip
                         deltaY = -deltaY;
                     }

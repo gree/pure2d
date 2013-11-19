@@ -159,15 +159,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         setSize(mTextBounds.right - mTextBounds.left + 1, mTextBounds.bottom - mTextBounds.top + 1);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         // find axis system
         if (mSceneAxis < 0) {
-            mSceneAxis = getScene().getAxisSystem();
+            mSceneAxis = mScene.getAxisSystem();
         }
 
         // update text bounds
@@ -178,10 +174,6 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         return super.update(deltaTime);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.IDisplayObject#draw(javax.microedition.khronos.opengles.GL10, int)
-     */
     @Override
     public boolean draw(final GLState glState) {
         if (mText == null || mText.length() == 0) {

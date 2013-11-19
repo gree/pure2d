@@ -98,8 +98,7 @@ public class Shape extends BaseDisplayObject {
      */
     protected void validateTextureCoordBuffer() {
         // match texture coordinates with the Axis system
-        final Scene scene = getScene();
-        if (mTextureCoordBuffer != null && scene != null && scene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
+        if (mTextureCoordBuffer != null && mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT && !mTextureFlippedForAxis) {
             // flip vertically
             mTextureCoordBuffer.flipVertical();
             mTextureFlippedForAxis = true;
