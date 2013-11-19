@@ -282,8 +282,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                     if (stackIndex < mNumDrawingChildren) {
                         stackIndex += stackChildAt(glState, child, stackIndex);
                     } else {
-                        // FIXME
-                        Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
+                        // FIXME :((
+                        // Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
                     }
                 }
 
