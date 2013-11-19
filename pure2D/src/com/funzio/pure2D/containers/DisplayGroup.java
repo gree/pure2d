@@ -254,7 +254,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
+            if (child.isVisible() && child.checkCameraClipping(glState.mCamera)) {
                 // draw frame, check alpha for optimization
                 if (child.getAlpha() > 0) {
                     child.draw(glState);

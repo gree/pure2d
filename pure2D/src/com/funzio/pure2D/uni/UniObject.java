@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
@@ -68,6 +69,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
     protected boolean mAutoUpdateBounds;
+    protected boolean mBypassCameraClipping = false;
 
     // interface
     protected float[] mVertices;
@@ -162,6 +164,10 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
     public boolean shouldDraw() {
         return mVisible && mAlpha > 0;
+    }
+
+    public boolean checkCameraClipping(final Camera camera) {
+        return mBypassCameraClipping || camera == null || camera.isViewable(this);
     }
 
     /**
@@ -729,6 +735,14 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
      */
     final public boolean isAutoUpdateBounds() {
         return mAutoUpdateBounds;
+    }
+
+    public boolean isBypassCameraClipping() {
+        return mBypassCameraClipping;
+    }
+
+    public void setBypassCameraClipping(final boolean ignoreCameraClipping) {
+        mBypassCameraClipping = ignoreCameraClipping;
     }
 
     /**

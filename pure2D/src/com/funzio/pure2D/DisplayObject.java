@@ -8,6 +8,7 @@ import android.graphics.RectF;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
@@ -119,6 +120,8 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public RectF getBounds();
 
     public RectF updateBounds();
+    
+    public boolean checkCameraClipping(final Camera camera);
 
     public boolean isAutoUpdateBounds();
 

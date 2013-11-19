@@ -100,7 +100,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             if (child instanceof UniContainer) {
                 mNumDrawingChildren += ((UniContainer) child).getNumDrawingChildren();
             } else {
-                if (child.shouldDraw() && (camera == null || camera.isViewable(child))) {
+                if (child.shouldDraw() && child.checkCameraClipping(camera)) {
                     mNumDrawingChildren++;
                 }
             }
@@ -277,7 +277,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && (glState.mCamera == null || glState.mCamera.isViewable(child))) {
+            if (child.isVisible() && child.checkCameraClipping(glState.mCamera)) {
                 // draw frame, check alpha for optimization
                 if (child.getAlpha() > 0) {
                     stackIndex += stackChildAt(glState, child, stackIndex);

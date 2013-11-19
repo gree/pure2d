@@ -105,6 +105,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected boolean mAutoUpdateBounds = false;
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
+    protected boolean mBypassCameraClipping = false;
 
     // perspective projection
     protected boolean mPerspectiveEnabled = false;
@@ -384,6 +385,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
     @Override
     public boolean shouldDraw() {
         return mVisible && mAlpha > 0;
+    }
+
+    public boolean checkCameraClipping(final Camera camera) {
+        return mBypassCameraClipping || camera == null || camera.isViewable(this);
     }
 
     /**
@@ -1132,6 +1137,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
      */
     final public RectF getBounds() {
         return mBounds;
+    }
+
+    public boolean isBypassCameraClipping() {
+        return mBypassCameraClipping;
+    }
+
+    public void setBypassCameraClipping(final boolean ignoreCameraClipping) {
+        mBypassCameraClipping = ignoreCameraClipping;
     }
 
     /**

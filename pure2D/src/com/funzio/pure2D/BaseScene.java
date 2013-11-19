@@ -434,7 +434,7 @@ public class BaseScene implements Scene {
 
                     for (int i = 0; i < mNumChildren; i++) {
                         child = mChildren.get(i);
-                        final boolean visible = child.isVisible() && ((mCamera == null) || mCamera.isViewable(child));
+                        final boolean visible = child.isVisible() && child.checkCameraClipping(mCamera);
                         if (visible) {
                             // draw frame, check alpha for optimization
                             if (child.getAlpha() > 0) {

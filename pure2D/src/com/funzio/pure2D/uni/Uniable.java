@@ -6,6 +6,7 @@ package com.funzio.pure2D.uni;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.gl.GLColor;
@@ -115,6 +116,8 @@ public interface Uniable extends Manipulatable {
     public RectF updateBounds();
 
     public boolean isAutoUpdateBounds();
+
+    public boolean checkCameraClipping(final Camera camera);
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
