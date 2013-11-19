@@ -279,7 +279,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             if (child.isVisible() && child.checkCameraClipping(mScene != null ? mScene.getCamera() : null)) {
                 // draw frame, check alpha for optimization
                 if (child.getAlpha() > 0) {
-                    stackIndex += stackChildAt(glState, child, stackIndex);
+                    if (stackIndex < mNumDrawingChildren) {
+                        stackIndex += stackChildAt(glState, child, stackIndex);
+                    } else {
+                        // FIXME
+                        Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
+                    }
                 }
 
                 // stack the visible child
