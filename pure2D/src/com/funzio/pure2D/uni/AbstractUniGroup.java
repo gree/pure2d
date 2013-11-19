@@ -67,6 +67,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected Texture mTexture;
     protected boolean mTextureLoaded;
 
+    protected UniContainer mUniParent;
     protected Matrix mMatrixWithoutParents;
 
     public AbstractUniGroup() {
@@ -828,11 +829,23 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         if (container instanceof DisplayObject) {
             mScene = ((DisplayObject) container).getScene();
         }
+
+        mUniParent = null;
     }
 
     public void onAdded(final UniContainer container) {
+        mUniParent = container;
         // use parent's texture
         setTexture(container.getTexture());
+
+        mParent = null;
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        mUniParent = null;
     }
 
     protected void onAddedChild(final Uniable child) {
@@ -841,6 +854,19 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     protected void onRemovedChild(final Uniable child) {
         // TODO
+    }
+
+    @Override
+    public boolean removeFromParent() {
+        if (super.removeFromParent()) {
+            return true;
+        }
+
+        if (mUniParent != null) {
+            return mUniParent.removeChild((Uniable) this);
+        } else {
+            return false;
+        }
     }
 
     /**
