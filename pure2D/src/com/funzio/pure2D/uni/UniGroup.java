@@ -96,7 +96,9 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
     @Override
     public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         // stack all sub children
-        stackChildren(glState);
+        if (!stackChildren(glState)) {
+            return 0;
+        }
 
         final float[] vertices = mMeshBuffer.getVertices();
         if (mMatrixWithoutParents != null) {
