@@ -67,7 +67,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     }
 
     @Override
-    public void updateChildren(final int deltaTime) {
+    protected void updateChildren(final int deltaTime) {
+        super.updateChildren(deltaTime);
+
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
         DisplayObject child;

@@ -76,7 +76,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     }
 
     @Override
-    public void updateChildren(final int deltaTime) {
+    protected void updateChildren(final int deltaTime) {
+        super.updateChildren(deltaTime);
+
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
         int numDrawingChildren = 0;
