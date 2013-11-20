@@ -71,6 +71,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
     protected boolean mAutoUpdateBounds;
     protected boolean mBypassCameraClipping = false;
+    protected PointF mGlobalPosition;
 
     // interface
     protected float[] mVertices;
@@ -701,6 +702,21 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
                 mMatrix.postConcat(parentMatrix);
             }
         }
+    }
+
+    /**
+     * Get global position of this object
+     * 
+     * @return the global point
+     */
+    public PointF getGlobalPosition() {
+        // null check
+        if (mGlobalPosition == null) {
+            mGlobalPosition = new PointF();
+        }
+        localToGlobal(null, mGlobalPosition);
+
+        return mGlobalPosition;
     }
 
     public RectF updateBounds() {
