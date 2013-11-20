@@ -101,7 +101,9 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
         }
 
         final float[] vertices = mMeshBuffer.getVertices();
-        if (mMatrixWithoutParents != null) {
+        if (mUniParent != null) {
+            mMatrix.mapPoints(vertices);
+        } else if (mMatrixWithoutParents != null) {
             mMatrixWithoutParents.mapPoints(vertices);
         }
 
