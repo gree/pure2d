@@ -1101,9 +1101,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mBounds.right = mSize.x - 1;
         mBounds.bottom = mSize.y - 1;
 
+        onPreConcatParentMatrix();
         // find the bounds
         if (changed || parentMatrix != null) {
-            onPreConcatParentMatrix();
 
             // apply the parent's matrix
             if (parentMatrix != null) {
