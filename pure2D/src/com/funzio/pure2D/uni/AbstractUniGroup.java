@@ -917,6 +917,15 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         }
     }
 
+    public UniContainer getUniParent() {
+        return mUniParent;
+    }
+
+    @Override
+    public Matrix getParentMatrix() {
+        return mParent != null ? mParent.getMatrix() : (mUniParent != null ? mUniParent.getMatrix() : null);
+    }
+
     /**
      * @param texture
      */

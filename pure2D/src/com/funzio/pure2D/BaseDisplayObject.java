@@ -1033,7 +1033,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
             mMatrix = new Matrix();
             changed = true;
         }
-        final Matrix parentMatrix = (mParent == null) ? null : mParent.getMatrix();
+        final Matrix parentMatrix = getParentMatrix();
 
         if (mHasTransformValues) {
             mMatrix.setTranslate(-mOrigin.x - mPivot.x, -mOrigin.y - mPivot.y);
@@ -1123,6 +1123,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     final public Matrix getMatrix() {
         return mMatrix;
+    }
+
+    public Matrix getParentMatrix() {
+        return mParent != null ? mParent.getMatrix() : null;
     }
 
     /**

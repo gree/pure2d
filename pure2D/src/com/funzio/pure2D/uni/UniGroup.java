@@ -131,9 +131,4 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
         return mNumDrawingChildren;
     }
 
-    @Override
-    public UniContainer getUniParent() {
-        return (mParent instanceof UniContainer) ? (UniContainer) mParent : null;
-    }
-
 }
