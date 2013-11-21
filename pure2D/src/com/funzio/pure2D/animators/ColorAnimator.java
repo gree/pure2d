@@ -7,6 +7,7 @@ import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.uni.UniObject;
 
 /**
  * @author juni.kim
@@ -48,6 +49,8 @@ public class ColorAnimator extends TweenAnimator {
     public void start(final GLColor dst) {
         if (mTarget instanceof DisplayObject) {
             start(((DisplayObject) mTarget).getColor(), dst);
+        } else if (mTarget instanceof UniObject) {
+            start(((UniObject) mTarget).getColor(), dst);
         }
     }
 
@@ -65,15 +68,17 @@ public class ColorAnimator extends TweenAnimator {
 
     @Override
     protected void onUpdate(final float value) {
-        if (mTarget instanceof DisplayObject) {
-            float r, g, b, a;
-            r = mSrc.r + mDelta.r * value;
-            g = mSrc.g + mDelta.g * value;
-            b = mSrc.b + mDelta.b * value;
-            a = mSrc.a + mDelta.a * value;
+        float r, g, b, a;
+        r = mSrc.r + mDelta.r * value;
+        g = mSrc.g + mDelta.g * value;
+        b = mSrc.b + mDelta.b * value;
+        a = mSrc.a + mDelta.a * value;
 
-            mTargetColor.setValues(r, g, b, a);
+        mTargetColor.setValues(r, g, b, a);
+        if (mTarget instanceof DisplayObject) {
             ((DisplayObject) mTarget).setColor(mTargetColor);
+        } else if (mTarget instanceof UniObject) {
+            ((UniObject) mTarget).setColor(mTargetColor);
         }
 
         super.onUpdate(value);
