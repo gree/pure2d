@@ -352,7 +352,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         if (mParent == null) {
             // multiply by parent's attributes
             if (mUniParent != null && mUniParent instanceof AbstractUniGroup) {
-                final AbstractUniGroup parent = (AbstractUniGroup) mParent;
+                final AbstractUniGroup parent = (AbstractUniGroup) mUniParent;
                 final GLColor parentColor = parent.getInheritedColor();
                 if (parentColor != null) {
                     color.multiply(parentColor);
