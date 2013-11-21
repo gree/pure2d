@@ -347,7 +347,20 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     @Override
     protected GLColor getInheritedColor() {
-        return super.getInheritedColor();
+        final GLColor color = super.getInheritedColor();
+
+        if (mParent == null) {
+            // multiply by parent's attributes
+            if (mUniParent != null && mUniParent instanceof UniObject) {
+                final UniObject parent = (UniObject) mParent;
+                final GLColor parentColor = parent.getInheritedColor();
+                if (parentColor != null) {
+                    color.multiply(parentColor);
+                }
+            }
+        }
+
+        return color;
     }
 
     @Override
