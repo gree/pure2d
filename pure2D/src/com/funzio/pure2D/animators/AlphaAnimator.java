@@ -6,6 +6,7 @@ package com.funzio.pure2D.animators;
 import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.uni.UniObject;
 
 /**
  * @author long
@@ -36,6 +37,8 @@ public class AlphaAnimator extends TweenAnimator {
     public void start(final float dest) {
         if (mTarget instanceof DisplayObject) {
             start(((DisplayObject) mTarget).getAlpha(), dest);
+        } else if (mTarget instanceof UniObject) {
+            start(((UniObject) mTarget).getAlpha(), dest);
         }
     }
 
@@ -43,6 +46,8 @@ public class AlphaAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget instanceof DisplayObject) {
             ((DisplayObject) mTarget).setAlpha(mSrc + value * mDelta);
+        } else if (mTarget instanceof UniObject) {
+            ((UniObject) mTarget).setAlpha(mSrc + value * mDelta);
         }
 
         super.onUpdate(value);
