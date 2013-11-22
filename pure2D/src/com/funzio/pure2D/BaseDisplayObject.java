@@ -100,7 +100,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected int mNumManipulators = 0;
 
     // rect and bounds
-    protected int mInvalidateFlags = 0;
+    public int mInvalidateFlags = 0;
     protected Matrix mMatrix;
     protected boolean mAutoUpdateBounds = false;
     // global bounds

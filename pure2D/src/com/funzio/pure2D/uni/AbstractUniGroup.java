@@ -79,6 +79,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected void updateChildren(final int deltaTime) {
         super.updateChildren(deltaTime);
 
+        final int flags;
+        if (mAutoUpdateBounds && (mInvalidateFlags & BOUNDS) != 0) {
+            // re-cal the matrix
+            updateBounds();
+        }
+
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
         int numDrawingChildren = 0;
@@ -119,6 +125,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
         }
 
+        validate(BOUNDS);
         setNumDrawingChildren(numDrawingChildren);
 
         // diff check

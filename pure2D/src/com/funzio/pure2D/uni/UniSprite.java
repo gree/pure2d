@@ -74,9 +74,9 @@ public class UniSprite extends UniRect {
             final PointF newSize = frame.getSize();
             if (mSizeToFrame && (newSize.x != mSize.x || newSize.y != mSize.y)) {
                 setSize(newSize.x, newSize.y);
-            } else {
-                invalidate(FRAME);
             }
+
+            invalidate(FRAME);
         } else {
             // default coord
             TextureCoordBuffer.getDefault(mTextureCoords);
