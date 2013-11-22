@@ -4,7 +4,6 @@
 package com.funzio.pure2D.ui;
 
 import android.graphics.PointF;
-import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -293,7 +292,7 @@ public class UIConstraint {
         final float cx = targetPos.x, cy = targetPos.y;
         final float cw = targetSize.x, ch = targetSize.y;
         float l = cx, r = 0, t = 0, b = cy, w = cw, h = ch;
-        
+
         // left and right
         if (leftUnit == UNIT.PIXEL) {
             l = x;
