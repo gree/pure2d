@@ -93,6 +93,11 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
     }
 
     @Override
+    protected int getNumObjects() {
+        return mScene.getNumGrandChildren();
+    }
+
+    @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         final int action = event.getActionMasked();
 
