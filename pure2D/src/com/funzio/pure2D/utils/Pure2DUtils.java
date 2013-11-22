@@ -205,9 +205,16 @@ public class Pure2DUtils {
 
         // resize to the specified scale
         if (options.inScaleX != 1 || options.inScaleY != 1) {
-            final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, Math.round(bitmap.getWidth() * options.inScaleX), Math.round(bitmap.getHeight() * options.inScaleY), true);
-            bitmap.recycle();
-            bitmap = newBitmap;
+            final int newWidth = Math.round(bitmap.getWidth() * options.inScaleX);
+            final int newHeight = Math.round(bitmap.getHeight() * options.inScaleY);
+
+            if (newWidth > 0 && newHeight > 0) {
+                final Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+                if (newBitmap != bitmap) {
+                    bitmap.recycle();
+                }
+                bitmap = newBitmap;
+            }
         }
 
         if (options.inPo2) {
