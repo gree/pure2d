@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
@@ -14,15 +13,25 @@ import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.shapes.Clip;
+import com.funzio.pure2D.uni.UniClip;
+import com.funzio.pure2D.uni.UniGroup;
+import com.funzio.pure2D.uni.UniObject;
 
 public class CoinExplosionActivity extends StageActivity implements AnimatorListener {
     private Texture mTexture;
     private JsonAtlas mAtlas;
+    private UniGroup mUniGroup;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            mAtlas = new JsonAtlas(mScene.getAxisSystem());
+            mAtlas.load(getAssets(), "atlas/coin_01_60.json", 1);
+        } catch (Exception e) {
+            Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
+        }
 
         // need to get the GL reference first
         mScene.setListener(new Scene.Listener() {
@@ -34,18 +43,16 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
                     // load the textures
                     loadTexture();
 
+                    mUniGroup = new UniGroup();
+                    mUniGroup.setTexture(mTexture);
+                    mScene.addChild(mUniGroup);
+
                     // generate a lot of squares
                     addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
                 }
             }
         });
 
-        try {
-            mAtlas = new JsonAtlas(mScene.getAxisSystem());
-            mAtlas.load(getAssets(), "atlas/coin_01_60.json", 1);
-        } catch (Exception e) {
-            Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
-        }
     }
 
     private void loadTexture() {
@@ -55,8 +62,7 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
 
     private void addObject(final float x, final float y) {
         // create object
-        Clip obj = new Clip(mAtlas.getMasterFrameSet());
-        obj.setTexture(mTexture);
+        UniClip obj = new UniClip(mAtlas.getMasterFrameSet());
         obj.playAt(mRandom.nextInt(obj.getNumFrames()));
         // obj.setRotation(mRandom.nextInt(360));
         // obj.setFps(30);
@@ -68,7 +74,7 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         obj.setPosition(x, y);
 
         // add to scene
-        mScene.addChild(obj);
+        mUniGroup.addChild(obj);
 
         // animation
         final TrajectoryAnimator animator = new TrajectoryAnimator(0);
@@ -79,23 +85,29 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
         animator.setListener(this);
     }
 
-    private void addSome(final float x, final float y) {
+    private void addSome(final float screenX, final float screenY) {
+        mScene.screenToGlobal(screenX, screenY, mTempPoint);
         for (int i = 0; i < 10; i++) {
-            addObject(x, y);
+            addObject(mTempPoint.x, mTempPoint.y);
         }
     }
 
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
-        final int action = event.getAction();
+        final int action = event.getActionMasked();
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
-            mStage.queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    addSome(event.getX(), mDisplaySize.y - event.getY());
-                }
-            });
+            final int num = event.getPointerCount();
+            for (int i = 0; i < num; i++) {
+                final float x = event.getX(i);
+                final float y = event.getY(i);
+                mStage.queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                        addSome(x, y);
+                    }
+                });
+            }
         }
 
         return true;
@@ -107,7 +119,7 @@ public class CoinExplosionActivity extends StageActivity implements AnimatorList
 
             @Override
             public void run() {
-                ((DisplayObject) animator.getTarget()).removeFromParent();
+                ((UniObject) animator.getTarget()).removeFromParent();
             }
         });
     }
