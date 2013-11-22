@@ -26,10 +26,6 @@ public class Bouncer extends Sprite {
         mVeloc.y *= mRandom.nextFloat() > 0.5 ? 1 : -1;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         super.update(deltaTime);
@@ -57,10 +53,6 @@ public class Bouncer extends Sprite {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#onAdded(com.funzio.pure2D.IContainer)
-     */
     @Override
     public void onAdded(final Container parent) {
         super.onAdded(parent);
