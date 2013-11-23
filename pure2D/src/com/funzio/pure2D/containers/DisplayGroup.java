@@ -64,6 +64,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
         // auto update is enabled by default for Containers
         setAutoUpdateBounds(true);
+        
+        // no need to check me, but my children
+        setBypassCameraClipping(true);
     }
 
     @Override

@@ -73,6 +73,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         // auto update is enabled by default for Containers
         setAutoUpdateBounds(true);
+
+        // no need to check me, but my children
+        setBypassCameraClipping(true);
     }
 
     @Override
