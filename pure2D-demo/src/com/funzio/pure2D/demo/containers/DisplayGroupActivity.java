@@ -63,6 +63,7 @@ public class DisplayGroupActivity extends StageActivity {
             Texture texture = mTextures.get(random);
             // create object
             Bouncer sq = new Bouncer();
+            sq.setAutoUpdateBounds(true);
             sq.setTexture(texture);
             // random positions
             sq.setPosition(mRandom.nextInt(200), mRandom.nextInt(200));

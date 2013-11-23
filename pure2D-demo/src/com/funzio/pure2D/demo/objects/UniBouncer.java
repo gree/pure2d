@@ -28,8 +28,6 @@ public class UniBouncer extends UniSprite {
 
     @Override
     public boolean update(final int deltaTime) {
-        super.update(deltaTime);
-
         if (mPosition.x >= mBoundary.x - mSize.x) {
             // mPosition.x = mBoundary.x - mSize.x;
             mVeloc.x = -Math.abs(mVeloc.x);
@@ -50,7 +48,7 @@ public class UniBouncer extends UniSprite {
         move(mVeloc.x * factor, mVeloc.y * factor);
         // rotate(1);
 
-        return true;
+        return super.update(deltaTime);
     }
 
     @Override

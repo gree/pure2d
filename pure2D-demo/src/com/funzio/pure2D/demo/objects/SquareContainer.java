@@ -41,14 +41,8 @@ public class SquareContainer extends DisplayGroup {
         setOrigin(new PointF(w / 2, h / 2));
     };
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
-        super.update(deltaTime);
-
         rotate(1);
         // setScale(2);
 
@@ -71,13 +65,9 @@ public class SquareContainer extends DisplayGroup {
         float factor = (float) deltaTime / 10;
         move(mVeloc.x * factor, mVeloc.y * factor);
 
-        return true;
+        return super.update(deltaTime);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.DisplayObject#onAdded(com.funzio.pure2D.IContainer)
-     */
     @Override
     public void onAdded(final Container parent) {
         super.onAdded(parent);
