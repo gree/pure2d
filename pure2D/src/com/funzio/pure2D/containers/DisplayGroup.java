@@ -82,6 +82,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             }
 
             if (child.isAlive()) {
+                // hint child to update bounds
+                if ((mInvalidateFlags & BOUNDS) != 0) {
+                    child.invalidate(PARENT_BOUNDS);
+                }
+                
                 // update child
                 child.update(deltaTime);
             }
@@ -105,23 +110,18 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         if (sx != mSize.x || sy != mSize.y) {
             // apply
             setSize(sx, sy);
-        }
-    }
-
-    @Override
-    public RectF updateBounds() {
-        final RectF rect = super.updateBounds();
-
-        // if bounds changed, all children's bounds should also be changed
-        DisplayObject child;
-        for (int i = 0; i < mNumChildren; i++) {
-            child = mChildren.get(i);
-            if (child.isAutoUpdateBounds()) {
-                child.updateBounds(); // TODO: optimize
+            
+            // size changed? need to re-update bounds, in the same frame
+            if (mAutoUpdateBounds) {
+                // check constraints first ,only apply it when size or parent changed
+                if (mUIConstraint != null) {
+                    mUIConstraint.apply(this, mParent);
+                }
+                
+             // re-cal the matrix
+                updateBounds();
             }
         }
-
-        return rect;
     }
 
     @Override

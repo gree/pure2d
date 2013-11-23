@@ -101,10 +101,13 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
         }
 
         final float[] vertices = mMeshBuffer.getVertices();
-        if (mUniParent != null) {
-            mMatrix.mapPoints(vertices);
-        } else if (mMatrixWithoutParents != null) {
-            mMatrixWithoutParents.mapPoints(vertices);
+        // if (mUniParent != null) {
+        // mMatrix.mapPoints(vertices);
+        // } else if (mMatrixWithoutParents != null) {
+        // mMatrixWithoutParents.mapPoints(vertices);
+        // }
+        if (mMatrixForVertices != null) {
+            mMatrixForVertices.mapPoints(vertices);
         }
 
         ((QuadMeshBuffer) vertexBuffer).setValuesAt(index, mNumDrawingChildren, vertices);
@@ -117,10 +120,10 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
 
         // for debugging
         final int debugFlags = Pure2D.DEBUG_FLAGS | mDebugFlags;
-        // local rect
-        if ((debugFlags & Pure2D.DEBUG_FLAG_WIREFRAME) != 0 && mSize.x > 0 && mSize.y > 0) {
-            drawWireframe(glState);
-        }
+        // TODO: local rect
+        // if ((debugFlags & Pure2D.DEBUG_FLAG_WIREFRAME) != 0 && mSize.x > 0 && mSize.y > 0) {
+        // drawWireframe(glState);
+        // }
         // debug global bounds
         if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
             final GL10 gl = glState.mGL;

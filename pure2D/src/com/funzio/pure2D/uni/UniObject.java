@@ -96,7 +96,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         }
 
         // finally update bounds
-        if ((mInvalidateFlags & BOUNDS) != 0 || (mParent != null && (((AbstractUniGroup) mParent).mInvalidateFlags & BOUNDS) != 0)) {
+        if ((mInvalidateFlags & BOUNDS) != 0) {
             // re-cal the matrix
             updateVertices();
 

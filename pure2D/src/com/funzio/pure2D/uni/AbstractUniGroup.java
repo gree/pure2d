@@ -66,7 +66,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected boolean mTextureLoaded;
 
     protected UniContainer mUniParent;
-    protected Matrix mMatrixWithoutParents;
+    protected Matrix mMatrixForVertices;
 
     public AbstractUniGroup() {
         super();
@@ -78,12 +78,6 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     @Override
     protected void updateChildren(final int deltaTime) {
         super.updateChildren(deltaTime);
-
-        final int flags;
-        if (mAutoUpdateBounds && (mInvalidateFlags & BOUNDS) != 0) {
-            // re-cal the matrix
-            updateBounds();
-        }
 
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
@@ -98,6 +92,10 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
 
             if (child.isAlive()) {
+                // hint child to update bounds
+                if ((mInvalidateFlags & BOUNDS) != 0) {
+                    child.invalidate(PARENT_BOUNDS);
+                }
                 // update child
                 child.update(deltaTime);
             }
@@ -125,30 +123,24 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
         }
 
-        validate(BOUNDS);
         setNumDrawingChildren(numDrawingChildren);
 
         // diff check
         if (sx != mSize.x || sy != mSize.y) {
             // apply
             setSize(sx, sy);
-        }
-    }
 
-    @Override
-    public RectF updateBounds() {
-        final RectF rect = super.updateBounds();
+            // size changed? need to re-update bounds, in the same frame
+            if (mAutoUpdateBounds) {
+                // check constraints first ,only apply it when size or parent changed
+                if (mUIConstraint != null) {
+                    mUIConstraint.apply(this, mParent);
+                }
 
-        // if bounds changed, all children's bounds should also be changed
-        Uniable child;
-        for (int i = 0; i < mNumChildren; i++) {
-            child = mChildren.get(i);
-            if (child.isAutoUpdateBounds()) {
-                child.updateBounds(); // TODO: optimize
+                // re-cal the matrix
+                updateBounds();
             }
         }
-
-        return rect;
     }
 
     @Override
@@ -327,11 +319,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected void onPreConcatParentMatrix() {
         super.onPreConcatParentMatrix();
 
-        if (mMatrixWithoutParents == null) {
-            mMatrixWithoutParents = new Matrix(mMatrix);
+        if (mMatrixForVertices == null) {
+            mMatrixForVertices = new Matrix(mMatrix);
         } else {
-            mMatrixWithoutParents.set(mMatrix);
+            mMatrixForVertices.set(mMatrix);
         }
+
     }
 
     public Texture getTexture() {
@@ -383,6 +376,15 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         }
 
         return super.update(deltaTime);
+    }
+
+    @Override
+    public final void invalidate(final int flags) {
+        super.invalidate(flags);
+
+        if (mUniParent != null) {
+            mUniParent.invalidate(CHILDREN);
+        }
     }
 
     /**
@@ -942,7 +944,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     }
 
     @Override
-    public Matrix getParentMatrix() {
+    protected Matrix getParentMatrix() {
         return mParent != null ? mParent.getMatrix() : (mUniParent != null ? mUniParent.getMatrix() : null);
     }
 

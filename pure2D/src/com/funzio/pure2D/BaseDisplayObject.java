@@ -100,7 +100,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected int mNumManipulators = 0;
 
     // rect and bounds
-    public int mInvalidateFlags = 0;
+    protected int mInvalidateFlags = 0;
     protected Matrix mMatrix;
     protected boolean mAutoUpdateBounds = false;
     // global bounds
@@ -268,7 +268,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     @Override
     public boolean update(final int deltaTime) {
-
         // check constraints first ,only apply it when size or parent changed
         if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT)) != 0) {
             mUIConstraint.apply(this, mParent);
@@ -305,14 +304,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
 
-        // now update children
-        updateChildren(deltaTime);
-
-        // finally update bounds
+        // update bounds for the children to calculate their bounds correctly
         if (mAutoUpdateBounds && (mInvalidateFlags & BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
         }
+
+        // now update children
+        updateChildren(deltaTime);
 
         // validate transform AFTER updateBounds()
         mInvalidateFlags &= ~(BOUNDS | TRANSFORM_MATRIX);
@@ -339,7 +338,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @hide
      */
-    final public void invalidate(final int flags) {
+    public void invalidate(final int flags) {
         mInvalidateFlags |= flags;
 
         if (mParent != null) {
@@ -1065,9 +1064,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
             }
         }
 
-        // clear flags: bounds
-        // mInvalidateFlags &= ~BOUNDS;
-
         // translate later
         if ((mPosition.x - mOrigin.x) != 0 || (mPosition.y - mOrigin.y) != 0) {
             if (changed) {
@@ -1125,7 +1121,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mMatrix;
     }
 
-    public Matrix getParentMatrix() {
+    protected Matrix getParentMatrix() {
         return mParent != null ? mParent.getMatrix() : null;
     }
 
