@@ -24,6 +24,8 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
     protected QuadMeshTextureCoordBuffer mTextureCoordBuffer;
     protected QuadMeshColorBuffer mColorBuffer;
 
+    protected boolean mStackable;
+
     public UniGroup() {
         super();
 
@@ -134,6 +136,22 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
         }
 
         return mNumDrawingChildren;
+    }
+
+    /**
+     * @hide for internal use
+     */
+    @Override
+    public void setStackable(final boolean value) {
+        mStackable = value;
+    }
+
+    /**
+     * @hide for internal use
+     */
+    @Override
+    public boolean isStackable() {
+        return mStackable;
     }
 
 }

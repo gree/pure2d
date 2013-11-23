@@ -15,7 +15,10 @@ import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
+import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
  * @author long
@@ -75,6 +78,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
     // interface
     protected float[] mVertices;
+    protected boolean mStackable;
 
     abstract protected void resetVertices();
 
@@ -166,6 +170,28 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
     public boolean shouldDraw() {
         return mVisible && mAlpha > 0;
+    }
+
+    @Override
+    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /**
+     * @hide for internal use
+     */
+    @Override
+    public void setStackable(final boolean value) {
+        mStackable = value;
+    }
+
+    /**
+     * @hide for internal use
+     */
+    @Override
+    public boolean isStackable() {
+        return mStackable;
     }
 
     public boolean checkCameraClipping(final Camera camera) {

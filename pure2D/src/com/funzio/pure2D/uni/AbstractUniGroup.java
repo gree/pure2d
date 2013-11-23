@@ -109,6 +109,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 } else {
                     numDrawingChildren++;
                 }
+                child.setStackable(true);
+            } else {
+                child.setStackable(false);
             }
 
             // match content size
@@ -289,15 +292,13 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && child.checkCameraClipping(mScene != null ? mScene.getCamera() : null)) {
+            if (child.isStackable()) {
                 // draw frame, check alpha for optimization
-                if (child.getAlpha() > 0) {
-                    if (stackIndex < mNumDrawingChildren) {
-                        stackIndex += stackChildAt(glState, child, stackIndex);
-                    } else {
-                        // FIXME :((
-                        // Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
-                    }
+                if (stackIndex < mNumDrawingChildren) {
+                    stackIndex += stackChildAt(glState, child, stackIndex);
+                } else {
+                    // FIXME :((
+                    // Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
                 }
 
                 // stack the visible child

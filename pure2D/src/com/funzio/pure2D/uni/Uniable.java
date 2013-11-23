@@ -76,6 +76,17 @@ public interface Uniable extends Manipulatable {
 
     public boolean shouldDraw();
 
+    /**
+     * @hide for internal use
+     * @param value
+     */
+    public void setStackable(final boolean value);
+
+    /**
+     * @hide for internal use
+     */
+    public boolean isStackable();
+
     public GLColor getColor();
 
     public void setColor(final GLColor color);
