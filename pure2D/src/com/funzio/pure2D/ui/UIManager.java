@@ -64,7 +64,7 @@ public class UIManager {
     public Context getContext() {
         return mContext;
     }
-    
+
     public String getPackageName() {
         return mPackageName;
     }
@@ -130,6 +130,7 @@ public class UIManager {
     public TextureOptions getTextureOptions() {
         if (mTextureOptions == null) {
             mTextureOptions = TextureOptions.getDefault();
+            mTextureOptions.inMipmaps = mConfigVO.texture_manager.texture_options.mipmaps;
 
             if (mConfigVO != null) {
                 // apply scale to texture options

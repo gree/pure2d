@@ -16,6 +16,7 @@ public class TextureOptionsVO {
     private static final String LINEAR = "linear";
 
     public int filter;
+    public int mipmaps;
 
     public TextureOptionsVO(final JSONObject json) {
 
@@ -27,5 +28,7 @@ public class TextureOptionsVO {
         } else {
             filter = 0;
         }
+
+        mipmaps = json.optInt("mipmaps", 0);
     }
 }
