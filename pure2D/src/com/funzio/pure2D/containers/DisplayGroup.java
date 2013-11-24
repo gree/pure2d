@@ -64,7 +64,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
         // auto update is enabled by default for Containers
         setAutoUpdateBounds(true);
-        
+
         // no need to check me, but my children
         setBypassCameraClipping(true);
     }
@@ -89,7 +89,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
                 if ((mInvalidateFlags & BOUNDS) != 0) {
                     child.invalidate(PARENT_BOUNDS);
                 }
-                
+
                 // update child
                 child.update(deltaTime);
             }
@@ -113,15 +113,15 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         if (sx != mSize.x || sy != mSize.y) {
             // apply
             setSize(sx, sy);
-            
+
             // size changed? need to re-update bounds, in the same frame
             if (mAutoUpdateBounds) {
                 // check constraints first ,only apply it when size or parent changed
                 if (mUIConstraint != null) {
                     mUIConstraint.apply(this, mParent);
                 }
-                
-             // re-cal the matrix
+
+                // re-cal the matrix
                 updateBounds();
             }
         }
@@ -258,7 +258,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.shouldDraw() && child.checkCameraClipping(glState.mCamera)) {
+            if (child.shouldDraw(glState.mCamera)) {
                 // draw frame, check alpha for optimization
                 child.draw(glState);
 

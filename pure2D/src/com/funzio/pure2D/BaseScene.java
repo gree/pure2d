@@ -21,7 +21,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
@@ -435,8 +434,7 @@ public class BaseScene implements Scene {
 
                     for (int i = 0; i < mNumChildren; i++) {
                         child = mChildren.get(i);
-                        final boolean visible = child.shouldDraw() && child.checkCameraClipping(mCamera);
-                        if (visible) {
+                        if (child.shouldDraw(mCamera)) {
                             // draw frame, check alpha for optimization
                             child.draw(mGLState);
 
@@ -455,7 +453,7 @@ public class BaseScene implements Scene {
             } else {
                 for (int i = 0; i < mNumChildren; i++) {
                     child = mChildren.get(i);
-                    if (child.shouldDraw() && ((mCamera == null) || mCamera.isViewable(child))) {
+                    if (child.shouldDraw(mCamera)) {
                         // draw frame
                         child.draw(mGLState);
                     }

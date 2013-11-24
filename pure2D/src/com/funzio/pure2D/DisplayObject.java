@@ -75,7 +75,7 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public boolean isVisible();
 
-    public boolean shouldDraw();
+    public boolean shouldDraw(final Camera camera);
 
     public GLColor getColor();
 
@@ -121,8 +121,6 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public RectF updateBounds();
     
-    public boolean checkCameraClipping(final Camera camera);
-
     public boolean isAutoUpdateBounds();
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);

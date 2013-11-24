@@ -74,7 +74,7 @@ public interface Uniable extends Manipulatable {
 
     public boolean isVisible();
 
-    public boolean shouldDraw();
+    public boolean shouldDraw(final Camera camera);
 
     /**
      * @hide for internal use
@@ -128,8 +128,6 @@ public interface Uniable extends Manipulatable {
     public RectF updateBounds();
 
     public boolean isAutoUpdateBounds();
-
-    public boolean checkCameraClipping(final Camera camera);
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 

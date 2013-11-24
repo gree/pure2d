@@ -70,6 +70,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     // rect and bounds
     protected int mInvalidateFlags = 0;
     protected Matrix mMatrix;
+    protected Matrix mMatrixForVertices;
     // global bounds
     protected RectF mBounds = new RectF(-mOrigin.x, -mOrigin.y, -mOrigin.x + mSize.x - 1, -mOrigin.y + mSize.y - 1);
     protected boolean mAutoUpdateBounds;
@@ -99,18 +100,28 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
             }
         }
 
-        // finally update bounds
-        if ((mInvalidateFlags & BOUNDS) != 0) {
+        // finally update bounds and vertices
+        final boolean boundsInvalidated = (mInvalidateFlags & BOUNDS) != 0;
+        final boolean shouldDraw = shouldDraw(mScene != null ? mScene.getCamera() : null);
+        if (boundsInvalidated || shouldDraw) {
             // re-cal the matrix
-            updateVertices();
+            if (boundsInvalidated) {
+                updateMatrix();
+            }
 
-            // update bounds
-            if (mAutoUpdateBounds) {
+            // apply to the vertices
+            if (shouldDraw) {
+                resetVertices();
+                mMatrixForVertices.mapPoints(mVertices);
+            }
+
+            if (boundsInvalidated && mAutoUpdateBounds) {
+                // update bounds
                 updateBounds();
             }
         }
 
-        // validate transform AFTER updateVertices()
+        // validate transform AFTER updateMatrix()
         mInvalidateFlags &= ~(BOUNDS);
 
         return mNumManipulators > 0;
@@ -168,8 +179,9 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         return mVisible;
     }
 
-    public boolean shouldDraw() {
-        return mVisible && mAlpha > 0;
+    @Override
+    public boolean shouldDraw(final Camera camera) {
+        return mVisible && mAlpha > 0 && (mBypassCameraClipping || camera == null || camera.isViewable(this));
     }
 
     @Override
@@ -192,10 +204,6 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     @Override
     public boolean isStackable() {
         return mStackable;
-    }
-
-    public boolean checkCameraClipping(final Camera camera) {
-        return mBypassCameraClipping || camera == null || camera.isViewable(this);
     }
 
     /**
@@ -659,7 +667,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     /**
      * Find the global bounds of this object that takes position, scale, rotation, skew... into account. Used mainly for Camera clipping and bounds hit-testing.
      */
-    protected void updateVertices() {
+    protected void updateMatrix() {
         boolean changed = false;
 
         // init
@@ -719,9 +727,11 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
         // find the bounds
         if (changed || parentMatrix != null) {
-            // apply to the vertices
-            resetVertices();
-            mMatrix.mapPoints(mVertices);
+            if (mMatrixForVertices == null) {
+                mMatrixForVertices = new Matrix(mMatrix);
+            } else {
+                mMatrixForVertices.set(mMatrix);
+            }
 
             // apply the parent's matrix
             if (parentMatrix != null) {
