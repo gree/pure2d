@@ -21,6 +21,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
@@ -434,12 +435,10 @@ public class BaseScene implements Scene {
 
                     for (int i = 0; i < mNumChildren; i++) {
                         child = mChildren.get(i);
-                        final boolean visible = child.isVisible() && child.checkCameraClipping(mCamera);
+                        final boolean visible = child.shouldDraw() && child.checkCameraClipping(mCamera);
                         if (visible) {
                             // draw frame, check alpha for optimization
-                            if (child.getAlpha() > 0) {
-                                child.draw(mGLState);
-                            }
+                            child.draw(mGLState);
 
                             // stack the visible child
                             if (child instanceof Touchable && ((Touchable) child).isTouchable()) {

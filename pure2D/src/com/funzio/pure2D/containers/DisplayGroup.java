@@ -258,11 +258,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
 
-            if (child.isVisible() && child.checkCameraClipping(glState.mCamera)) {
+            if (child.shouldDraw() && child.checkCameraClipping(glState.mCamera)) {
                 // draw frame, check alpha for optimization
-                if (child.getAlpha() > 0) {
-                    child.draw(glState);
-                }
+                child.draw(glState);
 
                 // stack the visible child
                 if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
