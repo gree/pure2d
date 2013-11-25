@@ -174,10 +174,6 @@ public class Camera implements Manipulatable {
         invalidate();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.Manipulatable#setScale(float, float)
-     */
     @Override
     public void setScale(final float sx, final float sy) {
         mZoom.x = 1 / sx;
@@ -185,20 +181,12 @@ public class Camera implements Manipulatable {
         invalidate();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.Manipulatable#setScale(float)
-     */
     @Override
     public void setScale(final float scale) {
         mZoom.x = mZoom.y = 1 / scale;
         invalidate();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.Manipulatable#getScale()
-     */
     @Override
     public PointF getScale() {
         return new PointF(1 / mZoom.x, 1 / mZoom.y);
