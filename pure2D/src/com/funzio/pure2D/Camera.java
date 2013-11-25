@@ -332,26 +332,6 @@ public class Camera implements Manipulatable {
     /**
      * Find the world coordinates of a point relative to the TL corner of the Camera's Rect.
      * 
-     * @param cameraX Relative X to the Left of the Camera's Rect
-     * @param cameraY Relative Y to the Top of the Camera's Rect
-     * @return
-     * @see #globalToLocal(float, float)
-     */
-    @Deprecated
-    public PointF localToGlobal(final float cameraX, final float cameraY) {
-        mScratch[0] = mZoomRect.left + cameraX;
-        mScratch[1] = mZoomRect.top + cameraY;
-
-        if (mRotation != 0) {
-            mMatrix.mapPoints(mScratch);
-        }
-
-        return new PointF(mScratch[0], mScratch[1]);
-    }
-
-    /**
-     * Find the world coordinates of a point relative to the TL corner of the Camera's Rect.
-     * 
      * @param cameraX
      * @param cameraY
      * @param result
@@ -366,28 +346,6 @@ public class Camera implements Manipulatable {
 
         result.x = mScratch[0];
         result.y = mScratch[1];
-    }
-
-    /**
-     * Find the local coordinates of a point relative to the TL corner of the Camera's Rect.
-     * 
-     * @param worldX
-     * @param worldY
-     * @return
-     * @see #localToGlobal(float, float)
-     */
-    @Deprecated
-    public PointF globalToLocal(final float worldX, final float worldY) {
-        mScratch[0] = worldX;
-        mScratch[1] = worldY;
-
-        if (mRotation != 0) {
-            final Matrix inverse = new Matrix(); // FIXME: reuse Matrix
-            inverse.setRotate(-mRotation, mCenter.x, mCenter.y);
-            inverse.mapPoints(mScratch);
-        }
-
-        return new PointF(mScratch[0] - mZoomRect.left, mScratch[1] - mZoomRect.top);
     }
 
     /**
