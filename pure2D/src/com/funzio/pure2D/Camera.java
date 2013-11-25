@@ -35,7 +35,8 @@ public class Camera implements Manipulatable {
 
     private boolean mClipping = false;
     private RectF mBounds = new RectF(); // the bounds that contains the rect (with/without rotation)
-    private Matrix mMatrix = new Matrix();
+    private Matrix mMatrix;
+    private Matrix mInvertedMatrix;
     private static final float[] mScratch = new float[4];
 
     public Camera(final PointF size) {
@@ -260,7 +261,15 @@ public class Camera implements Manipulatable {
 
         // re-cal the bounds
         if (mRotation != 0) {
+            if (mMatrix == null) {
+                mMatrix = new Matrix();
+                mInvertedMatrix = new Matrix();
+            }
+            // apply to matrices
             mMatrix.setRotate(mRotation, mCenter.x, mCenter.y);
+            mInvertedMatrix.setRotate(-mRotation, mCenter.x, mCenter.y);
+
+            // map the bounds
             mMatrix.mapRect(mBounds, mZoomRect);
         } else {
             mBounds.set(mZoomRect);
@@ -340,7 +349,7 @@ public class Camera implements Manipulatable {
         mScratch[0] = mZoomRect.left + cameraX;
         mScratch[1] = mZoomRect.top + cameraY;
 
-        if (mRotation != 0) {
+        if (mRotation != 0 && mMatrix != null) {
             mMatrix.mapPoints(mScratch);
         }
 
@@ -359,10 +368,8 @@ public class Camera implements Manipulatable {
         mScratch[0] = worldX;
         mScratch[1] = worldY;
 
-        if (mRotation != 0) {
-            final Matrix inverse = new Matrix(); // FIXME: reuse Matrix
-            inverse.setRotate(-mRotation, mCenter.x, mCenter.y);
-            inverse.mapPoints(mScratch);
+        if (mRotation != 0 && mInvertedMatrix != null) {
+            mInvertedMatrix.mapPoints(mScratch);
         }
 
         result.x = mScratch[0] - mZoomRect.left;
@@ -381,10 +388,8 @@ public class Camera implements Manipulatable {
         mScratch[2] = globalRect.right;
         mScratch[3] = globalRect.bottom;
 
-        if (mRotation != 0) {
-            final Matrix inverse = new Matrix(); // FIXME: reuse Matrix
-            inverse.setRotate(-mRotation, mCenter.x, mCenter.y);
-            inverse.mapPoints(mScratch);
+        if (mRotation != 0 && mInvertedMatrix != null) {
+            mInvertedMatrix.mapPoints(mScratch);
         }
 
         result.left = mScratch[0] - mZoomRect.left;
