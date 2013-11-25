@@ -193,10 +193,6 @@ public class BaseScene implements Scene {
         return mTextureManager;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.opengl.GLSurfaceView.Renderer#onSurfaceCreated(javax.microedition.khronos.opengles.GL10, javax.microedition.khronos.egl.EGLConfig)
-     */
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
         Log.v(TAG, "onSurfaceCreated()");
@@ -297,10 +293,6 @@ public class BaseScene implements Scene {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.opengl.GLSurfaceView.Renderer#onSurfaceChanged(javax.microedition.khronos.opengles.GL10, int, int)
-     */
     @Override
     public void onSurfaceChanged(final GL10 gl, final int width, final int height) {
         mSize.x = width;
@@ -329,10 +321,6 @@ public class BaseScene implements Scene {
         Log.v(TAG, "onSurfaceResumed()");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.opengl.GLSurfaceView.Renderer#onDrawFrame(javax.microedition.khronos.opengles.GL10)
-     */
     @Override
     public void onDrawFrame(final GL10 gl) {
         // state check
