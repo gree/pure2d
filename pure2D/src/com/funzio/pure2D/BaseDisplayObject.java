@@ -452,13 +452,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
         invalidate(POSITION);
     }
 
-    @Deprecated
-    public void moveBy(final float dx, final float dy) {
-        mPosition.x += dx;
-        mPosition.y += dy;
-        invalidate(POSITION);
-    }
-
     /**
      * @return the origin
      */
@@ -585,12 +578,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     public void setRotation(final float degree) {
         mRotation = degree;
-        invalidate(ROTATION);
-    }
-
-    @Deprecated
-    public void rotateBy(final float degreeDelta) {
-        mRotation += degreeDelta;
         invalidate(ROTATION);
     }
 
@@ -905,31 +892,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     /**
-     * Converts a local point to a global point
-     * 
-     * @param local
-     * @return
-     */
-    @Deprecated
-    final public PointF localToGlobal(final PointF local) {
-        // final PointF temp = new PointF(pt.x + mPosition.x - mOrigin.x, pt.y + mPosition.y - mOrigin.y);
-        final PointF result = new PointF((local == null ? 0 : local.x) + mPosition.x, (local == null ? 0 : local.y) + mPosition.y);
-
-        if (mParent != null && !(mParent instanceof Scene)) {
-            mParent.localToGlobal(result, result);
-
-            if (mParent instanceof DisplayObject) {
-                // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
-                result.x -= parentOrigin.x;
-                result.y -= parentOrigin.y;
-            }
-        }
-
-        return result;
-    }
-
-    /**
      * Converts a local point to a global point, without allocating new PointF
      * 
      * @param local
@@ -948,33 +910,6 @@ public abstract class BaseDisplayObject implements DisplayObject {
                 result.y -= parentOrigin.y;
             }
         }
-    }
-
-    /**
-     * Converts a global point to a local point
-     * 
-     * @param global
-     * @return
-     */
-    @Deprecated
-    final public PointF globalToLocal(final PointF global) {
-        final PointF local;
-        if (mParent != null && !(mParent instanceof Scene)) {
-            local = mParent.globalToLocal(global);
-
-            if (mParent instanceof DisplayObject) {
-                // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
-                local.x += parentOrigin.x;
-                local.y += parentOrigin.y;
-            }
-        } else {
-            local = new PointF(global.x, global.y);
-        }
-
-        local.x -= mPosition.x;
-        local.y -= mPosition.y;
-        return local;
     }
 
     /**

@@ -43,25 +43,13 @@ public interface Scene extends Renderer, Container {
 
     public TextureManager getTextureManager();
 
-    @Deprecated
-    public PointF globalToScreen(final float globalX, final float globalY);
-
-    @Deprecated
-    public PointF globalToScreen(final PointF global);
-
     public void globalToScreen(final float globalX, final float globalY, PointF result);
 
     public void globalToStage(final float globalX, float globalY, final PointF result);
 
     public void globalToStage(final RectF globalRect, final RectF result);
 
-    @Deprecated
-    public PointF screenToGlobal(final float screenX, final float screenY);
-
     public void screenToGlobal(final float screenX, final float screenY, PointF result);
-
-    @Deprecated
-    public PointF screenToGlobal(final PointF screen);
 
     public void screenToGlobal(final PointF screen, PointF result);
 

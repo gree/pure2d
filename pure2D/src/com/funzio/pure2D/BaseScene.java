@@ -796,16 +796,6 @@ public class BaseScene implements Scene {
     }
 
     /**
-     * Scene is the top level of the hierachy.
-     * 
-     * @return the copied point of the input
-     */
-    @Deprecated
-    final public PointF localToGlobal(final PointF local) {
-        return new PointF(local.x, local.y);
-    }
-
-    /**
      * Converts a local point to a global point, without allocating new PointF
      * 
      * @param local
@@ -841,41 +831,6 @@ public class BaseScene implements Scene {
      * 
      * @param globalX
      * @param globalY
-     * @return
-     */
-    @Deprecated
-    final public PointF globalToScreen(final float globalX, final float globalY) {
-        final Rect stageRect = mStage.getRect();
-        final PointF stageScale = mStage.getFixedScale();
-        final PointF screen;
-        // check the camera
-        if (mCamera != null) {
-            screen = mCamera.globalToLocal(globalX, globalY);
-
-            final RectF cameraRect = mCamera.mZoomRect;
-            screen.x /= (cameraRect.width() / mSize.x) * stageScale.x;
-            screen.y /= (cameraRect.height() / mSize.y) * stageScale.y;
-        } else {
-            screen = new PointF(globalX / stageScale.x, globalY / stageScale.y);
-        }
-
-        screen.x += stageRect.left;
-
-        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
-            screen.y += stageRect.top;
-        } else {
-            // inverse y
-            screen.y = stageRect.bottom - screen.y;
-        }
-
-        return screen;
-    }
-
-    /**
-     * Get the Screen's coordinates from a global point relative to this scene
-     * 
-     * @param globalX
-     * @param globalY
      */
     final public void globalToScreen(final float globalX, final float globalY, final PointF result) {
         final Rect stageRect = mStage.getRect();
@@ -899,46 +854,6 @@ public class BaseScene implements Scene {
         } else {
             // inverse y
             result.y = stageRect.bottom - result.y;
-        }
-    }
-
-    /**
-     * @param global
-     * @return
-     * @see #globalToScreen(float, float)
-     */
-    final public PointF globalToScreen(final PointF global) {
-        return globalToScreen(global.x, global.y);
-    }
-
-    /**
-     * Get the global coordinates from the Screen's coordinates
-     * 
-     * @param screenX
-     * @param screenY
-     * @return
-     */
-    @Deprecated
-    final public PointF screenToGlobal(final float screenX, final float screenY) {
-        final Rect stageRect = mStage.getRect();
-        final PointF stageScale = mStage.getFixedScale();
-        float localX = screenX - stageRect.left;
-        float localY;
-        if (mAxisSystem == Scene.AXIS_TOP_LEFT) {
-            localY = screenY - stageRect.top;
-        } else {
-            // inverse y
-            localY = stageRect.bottom - screenY;
-        }
-
-        // check the camera
-        if (mCamera != null) {
-            final RectF cameraRect = mCamera.mZoomRect;
-            localX *= (cameraRect.width() / mSize.x) * stageScale.x;
-            localY *= (cameraRect.height() / mSize.y) * stageScale.y;
-            return mCamera.localToGlobal(localX, localY);
-        } else {
-            return new PointF(localX * stageScale.x, localY * stageScale.y);
         }
     }
 
@@ -971,16 +886,6 @@ public class BaseScene implements Scene {
             result.x = localX * stageScale.x;
             result.y = localY * stageScale.y;
         }
-    }
-
-    /**
-     * @param screen
-     * @return
-     * @see BaseScene#screenToGlobal(float, float)
-     */
-    @Deprecated
-    final public PointF screenToGlobal(final PointF screen) {
-        return screenToGlobal(screen.x, screen.y);
     }
 
     /**
@@ -1144,7 +1049,10 @@ public class BaseScene implements Scene {
                 mTouchedPoints.clear();
                 mPointerCount = event.getPointerCount();
                 for (int i = 0; i < mPointerCount; i++) {
-                    mTouchedPoints.add(screenToGlobal(event.getX(i), event.getY(i)));
+                    // FIXME optimize this with pool
+                    final PointF p = new PointF();
+                    screenToGlobal(event.getX(i), event.getY(i), p);
+                    mTouchedPoints.add(p);
                 }
 
                 if (mVisibleTouchables != null) {
