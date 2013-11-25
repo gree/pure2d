@@ -18,6 +18,7 @@ import com.funzio.pure2D.gl.gl10.VertexBuffer;
  */
 public class Pure2D {
     public static final String TAG = Pure2D.class.getSimpleName();
+    public static final String VERSION = "1.5";
 
     // do not modify this
     public static String GL_EXTENSIONS = null;
@@ -48,6 +49,14 @@ public class Pure2D {
             0, 0, // BR
     };
     private static final VertexBuffer DEBUG_VERTEX_BUFFER = new VertexBuffer(GL10.GL_LINE_LOOP, 4, DEBUG_VERTICES);
+
+    /**
+     * @param flags
+     * @see Pure2D.DEBUG_FLAG_SHAPE, Pure2D.DEBUG_FLAG_BOUNDS
+     */
+    public static void setDebugFlags(final int flags) {
+        DEBUG_FLAGS = flags;
+    }
 
     /**
      * This is used internally to load GL properties. Do not ever call.
