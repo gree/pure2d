@@ -37,6 +37,8 @@ public interface Scene extends Renderer, Container {
 
     public void setCamera(final Camera camera);
 
+    public RectF getViewRect();
+
     public void setDepthRange(final float zNear, final float zFar);
 
     public GLState getGLState();

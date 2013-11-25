@@ -6,7 +6,6 @@ package com.funzio.pure2D.uni;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Manipulator;
@@ -74,7 +73,7 @@ public interface Uniable extends Manipulatable {
 
     public boolean isVisible();
 
-    public boolean shouldDraw(final Camera camera);
+    public boolean shouldDraw(final RectF globalViewRect);
 
     /**
      * @hide for internal use

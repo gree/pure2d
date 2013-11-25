@@ -18,6 +18,8 @@ import com.funzio.pure2D.gl.gl10.GLState;
  * @author long
  */
 public class Camera implements Manipulatable {
+    protected static final float[] mScratch = new float[4];
+
     // dimensions and size
     protected PointF mCenter = new PointF(0, 0);
     protected PointF mSize = new PointF(0, 0);
@@ -33,11 +35,10 @@ public class Camera implements Manipulatable {
     protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
 
-    private boolean mClipping = false;
-    private RectF mBounds = new RectF(); // the bounds that contains the rect (with/without rotation)
+    protected boolean mClipping = false;
+    protected RectF mBounds = new RectF(); // the bounds that contains the rect (with/without rotation)
     private Matrix mMatrix;
     private Matrix mInvertedMatrix;
-    private static final float[] mScratch = new float[4];
 
     public Camera(final PointF size) {
         this(size.x, size.y);

@@ -381,8 +381,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     @Override
-    public boolean shouldDraw(final Camera camera) {
-        return mVisible && mAlpha > 0 && (mBypassCameraClipping || camera == null || camera.isViewable(this));
+    public boolean shouldDraw(final RectF globalViewRect) {
+        return mVisible && mAlpha > 0 && (mBypassCameraClipping || globalViewRect == null || RectF.intersects(globalViewRect, mBounds));
     }
 
     /**

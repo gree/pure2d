@@ -75,7 +75,7 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
 
     public boolean isVisible();
 
-    public boolean shouldDraw(final Camera camera);
+    public boolean shouldDraw(final RectF globalViewRect);
 
     public GLColor getColor();
 

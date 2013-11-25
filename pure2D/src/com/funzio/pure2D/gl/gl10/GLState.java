@@ -10,7 +10,6 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLU;
 import android.util.Log;
 
-import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.Maskable;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
@@ -62,7 +61,8 @@ public class GLState {
 
     private TextureManager mTextureManager;
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
-    public Camera mCamera;
+
+    // public Camera mCamera;
 
     // private int mInvalidateFlags = 0;
 
@@ -323,7 +323,7 @@ public class GLState {
     }
 
     public boolean setTextureCoordBuffer(final TextureCoordBuffer buffer) {
-        // diff check, nope!  doesn't work for Uni stuff
+        // diff check, nope! doesn't work for Uni stuff
         // if (mTextureCoordBuffer == buffer) {
         // return false;
         // }
@@ -522,9 +522,9 @@ public class GLState {
     /**
      * @return the camera
      */
-    public Camera getCamera() {
-        return mCamera;
-    }
+    // public Camera getCamera() {
+    // return mCamera;
+    // }
 
     /**
      * For internal use only
@@ -532,9 +532,9 @@ public class GLState {
      * @hide
      * @param camera the camera to set
      */
-    public void setCamera(final Camera camera) {
-        mCamera = camera;
-    }
+    // public void setCamera(final Camera camera) {
+    // mCamera = camera;
+    // }
 
     public Maskable getMask() {
         return mMask;

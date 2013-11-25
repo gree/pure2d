@@ -103,7 +103,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 child.update(deltaTime);
             }
 
-            if (child.shouldDraw(mScene != null ? mScene.getCamera() : null)) {
+            if (child.shouldDraw(mScene != null ? mScene.getViewRect() : null)) {
                 int num2Draw = 1;
                 if (child instanceof UniContainer) {
                     num2Draw = ((UniContainer) child).getNumDrawingChildren();

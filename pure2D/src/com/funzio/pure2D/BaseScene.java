@@ -46,6 +46,7 @@ public class BaseScene implements Scene {
     private int mNumChildren;
 
     private PointF mSize = new PointF();
+    private RectF mBounds = new RectF();
 
     private long mStartTime = 0;
     private boolean mPaused = false;
@@ -119,10 +120,13 @@ public class BaseScene implements Scene {
     public void setStage(final Stage stage) {
         mStage = stage;
 
-        // size
         final Rect stageRect = mStage.getRect();
+        // update size
         mSize.x = stageRect.right - stageRect.left + 1;
         mSize.y = stageRect.bottom - stageRect.top + 1;
+        // update bounds
+        mBounds.right = mSize.x - 1;
+        mBounds.bottom = mSize.y - 1;
     }
 
     public void setAxisSystem(final int value) {
@@ -260,7 +264,7 @@ public class BaseScene implements Scene {
             mGLState = new GLState(gl, mStage);
             mGLState.setAxisSystem(mAxisSystem);
             mGLState.setDefaultBlendFunc(mDefaultBlendFunc);
-            mGLState.setCamera(mCamera);
+            // mGLState.setCamera(mCamera);
 
             // init Texture manager with the new GL
             mTextureManager = createDefaultTextureManager();
@@ -295,8 +299,12 @@ public class BaseScene implements Scene {
 
     @Override
     public void onSurfaceChanged(final GL10 gl, final int width, final int height) {
+        // update size
         mSize.x = width;
         mSize.y = height;
+        // update bounds
+        mBounds.right = mSize.x - 1;
+        mBounds.bottom = mSize.y - 1;
 
         // Sets the current view port to the new size.
         // gl.glViewport(0, 0, width, height);
@@ -422,7 +430,7 @@ public class BaseScene implements Scene {
 
                     for (int i = 0; i < mNumChildren; i++) {
                         child = mChildren.get(i);
-                        if (child.shouldDraw(mCamera)) {
+                        if (child.shouldDraw(getViewRect())) {
                             // draw frame, check alpha for optimization
                             child.draw(mGLState);
 
@@ -441,7 +449,7 @@ public class BaseScene implements Scene {
             } else {
                 for (int i = 0; i < mNumChildren; i++) {
                     child = mChildren.get(i);
-                    if (child.shouldDraw(mCamera)) {
+                    if (child.shouldDraw(getViewRect())) {
                         // draw frame
                         child.draw(mGLState);
                     }
@@ -765,15 +773,19 @@ public class BaseScene implements Scene {
         return mCamera;
     }
 
+    final public RectF getViewRect() {
+        return mCamera != null ? mCamera.mBounds : null; // TODO apply mBounds instead of null
+    }
+
     /**
      * @param camera the camera to set
      */
     public void setCamera(final Camera camera) {
         mCamera = camera;
-        if (mGLState != null) {
-            // set the camera
-            mGLState.setCamera(mCamera);
-        }
+        // if (mGLState != null) {
+        // // set the camera
+        // mGLState.setCamera(mCamera);
+        // }
 
         // if there is NO camera, use default view
         if (mCamera == null) {

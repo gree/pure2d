@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
@@ -102,7 +101,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
         // finally update bounds and vertices
         final boolean boundsInvalidated = (mInvalidateFlags & BOUNDS) != 0;
-        final boolean shouldDraw = shouldDraw(mScene != null ? mScene.getCamera() : null);
+        final boolean shouldDraw = shouldDraw(mScene != null ? mScene.getViewRect() : null);
         if (boundsInvalidated || shouldDraw) {
             // re-cal the matrix
             if (boundsInvalidated) {
@@ -180,8 +179,8 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     }
 
     @Override
-    public boolean shouldDraw(final Camera camera) {
-        return mVisible && mAlpha > 0 && (mBypassCameraClipping || camera == null || camera.isViewable(this));
+    public boolean shouldDraw(final RectF globalViewRect) {
+        return mVisible && mAlpha > 0 && (mBypassCameraClipping || globalViewRect == null || RectF.intersects(globalViewRect, mBounds));
     }
 
     @Override
