@@ -89,6 +89,7 @@ public class Pure2D {
         GL_MAX_PROJECTION_STACK_DEPTH = scratch[0];
 
         Log.i(TAG, "initGLProperties():\n" //
+                + "Version: " + VERSION + "\n" //
                 + GL_EXTENSIONS + "\n" //
                 + "NPOT Texture: " + GL_NPOT_TEXTURE_SUPPORTED + "\n" //
                 + "GL_MAX_TEXTURE_SIZE: " + GL_MAX_TEXTURE_SIZE);
