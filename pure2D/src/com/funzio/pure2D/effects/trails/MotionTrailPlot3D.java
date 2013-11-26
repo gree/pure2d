@@ -6,6 +6,7 @@ package com.funzio.pure2D.effects.trails;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.geom.Point3D;
 
@@ -21,14 +22,10 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
         this(null);
     }
 
-    public MotionTrailPlot3D(final DisplayObject target) {
+    public MotionTrailPlot3D(final Manipulatable target) {
         super(target);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
-     */
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = mMotionEasingZ = DEFAULT_MOTION_EASING;
@@ -40,10 +37,6 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setZ(float)
-     */
     @Override
     public void setZ(final float z) {
         if (mNumPoints > 0) {
@@ -57,10 +50,6 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         if (mNumPoints > 0) {
@@ -86,10 +75,10 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
             }
 
             // follow the target
-            if (mTarget != null) {
+            if (mTarget != null && mTarget instanceof DisplayObject) {
                 // set the head
                 final PointF pos = mTarget.getPosition();
-                ((Point3D) mPoints[0]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + ((Point3D) mTargetOffset).z);
+                ((Point3D) mPoints[0]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, ((DisplayObject) mTarget).getZ() + ((Point3D) mTargetOffset).z);
             }
 
             // apply
@@ -98,17 +87,6 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
 
         return super.update(deltaTime);
     }
-
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.effects.trails.MotionTrailDots#drawPoint(com.funzio.pure2D.gl.gl10.GLState, android.graphics.PointF, float, float)
-     */
-    // @Override
-    // protected void drawDot(final GLState glState, final int index, final float width, final float height) {
-    // super.drawDot(glState, index, width, height);
-    //
-    // // TODO apply Z
-    // }
 
     @Override
     public void setNumPoints(final int numPoints) {
@@ -126,8 +104,8 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
             for (int i = 0; i < numPoints; i++) {
                 mPoints[i] = new Point3D();
 
-                if (pos != null) {
-                    ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + ((Point3D) mTargetOffset).z);
+                if (pos != null && mTarget instanceof DisplayObject) {
+                    ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, ((DisplayObject) mTarget).getZ() + ((Point3D) mTargetOffset).z);
                 }
             }
 
@@ -137,13 +115,13 @@ public class MotionTrailPlot3D extends MotionTrailPlot implements MotionTrail {
     }
 
     @Override
-    public void setTarget(final DisplayObject target) {
+    public void setTarget(final Manipulatable target) {
         mTarget = target;
 
-        if (mTarget != null) {
+        if (mTarget != null && mTarget instanceof DisplayObject) {
             final PointF pos = mTarget.getPosition();
             for (int i = 0; i < mNumPoints; i++) {
-                ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + ((Point3D) mTargetOffset).z);
+                ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, ((DisplayObject) mTarget).getZ() + ((Point3D) mTargetOffset).z);
             }
         }
 

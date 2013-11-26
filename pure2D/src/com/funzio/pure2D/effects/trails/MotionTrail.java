@@ -4,6 +4,7 @@
 package com.funzio.pure2D.effects.trails;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.utils.Reusable;
 
 /**
@@ -15,9 +16,9 @@ public interface MotionTrail extends DisplayObject, Reusable {
 
     public void setNumPoints(final int numPoints);
 
-    public DisplayObject getTarget();
+    public Manipulatable getTarget();
 
-    public void setTarget(final DisplayObject target);
+    public void setTarget(final Manipulatable target);
 
     public Object getData();
 

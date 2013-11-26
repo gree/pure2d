@@ -6,7 +6,7 @@ package com.funzio.pure2D.effects.trails;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.BaseDisplayObject;
-import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -31,7 +31,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
     protected PointF[] mPoints;
 
-    protected DisplayObject mTarget;
+    protected Manipulatable mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
     protected Object mData;
     private boolean mFollowingHead = false;
@@ -54,7 +54,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         this(null);
     }
 
-    public MotionTrailPlot(final DisplayObject target) {
+    public MotionTrailPlot(final Manipulatable target) {
         super();
 
         mMeshBuffer = new QuadMeshBuffer(mNumPoints);
@@ -68,10 +68,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
-     */
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
@@ -101,10 +97,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         invalidate(SCALE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
-     */
     @Override
     public void setPosition(final float x, final float y) {
         if (mNumPoints > 0) {
@@ -120,10 +112,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         invalidate(CHILDREN);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#move(float, float)
-     */
     @Override
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
@@ -136,10 +124,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         invalidate(CHILDREN);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         if (mNumPoints > 0) {
@@ -365,11 +349,11 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         }
     }
 
-    public DisplayObject getTarget() {
+    public Manipulatable getTarget() {
         return mTarget;
     }
 
-    public void setTarget(final DisplayObject target) {
+    public void setTarget(final Manipulatable target) {
         mTarget = target;
 
         if (mTarget != null) {
@@ -438,10 +422,6 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
         mTargetOffset.set(offsetX, offsetY);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();

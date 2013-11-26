@@ -6,6 +6,7 @@ package com.funzio.pure2D.effects.trails;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.geom.Point3D;
 import com.funzio.pure2D.shapes.Polyline3D;
@@ -24,7 +25,7 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
     protected int mMinLength = 0;
     protected int mSegmentLength = 0;
 
-    protected DisplayObject mTarget;
+    protected Manipulatable mTarget;
     protected Point3D mTargetOffset = new Point3D(0, 0, 0);
     protected Object mData;
 
@@ -32,7 +33,7 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         this(null);
     }
 
-    public MotionTrailShape3D(final DisplayObject target) {
+    public MotionTrailShape3D(final Manipulatable target) {
         super();
 
         // set default num points
@@ -43,10 +44,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
-     */
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = mMotionEasingZ = DEFAULT_MOTION_EASING;
@@ -62,10 +59,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         mData = data;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
-     */
     @Override
     public void setPosition(final float x, final float y) {
         if (mNumPoints > 0) {
@@ -79,10 +72,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setZ(float)
-     */
     @Override
     public void setZ(final float z) {
         if (mNumPoints > 0) {
@@ -90,10 +79,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#move(float, float)
-     */
     @Override
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
@@ -107,10 +92,6 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         if (mNumPoints > 0) {
@@ -136,10 +117,10 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
             }
 
             // follow the target
-            if (mTarget != null) {
+            if (mTarget != null && mTarget instanceof DisplayObject) {
                 // set the head
                 final PointF pos = mTarget.getPosition();
-                ((Point3D) mPoints[0]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + mTargetOffset.z);
+                ((Point3D) mPoints[0]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, ((DisplayObject) mTarget).getZ() + mTargetOffset.z);
             }
 
             // apply
@@ -168,8 +149,8 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
             for (int i = 0; i < numPoints; i++) {
                 mPoints[i] = new Point3D();
 
-                if (pos != null) {
-                    ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + mTargetOffset.z);
+                if (pos != null && mTarget instanceof DisplayObject) {
+                    ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, ((DisplayObject) mTarget).getZ() + mTargetOffset.z);
                 }
             }
 
@@ -181,17 +162,17 @@ public class MotionTrailShape3D extends Polyline3D implements MotionTrail {
         allocateVertices(numPoints * 2, VERTEX_POINTER_SIZE);
     }
 
-    public DisplayObject getTarget() {
+    public Manipulatable getTarget() {
         return mTarget;
     }
 
-    public void setTarget(final DisplayObject target) {
+    public void setTarget(final Manipulatable target) {
         mTarget = target;
 
-        if (mTarget != null) {
+        if (mTarget != null && mTarget instanceof DisplayObject) {
             final PointF pos = mTarget.getPosition();
             for (int i = 0; i < mNumPoints; i++) {
-                ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, mTarget.getZ() + mTargetOffset.z);
+                ((Point3D) mPoints[i]).set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y, ((DisplayObject) mTarget).getZ() + mTargetOffset.z);
             }
         }
 

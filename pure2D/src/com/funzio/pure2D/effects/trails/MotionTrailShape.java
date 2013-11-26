@@ -5,7 +5,7 @@ package com.funzio.pure2D.effects.trails;
 
 import android.graphics.PointF;
 
-import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.shapes.Polyline;
 
@@ -22,7 +22,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     protected int mMinLength = 1;
     protected int mSegmentLength = 0;
 
-    protected DisplayObject mTarget;
+    protected Manipulatable mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
     protected Object mData;
     private boolean mFollowingHead = false;
@@ -31,7 +31,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         this(null);
     }
 
-    public MotionTrailShape(final DisplayObject target) {
+    public MotionTrailShape(final Manipulatable target) {
         super();
 
         // set default num points
@@ -176,11 +176,11 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         allocateVertices(numPoints * 2, VERTEX_POINTER_SIZE);
     }
 
-    public DisplayObject getTarget() {
+    public Manipulatable getTarget() {
         return mTarget;
     }
 
-    public void setTarget(final DisplayObject target) {
+    public void setTarget(final Manipulatable target) {
         mTarget = target;
 
         if (mTarget != null) {
