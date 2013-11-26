@@ -42,10 +42,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
-     */
     @Override
     public void reset(final Object... params) {
         mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
@@ -63,10 +59,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         mData = data;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#setPosition(float, float)
-     */
     @Override
     public void setPosition(final float x, final float y) {
         if (mNumPoints > 0) {
@@ -79,10 +71,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#move(float, float)
-     */
     @Override
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
@@ -93,10 +81,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.BaseDisplayObject#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
 
