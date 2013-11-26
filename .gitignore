@@ -32,3 +32,6 @@ proguard/
 *.iws
 .idea/
 
+# Html files
+*.html
+*.css
