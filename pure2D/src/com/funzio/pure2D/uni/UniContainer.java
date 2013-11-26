@@ -3,16 +3,13 @@
  */
 package com.funzio.pure2D.uni;
 
-import android.graphics.Matrix;
-import android.graphics.PointF;
-
-import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.Contentable;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 /**
  * @author long
  */
-public interface UniContainer {
+public interface UniContainer extends Contentable {
     public Texture getTexture();
 
     public void setTexture(final Texture texture);
@@ -23,8 +20,6 @@ public interface UniContainer {
 
     public boolean removeChild(final Uniable child);
 
-    public void removeAllChildren();
-
     public Uniable getChildAt(final int index);
 
     public int getChildIndex(final Uniable child);
@@ -33,27 +28,6 @@ public interface UniContainer {
 
     public boolean swapChildren(final Uniable child1, final Uniable child2);
 
-    public boolean swapChildren(final int index1, final int index2);
-
-    public int getNumChildren();
-
-    public int getNumGrandChildren();
-
     public int getNumDrawingChildren();
 
-    public void invalidate();
-
-    public void invalidate(int flags);
-
-    public PointF getSize();
-
-    public void localToGlobal(final PointF local, final PointF result);
-
-    public void globalToLocal(final PointF global, final PointF result);
-
-    public Matrix getMatrix();
-
-    public Scene getScene();
-
-    public boolean queueEvent(Runnable r);
 }

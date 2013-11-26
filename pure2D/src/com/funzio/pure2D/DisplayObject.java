@@ -8,7 +8,6 @@ import android.graphics.RectF;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import com.funzio.pure2D.Camera;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.GLColor;
@@ -120,7 +119,7 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
     public RectF getBounds();
 
     public RectF updateBounds();
-    
+
     public boolean isAutoUpdateBounds();
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
@@ -146,7 +145,7 @@ public interface DisplayObject extends Manipulatable, InvalidateFlags {
      * @hide For internal use
      */
     public void onRemoved();
-    
+
     /**
      * @hide For internal use
      */

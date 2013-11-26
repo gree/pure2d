@@ -40,6 +40,7 @@ public class BaseScene implements Scene {
     protected Stage mStage;
     protected GLState mGLState;
     protected Camera mCamera;
+    protected boolean mClippingEnabled = false;
     protected TextureManager mTextureManager;
     protected ArrayList<DisplayObject> mChildren = new ArrayList<DisplayObject>();
     protected HashMap<String, DisplayObject> mChildrenIds = new HashMap<String, DisplayObject>();
@@ -818,7 +819,20 @@ public class BaseScene implements Scene {
     }
 
     final public RectF getCameraRect() {
-        return mCamera != null && mCamera.mClipping ? mCamera.mBounds : null; // TODO apply mBounds instead of null
+        return mCamera != null && mCamera.mClipping ? mCamera.mBounds : (mClippingEnabled ? mBounds : null);
+    }
+
+    public boolean isClippingEnabled() {
+        return mClippingEnabled;
+    }
+
+    /**
+     * @param clippingEnabled
+     */
+    public void setClippingEnabled(final boolean clippingEnabled) {
+        mClippingEnabled = clippingEnabled;
+
+        invalidate();
     }
 
     /**
