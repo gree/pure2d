@@ -49,10 +49,6 @@ public class PerspectiveCamera extends Camera {
         mZFar = mSize.y;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.Camera#setSize(float, float)
-     */
     @Override
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
@@ -61,17 +57,18 @@ public class PerspectiveCamera extends Camera {
         mZFar = h;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.Camera#project(com.funzio.pure2D.gl.gl10.GLState)
-     */
     @Override
-    protected void project(final GLState glState) {
+    public void apply(final GLState glState) {
+        if (mInvalidated) {
+            validate();
+        }
+
         final GL10 gl = glState.mGL;
         // Select the projection matrix
         gl.glMatrixMode(GL10.GL_PROJECTION);
         // Reset the projection matrix
-        gl.glLoadIdentity();
+        // gl.glLoadIdentity();
+        gl.glPushMatrix();
 
         // perspective projection
         // TODO: use glState.setProjection() instead

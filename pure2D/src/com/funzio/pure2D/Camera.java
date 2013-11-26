@@ -29,8 +29,8 @@ public class Camera implements Manipulatable {
     protected int mAxisSystem;
 
     protected RectF mZoomRect = new RectF();
-    private PointF mHalfSize = new PointF(0, 0);
-    private boolean mInvalidated;
+    protected PointF mHalfSize = new PointF(0, 0);
+    protected boolean mInvalidated;
 
     protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
@@ -241,7 +241,7 @@ public class Camera implements Manipulatable {
         return false;
     }
 
-    public void validate(final GLState glState) {
+    protected void validate() {
         // prepare the rect
         mZoomRect.left = mCenter.x - mHalfSize.x / mZoom.x;
         mZoomRect.top = mCenter.y - mHalfSize.y / mZoom.y;
@@ -264,18 +264,20 @@ public class Camera implements Manipulatable {
             mBounds.set(mZoomRect);
         }
 
-        // projection
-        project(glState);
-
         mInvalidated = false;
     }
 
-    protected void project(final GLState glState) {
+    public void apply(final GLState glState) {
+        if (mInvalidated) {
+            validate();
+        }
+
         final GL10 gl = glState.mGL;
         // Select the projection matrix
         gl.glMatrixMode(GL10.GL_PROJECTION);
         // Reset the projection matrix
-        gl.glLoadIdentity();
+        // gl.glLoadIdentity();
+        gl.glPushMatrix();
         // camera view and axis system
         glState.setProjection(mAxisSystem, mZoomRect.left, mZoomRect.right, mZoomRect.top, mZoomRect.bottom);
 
@@ -285,6 +287,16 @@ public class Camera implements Manipulatable {
             gl.glRotatef(-mRotation, 0, 0, 1);
             gl.glTranslatef(-mCenter.x, -mCenter.y, 0);
         }
+
+        // set matrix back to model view
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+    }
+
+    public void unapply(final GLState glState) {
+        final GL10 gl = glState.mGL;
+        // Select the projection matrix
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glPopMatrix();
 
         // set matrix back to model view
         gl.glMatrixMode(GL10.GL_MODELVIEW);

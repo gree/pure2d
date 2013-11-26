@@ -310,6 +310,11 @@ public class BaseScene implements Scene {
         // gl.glViewport(0, 0, width, height);
         mGLState.setViewport(0, 0, width, height);
 
+        // Select the projection matrix
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        // Reset the projection matrix
+        gl.glLoadIdentity();
+
         // reapply the camera
         setCamera(mCamera);
 
@@ -409,9 +414,9 @@ public class BaseScene implements Scene {
         // draw children if needed
         if (mInvalidated > 0 || mRenderContinueously) {
             // camera
-            if (mCamera != null && mCamera.isInvalidated()) {
+            if (mCamera != null) {
                 // validate the camera
-                mCamera.validate(mGLState);
+                mCamera.apply(mGLState);
             }
 
             if (mAutoClear) {
@@ -454,6 +459,12 @@ public class BaseScene implements Scene {
                         child.draw(mGLState);
                     }
                 }
+            }
+
+            // camera
+            if (mCamera != null) {
+                // validate the camera
+                mCamera.unapply(mGLState);
             }
 
             // validate state
@@ -774,7 +785,7 @@ public class BaseScene implements Scene {
     }
 
     final public RectF getViewRect() {
-        return mCamera != null ? mCamera.mBounds : null; // TODO apply mBounds instead of null
+        return mCamera != null && mCamera.mClipping ? mCamera.mBounds : null; // TODO apply mBounds instead of null
     }
 
     /**
