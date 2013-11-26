@@ -101,7 +101,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
 
         // finally update bounds and vertices
         final boolean boundsInvalidated = (mInvalidateFlags & BOUNDS) != 0;
-        final boolean shouldDraw = shouldDraw(mScene != null ? mScene.getViewRect() : null);
+        final boolean shouldDraw = shouldDraw(mScene != null ? mScene.getCameraRect() : null);
         if (boundsInvalidated || shouldDraw) {
             // re-cal the matrix
             if (boundsInvalidated) {

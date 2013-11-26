@@ -438,7 +438,7 @@ public class BaseScene implements Scene {
 
                     for (int i = 0; i < mNumChildren; i++) {
                         child = mChildren.get(i);
-                        if (child.shouldDraw(getViewRect())) {
+                        if (child.shouldDraw(getCameraRect())) {
                             // draw frame, check alpha for optimization
                             child.draw(mGLState);
 
@@ -457,7 +457,7 @@ public class BaseScene implements Scene {
             } else {
                 for (int i = 0; i < mNumChildren; i++) {
                     child = mChildren.get(i);
-                    if (child.shouldDraw(getViewRect())) {
+                    if (child.shouldDraw(getCameraRect())) {
                         // draw frame
                         child.draw(mGLState);
                     }
@@ -817,7 +817,7 @@ public class BaseScene implements Scene {
         }
     }
 
-    final public RectF getViewRect() {
+    final public RectF getCameraRect() {
         return mCamera != null && mCamera.mClipping ? mCamera.mBounds : null; // TODO apply mBounds instead of null
     }
 
