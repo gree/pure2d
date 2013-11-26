@@ -91,10 +91,12 @@ public class BaseScene implements Scene {
     final public boolean queueEvent(final Runnable r) {
         if (mStage != null) {
             mStage.queueEvent(r);
-            return true;
+        } else {
+            r.run();
         }
 
-        return false;
+        // always success now
+        return true;
     }
 
     final public boolean queueEvent(final Runnable r, final int delayMillis) {
@@ -107,11 +109,12 @@ public class BaseScene implements Scene {
                     queueEvent(r);
                 }
             }, delayMillis);
-
-            return true;
+        } else {
+            r.run();
         }
 
-        return false;
+        // always success now
+        return true;
     }
 
     /**
