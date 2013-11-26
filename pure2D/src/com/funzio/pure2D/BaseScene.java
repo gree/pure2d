@@ -787,10 +787,6 @@ public class BaseScene implements Scene {
         return mCamera;
     }
 
-    final public RectF getViewRect() {
-        return mCamera != null && mCamera.mClipping ? mCamera.mBounds : null; // TODO apply mBounds instead of null
-    }
-
     /**
      * @param camera the camera to set
      */
@@ -819,6 +815,10 @@ public class BaseScene implements Scene {
             // assign the scene
             mCamera.setScene(this);
         }
+    }
+
+    final public RectF getViewRect() {
+        return mCamera != null && mCamera.mClipping ? mCamera.mBounds : null; // TODO apply mBounds instead of null
     }
 
     /**
