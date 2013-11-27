@@ -104,15 +104,13 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
 
             if (child.shouldDraw(mScene != null ? mScene.getCameraRect() : null)) {
-                int num2Draw = 1;
-                if (child instanceof UniContainer) {
-                    num2Draw = ((UniContainer) child).getNumDrawingChildren();
-                }
-
+                final int num2Draw = child.getNumDrawingChildren();
                 // there is something to draw
                 if (num2Draw > 0) {
                     numDrawingChildren += num2Draw;
                     child.setStackable(true);
+                } else {
+                    child.setStackable(false);
                 }
             } else {
                 child.setStackable(false);
