@@ -34,7 +34,7 @@ public class MotionTrailShapeActivity extends StageActivity {
                 if (firstTime) {
                     loadTexture();
 
-                    for (int i = 0; i < 50; i++) {
+                    for (int i = 0; i < 100; i++) {
                         addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
                     }
                 }

@@ -36,11 +36,27 @@
             android:text="@string/uni_motion_trail_shape" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_motion_trail_plot"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/motion_trail_plot" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_motion_trail_plot"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/motion_trail_plot" />
+
+        <Button
+            android:id="@+id/btn_uni_motion_trail_plot"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/uni_motion_trail_plot" />
+    </LinearLayout>
 
 </LinearLayout>

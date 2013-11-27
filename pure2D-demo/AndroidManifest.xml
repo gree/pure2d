@@ -306,6 +306,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name=".effects.UniMotionTrailPlotActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".astar.AstarMenuActivity"
             android:label="@string/physics"
             android:screenOrientation="portrait" >

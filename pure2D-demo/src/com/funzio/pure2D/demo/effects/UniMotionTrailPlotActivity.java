@@ -6,18 +6,19 @@ import android.view.View;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
-import com.funzio.pure2D.demo.objects.Bouncer;
+import com.funzio.pure2D.demo.objects.UniBouncer;
 import com.funzio.pure2D.effects.trails.MotionTrailPlot;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.AssetTexture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+import com.funzio.pure2D.uni.UniGroup;
 
-public class MotionTrailPlotActivity extends StageActivity {
+public class UniMotionTrailPlotActivity extends StageActivity {
 
-    // private List<Texture> mTextures = new ArrayList<Texture>();
     private AssetTexture mTexture;
+    private UniGroup mUniGroup;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -30,6 +31,11 @@ public class MotionTrailPlotActivity extends StageActivity {
                 if (firstTime) {
                     loadTextures();
 
+                    mUniGroup = new UniGroup();
+                    mUniGroup.setSize(mDisplaySize.x, mDisplaySize.y);
+                    mUniGroup.setTexture(mTexture);
+                    mScene.addChild(mUniGroup);
+
                     for (int i = 0; i < 100; i++) {
                         addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
                     }
@@ -38,18 +44,12 @@ public class MotionTrailPlotActivity extends StageActivity {
         });
     }
 
-    private void loadTextures() {
-        // final int[] ids = {
-        // R.drawable.cc_32, // cc
-        // R.drawable.mw_32, // mw
-        // R.drawable.ka_32, // ka
-        // };
-        //
-        // for (int id : ids) {
-        // // add texture to list
-        // mTextures.add(mScene.getTextureManager().createDrawableTexture(id, null));
-        // }
+    @Override
+    protected int getNumObjects() {
+        return mScene.getNumGrandChildren();
+    }
 
+    private void loadTextures() {
         final TextureOptions options = TextureOptions.getDefault();
         options.inMipmaps = 1;
         mTexture = mScene.getTextureManager().createAssetTexture("sprites/flare.png", options);
@@ -57,23 +57,19 @@ public class MotionTrailPlotActivity extends StageActivity {
 
     private void addObject(final float screenX, final float screenY) {
         mScene.screenToGlobal(screenX, screenY, mTempPoint);
-        // final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
-        // final GLColor color2 = new GLColor(color1);// new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 0.5f);
-        // color2.a = 0.1f;
 
         // create object
-        final Bouncer obj = new Bouncer();
+        final UniBouncer obj = new UniBouncer();
         obj.setSize(30, 30);
         obj.setOriginAtCenter();
         // obj.setColor(color1);
         obj.setPosition(mTempPoint);
         obj.setVisible(false);
         // add to scene
-        mScene.addChild(obj);
+        mUniGroup.addChild(obj);
 
         final MotionTrailPlot trail = new MotionTrailPlot();
         // trail.setTexture(mTextures.get(RANDOM.nextInt(mTextures.size())));
-        trail.setTexture(mTexture);
         trail.setBlendFunc(BlendModes.PREMULTIPLIED_ALPHA_FUNC);
         final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
         final GLColor color2 = new GLColor(color1);// new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 0.5f);
@@ -86,7 +82,7 @@ public class MotionTrailPlotActivity extends StageActivity {
         trail.setNumPoints(10);
         // trail.setMinLength(400);
         trail.setTarget(obj);
-        mScene.addChild(trail);
+        mUniGroup.addChild(trail);
     }
 
     @Override

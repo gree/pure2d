@@ -120,7 +120,7 @@ public class UniMotionTrailShapeActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    for (int i = 0; i < 100; i++) {
+                    for (int i = 0; i < 50; i++) {
                         addObject(event.getX(), event.getY());
                     }
                 }
