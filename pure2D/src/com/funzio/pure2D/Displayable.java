@@ -19,21 +19,9 @@ public interface Displayable extends Manipulatable, InvalidateFlags {
 
     public boolean update(final int deltaTime);
 
-    public void setX(final float x);
-
-    public float getX();
-
-    public void setY(final float y);
-
-    public float getY();
-
     public void setZ(final float z);
 
     public float getZ();
-
-    public float getWidth();
-
-    public float getHeight();
 
     public PointF getOrigin();
 

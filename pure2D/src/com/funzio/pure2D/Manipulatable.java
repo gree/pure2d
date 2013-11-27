@@ -39,4 +39,16 @@ public interface Manipulatable {
     public PointF getScale();
 
     public RectF getBounds();
+
+    public void setX(final float x);
+
+    public float getX();
+
+    public void setY(final float y);
+
+    public float getY();
+
+    public float getWidth();
+
+    public float getHeight();
 }

@@ -100,6 +100,24 @@ public class Camera implements Manipulatable {
         invalidate();
     }
 
+    public void setX(final float x) {
+        mCenter.x = x;
+        invalidate();
+    }
+
+    final public float getX() {
+        return mCenter.x;
+    }
+
+    public void setY(final float y) {
+        mCenter.y = y;
+        invalidate();
+    }
+
+    final public float getY() {
+        return mCenter.y;
+    }
+
     public void moveTo(final float x, final float y) {
         mCenter.x = x;
         mCenter.y = y;
@@ -138,6 +156,14 @@ public class Camera implements Manipulatable {
         mHalfSize.y = h / 2;
 
         invalidate();
+    }
+
+    final public float getWidth() {
+        return mSize.x;
+    }
+
+    final public float getHeight() {
+        return mSize.y;
     }
 
     public void setRotation(final float degree) {
