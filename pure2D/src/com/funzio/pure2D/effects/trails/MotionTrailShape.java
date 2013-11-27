@@ -7,6 +7,7 @@ import android.graphics.PointF;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
@@ -16,12 +17,11 @@ import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.Polyline;
 import com.funzio.pure2D.uni.UniContainer;
-import com.funzio.pure2D.uni.Uniable;
 
 /**
  * @author long
  */
-public class MotionTrailShape extends Polyline implements MotionTrail, Uniable {
+public class MotionTrailShape extends Polyline implements MotionTrail, StackableObject {
     public static final int DEFAULT_NUM_POINTS = 10;
     public static final float DEFAULT_MOTION_EASING = 0.5f;
 
@@ -265,7 +265,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail, Uniable {
     // Uni implementation ///////////////////////////////////////
 
     @Override
-    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         final int numCells = mNumPointsUsed - 1;
         int verIndex = 0;
         int colorIndex = 0;
@@ -293,7 +293,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail, Uniable {
     }
 
     @Override
-    public int getNumDrawingChildren() {
+    public int getNumStackedChildren() {
         return mNumPointsUsed - 1;
     }
 

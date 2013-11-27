@@ -6,6 +6,7 @@ package com.funzio.pure2D.uni;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.funzio.pure2D.Pure2D;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
@@ -18,7 +19,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 /**
  * @author long.ngo
  */
-public class UniGroup extends AbstractUniGroup implements Uniable {
+public class UniGroup extends AbstractUniGroup implements StackableObject {
 
     protected QuadMeshBuffer mMeshBuffer;
     protected QuadMeshTextureCoordBuffer mTextureCoordBuffer;
@@ -57,8 +58,8 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
     }
 
     @Override
-    protected int stackChildAt(final GLState glState, final Uniable child, final int index) {
-        return child.updateBuffers(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
+    protected int stackChildAt(final GLState glState, final StackableObject child, final int index) {
+        return child.stackToBuffers(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class UniGroup extends AbstractUniGroup implements Uniable {
     }
 
     @Override
-    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         // stack all sub children
         if (!stackChildren(glState)) {
             return 0;

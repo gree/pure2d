@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
@@ -22,7 +23,7 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 /**
  * @author long
  */
-public abstract class UniObject implements Uniable, InvalidateFlags {
+public abstract class UniObject implements StackableObject, InvalidateFlags {
     public static final String TAG = UniObject.class.getSimpleName();
 
     // for debugging
@@ -184,7 +185,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
     }
 
     @Override
-    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -806,7 +807,7 @@ public abstract class UniObject implements Uniable, InvalidateFlags {
         mAutoUpdateBounds = autoUpdateBounds;
     }
 
-    public int getNumDrawingChildren() {
+    public int getNumStackedChildren() {
         return 1;
     }
 

@@ -17,6 +17,7 @@ import org.xmlpull.v1.XmlPullParser;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
@@ -37,9 +38,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected static final String ATT_CLIPPING_ENABLED = "clippingEnabled";
     protected static final String ATT_CACHE_ENABLED = "cacheEnabled";
 
-    protected ArrayList<Uniable> mChildren = new ArrayList<Uniable>();
-    protected ArrayList<Uniable> mChildrenDisplayOrder = mChildren;
-    protected HashMap<String, Uniable> mChildrenIds = new HashMap<String, Uniable>();
+    protected ArrayList<StackableObject> mChildren = new ArrayList<StackableObject>();
+    protected ArrayList<StackableObject> mChildrenDisplayOrder = mChildren;
+    protected HashMap<String, StackableObject> mChildrenIds = new HashMap<String, StackableObject>();
     protected int mNumChildren = 0;
     protected int mNumDrawingChildren = 0;
 
@@ -85,7 +86,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
 
         int numDrawingChildren = 0;
-        Uniable child;
+        StackableObject child;
         float temp, sx = mSize.x, sy = mSize.y;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
@@ -104,7 +105,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
 
             if (child.shouldDraw(mScene != null ? mScene.getCameraRect() : null)) {
-                final int num2Draw = child.getNumDrawingChildren();
+                final int num2Draw = child.getNumStackedChildren();
                 // there is something to draw
                 if (num2Draw > 0) {
                     numDrawingChildren += num2Draw;
@@ -288,7 +289,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         // draw the children
         int numVisibles = 0;
         final boolean uiEnabled = mTouchable && mScene != null && mScene.isUIEnabled();
-        Uniable child;
+        StackableObject child;
         final int numChildren = mChildrenDisplayOrder.size();
         int stackIndex = 0;
         for (int i = 0; i < numChildren; i++) {
@@ -307,7 +308,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 if (uiEnabled && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
                     int j = numVisibles;
-                    while (j > 0 && ((Uniable) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                    while (j > 0 && ((StackableObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
@@ -319,7 +320,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return true;
     }
 
-    abstract protected int stackChildAt(GLState glState, final Uniable child, final int index);
+    abstract protected int stackChildAt(GLState glState, final StackableObject child, final int index);
 
     @Override
     protected void onPreConcatParentMatrix() {
@@ -399,7 +400,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
      * @param child
      * @return true if at least one of the corners of the child is in this container's rect.
      */
-    protected boolean isChildInBounds(final Uniable child) {
+    protected boolean isChildInBounds(final StackableObject child) {
         // null check
         if (child == null) {
             return false;
@@ -450,7 +451,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         }
     }
 
-    public boolean addChild(final Uniable child) {
+    public boolean addChild(final StackableObject child) {
         if (mChildren.indexOf(child) < 0) {
 
             // check id
@@ -477,7 +478,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return false;
     }
 
-    public boolean addChild(final Uniable child, final int index) {
+    public boolean addChild(final StackableObject child, final int index) {
         if (index <= mNumChildren && mChildren.indexOf(child) < 0) {
 
             // check id
@@ -503,7 +504,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return false;
     }
 
-    public boolean removeChild(final Uniable child) {
+    public boolean removeChild(final StackableObject child) {
         if (mChildren.indexOf(child) >= 0) {
 
             // child callback
@@ -526,7 +527,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     public boolean removeChild(final int index) {
         if (index < mNumChildren) {
-            final Uniable child = mChildren.get(index);
+            final StackableObject child = mChildren.get(index);
 
             // child callback
             // child.onPreRemoved();
@@ -554,7 +555,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         // child.onPreRemoved();
         // }
 
-        Uniable child;
+        StackableObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             // callback
@@ -568,16 +569,16 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         invalidate(CHILDREN);
     }
 
-    public Uniable getChildAt(final int index) {
+    public StackableObject getChildAt(final int index) {
         return index < mChildren.size() ? mChildren.get(index) : null;
     }
 
-    public int getChildIndex(final Uniable child) {
+    public int getChildIndex(final StackableObject child) {
         return mChildren.indexOf(child);
     }
 
-    public Uniable getChildById(final String id) {
-        Uniable child = mChildrenIds.get(id);
+    public StackableObject getChildById(final String id) {
+        StackableObject child = mChildrenIds.get(id);
         if (child != null) {
             return child;
         }
@@ -592,7 +593,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
      * @param child2
      * @return
      */
-    public boolean swapChildren(final Uniable child1, final Uniable child2) {
+    public boolean swapChildren(final StackableObject child1, final StackableObject child2) {
         // check child 1
         final int index1 = mChildren.indexOf(child1);
         if (index1 < 0) {
@@ -620,12 +621,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
      */
     public boolean swapChildren(final int index1, final int index2) {
         // check child 1
-        final Uniable child1 = mChildren.get(index1);
+        final StackableObject child1 = mChildren.get(index1);
         if (child1 == null) {
             return false;
         }
         // check child 2
-        final Uniable child2 = mChildren.get(index2);
+        final StackableObject child2 = mChildren.get(index2);
         if (child2 == null) {
             return false;
         }
@@ -637,7 +638,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return true;
     }
 
-    public boolean sendChildToTop(final Uniable child) {
+    public boolean sendChildToTop(final StackableObject child) {
         if (mNumChildren < 2) {
             return false;
         }
@@ -657,7 +658,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return true;
     }
 
-    public boolean sendChildToBottom(final Uniable child) {
+    public boolean sendChildToBottom(final StackableObject child) {
         if (mNumChildren < 2) {
             return false;
         }
@@ -693,7 +694,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
      */
     public int getNumGrandChildren() {
         int n = mNumChildren;
-        Uniable child;
+        StackableObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             if (child instanceof UniContainer) {
@@ -704,7 +705,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return n;
     }
 
-    public int getNumDrawingChildren() {
+    public int getNumStackedChildren() {
         return mNumDrawingChildren;
     }
 
@@ -816,7 +817,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     // return mChildrenDisplayOrder;
     // }
 
-    public void setChildrenDisplayOrder(final ArrayList<Uniable> childrenDisplayOrder) {
+    public void setChildrenDisplayOrder(final ArrayList<StackableObject> childrenDisplayOrder) {
         if (childrenDisplayOrder.size() != mNumChildren) {
             Log.e(TAG, "Invalid Children array!");
             return;
@@ -900,11 +901,11 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         mUniParent = null;
     }
 
-    protected void onAddedChild(final Uniable child) {
+    protected void onAddedChild(final StackableObject child) {
         // TODO
     }
 
-    protected void onRemovedChild(final Uniable child) {
+    protected void onRemovedChild(final StackableObject child) {
         // TODO
     }
 
@@ -913,7 +914,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         super.onAddedToScene(scene);
 
         // forward to all children
-        Uniable child;
+        StackableObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             child.onAddedToScene(scene);
@@ -925,7 +926,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         super.onRemovedFromScene();
 
         // forward to all children
-        Uniable child;
+        StackableObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             child.onRemovedFromScene();
@@ -939,7 +940,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         }
 
         if (mUniParent != null) {
-            return mUniParent.removeChild((Uniable) this);
+            return mUniParent.removeChild((StackableObject) this);
         } else {
             return false;
         }
@@ -973,7 +974,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         sb.append(super.getObjectTree(prefix));
         sb.append("\n");
 
-        Uniable child;
+        StackableObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
             sb.append(child.getObjectTree(prefix + "   "));

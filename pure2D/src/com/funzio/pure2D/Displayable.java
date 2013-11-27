@@ -1,29 +1,23 @@
 /**
  * 
  */
-package com.funzio.pure2D.uni;
+package com.funzio.pure2D;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.funzio.pure2D.Manipulatable;
-import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Manipulator;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
-import com.funzio.pure2D.gl.gl10.ColorBuffer;
-import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.VertexBuffer;
-import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
- * @author long.ngo
+ * @author long
  */
-public interface Uniable extends Manipulatable {
+public interface Displayable extends Manipulatable, InvalidateFlags {
+    public static final int FLIP_X = 1;
+    public static final int FLIP_Y = 1 << 1;
 
     public boolean update(final int deltaTime);
-
-    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer);
 
     public void setX(final float x);
 
@@ -75,17 +69,6 @@ public interface Uniable extends Manipulatable {
 
     public boolean shouldDraw(final RectF globalViewRect);
 
-    /**
-     * @hide for internal use
-     * @param value
-     */
-    public void setStackable(final boolean value);
-
-    /**
-     * @hide for internal use
-     */
-    public boolean isStackable();
-
     public GLColor getColor();
 
     public void setColor(final GLColor color);
@@ -112,7 +95,9 @@ public interface Uniable extends Manipulatable {
 
     public int getNumManipulators();
 
-    public UniContainer getUniParent();
+    public Scene getScene();
+
+    public boolean queueEvent(final Runnable r);
 
     public boolean removeFromParent();
 
@@ -130,18 +115,11 @@ public interface Uniable extends Manipulatable {
 
     public void setAutoUpdateBounds(final boolean autoUpdateBounds);
 
-    public int getNumDrawingChildren();
-
     public String getObjectTree(final String prefix);
 
     public String getId();
 
     public void setId(String id);
-
-    /**
-     * @hide For internal use
-     */
-    public void onAdded(UniContainer container);
 
     /**
      * @hide For internal use
@@ -157,4 +135,5 @@ public interface Uniable extends Manipulatable {
      * @hide For internal use
      */
     public void onRemovedFromScene();
+
 }

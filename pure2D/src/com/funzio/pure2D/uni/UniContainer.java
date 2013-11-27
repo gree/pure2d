@@ -4,6 +4,7 @@
 package com.funzio.pure2D.uni;
 
 import com.funzio.pure2D.Contentable;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 /**
@@ -14,20 +15,20 @@ public interface UniContainer extends Contentable {
 
     public void setTexture(final Texture texture);
 
-    public boolean addChild(final Uniable child);
+    public boolean addChild(final StackableObject child);
 
-    public boolean addChild(final Uniable child, final int index);
+    public boolean addChild(final StackableObject child, final int index);
 
-    public boolean removeChild(final Uniable child);
+    public boolean removeChild(final StackableObject child);
 
-    public Uniable getChildAt(final int index);
+    public StackableObject getChildAt(final int index);
 
-    public int getChildIndex(final Uniable child);
+    public int getChildIndex(final StackableObject child);
 
-    public Uniable getChildById(final String id);
+    public StackableObject getChildById(final String id);
 
-    public boolean swapChildren(final Uniable child1, final Uniable child2);
+    public boolean swapChildren(final StackableObject child1, final StackableObject child2);
 
-    public int getNumDrawingChildren();
+    public int getNumStackedChildren();
 
 }
