@@ -3,13 +3,13 @@
  */
 package com.funzio.pure2D.containers;
 
-import com.funzio.pure2D.Contentable;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.DisplayObject;
 
 /**
  * @author long
  */
-public interface Container extends Contentable {
+public interface Container extends Parentable {
     public boolean addChild(final DisplayObject child);
 
     public boolean addChild(final DisplayObject child, final int index);

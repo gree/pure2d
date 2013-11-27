@@ -9,7 +9,7 @@ import android.graphics.PointF;
 /**
  * @author long
  */
-public interface Contentable {
+public interface Parentable {
 
     public void removeAllChildren();
 

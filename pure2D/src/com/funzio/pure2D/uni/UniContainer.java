@@ -3,14 +3,14 @@
  */
 package com.funzio.pure2D.uni;
 
-import com.funzio.pure2D.Contentable;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 
 /**
  * @author long
  */
-public interface UniContainer extends Contentable {
+public interface UniContainer extends Parentable {
     public Texture getTexture();
 
     public void setTexture(final Texture texture);
