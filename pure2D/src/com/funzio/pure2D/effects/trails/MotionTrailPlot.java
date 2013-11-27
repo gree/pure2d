@@ -9,16 +9,21 @@ import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
 import com.funzio.pure2D.gl.gl10.QuadMeshColorBuffer;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
 import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.uni.UniContainer;
+import com.funzio.pure2D.uni.Uniable;
 
 /**
  * @author long
  */
-public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
+public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail, Uniable {
     public static final int DEFAULT_PLOT_SIZE = 10;
     public static final int DEFAULT_NUM_POINTS = 10;
     public static final float DEFAULT_MOTION_EASING = 0.5f;
@@ -49,6 +54,10 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
     protected GLColor mColor2 = null;
     protected float mScale1 = 1;
     protected float mScale2 = 1;
+
+    // Uniable implementation
+    protected boolean mStackable;
+    protected UniContainer mUniParent;
 
     public MotionTrailPlot() {
         this(null);
@@ -443,5 +452,62 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail {
             mColorBuffer = null;
         }
 
+    }
+
+    // Uni implementation ///////////////////////////////////////
+
+    @Override
+    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+
+        // update vertices
+        ((QuadMeshBuffer) vertexBuffer).setValuesAt(index, mNumPoints, mMeshBuffer.getVertices());
+
+        // update colors
+        if (mColorBuffer != null) {
+            ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index, mNumPoints, mColorBuffer.getValues());
+        }
+
+        // optional
+        if (coordBuffer != null && mTextureCoordBuffer != null) {
+            ((QuadMeshTextureCoordBuffer) coordBuffer).setValuesAt(index, mNumPoints, mTextureCoordBuffer.getValues());
+        }
+
+        return mNumPoints;
+    }
+
+    @Override
+    public int getNumDrawingChildren() {
+        return mNumPoints;
+    }
+
+    @Override
+    public void setStackable(final boolean value) {
+        mStackable = value;
+
+    }
+
+    @Override
+    public boolean isStackable() {
+        return mStackable;
+    }
+
+    @Override
+    public UniContainer getUniParent() {
+        return mUniParent;
+    }
+
+    @Override
+    public void onAdded(final UniContainer container) {
+        mUniParent = container;
+
+        // apply texture
+        setTexture(container.getTexture());
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        mUniParent = null;
     }
 }

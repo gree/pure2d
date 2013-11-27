@@ -275,7 +275,9 @@ public class MotionTrailShape extends Polyline implements MotionTrail, Uniable {
             ((QuadMeshBuffer) vertexBuffer).setValuesAt(index + i, 1, verIndex, mVertices);
 
             // update colors
-            ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index + i, 1, colorIndex, mColorValues);
+            if (mColorValues != null) {
+                ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index + i, 1, colorIndex, mColorValues);
+            }
 
             // optional
             if (coordBuffer != null && mTextureCoords != null) {
