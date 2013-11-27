@@ -7,12 +7,21 @@ import android.graphics.PointF;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.gl.gl10.ColorBuffer;
+import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
+import com.funzio.pure2D.gl.gl10.QuadMeshColorBuffer;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
+import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.Polyline;
+import com.funzio.pure2D.uni.UniContainer;
+import com.funzio.pure2D.uni.Uniable;
 
 /**
  * @author long
  */
-public class MotionTrailShape extends Polyline implements MotionTrail {
+public class MotionTrailShape extends Polyline implements MotionTrail, Uniable {
     public static final int DEFAULT_NUM_POINTS = 10;
     public static final float DEFAULT_MOTION_EASING = 0.5f;
 
@@ -26,6 +35,10 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     protected PointF mTargetOffset = new PointF(0, 0);
     protected Object mData;
     private boolean mFollowingHead = false;
+
+    // Uniable implementation
+    protected boolean mStackable;
+    protected UniContainer mUniParent;
 
     public MotionTrailShape() {
         this(null);
@@ -247,6 +260,70 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
 
     public void setTargetOffset(final float offsetX, final float offsetY) {
         mTargetOffset.set(offsetX, offsetY);
+    }
+
+    // Uni implementation ///////////////////////////////////////
+
+    @Override
+    public int updateBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+        final int numCells = mNumPointsUsed - 1;
+        int verIndex = 0;
+        int colorIndex = 0;
+        int coordIndex = 0;
+        for (int i = 0; i < numCells; i++) {
+            // update vertices
+            ((QuadMeshBuffer) vertexBuffer).setValuesAt(index + i, 1, verIndex, mVertices);
+
+            // update colors
+            ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index + i, 1, colorIndex, mColorValues);
+
+            // optional
+            if (coordBuffer != null && mTextureCoords != null) {
+                ((QuadMeshTextureCoordBuffer) coordBuffer).setValuesAt(index + i, 1, coordIndex, mTextureCoords);
+            }
+
+            verIndex += 4;
+            colorIndex += 8;
+            coordIndex += 4;
+        }
+
+        return numCells;
+    }
+
+    @Override
+    public int getNumDrawingChildren() {
+        return mNumPointsUsed - 1;
+    }
+
+    @Override
+    public void setStackable(final boolean value) {
+        mStackable = value;
+
+    }
+
+    @Override
+    public boolean isStackable() {
+        return mStackable;
+    }
+
+    @Override
+    public UniContainer getUniParent() {
+        return mUniParent;
+    }
+
+    @Override
+    public void onAdded(final UniContainer container) {
+        mUniParent = container;
+
+        // apply texture
+        setTexture(container.getTexture());
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        mUniParent = null;
     }
 
 }
