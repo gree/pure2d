@@ -118,6 +118,17 @@ public class QuadMeshTextureCoordBuffer extends TextureCoordBuffer {
         mInvalidated = true;
     }
 
+    public void setValuesAt(final int index, final int numCells, final int srcOffset, final float... values) {
+
+        final int start = index * NUM_COORD_PER_CELL;
+        final int length = numCells * NUM_COORD_PER_CELL;
+        for (int i = 0; i < length; i++) {
+            mValues[start + i] = values[srcOffset + i];
+        }
+
+        mInvalidated = true;
+    }
+
     /**
      * Applies the values set by {@link #setRectAt(int, float...)}
      */
