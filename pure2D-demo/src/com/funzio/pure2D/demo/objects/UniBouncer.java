@@ -44,7 +44,7 @@ public class UniBouncer extends UniSprite {
             mVeloc.y = Math.abs(mVeloc.y);
         }
 
-        final float factor = (float) deltaTime / 30;
+        final float factor = (float) deltaTime / 10;
         move(mVeloc.x * factor, mVeloc.y * factor);
         // rotate(1);
 

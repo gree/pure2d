@@ -195,5 +195,6 @@
     <string name="charset_basic_latin">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!</string>
     <string name="uni_groups">Uni Groups</string>
     <string name="uni_clips">Uni Clips</string>
+    <string name="uni_motion_trail_shape">Uni Motion Trail Shape</string>
 
 </resources>

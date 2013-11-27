@@ -10,14 +10,16 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.animations.AnimationActivity;
-import com.funzio.pure2D.demo.objects.Bouncer;
+import com.funzio.pure2D.demo.objects.UniBouncer;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.uni.UniGroup;
 
-public class MotionTrailShapeActivity extends StageActivity {
+public class UniMotionTrailShapeActivity extends StageActivity {
 
+    private UniGroup mUniGroup;
     private Interpolator mInterpolator;
 
     @SuppressWarnings("unused")
@@ -34,7 +36,12 @@ public class MotionTrailShapeActivity extends StageActivity {
                 if (firstTime) {
                     loadTexture();
 
-                    for (int i = 0; i < 50; i++) {
+                    mUniGroup = new UniGroup();
+                    mUniGroup.setSize(mDisplaySize.x, mDisplaySize.y);
+                    // mUniGroup.setTexture(mTexture);
+                    mScene.addChild(mUniGroup);
+
+                    for (int i = 0; i < 100; i++) {
                         addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
                     }
                 }
@@ -52,32 +59,6 @@ public class MotionTrailShapeActivity extends StageActivity {
         return mScene.getNumGrandChildren();
     }
 
-    // private void addObject(float x, float y) {
-    // final GLColor color1 = new GLColor(.5f + RANDOM.nextFloat(), RANDOM.nextFloat(), RANDOM.nextFloat(), 1f);
-    // final GLColor color2 = new GLColor(color1);
-    // color2.a = 0;
-    //
-    // // create object
-    // Polyline obj = new Polyline();
-    // obj.setColor(color1);
-    // obj.setStrokeRange(10, 50);
-    //
-    // PointF[] points = new PointF[5];
-    // points[0] = new PointF(x, y);
-    // for (int i = 1; i < points.length; i++) {
-    // x += RANDOM.nextInt(300) - 150;
-    // y += RANDOM.nextInt(300) - 150;
-    // points[i] = new PointF(x, y);
-    // }
-    // obj.setPoints(points);
-    //
-    // // obj.setPoints(new PointF(x, y), new PointF(x + RANDOM.nextInt(300), y + RANDOM.nextInt(300)), new PointF(x + RANDOM.nextInt(300), y + RANDOM.nextInt(300)));
-    // // obj.setPoints(new PointF(x, y), new PointF(x + 300, y), new PointF(x + 100, y + 100), new PointF(x + 400, y - 300), new PointF());
-    //
-    // // add to scene
-    // mScene.addChild(obj);
-    // }
-
     private void loadTexture() {
         // create texture
         mTexture = mScene.getTextureManager().createDrawableTexture(R.drawable.cc_175, null);
@@ -91,14 +72,14 @@ public class MotionTrailShapeActivity extends StageActivity {
         mScene.screenToGlobal(screenX, screenY, mTempPoint);
 
         // create object
-        Bouncer obj = new Bouncer();
+        UniBouncer obj = new UniBouncer();
         obj.setSize(30, 30);
         obj.setAutoUpdateBounds(true);
         obj.setOriginAtCenter();
         obj.setColor(color1);
         obj.setPosition(mTempPoint);
         // add to scene
-        mScene.addChild(obj);
+        mUniGroup.addChild(obj);
 
         MotionTrailShape trail = new MotionTrailShape();
         // trail.setColor(color1);
@@ -110,7 +91,7 @@ public class MotionTrailShapeActivity extends StageActivity {
         trail.setMinLength(100);
         trail.setTarget(obj);
         trail.setStrokeInterpolator(mInterpolator);
-        mScene.addChild(trail);
+        mUniGroup.addChild(trail);
 
     }
 
@@ -120,9 +101,9 @@ public class MotionTrailShapeActivity extends StageActivity {
 
             @Override
             public void run() {
-                final int num = mScene.getNumChildren();
+                final int num = mUniGroup.getNumChildren();
                 for (int i = 0; i < num; i++) {
-                    Manipulatable child = mScene.getChildAt(i);
+                    Manipulatable child = mUniGroup.getChildAt(i);
                     if (child instanceof MotionTrailShape) {
                         ((MotionTrailShape) child).setStrokeInterpolator(interpolator);
                     }
@@ -139,7 +120,7 @@ public class MotionTrailShapeActivity extends StageActivity {
 
                 @Override
                 public void run() {
-                    for (int i = 0; i < 50; i++) {
+                    for (int i = 0; i < 100; i++) {
                         addObject(event.getX(), event.getY());
                     }
                 }
