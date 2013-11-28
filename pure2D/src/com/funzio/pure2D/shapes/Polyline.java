@@ -8,19 +8,26 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import com.funzio.pure2D.Parentable;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.geom.Line;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
+import com.funzio.pure2D.gl.gl10.QuadMeshColorBuffer;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
+import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.uni.UniContainer;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
 /**
  * @author long
  */
-public class Polyline extends Shape {
+public class Polyline extends Shape implements StackableObject {
 
     protected static final int VERTEX_POINTER_SIZE = 2; // xy
 
@@ -46,6 +53,10 @@ public class Polyline extends Shape {
 
     // for texture animation
     protected AtlasFrame mAtlasFrame;
+
+    // Uniable implementation
+    protected boolean mStackable;
+    protected UniContainer mUniParent;
 
     public PointF[] getPoints() {
         return mPoints;
@@ -254,13 +265,20 @@ public class Polyline extends Shape {
                 }
 
             }
-            setTextureCoordBuffer(mTextureCoords);
+
+            // optional for Uni Parent
+            if (mParent != null) {
+                setTextureCoordBuffer(mTextureCoords);
+            }
         }
 
-        if (mVertexBuffer == null) {
-            mVertexBuffer = new VertexBuffer(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
-        } else {
-            mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
+        // optional for Uni Parent
+        if (mParent != null) {
+            if (mVertexBuffer == null) {
+                mVertexBuffer = new VertexBuffer(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
+            } else {
+                mVertexBuffer.setVertices(GL10.GL_TRIANGLE_STRIP, mVerticesNum, mVertices);
+            }
         }
 
         validate(VERTICES);
@@ -268,7 +286,7 @@ public class Polyline extends Shape {
 
     @Override
     public boolean update(final int deltaTime) {
-        if ((mInvalidateFlags & VERTICES) > 0) {
+        if ((mInvalidateFlags & (VERTICES | PARENT)) > 0) {
             if (mPoints != null && mNumPointsUsed > 0) {
                 // allocate more/less points if necessary
                 validateVertices();
@@ -341,16 +359,6 @@ public class Polyline extends Shape {
         mStroke2 = stroke2;
 
         invalidate(VERTICES);
-    }
-
-    @Deprecated
-    /**
-     * @param color1
-     * @param color2
-     * @see #setStrokeColors
-     */
-    public void setStrokeColorRange(final GLColor color1, final GLColor color2) {
-        setStrokeColors(color1, color2);
     }
 
     /**
@@ -468,6 +476,72 @@ public class Polyline extends Shape {
 
     public AtlasFrame getAtlasFrame() {
         return mAtlasFrame;
+    }
+
+    // Uni implementation ///////////////////////////////////////
+
+    @Override
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+        final int numCells = mNumPointsUsed - 1;
+        int verIndex = 0;
+        int colorIndex = 0;
+        int coordIndex = 0;
+        for (int i = 0; i < numCells; i++) {
+            // update vertices
+            ((QuadMeshBuffer) vertexBuffer).setValuesAt(index + i, 1, verIndex, mVertices);
+
+            // update colors
+            if (mColorValues != null) {
+                ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index + i, 1, colorIndex, mColorValues);
+            }
+
+            // optional
+            if (coordBuffer != null && mTextureCoords != null) {
+                ((QuadMeshTextureCoordBuffer) coordBuffer).setValuesAt(index + i, 1, coordIndex, mTextureCoords);
+            }
+
+            verIndex += 4;
+            colorIndex += 8;
+            coordIndex += 4;
+        }
+
+        return numCells;
+    }
+
+    @Override
+    public int getNumStackedChildren() {
+        return mNumPointsUsed - 1;
+    }
+
+    @Override
+    public void setStackable(final boolean value) {
+        mStackable = value;
+
+    }
+
+    @Override
+    public boolean isStackable() {
+        return mStackable;
+    }
+
+    @Override
+    final public Parentable getParent() {
+        return mParent != null ? mParent : mUniParent;
+    }
+
+    @Override
+    public void onAdded(final UniContainer container) {
+        mUniParent = container;
+
+        // apply texture
+        setTexture(container.getTexture());
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        mUniParent = null;
     }
 
 }
