@@ -6,6 +6,7 @@ package com.funzio.pure2D.effects.trails;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.Manipulatable;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
@@ -309,8 +310,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail, Stackable
     }
 
     @Override
-    public UniContainer getUniParent() {
-        return mUniParent;
+    final public Parentable getParent() {
+        return mParent != null ? mParent : mUniParent;
     }
 
     @Override

@@ -22,8 +22,6 @@ public interface DisplayObject extends Displayable {
 
     public void setPerspectiveEnabled(final boolean perspectiveEnabled);
 
-    public Container getParent();
-
     /**
      * @hide For internal use
      */

@@ -29,8 +29,6 @@ public interface StackableObject extends Displayable {
      */
     public boolean isStackable();
 
-    public UniContainer getUniParent();
-
     /**
      * @hide For internal use
      */

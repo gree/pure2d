@@ -109,6 +109,8 @@ public interface Displayable extends Manipulatable, InvalidateFlags {
 
     public void setId(String id);
 
+    public Parentable getParent();
+
     /**
      * @hide For internal use
      */

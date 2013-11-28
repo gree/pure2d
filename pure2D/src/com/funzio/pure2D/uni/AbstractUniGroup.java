@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.Touchable;
@@ -946,8 +947,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         }
     }
 
-    public UniContainer getUniParent() {
-        return mUniParent;
+    @Override
+    final public Parentable getParent() {
+        return mParent != null ? mParent : mUniParent;
     }
 
     @Override

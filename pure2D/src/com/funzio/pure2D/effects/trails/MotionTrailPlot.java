@@ -7,6 +7,7 @@ import android.graphics.PointF;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Manipulatable;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.gl.GLColor;
@@ -492,8 +493,8 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail, S
     }
 
     @Override
-    public UniContainer getUniParent() {
-        return mUniParent;
+    final public Parentable getParent() {
+        return mParent != null ? mParent : mUniParent;
     }
 
     @Override

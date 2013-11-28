@@ -8,6 +8,7 @@ import android.graphics.RectF;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.animators.Manipulator;
@@ -595,7 +596,8 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         return mNumManipulators;
     }
 
-    final public UniContainer getUniParent() {
+    @Override
+    final public Parentable getParent() {
         return mParent;
     }
 

@@ -860,7 +860,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mScene;
     }
 
-    final public Container getParent() {
+    @Override
+    public Parentable getParent() {
         return mParent;
     }
 
