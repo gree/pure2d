@@ -266,7 +266,7 @@ public class MotionTrailShape extends Polyline implements MotionTrail, Stackable
     // Uni implementation ///////////////////////////////////////
 
     @Override
-    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         final int numCells = mNumPointsUsed - 1;
         int verIndex = 0;
         int colorIndex = 0;

@@ -458,7 +458,7 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail, S
     // Uni implementation ///////////////////////////////////////
 
     @Override
-    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
 
         // update vertices
         ((QuadMeshBuffer) vertexBuffer).setValuesAt(index, mNumPoints, mMeshBuffer.getVertices());

@@ -13,8 +13,6 @@ import com.funzio.pure2D.ui.UIManager;
  * @author long
  */
 public interface DisplayObject extends Displayable {
-    public static final int FLIP_X = 1;
-    public static final int FLIP_Y = 1 << 1;
 
     public boolean draw(final GLState glState);
 
@@ -30,7 +28,7 @@ public interface DisplayObject extends Displayable {
     /**
      * @hide For internal use
      */
-    public void onAdded(Container container);
+    public void onAdded(Container container); // TODO change to Parentable and consolidate with Displayable
 
     /**
      * @hide For internal use

@@ -186,7 +186,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     @Override
-    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         // TODO Auto-generated method stub
         return 0;
     }

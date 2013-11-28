@@ -59,7 +59,7 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
 
     @Override
     protected int stackChildAt(final GLState glState, final StackableObject child, final int index) {
-        return child.stackToBuffers(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
+        return child.stack(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
     }
 
     @Override
-    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
         // stack all sub children
         if (!stackChildren(glState)) {
             return 0;

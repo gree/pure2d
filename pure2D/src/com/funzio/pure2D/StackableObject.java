@@ -14,24 +14,23 @@ import com.funzio.pure2D.uni.UniContainer;
  */
 public interface StackableObject extends Displayable {
 
-    public int stackToBuffers(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer);
+    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer);
 
     public int getNumStackedChildren();
 
     /**
      * @hide for internal use
-     * @param value
      */
     public void setStackable(final boolean value);
 
     /**
-     * @hide for internal use
+     * @hide for internal uses
      */
     public boolean isStackable();
 
     /**
      * @hide For internal use
      */
-    public void onAdded(UniContainer container);
+    public void onAdded(UniContainer container); // TODO change to Parentable and consolidate with Displayable
 
 }
