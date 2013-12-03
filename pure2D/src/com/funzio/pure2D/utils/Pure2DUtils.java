@@ -18,7 +18,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.FloatMath;
 import android.util.Log;
 
 import com.funzio.pure2D.Pure2D;
@@ -148,8 +147,8 @@ public class Pure2DUtils {
     /**
      * Create a bitmap from a uri. For example: asset://images/image1.png
      * 
-     * @param resources only required when uri is drawable:// or asset://
-     * @param packageName only required when uri is drawable://
+     * @param resources only required when uri is @drawable/ or asset://
+     * @param packageName only required when uri is @drawable/
      * @param uri
      * @param options
      * @param outDimensions
@@ -174,11 +173,59 @@ public class Pure2DUtils {
             // load from bundle assets
             bitmap = getAssetBitmap(resources.getAssets(), actualPath, options, outDimensions);
         } else if (uri.startsWith(Pure2DURI.HTTP)) {
-            // load from bundle assets
-            bitmap = getURLBitmap(uri, options, outDimensions);
+            // load from http
+            bitmap = getURLBitmap(actualPath, options, outDimensions);
         }
 
         return bitmap;
+    }
+
+    /**
+     * Get dimensions of a Bitmap by its uri.
+     * 
+     * @param resources
+     * @param packageName
+     * @param uri
+     * @param options
+     * @param outDimensions
+     * @return
+     */
+    public static boolean getUriBitmapDimensions(final Resources resources, final String packageName, final String uri, final TextureOptions options, final int[] outDimensions) {
+        final String actualPath = Pure2DURI.getPathFromUri(uri);
+
+        final BitmapFactory.Options temp = new BitmapFactory.Options();
+        temp.inJustDecodeBounds = true; // for bounds only
+        temp.inPurgeable = true;
+
+        try {
+            if (uri.startsWith(Pure2DURI.DRAWABLE)) {
+                // load from resources
+                final int resId = resources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, packageName);
+                if (resId > 0) {
+                    BitmapFactory.decodeResource(resources, resId, temp);
+                }
+            } else if (uri.startsWith(Pure2DURI.FILE)) {
+                // load from file / sdcard
+                BitmapFactory.decodeFile(actualPath, temp);
+            } else if (uri.startsWith(Pure2DURI.ASSET)) {
+                // load from bundle assets
+                BitmapFactory.decodeStream(resources.getAssets().open(actualPath), null, temp);
+            } else if (uri.startsWith(Pure2DURI.HTTP)) {
+                // load from http
+                final URLLoadBitmapTask task = new URLLoadBitmapTask(actualPath, temp);
+                task.run();
+            }
+
+            if (outDimensions != null) {
+                outDimensions[0] = Math.round(temp.outWidth * options.inScaleX);
+                outDimensions[1] = Math.round(temp.outHeight * options.inScaleY);
+            }
+
+            return true;
+        } catch (Exception e) {
+            Log.e(Pure2D.TAG, "Failed to decode bitmap: " + uri, e);
+            return false;
+        }
     }
 
     /**
@@ -451,7 +498,7 @@ public class Pure2DUtils {
         int minHeight = 0;
         int minArea = Integer.MAX_VALUE;
         for (int row = 1; row <= num; row++) {
-            int col = (int) FloatMath.ceil((float) num / (float) row);
+            int col = (int) Math.ceil((float) num / (float) row);
             int po2Width = forcePo2 ? getNextPO2(col * width) : col * width;
             int po2Height = forcePo2 ? getNextPO2(row * height) : row * height;
             int area = po2Width * po2Height;
