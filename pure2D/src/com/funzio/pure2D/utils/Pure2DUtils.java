@@ -22,9 +22,11 @@ import android.util.FloatMath;
 import android.util.Log;
 
 import com.funzio.pure2D.Pure2D;
+import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.URLLoadBitmapTask;
 import com.funzio.pure2D.text.TextOptions;
+import com.funzio.pure2D.ui.UIConfig;
 
 /**
  * @author long
@@ -141,6 +143,42 @@ public class Pure2DUtils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Create a bitmap from a uri
+     * 
+     * @param resources only required when uri is drawable:// or asset://
+     * @param packageName only required when uri is drawable://
+     * @param uri
+     * @param options
+     * @param outDimensions
+     * @return the bitmap
+     * @see Pure2DURI
+     */
+    public static Bitmap getUriBitmap(final Resources resources, final String packageName, final String uri, final TextureOptions options, final int[] outDimensions) {
+        final String actualPath = Pure2DURI.getPathFromUri(uri);
+        Bitmap bitmap = null;
+
+        // create
+        if (uri.startsWith(Pure2DURI.DRAWABLE)) {
+            // load from resources
+            final int resId = resources.getIdentifier(actualPath, UIConfig.TYPE_DRAWABLE, packageName);
+            if (resId > 0) {
+                bitmap = getResourceBitmap(resources, resId, options, outDimensions);
+            }
+        } else if (uri.startsWith(Pure2DURI.FILE)) {
+            // load from file / sdcard
+            bitmap = getFileBitmap(actualPath, options, outDimensions);
+        } else if (uri.startsWith(Pure2DURI.ASSET)) {
+            // load from bundle assets
+            bitmap = getAssetBitmap(resources.getAssets(), actualPath, options, outDimensions);
+        } else if (uri.startsWith(Pure2DURI.HTTP)) {
+            // load from bundle assets
+            bitmap = getURLBitmap(uri, options, outDimensions);
+        }
+
+        return bitmap;
     }
 
     /**
