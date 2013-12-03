@@ -146,7 +146,7 @@ public class Pure2DUtils {
     }
 
     /**
-     * Create a bitmap from a uri
+     * Create a bitmap from a uri. For example: asset://images/image1.png
      * 
      * @param resources only required when uri is drawable:// or asset://
      * @param packageName only required when uri is drawable://
