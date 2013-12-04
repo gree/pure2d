@@ -29,6 +29,11 @@ public class Atlas {
         mHeight = height;
     }
 
+    public void setSize(final float width, final float height) {
+        mWidth = width;
+        mHeight = height;
+    }
+
     public String getImage() {
         return mImage;
     }
