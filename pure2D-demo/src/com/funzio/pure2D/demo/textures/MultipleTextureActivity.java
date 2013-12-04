@@ -81,7 +81,7 @@ public class MultipleTextureActivity extends StageActivity {
                 // }
             } else {
                 sq.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), mRandom.nextFloat() + 0.5f));
-                int size = mRandom.nextFloat() > 0.5 ? 32 : 128;
+                final int size = 128;// mRandom.nextFloat() > 0.5 ? 32 : 128;
                 sq.setSize(size, size);
             }
 

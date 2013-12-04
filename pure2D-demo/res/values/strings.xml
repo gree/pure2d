@@ -197,5 +197,6 @@
     <string name="uni_clips">Uni Clips</string>
     <string name="uni_motion_trail_shape">Uni Motion Trail Shape</string>
     <string name="uni_motion_trail_plot">Uni Motion Trail Plot</string>
+    <string name="texture_packer">Texture Packer</string>
 
 </resources>

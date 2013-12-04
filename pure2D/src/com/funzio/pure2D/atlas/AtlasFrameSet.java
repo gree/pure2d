@@ -43,8 +43,8 @@ public class AtlasFrameSet {
         mFrames.add(frame);
 
         // check and auto assign texture
-        if (frame.mTexture == null) {
-            frame.mTexture = mTexture;
+        if (frame.getTexture() == null) {
+            frame.setTexture(mTexture);
         }
 
         if (frame.mSize.x > mFrameMaxSize.x) {
@@ -85,7 +85,7 @@ public class AtlasFrameSet {
         // apply to all frames
         int len = mFrames.size();
         for (int i = 0; i < len; i++) {
-            mFrames.get(i).mTexture = texture;
+            mFrames.get(i).setTexture(texture);
         }
     }
 

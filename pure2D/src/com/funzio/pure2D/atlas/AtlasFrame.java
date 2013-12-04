@@ -77,7 +77,7 @@ public class AtlasFrame {
             // BR
             mTextureCoords[6] = right / size.x;
             mTextureCoords[7] = bottom / size.y;
-        } else {
+        } else if (mAtlas != null) {
             // TL
             mTextureCoords[0] = left / mAtlas.mWidth;
             mTextureCoords[1] = top / mAtlas.mHeight;
@@ -183,6 +183,15 @@ public class AtlasFrame {
      */
     public String getName() {
         return mName;
+    }
+
+    public void setTexture(final Texture texture) {
+        mTexture = texture;
+
+        if (mAtlas == null) {
+            // refresh the coords
+            setRect(mRect);
+        }
     }
 
     public Texture getTexture() {

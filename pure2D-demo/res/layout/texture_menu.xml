@@ -20,13 +20,29 @@
         android:onClick="onClickButton"
         android:text="@string/repeating_texture" />
 
-    <Button
-        android:id="@+id/btn_multiple_texture"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickButton"
-        android:text="@string/multiple_texture" />
-    
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_multiple_texture"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/multiple_texture" />
+
+        <Button
+            android:id="@+id/btn_texture_packer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="onClickButton"
+            android:text="@string/texture_packer" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_url_texture"
         android:layout_width="fill_parent"

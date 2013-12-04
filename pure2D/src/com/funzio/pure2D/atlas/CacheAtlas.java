@@ -87,7 +87,7 @@ public class CacheAtlas extends Atlas {
             // create frame
             final AtlasFrame frame = new AtlasFrame(this, i, "", posRect);
             frame.mOffset = new PointF(frameRect.left, frameRect.top);
-            frame.mTexture = mTexture;
+            frame.setTexture(mTexture);
             addFrame(frame);
 
             if (Math.round(frameRect.width()) == posRect.width()) {
