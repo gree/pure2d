@@ -254,17 +254,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
         gl.glPopMatrix();
 
         // debug global bounds
-        if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0 && mBounds.width() > 0 && mBounds.height() > 0) {
-            gl.glPushMatrix();
-            gl.glLoadIdentity();
-            Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
-            gl.glPopMatrix();
+        if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0) {
+            drawBounds(glState);
         }
     }
 
     protected void drawWireframe(final GLState glState) {
         // TODO to be overriden
         // Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
+    }
+
+    protected void drawBounds(final GLState glState) {
+        if (mBounds.width() > 0 && mBounds.height() > 0) {
+            final GL10 gl = glState.mGL;
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+            gl.glPopMatrix();
+        }
     }
 
     @Override
