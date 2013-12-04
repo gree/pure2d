@@ -107,14 +107,25 @@ public class Pure2D {
      * @hide
      */
     public static void drawDebugRect(final GLState glState, final float x1, final float y1, final float x2, final float y2, final int flag) {
-        DEBUG_VERTICES[0] = x1;
-        DEBUG_VERTICES[1] = y1;
-        DEBUG_VERTICES[2] = x1;
-        DEBUG_VERTICES[3] = y2;
-        DEBUG_VERTICES[4] = x2;
-        DEBUG_VERTICES[5] = y2;
-        DEBUG_VERTICES[6] = x2;
-        DEBUG_VERTICES[7] = y1;
+        drawDebugVertices(glState, flag, x1, y1, x1, y2, x2, y2, x2, y1);
+    }
+
+    /**
+     * Draw debug vertices
+     * 
+     * @param glState
+     * @param flag
+     * @param vertices
+     */
+    public static void drawDebugVertices(final GLState glState, final int flag, final float... vertices) {
+        DEBUG_VERTICES[0] = vertices[0];
+        DEBUG_VERTICES[1] = vertices[1];
+        DEBUG_VERTICES[2] = vertices[2];
+        DEBUG_VERTICES[3] = vertices[3];
+        DEBUG_VERTICES[4] = vertices[4];
+        DEBUG_VERTICES[5] = vertices[5];
+        DEBUG_VERTICES[6] = vertices[6];
+        DEBUG_VERTICES[7] = vertices[7];
 
         DEBUG_VERTEX_BUFFER.setValues(DEBUG_VERTICES);
 
@@ -126,6 +137,7 @@ public class Pure2D {
         glState.setTextureEnabled(false);
 
         // draw
+        DEBUG_VERTEX_BUFFER.setPrimitive((flag & DEBUG_FLAG_GLOBAL_BOUNDS) != 0 ? GL10.GL_LINE_LOOP : GL10.GL_LINE_STRIP);
         DEBUG_VERTEX_BUFFER.draw(glState);
 
         // post-draw

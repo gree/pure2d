@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import com.funzio.pure2D.Pure2D;
+import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.ui.TouchListener;
@@ -47,6 +49,14 @@ public class Rectangular extends Shape implements UIObject {
         mPosition.x = rect.left;
         mPosition.y = rect.top;
         setSize(rect.width(), rect.height());
+    }
+
+    @Override
+    protected void drawWireframe(final GLState glState) {
+        // null check
+        if (mVertexBuffer != null) {
+            Pure2D.drawDebugVertices(glState, Pure2D.DEBUG_FLAG_WIREFRAME, ((QuadBuffer) mVertexBuffer).getValues());
+        }
     }
 
     /**

@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.LoopModes;
-import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.animators.ScaleAnimator;
 import com.funzio.pure2D.atlas.JsonAtlas;
@@ -76,7 +75,7 @@ public class UniGroupClipActivity extends StageActivity {
         }
 
         UniGroup sub = new UniGroup();
-        sub.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+        // sub.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
         sub.setSize(200, 200);
         sub.setOriginAtCenter();
         sub.setPosition(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);

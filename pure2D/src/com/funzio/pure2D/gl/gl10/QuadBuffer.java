@@ -87,6 +87,10 @@ public class QuadBuffer extends VertexBuffer {
         return mHeight;
     }
 
+    public float[] getValues() {
+        return mValues;
+    }
+
     public static boolean compare(final QuadBuffer a, final QuadBuffer b) {
         if (a == b) {
             return true;

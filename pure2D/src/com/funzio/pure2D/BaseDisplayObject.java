@@ -263,7 +263,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     protected void drawWireframe(final GLState glState) {
-        Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
+        // TODO to be overriden
+        // Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
     }
 
     @Override

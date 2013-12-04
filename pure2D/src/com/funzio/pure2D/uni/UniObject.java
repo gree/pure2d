@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Parentable;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.animators.Manipulator;
@@ -16,10 +17,7 @@ import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
-import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.VertexBuffer;
-import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 
 /**
  * @author long
@@ -89,8 +87,9 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     protected void drawWireframe(final GLState glState) {
-        // TODO
-        // Pure2D.drawDebugRect(glState, 0, 0, mSize.x - 1, mSize.y - 1, Pure2D.DEBUG_FLAG_WIREFRAME);
+        if (mVertices != null) {
+            Pure2D.drawDebugVertices(glState, Pure2D.DEBUG_FLAG_WIREFRAME, mVertices);
+        }
     }
 
     public boolean update(final int deltaTime) {
@@ -183,12 +182,6 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     @Override
     public boolean shouldDraw(final RectF globalViewRect) {
         return mVisible && mAlpha > 0 && (mBypassCameraClipping || globalViewRect == null || RectF.intersects(globalViewRect, mBounds));
-    }
-
-    @Override
-    public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
-        // TODO Auto-generated method stub
-        return 0;
     }
 
     /**
