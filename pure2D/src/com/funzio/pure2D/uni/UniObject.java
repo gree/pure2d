@@ -2,6 +2,8 @@ package com.funzio.pure2D.uni;
 
 import java.util.ArrayList;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -87,8 +89,18 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     protected void drawWireframe(final GLState glState) {
-        if (mVertices != null) {
+        if (mVertices != null && mSize.x > 0 && mSize.y > 0) {
             Pure2D.drawDebugVertices(glState, Pure2D.DEBUG_FLAG_WIREFRAME, mVertices);
+        }
+    }
+
+    protected void drawBounds(final GLState glState) {
+        if (mBounds.width() > 0 && mBounds.height() > 0) {
+            final GL10 gl = glState.mGL;
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            Pure2D.drawDebugRect(glState, mBounds.left, mBounds.bottom, mBounds.right, mBounds.top, Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);
+            gl.glPopMatrix();
         }
     }
 
