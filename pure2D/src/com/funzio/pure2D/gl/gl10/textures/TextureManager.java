@@ -325,7 +325,7 @@ public class TextureManager {
      * @param options
      * @return
      */
-    public Texture createDynamicTexture(final Runnable loadRunnable, final TextOptions options) {
+    public Texture createDynamicTexture(final Runnable loadRunnable, final TextureOptions options) {
         Log.v(TAG, String.format("createDynamicTexture()"));
 
         final Texture texture = new Texture(mGLState) {
