@@ -72,9 +72,8 @@ public class BitmapFont {
 
                 @Override
                 public void run() {
-                    final int[] dimensions = new int[2];
-                    final Bitmap bitmap = createBitmap(dimensions);
-                    mTexture.load(bitmap, dimensions[0], dimensions[1], 0);
+                    final Bitmap bitmap = createBitmap();
+                    mTexture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
                     bitmap.recycle();
                 }
             }, null);
@@ -153,7 +152,7 @@ public class BitmapFont {
     }
 
     @SuppressWarnings("deprecation")
-    protected Bitmap createBitmap(final int[] outDimensions) {
+    protected Bitmap createBitmap() {
         if (mCharOffsets == null) {
             findCharOffsets();
         }
@@ -194,11 +193,6 @@ public class BitmapFont {
 
         // time = SystemClock.elapsedRealtime() - start;
         // Log.e("long", "draw time: " + time + "ms");
-
-        if (outDimensions != null) {
-            outDimensions[0] = bitmap.getWidth();
-            outDimensions[1] = bitmap.getHeight();
-        }
 
         return bitmap;
     }
