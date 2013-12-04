@@ -114,20 +114,17 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
         // finally update bounds and vertices
         final boolean boundsInvalidated = (mInvalidateFlags & BOUNDS) != 0;
-        final boolean shouldDraw = shouldDraw(mScene != null ? mScene.getCameraRect() : null);
-        if (boundsInvalidated || shouldDraw) {
+        if (boundsInvalidated) {
             // re-cal the matrix
-            if (boundsInvalidated) {
-                updateMatrix();
-            }
+            updateMatrix();
 
             // apply to the vertices
-            if (shouldDraw) {
+            if (shouldDraw(mScene != null ? mScene.getCameraRect() : null)) {
                 resetVertices();
                 mMatrixForVertices.mapPoints(mVertices);
             }
 
-            if (boundsInvalidated && mAutoUpdateBounds) {
+            if (mAutoUpdateBounds) {
                 // update bounds
                 updateBounds();
             }
