@@ -217,8 +217,8 @@ public class Pure2DUtils {
             }
 
             if (outDimensions != null) {
-                outDimensions[0] = Math.round(temp.outWidth * options.inScaleX);
-                outDimensions[1] = Math.round(temp.outHeight * options.inScaleY);
+                outDimensions[0] = Math.round(temp.outWidth * (options != null ? options.inScaleX : 1));
+                outDimensions[1] = Math.round(temp.outHeight * (options != null ? options.inScaleY : 1));
             }
 
             return true;
