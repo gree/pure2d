@@ -77,6 +77,9 @@ public class UniRect extends UniObject {
             drawBounds(glState);
         }
 
+        // validate visual only
+        mInvalidateFlags &= ~VISUAL;
+
         return 1; // just me
     }
 }

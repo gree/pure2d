@@ -102,11 +102,6 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
         }
 
         final float[] vertices = mMeshBuffer.getVertices();
-        // if (mUniParent != null) {
-        // mMatrix.mapPoints(vertices);
-        // } else if (mMatrixWithoutParents != null) {
-        // mMatrixWithoutParents.mapPoints(vertices);
-        // }
         if (mMatrixForVertices != null) {
             mMatrixForVertices.mapPoints(vertices);
         }
@@ -125,6 +120,9 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
         if ((debugFlags & Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS) != 0) {
             drawBounds(glState);
         }
+
+        // validate visual only
+        mInvalidateFlags &= ~VISUAL;
 
         return mNumDrawingChildren;
     }
