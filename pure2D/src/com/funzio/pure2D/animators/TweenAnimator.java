@@ -33,10 +33,6 @@ public class TweenAnimator extends BaseAnimator {
         mInterpolator = interpolator;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#startElapse(int)
-     */
     @Override
     public void startElapse(final int elapsedTime) {
         super.startElapse(elapsedTime);
@@ -46,10 +42,6 @@ public class TweenAnimator extends BaseAnimator {
         mTripCount = 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#update(int)
-     */
     @Override
     public boolean update(final int deltaTime) {
         if (mDuration > 0 && super.update(deltaTime)) {
@@ -98,10 +90,6 @@ public class TweenAnimator extends BaseAnimator {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#end()
-     */
     @Override
     public void end() {
         // force end

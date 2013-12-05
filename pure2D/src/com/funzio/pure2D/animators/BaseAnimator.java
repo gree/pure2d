@@ -28,10 +28,6 @@ public class BaseAnimator implements Animator {
     protected boolean mLifeEnded = false;
     private boolean mStartDelayPassed = false;
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.utils.Reusable#reset(java.lang.Object[])
-     */
     @Override
     public void reset(final Object... params) {
         stop();
@@ -96,10 +92,6 @@ public class BaseAnimator implements Animator {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.Animator#start()
-     */
     @Override
     final public void start() {
         startElapse(0);
@@ -123,10 +115,6 @@ public class BaseAnimator implements Animator {
         mLifeEnded = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.Animator#stop()
-     */
     @Override
     public void stop() {
         mRunning = false;
@@ -154,10 +142,6 @@ public class BaseAnimator implements Animator {
         return mElapsedTime;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.Animator#end()
-     */
     @Override
     public void end() {
         mRunning = false;
@@ -187,19 +171,11 @@ public class BaseAnimator implements Animator {
         mAccumulating = accumulating;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.Animator#setListener(com.funzio.pure2D.animators.Animator.AnimatorListener)
-     */
     @Override
     public void setListener(final AnimatorListener listener) {
         mListener = listener;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.Animator#getListener()
-     */
     @Override
     public AnimatorListener getListener() {
         return mListener;
