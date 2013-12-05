@@ -34,6 +34,7 @@ public abstract class AnimatorVO extends NovaEntryVO {
     public static final String ALPHA = "alpha";
     public static final String TRANSLATE = "translate";
     public static final String MOVE = "move";
+    public static final String UNSTABLE_MOVE = "unstable_move";
     public static final String ROTATE = "rotate";
     public static final String SCALE = "scale";
     public static final String SKEW = "skew";
@@ -125,6 +126,8 @@ public abstract class AnimatorVO extends NovaEntryVO {
             return new ParallelAnimatorVO(json);
         } else if (type.equalsIgnoreCase(TRANSLATE) || type.equalsIgnoreCase(MOVE)) {
             return new MoveAnimatorVO(json);
+        } else if (type.equalsIgnoreCase(UNSTABLE_MOVE)) {
+            return new UnstableMoveAnimatorVO(json);
         } else if (type.equalsIgnoreCase(ROTATE)) {
             return new RotateAnimatorVO(json);
         } else if (type.equalsIgnoreCase(SCALE)) {
