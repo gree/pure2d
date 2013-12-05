@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlPullParser;
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.exceptions.Pure2DException;
@@ -593,8 +594,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         DisplayObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
-            if (child instanceof Container) {
-                n += ((Container) child).getNumGrandChildren();
+            if (child instanceof Parentable) {
+                n += ((Parentable) child).getNumGrandChildren();
             }
         }
 

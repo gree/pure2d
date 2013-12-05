@@ -698,8 +698,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         StackableObject child;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
-            if (child instanceof UniContainer) {
-                n += ((UniContainer) child).getNumGrandChildren();
+            if (child instanceof Parentable) {
+                n += ((Parentable) child).getNumGrandChildren();
             }
         }
 
