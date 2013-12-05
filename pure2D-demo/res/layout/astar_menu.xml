@@ -7,6 +7,13 @@
     android:paddingTop="10dp" >
 
     <Button
+        android:id="@+id/btn_grid_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/grid_group" />
+
+    <Button
         android:id="@+id/btn_astar_rect_grid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

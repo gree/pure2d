@@ -82,6 +82,7 @@ public class UniGroupClipActivity extends StageActivity {
         mUniGroup.addChild(sub);
         for (int i = 0; i < 3; i++) {
             UniSprite child = new UniSprite();
+            child.setAutoUpdateBounds(true);
             // child.setAtlasFrameSet(mAtlas.getMasterFrameSet());
             // child.setSize(200, 200);
             // child.setPosition(100, 100);
