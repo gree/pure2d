@@ -97,6 +97,8 @@ public class UnstableMoveAnimator extends TweenAnimator {
     protected void onUpdate(final float value) {
         if (mTarget != null) {
 
+            final float lastModX = mModX;
+            final float lastModY = mModY;
             if (mSegmentDuration > 0 && mSegmentDuration < mDuration) {
                 int index = (int) Math.floor(mElapsedTime / mSegmentDuration);
                 if (index != mCurrentSegment) {
@@ -132,7 +134,7 @@ public class UnstableMoveAnimator extends TweenAnimator {
             }
 
             if (mAccumulating) {
-                mTarget.move((value - mLastValue) * mDelta.x + mModX, (value - mLastValue) * mDelta.y + mModY);
+                mTarget.move((value - mLastValue) * mDelta.x - lastModX + mModX, (value - mLastValue) * mDelta.y - lastModY + mModY);
             } else {
                 mTarget.setPosition(mSrcX + value * mDelta.x + mModX, mSrcY + value * mDelta.y + mModY);
             }
