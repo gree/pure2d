@@ -111,6 +111,10 @@ public interface Displayable extends Manipulatable, InvalidateFlags {
 
     public Parentable getParent();
 
+    public GLColor getInheritedColor();
+
+    public BlendFunc getInheritedBlendFunc();
+
     /**
      * @hide For internal use
      */

@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Displayable;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Pure2D;
@@ -475,8 +476,8 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    final protected GLColor getInheritedColor() {
-        if (BlendModes.isInterpolate(getInheritedBlendFunc())) {
+    final public GLColor getInheritedColor() {
+        if (BlendModes.isInterpolate(mBlendFunc)) {
             if (mBlendColor == null) {
                 // init
                 mBlendColor = (mColor == null) ? new GLColor(1f, 1f, 1f, mAlpha) : new GLColor(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
@@ -503,8 +504,8 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         }
 
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof AbstractUniGroup) {
-            final AbstractUniGroup parent = (AbstractUniGroup) mParent;
+        if (mParent != null && mParent instanceof Displayable) {
+            final Displayable parent = (Displayable) mParent;
             final GLColor parentColor = parent.getInheritedColor();
             if (parentColor != null) {
                 mBlendColor.multiply(parentColor);
@@ -514,11 +515,11 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         return mBlendColor;
     }
 
-    final protected BlendFunc getInheritedBlendFunc() {
+    final public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
-        } else if (mParent != null && mParent instanceof DisplayObject) {
-            return ((DisplayObject) mParent).getBlendFunc();
+        } else if (mParent != null && mParent instanceof Displayable) {
+            return ((Displayable) mParent).getInheritedBlendFunc();
         } else {
             return null;
         }

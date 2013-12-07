@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
+import com.funzio.pure2D.Displayable;
 import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
@@ -354,13 +355,13 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     }
 
     @Override
-    protected GLColor getInheritedColor() {
+    public GLColor getInheritedColor() {
         final GLColor color = super.getInheritedColor();
 
         if (mParent == null) {
             // multiply by parent's attributes
-            if (mUniParent != null && mUniParent instanceof AbstractUniGroup) {
-                final AbstractUniGroup parent = (AbstractUniGroup) mUniParent;
+            if (mUniParent != null && mUniParent instanceof Displayable) {
+                final Displayable parent = (Displayable) mUniParent;
                 final GLColor parentColor = parent.getInheritedColor();
                 if (parentColor != null) {
                     color.multiply(parentColor);

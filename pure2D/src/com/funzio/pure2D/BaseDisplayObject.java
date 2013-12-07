@@ -672,7 +672,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    protected GLColor getInheritedColor() {
+    public GLColor getInheritedColor() {
         if (BlendModes.isInterpolate(mBlendFunc)) {
             if (mBlendColor == null) {
                 // init
@@ -700,8 +700,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof BaseDisplayObject) {
-            final BaseDisplayObject parent = (BaseDisplayObject) mParent;
+        if (mParent != null && mParent instanceof Displayable) {
+            final Displayable parent = (Displayable) mParent;
             final GLColor parentColor = parent.getInheritedColor();
             if (parentColor != null) {
                 mBlendColor.multiply(parentColor);
@@ -711,11 +711,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mBlendColor;
     }
 
-    final protected BlendFunc getInheritedBlendFunc() {
+    final public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
-        } else if (mParent != null && mParent instanceof DisplayObject) {
-            return ((DisplayObject) mParent).getBlendFunc();
+        } else if (mParent != null && mParent instanceof Displayable) {
+            return ((Displayable) mParent).getInheritedBlendFunc();
         } else {
             return null;
         }
