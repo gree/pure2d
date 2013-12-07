@@ -18,6 +18,12 @@ import com.funzio.pure2D.gl.gl10.GLState;
 public class PerspectiveCamera extends Camera {
     private float mZFar = 1000f;
 
+    public PerspectiveCamera(final float width, final float height) {
+        super(width, height);
+
+        mZFar = height;
+    }
+
     /**
      * @param size
      */
