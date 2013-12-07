@@ -476,7 +476,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
      * @return the final color which takes parent's color and alpha into account
      */
     final protected GLColor getInheritedColor() {
-        if (BlendModes.isInterpolate(mBlendFunc)) {
+        if (BlendModes.isInterpolate(getInheritedBlendFunc())) {
             if (mBlendColor == null) {
                 // init
                 mBlendColor = (mColor == null) ? new GLColor(1f, 1f, 1f, mAlpha) : new GLColor(mColor.r, mColor.g, mColor.b, mColor.a * mAlpha);
