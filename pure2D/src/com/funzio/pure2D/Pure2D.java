@@ -50,19 +50,23 @@ public class Pure2D {
     };
     private static final VertexBuffer DEBUG_VERTEX_BUFFER = new VertexBuffer(GL10.GL_LINE_LOOP, 4, DEBUG_VERTICES);
 
-    /**
-     * Globally set auto update bounds on all display objects. This can be used in conjunction with {@link Camera.#setClipping(boolean)}
-     */
     public static boolean AUTO_UPDATE_BOUNDS = false;
 
     /**
+     * Globally turns on debug flags on all display objects.
+     * 
      * @param flags
-     * @see Pure2D.DEBUG_FLAG_SHAPE, Pure2D.DEBUG_FLAG_BOUNDS
+     * @see {@link #DEBUG_FLAG_WIREFRAME}, {@link #DEBUG_FLAG_GLOBAL_BOUNDS}
      */
     public static void setDebugFlags(final int flags) {
         DEBUG_FLAGS = flags;
     }
 
+    /**
+     * Globally sets auto update bounds on all display objects. This can be used in conjunction with {@link Camera.#setClipping(boolean)}
+     * 
+     * @see {@link Camera.#setClipping(boolean)}
+     */
     public static void setAutoUpdateBounds(final boolean value) {
         AUTO_UPDATE_BOUNDS = value;
     }
