@@ -12,7 +12,7 @@ import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.VertexBuffer;
 
 /**
- * This class is intentionally for being used ONLY outside the engine.
+ * This class contains global properties and settings for Pure2D.
  * 
  * @author long
  */
