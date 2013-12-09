@@ -129,6 +129,7 @@ public class Pure2D {
      * @param glState
      * @param flag
      * @param vertices
+     * @hide
      */
     public static void drawDebugVertices(final GLState glState, final int flag, final float... vertices) {
         DEBUG_VERTICES[0] = vertices[0];
