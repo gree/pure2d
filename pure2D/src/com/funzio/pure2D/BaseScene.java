@@ -1140,9 +1140,9 @@ public class BaseScene implements Scene {
      * 
      * @return
      */
-    public String getObjectCounts() {
+    public String countObjectsByGroup() {
         final Map<String, Integer> map = new HashMap<String, Integer>();
-        getObjectCounts(this, map);
+        countObjectsByGroup(this, map);
 
         // Sort keys by values.
         List<String> sortedKeys = new ArrayList<String>(map.keySet());
@@ -1171,7 +1171,7 @@ public class BaseScene implements Scene {
         return sb.toString();
     }
 
-    protected void getObjectCounts(final Container container, final Map<String, Integer> map) {
+    protected void countObjectsByGroup(final Container container, final Map<String, Integer> map) {
         final int num = container.getNumChildren();
         for (int i = 0; i < num; i++) {
             final DisplayObject child = container.getChildAt(i);
@@ -1183,7 +1183,7 @@ public class BaseScene implements Scene {
             }
 
             if (child instanceof Container) {
-                getObjectCounts((Container) child, map);
+                countObjectsByGroup((Container) child, map);
             }
         }
     }
