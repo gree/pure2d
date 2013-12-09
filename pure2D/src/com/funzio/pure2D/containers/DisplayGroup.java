@@ -17,6 +17,7 @@ import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Parentable;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.exceptions.Pure2DException;
@@ -116,8 +117,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             setSize(sx, sy);
 
             // size changed? need to re-update bounds, in the same frame
-            if (mAutoUpdateBounds) {
-                // check constraints first ,only apply it when size or parent changed
+            if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS)) {
+                // check constraints first, only apply it when size or parent changed
                 if (mUIConstraint != null) {
                     mUIConstraint.apply(this, mParent);
                 }

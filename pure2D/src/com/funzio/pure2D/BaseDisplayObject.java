@@ -313,7 +313,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // update bounds for the children to calculate their bounds correctly
-        if (mAutoUpdateBounds && (mInvalidateFlags & BOUNDS) != 0) {
+        if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS) && (mInvalidateFlags & BOUNDS) != 0) {
             // re-cal the matrix
             updateBounds();
         }

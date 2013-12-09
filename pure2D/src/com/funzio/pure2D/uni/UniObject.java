@@ -118,7 +118,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
             // re-cal the matrix
             updateMatrix();
 
-            if (mAutoUpdateBounds) {
+            if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS)) {
                 // update bounds
                 updateBounds();
             }

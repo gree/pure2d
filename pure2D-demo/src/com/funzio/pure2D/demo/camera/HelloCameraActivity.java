@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.UniBouncer;
@@ -25,6 +26,7 @@ public class HelloCameraActivity extends StageActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Pure2D.setAutoUpdateBounds(true); // for camera clipping
         mCamera = new Camera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
         mCamera.setClipping(true);
         mScene.setCamera(mCamera);
@@ -50,7 +52,7 @@ public class HelloCameraActivity extends StageActivity {
         for (int i = 0; i < num; i++) {
             // create object
             UniBouncer sq = new UniBouncer();
-            sq.setAutoUpdateBounds(true);// for camera clipping
+            // sq.setAutoUpdateBounds(true);// for camera clipping
             sq.setSize(30, 30);
             sq.setColor(new GLColor(1f, mRandom.nextFloat(), mRandom.nextFloat(), 0.7f));
             sq.setBoundary(mDisplaySize.y * 3, mDisplaySize.y * 3);

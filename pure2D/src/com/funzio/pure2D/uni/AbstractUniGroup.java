@@ -18,6 +18,7 @@ import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
 import com.funzio.pure2D.Displayable;
 import com.funzio.pure2D.Parentable;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.Touchable;
@@ -142,7 +143,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             setSize(sx, sy);
 
             // size changed? need to re-update bounds, in the same frame
-            if (mAutoUpdateBounds) {
+            if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS)) {
                 // check constraints first ,only apply it when size or parent changed
                 if (mUIConstraint != null) {
                     mUIConstraint.apply(this, mParent);
