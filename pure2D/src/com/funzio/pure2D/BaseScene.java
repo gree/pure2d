@@ -1136,13 +1136,13 @@ public class BaseScene implements Scene {
     }
 
     /**
-     * For Debugging. Group object with the same class and count
+     * For Debugging. Group object with the same type and count
      * 
      * @return
      */
-    public String countObjectsByGroup() {
+    public String countObjectsByType() {
         final Map<String, Integer> map = new HashMap<String, Integer>();
-        countObjectsByGroup(this, map);
+        countObjectsByType(this, map);
 
         // Sort keys by values.
         List<String> sortedKeys = new ArrayList<String>(map.keySet());
@@ -1171,7 +1171,7 @@ public class BaseScene implements Scene {
         return sb.toString();
     }
 
-    protected void countObjectsByGroup(final Container container, final Map<String, Integer> map) {
+    protected void countObjectsByType(final Container container, final Map<String, Integer> map) {
         final int num = container.getNumChildren();
         for (int i = 0; i < num; i++) {
             final DisplayObject child = container.getChildAt(i);
@@ -1183,7 +1183,7 @@ public class BaseScene implements Scene {
             }
 
             if (child instanceof Container) {
-                countObjectsByGroup((Container) child, map);
+                countObjectsByType((Container) child, map);
             }
         }
     }
