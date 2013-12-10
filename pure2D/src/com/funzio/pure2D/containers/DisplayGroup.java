@@ -316,6 +316,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         mCacheDrawer.setTexture(mCacheFrameBuffer.getTexture());
     }
 
+    /**
+     * Clear cache manually when it is no longer needed.
+     * 
+     * @see {@link #setCacheEnabled(boolean)}
+     */
     public void clearCache() {
         if (mCacheFrameBuffer != null) {
             mCacheFrameBuffer.getTexture().unload();
@@ -655,6 +660,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
      * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
      * 
      * @param cacheEnabled
+     * @see {@link #setCachePolicy(int)}
+     * @see {@link #setCacheProjection(int)}
+     * @see {@link #clearCache()}
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
         // diff check
@@ -663,6 +671,11 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         }
 
         mCacheEnabled = cacheEnabled;
+
+        if (!cacheEnabled) {
+            // clear cache
+            clearCache();
+        }
 
         invalidate(CACHE);
     }
@@ -675,7 +688,9 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
      * Set how to you want to cache
      * 
      * @param cachePolicy
-     * @see #Cacheable
+     * @see {@link #setCacheEnabled(boolean)}
+     * @see {@link #setCacheProjection(int)}
+     * @see {@link #clearCache()}
      */
     public void setCachePolicy(final int cachePolicy) {
         // diff check
@@ -692,6 +707,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         return mCacheProjection;
     }
 
+    /**
+     * @param cacheProjection
+     * @see {@link #setCacheEnabled(boolean)}
+     * @see {@link #setCachePolicy(int)}
+     * @see {@link #clearCache()}
+     */
     public void setCacheProjection(final int cacheProjection) {
         // diff check
         if (mCacheProjection == cacheProjection) {
