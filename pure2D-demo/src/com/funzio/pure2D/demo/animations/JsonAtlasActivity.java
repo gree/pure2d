@@ -34,8 +34,10 @@ public class JsonAtlasActivity extends StageActivity {
                     // load the textures
                     loadTexture();
 
-                    // generate a lot of squares
-                    addObject(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    // generate a lot of clips
+                    for (int i = 0; i < 1000; i++) {
+                        addObject(RANDOM.nextInt(mDisplaySize.x), RANDOM.nextInt(mDisplaySize.y));
+                    }
                 }
             }
         });
@@ -66,6 +68,7 @@ public class JsonAtlasActivity extends StageActivity {
         // create object
         Clip obj = new Clip(mAtlas.getMasterFrameSet());
         obj.setTexture(mTexture);
+        obj.playAt(RANDOM.nextInt(obj.getNumFrames()));
         // obj.setFps(30);
 
         // center origin
