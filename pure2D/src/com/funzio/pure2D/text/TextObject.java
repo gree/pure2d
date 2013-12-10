@@ -3,7 +3,7 @@
  */
 package com.funzio.pure2D.text;
 
-import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.shapes.Rectangular;
 
 /**
@@ -51,18 +51,14 @@ public class TextObject extends Rectangular {
         return mOptions;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.shapes.Shape#onAdded(com.funzio.pure2D.containers.Container)
-     */
     @Override
-    public void onAdded(final Container parent) {
-        super.onAdded(parent);
+    public void onAddedToScene(final Scene scene) {
+        super.onAddedToScene(scene);
 
         // if there is no texture yet
         if (mTexture == null && mText.length() > 0) {
-            if (mScene != null && mScene.getTextureManager() != null) {
-                setTexture(mScene.getTextureManager().createTextTexture(mText, mOptions));
+            if (scene != null && scene.getTextureManager() != null) {
+                setTexture(scene.getTextureManager().createTextTexture(mText, mOptions));
                 // match the size with the texture
                 if (mTexture != null) {
                     setSize(mTexture.getSize());
@@ -70,4 +66,5 @@ public class TextObject extends Rectangular {
             }
         }
     }
+
 }
