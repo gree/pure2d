@@ -98,7 +98,37 @@ public class UITextureManager extends TextureManager {
         return mBitmapFonts.get(fontId);
     }
 
-    public Texture getUriTexture(String textureUri, final boolean async) {
+    /**
+     * Create and cache a texture synchronously from a specified URI. If this texture is already in cache, it simply returns the cache version.
+     * 
+     * @param textureUri
+     * @return
+     */
+    public Texture getUriTexture(final String textureUri) {
+        return getUriTexture(textureUri, false, null);
+    }
+
+    /**
+     * Create and cache a texture from a specified URI with the Texture Options defined in UI Config file.
+     * 
+     * @param textureUri
+     * @param async
+     * @return
+     */
+    public Texture getUriTexture(final String textureUri, final boolean async) {
+        return getUriTexture(textureUri, async, null);
+    }
+
+    /**
+     * Create and cache a texture from a specified URI. If this texture is already in cache, it simply returns the cache version.
+     * 
+     * @param textureUri
+     * @param async
+     * @param options can be null. If this is null, it used the Texture Options defined in UI Config file.
+     * @return
+     * @see Pure2DURI
+     */
+    public Texture getUriTexture(String textureUri, final boolean async, final TextureOptions options) {
         if (Texture.LOG_ENABLED) {
             Log.v(TAG, "getUriTexture(): " + textureUri);
         }
@@ -119,7 +149,7 @@ public class UITextureManager extends TextureManager {
             return mGeneralTextures.get(actualPath);
         } else {
             Texture texture = null;
-            final TextureOptions textureOptions = mUIManager.getTextureOptions();
+            final TextureOptions textureOptions = (options == null) ? mUIManager.getTextureOptions() : options;
             // create
             if (textureUri.startsWith(Pure2DURI.DRAWABLE)) {
                 // load from file / sdcard
