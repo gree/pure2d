@@ -288,7 +288,7 @@ public class Shape extends BaseDisplayObject {
         final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
         if (source != null && !source.endsWith(UIConfig.FILE_JSON)) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
-            setTexture(manager.getTextureManager().getUriTexture(manager.evalString(source), async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
+            setTexture(manager.getTextureManager().getUriTexture(manager.evalString(source), null, async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
         }
     }
 

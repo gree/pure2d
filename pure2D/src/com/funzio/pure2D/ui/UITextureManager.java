@@ -105,18 +105,18 @@ public class UITextureManager extends TextureManager {
      * @return
      */
     public Texture getUriTexture(final String textureUri) {
-        return getUriTexture(textureUri, false, null);
+        return getUriTexture(textureUri, null, false);
     }
 
     /**
-     * Create and cache a texture from a specified URI with the Texture Options defined in UI Config file.
+     * Create and cache a texture synchronously from a specified URI. If this texture is already in cache, it simply returns the cache version.
      * 
      * @param textureUri
-     * @param async
+     * @param options can be null. If this is null, it used the Texture Options defined in UI Config file.
      * @return
      */
-    public Texture getUriTexture(final String textureUri, final boolean async) {
-        return getUriTexture(textureUri, async, null);
+    public Texture getUriTexture(final String textureUri, final TextureOptions options) {
+        return getUriTexture(textureUri, options, false);
     }
 
     /**
@@ -128,7 +128,7 @@ public class UITextureManager extends TextureManager {
      * @return
      * @see Pure2DURI
      */
-    public Texture getUriTexture(String textureUri, final boolean async, final TextureOptions options) {
+    public Texture getUriTexture(String textureUri, final TextureOptions options, final boolean async) {
         if (Texture.LOG_ENABLED) {
             Log.v(TAG, "getUriTexture(): " + textureUri);
         }
@@ -242,7 +242,7 @@ public class UITextureManager extends TextureManager {
 
                 // now load texture
                 final AtlasFrameSet multiFrames = atlas.getMasterFrameSet();
-                multiFrames.setTexture(getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), async));
+                multiFrames.setTexture(getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), null, async));
 
                 // cache it
                 mAtlasFrames.put(actualPath, multiFrames);
@@ -253,7 +253,7 @@ public class UITextureManager extends TextureManager {
                 return null;
             }
         } else {
-            final SingleFrameSet singleFrame = new SingleFrameSet(actualPath, getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), async));
+            final SingleFrameSet singleFrame = new SingleFrameSet(actualPath, getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), null, async));
             // cache it
             mAtlasFrames.put(actualPath, singleFrame);
             return singleFrame;
