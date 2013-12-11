@@ -59,7 +59,7 @@ public class FrameBufferActivity extends StageActivity {
     }
 
     private void createBufferTexture() {
-        if (!FrameBuffer.isSupported(mScene.getGLState().mGL)) {
+        if (!FrameBuffer.isSupported()) {
             Log.e(Pure2D.TAG, "FrameBuffer is not supported!");
             return;
         }

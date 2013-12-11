@@ -44,7 +44,7 @@ public class CasinoTextureManager extends TextureManager {
         super(scene, resources);
 
         // FrameBuffer extension is a requirement!
-        if (!FrameBuffer.isSupported(mGL)) {
+        if (!FrameBuffer.isSupported()) {
             throw new UnsupportedOperationException("FrameBuffer is not supported!");
         }
 
