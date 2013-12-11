@@ -87,7 +87,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         mGLState = glState;
         mGL = mGLState.mGL;
 
-        if (!FrameBuffer.isSupported(mGL)) {
+        if (!FrameBuffer.isSupported()) {
             Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));
             return;
         }
