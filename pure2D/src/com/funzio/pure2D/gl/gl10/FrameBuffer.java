@@ -273,7 +273,7 @@ public class FrameBuffer {
         return mWidth == size.x && mHeight == size.y;
     }
 
-    public static boolean isSupported(final GL10 gl) {
+    public static boolean isSupported() {
         return Pure2D.GL_FBO_SUPPORTED;
     }
 
