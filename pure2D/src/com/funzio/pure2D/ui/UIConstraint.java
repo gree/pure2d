@@ -288,6 +288,13 @@ public class UIConstraint {
         final PointF targetPos = target.getPosition();
         final PointF targetSize = target.getSize();
         final PointF parentSize = container.getSize();
+        if (container instanceof Scene) {
+            final Scene scene = (Scene) container;
+            final PointF fixedScale = scene.getStage().getFixedScale();
+            // apply the fixed scale when using Hardware Scaler
+            parentSize.x *= fixedScale.x;
+            parentSize.y *= fixedScale.y;
+        }
         final float parentW = parentSize.x, parentH = parentSize.y;
         final float cx = targetPos.x, cy = targetPos.y;
         final float cw = targetSize.x, ch = targetSize.y;
