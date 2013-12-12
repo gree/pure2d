@@ -26,9 +26,12 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.geom.Rectangle;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl10.VertexBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.DummyDrawer;
 import com.funzio.pure2D.ui.UIManager;
 
@@ -72,8 +75,17 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     protected UniContainer mUniParent;
     protected Matrix mMatrixForVertices;
 
+    private VertexBuffer mVertexBuffer;
+    private TextureCoordBuffer mTextureCoordBuffer;
+    private ColorBuffer mColorBuffer;
+
     public AbstractUniGroup() {
         super();
+
+        // create buffers
+        mVertexBuffer = createVertexBuffer();
+        mTextureCoordBuffer = createTextureCoordBuffer();
+        mColorBuffer = createColorBuffer();
 
         // auto update is enabled by default for Containers
         setAutoUpdateBounds(true);
@@ -81,6 +93,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         // no need to check me, but my children
         setBypassCameraClipping(true);
     }
+
+    abstract protected VertexBuffer createVertexBuffer();
+
+    abstract protected TextureCoordBuffer createTextureCoordBuffer();
+
+    abstract protected ColorBuffer createColorBuffer();
 
     @Override
     protected void updateChildren(final int deltaTime) {
@@ -290,7 +308,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             if (child.isStackable()) {
                 // draw frame, check alpha for optimization
                 if (stackIndex < mNumDrawingChildren) {
-                    stackIndex += stackChildAt(glState, child, stackIndex);
+                    stackIndex += child.stack(glState, stackIndex, mVertexBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
                 } else {
                     // FIXME :((
                     // Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
@@ -311,8 +329,6 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         return true;
     }
-
-    abstract protected int stackChildAt(GLState glState, final StackableObject child, final int index);
 
     @Override
     protected void onPreConcatParentMatrix() {

@@ -27,10 +27,21 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
 
     public UniGroup() {
         super();
+    }
 
-        mMeshBuffer = new QuadMeshBuffer(0);
-        mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(0);
-        mColorBuffer = new QuadMeshColorBuffer(0);
+    @Override
+    protected VertexBuffer createVertexBuffer() {
+        return mMeshBuffer = new QuadMeshBuffer(0);
+    }
+
+    @Override
+    protected TextureCoordBuffer createTextureCoordBuffer() {
+        return mTextureCoordBuffer = new QuadMeshTextureCoordBuffer(0);
+    }
+
+    @Override
+    protected ColorBuffer createColorBuffer() {
+        return mColorBuffer = new QuadMeshColorBuffer(0);
     }
 
     @Override
@@ -53,11 +64,6 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
                 mTextureCoordBuffer.setNumCells(num);
             }
         }
-    }
-
-    @Override
-    protected int stackChildAt(final GLState glState, final StackableObject child, final int index) {
-        return child.stack(glState, index, mMeshBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
     }
 
     @Override
