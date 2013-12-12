@@ -62,7 +62,8 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
 
     @Override
     protected boolean drawChildren(final GLState glState) {
-        if (!super.drawChildren(glState)) {
+        // stack all children first
+        if (!stackChildren(glState)) {
             return false;
         }
 
