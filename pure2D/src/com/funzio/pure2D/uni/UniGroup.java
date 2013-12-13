@@ -94,12 +94,14 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
             glState.setTextureCoordArrayEnabled(false);
         }
 
-        // draw
+        // flush it out
         mMeshBuffer.setIndicesNumUsed(mNumDrawingChildren * QuadMeshBuffer.NUM_INDICES_PER_CELL);
         mMeshBuffer.draw(glState);
 
         return true;
     }
+
+    // StackableObject implementation, for recursive nesting ///////////////////////////
 
     @Override
     public int stack(final GLState glState, final int index, final VertexBuffer vertexBuffer, final ColorBuffer colorBuffer, final TextureCoordBuffer coordBuffer) {
