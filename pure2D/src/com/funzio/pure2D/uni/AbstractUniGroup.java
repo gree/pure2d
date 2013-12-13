@@ -310,8 +310,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
                 if (stackIndex < mNumDrawingChildren) {
                     stackIndex += child.stack(glState, stackIndex, mVertexBuffer, mColorBuffer, mTexture != null ? mTextureCoordBuffer : null);
                 } else {
-                    // FIXME :((
-                    // Log.wtf(TAG, "This should NOT happen: " + stackIndex + " >= " + mNumDrawingChildren);
+                    Log.wtf(TAG, "This should NEVER happen: " + stackIndex + " >= " + mNumDrawingChildren);
                 }
 
                 // stack the visible child
