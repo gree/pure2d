@@ -277,7 +277,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     @Override
     public boolean update(final int deltaTime) {
         // check constraints first ,only apply it when size or parent changed
-        if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT)) != 0) {
+        if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0) {
             mUIConstraint.apply(this, mParent);
         }
 

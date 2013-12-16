@@ -28,6 +28,7 @@
 <!ENTITY % LGROUP_ATTRS
 	"%GROUP_ATTRS;
  	%ALIGN;
+ 	childrenGap CDATA #IMPLIED
  	">
 
 <!ELEMENT Group ANY>
@@ -40,6 +41,14 @@
 	
 <!ELEMENT HGroup ANY>
 <!ATTLIST HGroup 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT VWheel ANY>
+<!ATTLIST VWheel 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT HWheel ANY>
+<!ATTLIST HWheel 
 	%LGROUP_ATTRS;>
 	
 <!ELEMENT VScroll ANY>
@@ -73,7 +82,9 @@
 <!ATTLIST Clip 
 	%OBJ_ATTRS;
 	%SOURCE;
-	%ASYNC;>
+	%ASYNC;
+	playAt CDATA #IMPLIED
+	stopAt CDATA #IMPLIED>
 	
 <!ELEMENT NovaGroup ANY>
 <!ATTLIST NovaGroup 

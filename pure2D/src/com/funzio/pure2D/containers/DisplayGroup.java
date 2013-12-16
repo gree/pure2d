@@ -75,7 +75,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     protected void updateChildren(final int deltaTime) {
         super.updateChildren(deltaTime);
 
-        final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT)) != 0);
+        final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0);
 
         DisplayObject child;
         float temp, sx = mSize.x, sy = mSize.y;
@@ -125,6 +125,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
                 // re-cal the matrix
                 updateBounds();
+
+                // hint the children to update bounds next frame
+                for (int i = 0; i < mNumChildren; i++) {
+                    child = mChildren.get(i);
+                    child.invalidate(PARENT_BOUNDS);
+                }
             }
         }
     }
