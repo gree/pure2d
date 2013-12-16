@@ -17,6 +17,10 @@ import com.funzio.pure2D.ui.UIManager;
  * @author long
  */
 public class Clip extends Sprite implements Playable {
+    // XML attributes
+    protected static final String ATT_PLAY_AT = "playAt";
+    protected static final String ATT_STOP_AT = "stopAt";
+
     private int mLoop = LOOP_REPEAT;
     private boolean mPlaying = true;
     private int mCurrentFrame = 0;
@@ -202,6 +206,17 @@ public class Clip extends Sprite implements Playable {
         if (source != null && source.endsWith(UIConfig.FILE_JSON)) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
             setAtlasFrameSet(manager.getTextureManager().getUriAtlas(manager.evalString(source), async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
+
+            final String playAt = xmlParser.getAttributeValue(null, ATT_PLAY_AT);
+            if (playAt != null) {
+                playAt(Integer.valueOf(playAt));
+            } else {
+
+                final String stopAt = xmlParser.getAttributeValue(null, ATT_STOP_AT);
+                if (stopAt != null) {
+                    stopAt(Integer.valueOf(stopAt));
+                }
+            }
         }
     }
 }
