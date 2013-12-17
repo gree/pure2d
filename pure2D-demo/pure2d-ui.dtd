@@ -19,6 +19,7 @@
 	alpha CDATA #IMPLIED
 	%BLEND_MODE;
 	originAtCenter (false|true) #IMPLIED
+	autoUpdateBounds (false|true) #IMPLIED
 	debug (false|true) #IMPLIED">
 	
 <!ENTITY % GROUP_ATTRS

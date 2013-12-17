@@ -41,6 +41,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected static final String ATT_ORIGIN_AT_CENTER = "originAtCenter";
     protected static final String ATT_ROTATION = "rotation";
     protected static final String ATT_VISIBLE = "visible";
+    protected static final String ATT_AUTO_UPDATE_BOUNDS = "autoUpdateBounds";
     protected static final String ATT_ANIMATOR = "animator";
     protected static final String ATT_DEBUG = "debug";
 
@@ -1227,6 +1228,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
             if (Boolean.valueOf(originAtCenter)) {
                 setOriginAtCenter();
             }
+        }
+
+        final String updateBounds = xmlParser.getAttributeValue(null, ATT_AUTO_UPDATE_BOUNDS);
+        if (updateBounds != null) {
+            setAutoUpdateBounds(Boolean.valueOf(updateBounds));
         }
 
         final String color = xmlParser.getAttributeValue(null, ATT_COLOR);
