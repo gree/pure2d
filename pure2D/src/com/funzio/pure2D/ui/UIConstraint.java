@@ -302,7 +302,7 @@ public class UIConstraint {
 
         // left and right
         if (leftUnit == UNIT.PIXEL) {
-            l = x;
+            l = left;
         } else if (leftUnit == UNIT.PERCENT) {
             l = parentW * left;
         }
