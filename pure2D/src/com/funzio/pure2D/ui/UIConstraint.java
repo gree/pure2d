@@ -383,12 +383,12 @@ public class UIConstraint {
 
         // implicit left base on right and width
         if (leftUnit == UNIT.UNSET && rightUnit != UNIT.UNSET) {
-            l = parentW - r - w;
+            l = parentW - r - w + target.getOrigin().x;
         }
 
         // implicit bottom base on top and height
         if (bottomUnit == UNIT.UNSET && topUnit != UNIT.UNSET) {
-            b = parentH - t - h;
+            b = parentH - t - h + target.getOrigin().y;
         }
 
         // explicit x
