@@ -17,4 +17,8 @@ public interface Touchable {
     public void setTouchable(boolean touchable);
 
     public boolean isTouchable();
+
+    public void setModal(boolean modal);
+
+    public boolean isModal();
 }

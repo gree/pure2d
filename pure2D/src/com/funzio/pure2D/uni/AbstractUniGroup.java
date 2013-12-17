@@ -52,7 +52,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     // UI
     protected ArrayList<Touchable> mVisibleTouchables;
-    protected boolean mTouchable = false; // false by default
+    protected boolean mTouchable = false;
+    protected boolean mModal = false;
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
@@ -742,7 +743,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
         }
 
-        return false;
+        // also take control if this is modal
+        return mModal;
     }
 
     @Override
@@ -753,6 +755,16 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
     @Override
     public boolean isTouchable() {
         return mTouchable && mAlive;
+    }
+
+    @Override
+    public void setModal(final boolean modal) {
+        mModal = modal;
+    }
+
+    @Override
+    public boolean isModal() {
+        return mModal;
     }
 
     public boolean isClippingEnabled() {

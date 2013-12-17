@@ -44,6 +44,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     // UI
     protected ArrayList<Touchable> mVisibleTouchables;
     protected boolean mTouchable = true; // true by default
+    protected boolean mModal = false;
 
     // cache
     protected FrameBuffer mCacheFrameBuffer;
@@ -630,7 +631,8 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             }
         }
 
-        return false;
+        // also take control if this is modal
+        return mModal;
     }
 
     @Override
@@ -641,6 +643,16 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
     @Override
     public boolean isTouchable() {
         return mTouchable && mAlive;
+    }
+
+    @Override
+    public void setModal(final boolean modal) {
+        mModal = modal;
+    }
+
+    @Override
+    public boolean isModal() {
+        return mModal;
     }
 
     public boolean isClippingEnabled() {

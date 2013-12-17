@@ -23,6 +23,7 @@ import com.funzio.pure2D.ui.UIObject;
 public class Rectangular extends Shape implements UIObject {
 
     protected boolean mTouchable;
+    protected boolean mModal;
     protected boolean mFocus;
     protected int mTouchPointerID = -1;
     protected TouchListener mTouchListener;
@@ -83,6 +84,16 @@ public class Rectangular extends Shape implements UIObject {
         return mTouchable && mAlive;
     }
 
+    @Override
+    public void setModal(final boolean modal) {
+        mModal = modal;
+    }
+
+    @Override
+    public boolean isModal() {
+        return mModal;
+    }
+
     public TouchListener getTouchListener() {
         return mTouchListener;
     }
@@ -140,7 +151,8 @@ public class Rectangular extends Shape implements UIObject {
             }
         }
 
-        return false;
+        // also take control if this is modal
+        return mModal;
     }
 
     @Override
