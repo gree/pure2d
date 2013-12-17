@@ -92,7 +92,13 @@
 <!ATTLIST NovaGroup 
 	%OBJ_ATTRS;
 	%SOURCE;
-	%ASYNC;>
+	%ASYNC;
+	autoStart (false|true) ""
+	container CDATA ""
+	paramNum CDATA ""
+	param0 CDATA ""
+	param1 CDATA ""
+	param2 CDATA "">
 	
 <!ELEMENT Text EMPTY>
 <!ATTLIST Text 

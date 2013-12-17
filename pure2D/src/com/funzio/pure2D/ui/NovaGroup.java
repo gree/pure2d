@@ -23,7 +23,7 @@ public class NovaGroup extends DisplayGroup {
 
     protected static final String ATT_SOURCE = "source";
     protected static final String ATT_ASYNC = "async";
-    protected static final String ATT_AUTO_PLAY = "autoStart";
+    protected static final String ATT_AUTO_START = "autoStart";
     protected static final String ATT_PARAM_NUM = "paramNum";
     protected static final String ATT_CONTAINER = "container";
 
@@ -42,13 +42,10 @@ public class NovaGroup extends DisplayGroup {
     @Override
     public boolean update(final int deltaTime) {
         // async support and diff check
-        if (mAutoStart && !mStarted) {
+        if (!mNovaLoaded && mNovaFactory != null && mNovaFactory.getNovaVO() != null) {
+            mNovaLoaded = true; // flag now
 
-            if (!mNovaLoaded && mNovaFactory != null && mNovaFactory.getNovaVO() != null) {
-                mNovaLoaded = true; // flag now
-            }
-
-            if (mNovaLoaded) {
+            if (mAutoStart && !mStarted) {
                 addEmiters();
             }
         }
@@ -75,7 +72,7 @@ public class NovaGroup extends DisplayGroup {
             mContainerId = container;
         }
 
-        final String autoPlay = xmlParser.getAttributeValue(null, ATT_AUTO_PLAY);
+        final String autoPlay = xmlParser.getAttributeValue(null, ATT_AUTO_START);
         if (autoPlay != null) {
             mAutoStart = Boolean.valueOf(autoPlay);
         }
