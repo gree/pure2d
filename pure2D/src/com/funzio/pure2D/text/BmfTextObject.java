@@ -26,6 +26,7 @@ import com.funzio.pure2D.gl.gl10.QuadMeshBuffer;
 import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.DummyDrawer;
+import com.funzio.pure2D.ui.UIConfig;
 import com.funzio.pure2D.ui.UIManager;
 
 /**
@@ -36,6 +37,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     // xml attributes
     protected static final String ATT_LETTER_SPACING = "letterSpacing";
     protected static final String ATT_TEXT = "text";
+    protected static final String ATT_TEXT_ALIGN = "textAlign";
     protected static final String ATT_FONT = "font";
 
     protected BitmapFont mBitmapFont;
@@ -439,6 +441,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             } else {
                 Log.e(TAG, "Font not found: " + font, new Exception());
             }
+        }
+
+        final String textAlign = xmlParser.getAttributeValue(null, ATT_TEXT_ALIGN);
+        if (textAlign != null) {
+            setTextAlignment(UIConfig.getAlignment(textAlign));
         }
 
     }
