@@ -98,13 +98,13 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
             // match content size
             if (mWrapContentWidth) {
-                temp = child.getX() + child.getWidth();
+                temp = child.getX() + child.getWidth() - child.getOrigin().x;
                 if (temp > sx) {
                     sx = temp;
                 }
             }
             if (mWrapContentHeight) {
-                temp = child.getY() + child.getHeight();
+                temp = child.getY() + child.getHeight() - child.getOrigin().y;
                 if (temp > sy) {
                     sy = temp;
                 }
