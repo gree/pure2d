@@ -169,7 +169,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         }
 
         // update text bounds
-        if ((mInvalidateFlags & CHILDREN) != 0) {
+        if ((mInvalidateFlags & CHILDREN) != 0 || mSize.x <= 1 || mSize.y <= 1) {
             updateTextBounds();
         }
 
