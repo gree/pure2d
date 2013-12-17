@@ -19,6 +19,8 @@ public abstract class LinearGroup extends DisplayGroup {
 
     protected static final String ATT_ALIGN = "align";
     protected static final String ATT_REPEATING = "repeating";
+    protected static final String ATT_BOUNDS_CHECK_ENABLED = "boundsCheckEnabled";
+    protected static final String ATT_AUTO_SLEEP_CHILDREN = "autoSleepChildren";
 
     protected float mGap = 0;
     protected float mOffsetX = 0;
@@ -185,6 +187,16 @@ public abstract class LinearGroup extends DisplayGroup {
         final String repeating = xmlParser.getAttributeValue(null, ATT_REPEATING);
         if (repeating != null) {
             setRepeating(Boolean.valueOf(repeating));
+        }
+
+        final String boundsCheck = xmlParser.getAttributeValue(null, ATT_BOUNDS_CHECK_ENABLED);
+        if (boundsCheck != null) {
+            setBoundsCheckEnabled(Boolean.valueOf(boundsCheck));
+        }
+
+        final String autoSleepChildren = xmlParser.getAttributeValue(null, ATT_AUTO_SLEEP_CHILDREN);
+        if (autoSleepChildren != null) {
+            setAutoSleepChildren(Boolean.valueOf(autoSleepChildren));
         }
     }
 

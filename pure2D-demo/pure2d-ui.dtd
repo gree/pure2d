@@ -31,6 +31,8 @@
 	"%GROUP_ATTRS;
  	%ALIGN;
  	childrenGap CDATA #IMPLIED
+ 	boundsCheckEnabled (false|true) #IMPLIED
+ 	autoSleepChildren (false|true) #IMPLIED
  	">
 
 <!ELEMENT Group ANY>
@@ -78,7 +80,7 @@
 	%OBJ_ATTRS;
 	%SOURCE;
 	%ASYNC;
-	patches CDATA "">
+	patches CDATA #IMPLIED>
 	
 <!ELEMENT Clip EMPTY>
 <!ATTLIST Clip 
@@ -93,23 +95,23 @@
 	%OBJ_ATTRS;
 	%SOURCE;
 	%ASYNC;
-	autoStart (false|true) ""
-	container CDATA ""
-	paramNum CDATA ""
-	param0 CDATA ""
-	param1 CDATA ""
-	param2 CDATA "">
+	autoStart (false|true) #IMPLIED
+	container CDATA #IMPLIED
+	paramNum CDATA #IMPLIED
+	param0 CDATA #IMPLIED
+	param1 CDATA #IMPLIED
+	param2 CDATA #IMPLIED>
 	
 <!ELEMENT Text EMPTY>
 <!ATTLIST Text 
 	%OBJ_ATTRS;
 	%TEXT_ALIGN;
-	font CDATA ""
-	text CDATA "">
+	font CDATA #IMPLIED
+	text CDATA #IMPLIED>
 
 <!ELEMENT Button ANY>
 <!ATTLIST Button 
 	%GROUP_ATTRS;
 	%SOURCE;
 	%ASYNC;
-	patches CDATA "">
+	patches CDATA #IMPLIED>
