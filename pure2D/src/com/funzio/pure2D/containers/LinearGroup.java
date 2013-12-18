@@ -213,7 +213,7 @@ public abstract class LinearGroup extends DisplayGroup {
         }
 
         final String minCellSize = xmlParser.getAttributeValue(null, ATT_MIN_CELL_SIZE);
-        if (ATT_MIN_CELL_SIZE != null) {
+        if (minCellSize != null) {
             setMinCellSize(Float.valueOf(minCellSize) * manager.getConfig().screen_scale);
         }
     }
