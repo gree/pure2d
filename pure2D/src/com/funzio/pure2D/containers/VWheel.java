@@ -122,8 +122,12 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         }
 
         mSnapAnchor = mScrollPosition.y;
-        mSnapAnimator.setDuration((int) Math.abs(position - mScrollPosition.y));
+        mSnapAnimator.setDuration(getSnapDuration(position - mScrollPosition.y));
         mSnapAnimator.start(0, mScrollPosition.y, 0, position);
+    }
+
+    protected int getSnapDuration(final float distance) {
+        return (int) Math.abs(distance);
     }
 
     /**

@@ -122,8 +122,12 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         }
 
         mSnapAnchor = mScrollPosition.x;
-        mSnapAnimator.setDuration((int) Math.abs(position - mScrollPosition.x));
+        mSnapAnimator.setDuration(getSnapDuration(position - mScrollPosition.x));
         mSnapAnimator.start(mScrollPosition.x, 0, position, 0);
+    }
+
+    protected int getSnapDuration(final float distance) {
+        return (int) Math.abs(distance);
     }
 
     /**
