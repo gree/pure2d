@@ -470,9 +470,9 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
                 if (mTouchBounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         if (mOrientation == ORIENTATION_X) {
-                            mSwipeAnchor = event.getX(pointerIndex);
+                            mSwipeAnchor = global.x;
                         } else {
-                            mSwipeAnchor = event.getY(pointerIndex);
+                            mSwipeAnchor = global.y;
                         }
 
                         // keep pointer id
@@ -488,12 +488,12 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
                 if (swipePointerIndex >= 0) {
 
                     if (mOrientation == ORIENTATION_X) {
-                        final float deltaX = event.getX(swipePointerIndex) - mSwipeAnchor;
+                        final float deltaX = mScene.getTouchedPoint(swipePointerIndex).x - mSwipeAnchor;
                         if (mSwipeAnchor >= 0) {
                             if (!mSwiping) {
                                 if (Math.abs(deltaX) >= mSwipeMinThreshold) {
                                     // re-anchor
-                                    mSwipeAnchor = event.getX(swipePointerIndex);
+                                    mSwipeAnchor = mScene.getTouchedPoint(swipePointerIndex).x;
 
                                     startSwipe();
                                 }
@@ -504,8 +504,8 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
 
                     } else {
 
-                        float deltaY = event.getY(swipePointerIndex) - mSwipeAnchor;
-                        if (mScene.getAxisSystem() == Scene.AXIS_BOTTOM_LEFT) {
+                        float deltaY = mScene.getTouchedPoint(swipePointerIndex).y - mSwipeAnchor;
+                        if (mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
                             // flip
                             deltaY = -deltaY;
                         }
@@ -514,7 +514,7 @@ public class Wheel3D extends DisplayGroup implements Animator.AnimatorListener, 
                             if (!mSwiping) {
                                 if (Math.abs(deltaY) >= mSwipeMinThreshold) {
                                     // re-anchor
-                                    mSwipeAnchor = event.getY(swipePointerIndex);
+                                    mSwipeAnchor = mScene.getTouchedPoint(swipePointerIndex).y;
 
                                     startSwipe();
                                 }

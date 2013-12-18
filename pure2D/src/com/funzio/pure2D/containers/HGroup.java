@@ -371,7 +371,7 @@ public class HGroup extends LinearGroup implements UIObject {
                 final PointF global = mScene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
-                        mSwipeAnchor = event.getX(pointerIndex);
+                        mSwipeAnchor = global.x;
                         // keep pointer id
                         mSwipePointerID = event.getPointerId(pointerIndex);
                     }
@@ -383,12 +383,12 @@ public class HGroup extends LinearGroup implements UIObject {
             } else if (action == MotionEvent.ACTION_MOVE) {
                 final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
                 if (swipePointerIndex >= 0) {
-                    final float deltaX = event.getX(swipePointerIndex) - mSwipeAnchor;
+                    final float deltaX = mScene.getTouchedPoint(swipePointerIndex).x - mSwipeAnchor;
                     if (mSwipeAnchor >= 0) {
                         if (!mSwiping) {
                             if (Math.abs(deltaX) >= mSwipeMinThreshold) {
                                 // re-anchor
-                                mSwipeAnchor = event.getX(swipePointerIndex);
+                                mSwipeAnchor = mScene.getTouchedPoint(swipePointerIndex).x;
 
                                 startSwipe();
                             }
