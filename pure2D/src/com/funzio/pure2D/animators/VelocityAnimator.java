@@ -60,10 +60,6 @@ public class VelocityAnimator extends BaseAnimator {
         mAcceleration = acceleration;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.funzio.pure2D.animators.BaseAnimator#elapse(int)
-     */
     @Override
     public void elapse(final int elapsedTimeDelta) {
         mPendingElapse += elapsedTimeDelta;
