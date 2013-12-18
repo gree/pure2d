@@ -24,8 +24,8 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
     // snapping
     protected boolean mSnapEnabled = false;
-    private MoveAnimator mSnapAnimator;
-    private float mSnapAnchor;
+    protected MoveAnimator mSnapAnimator;
+    protected float mSnapAnchor;
 
     protected float mSwipeDelta = 0;
     protected float mSwipeVelocity = 0;
