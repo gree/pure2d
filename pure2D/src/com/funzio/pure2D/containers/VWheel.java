@@ -23,7 +23,7 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
 
     // snapping
     protected boolean mSnapEnabled = false;
-    protected MoveAnimator mSnapAnimator;
+    private MoveAnimator mSnapAnimator;
     private float mSnapAnchor;
 
     protected float mSwipeDelta = 0;
@@ -70,6 +70,10 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     }
 
     public void spin(final float veloc, final float acceleration, final int maxSpinTime) {
+        if (mSnapAnimator != null) {
+            mSnapAnimator.stop();
+        }
+
         mSpinVelocity = veloc;
         mVelocAnimator.start(veloc, acceleration, maxSpinTime);
     }
@@ -87,6 +91,10 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
             return;
         }
 
+        if (mSnapAnimator != null) {
+            mSnapAnimator.stop();
+        }
+
         final float accel = distance > 0 ? -acceleration : acceleration; // against veloc
         final float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
         mSpinVelocity = veloc;
@@ -100,8 +108,22 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
      * @param acceleration
      * @param duration
      */
+    @Deprecated
     public void spinToSnap(final boolean positive, final float acceleration, final int duration) {
         spinDistance(getSnapDelta(positive), acceleration, duration);
+    }
+
+    public void snapTo(final float position) {
+        if (mSnapAnimator == null) {
+            mSnapAnimator = new MoveAnimator(NovaConfig.INTER_DECELERATE);
+            addManipulator(mSnapAnimator);
+            mSnapAnimator.setTarget(null); // no target
+            mSnapAnimator.setListener(this);
+        }
+
+        mSnapAnchor = mScrollPosition.y;
+        mSnapAnimator.setDuration((int) Math.abs(position - mScrollPosition.y));
+        mSnapAnimator.start(0, mScrollPosition.y, 0, position);
     }
 
     /**
@@ -140,6 +162,10 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         // stop animation first
         mVelocAnimator.stop();
 
+        if (mSnapAnimator != null) {
+            mSnapAnimator.stop();
+        }
+
         super.startSwipe();
     }
 
@@ -174,20 +200,20 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
 
     public void setSnapEnabled(final boolean snapEnabled) {
         mSnapEnabled = snapEnabled;
+
+        if (snapEnabled && mSnapAnimator == null) {
+            mSnapAnimator = new MoveAnimator(NovaConfig.INTER_DECELERATE);
+            addManipulator(mSnapAnimator);
+            mSnapAnimator.setTarget(null); // no target
+            mSnapAnimator.setListener(this);
+        }
     }
 
     public void onAnimationEnd(final Animator animator) {
         if (animator == mVelocAnimator) {
             if (mSnapEnabled) {
-                if (mSnapAnimator == null) {
-                    mSnapAnimator = new MoveAnimator(NovaConfig.INTER_DECELERATE);
-                    addManipulator(mSnapAnimator);
-                    mSnapAnimator.setTarget(null); // no target
-                    mSnapAnimator.setListener(this);
-                }
-
-                mSnapAnchor = mScrollPosition.y;
                 final float snapDelta = getSnapDelta(mSpinVelocity < 0);
+                mSnapAnchor = mScrollPosition.y;
                 mSnapAnimator.setDuration((int) Math.abs(snapDelta) * 5);
                 mSnapAnimator.start(0, 0, 0, snapDelta);
             }

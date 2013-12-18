@@ -11,8 +11,6 @@ import com.funzio.pure2D.animators.Animator;
  * @author long
  */
 public class HScroll extends HWheel implements List {
-    protected boolean mSnapping2Bound = false;
-
     public HScroll() {
         super();
 
@@ -20,20 +18,6 @@ public class HScroll extends HWheel implements List {
         setAlignment(Alignment.VERTICAL_CENTER);
         setSwipeEnabled(true);
         setRepeating(false);
-    }
-
-    @Override
-    protected void startSwipe() {
-        super.startSwipe();
-
-        mSnapping2Bound = false;
-    }
-
-    @Override
-    protected void stopSwipe() {
-        super.stopSwipe();
-
-        mSnapping2Bound = false;
     }
 
     @Override
@@ -53,25 +37,24 @@ public class HScroll extends HWheel implements List {
     public void onAnimationUpdate(final Animator animator, final float value) {
         super.onAnimationUpdate(animator, value);
 
-        if (!mSnapping2Bound) {
-            // out of range?
+        // out of range?
+        if (animator == mVelocAnimator) {
             if (mScrollPosition.x < 0 || mScrollPosition.x > mScrollMax.x) {
-                stop();
+                mVelocAnimator.end();
             }
         }
     }
 
     @Override
     public void onAnimationEnd(final Animator animator) {
-        super.onAnimationEnd(animator);
 
-        if (!mSnapping2Bound) {
+        if (animator == mVelocAnimator) {
             if (mScrollPosition.x < 0) {
-                mSnapping2Bound = true;
-                spinDistance(-mScrollPosition.x, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
+                snapTo(0);
             } else if (mScrollPosition.x > mScrollMax.x) {
-                mSnapping2Bound = true;
-                spinDistance(-mScrollPosition.x + mScrollMax.x, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
+                snapTo(mScrollMax.x);
+            } else {
+                super.onAnimationEnd(animator);
             }
         }
     }

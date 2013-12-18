@@ -11,8 +11,6 @@ import com.funzio.pure2D.animators.Animator;
  * @author long
  */
 public class VScroll extends VWheel implements List {
-    protected boolean mSnapping2Bound = false;
-
     public VScroll() {
         super();
 
@@ -20,20 +18,6 @@ public class VScroll extends VWheel implements List {
         setAlignment(Alignment.HORIZONTAL_CENTER);
         setSwipeEnabled(true);
         setRepeating(false);
-    }
-
-    @Override
-    protected void startSwipe() {
-        super.startSwipe();
-
-        mSnapping2Bound = false;
-    }
-
-    @Override
-    protected void stopSwipe() {
-        super.stopSwipe();
-
-        mSnapping2Bound = false;
     }
 
     @Override
@@ -53,25 +37,23 @@ public class VScroll extends VWheel implements List {
     public void onAnimationUpdate(final Animator animator, final float value) {
         super.onAnimationUpdate(animator, value);
 
-        if (!mSnapping2Bound) {
-            // out of range?
+        // out of range?
+        if (animator == mVelocAnimator) {
             if (mScrollPosition.y < 0 || mScrollPosition.y > mScrollMax.y) {
-                stop();
+                mVelocAnimator.end();
             }
         }
     }
 
     @Override
     public void onAnimationEnd(final Animator animator) {
-        super.onAnimationEnd(animator);
-
-        if (!mSnapping2Bound) {
+        if (animator == mVelocAnimator) {
             if (mScrollPosition.y < 0) {
-                mSnapping2Bound = true;
-                spinDistance(-mScrollPosition.y, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
+                snapTo(0);
             } else if (mScrollPosition.y > mScrollMax.y) {
-                mSnapping2Bound = true;
-                spinDistance(-mScrollPosition.y + mScrollMax.y, DEFAULT_SNAP_ACCELERATION, DEFAULT_SNAP_DURATION);
+                snapTo(mScrollMax.y);
+            } else {
+                super.onAnimationEnd(animator);
             }
         }
     }

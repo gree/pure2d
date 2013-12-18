@@ -68,6 +68,7 @@ public class ScrollActivity extends StageActivity {
         mVScroll = new VScroll();
         // mVScroll.setCacheEnabled(true);
         mVScroll.setClippingEnabled(true);
+        mVScroll.setSnapEnabled(true);
         // mVScroll.setPositiveOrientation(false);
         mVScroll.setGap(10);
         mVScroll.setSize(LIST_WIDTH, mDisplaySize.y - LIST_WIDTH);
@@ -90,6 +91,7 @@ public class ScrollActivity extends StageActivity {
         mHScroll = new HScroll();
         // mHScroll.setCacheEnabled(true);
         mHScroll.setClippingEnabled(true);
+        mHScroll.setSnapEnabled(true);
         mHScroll.setGap(10);
         mHScroll.setSize(mDisplaySize.x, LIST_WIDTH);
 
