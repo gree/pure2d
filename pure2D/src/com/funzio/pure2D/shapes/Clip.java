@@ -55,8 +55,11 @@ public class Clip extends Sprite implements Playable {
                 setLoop(loopMode);
             }
 
-            // start from first frame
-            mCurrentFrame = 0;
+            // check current frame
+            if (mCurrentFrame >= mNumFrames) {
+                // start from first frame
+                mCurrentFrame = 0;
+            }
 
             setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
         } else {
