@@ -214,7 +214,7 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
             if (mSnapEnabled) {
                 final float snapDelta = getSnapDelta(mSpinVelocity < 0);
                 mSnapAnchor = mScrollPosition.y;
-                mSnapAnimator.setDuration((int) Math.abs(snapDelta) * 5);
+                mSnapAnimator.setDuration((int) Math.abs(snapDelta));
                 mSnapAnimator.start(0, 0, 0, snapDelta);
             }
         }
