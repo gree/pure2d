@@ -65,6 +65,11 @@
 <!ATTLIST HScroll 
 	%LGROUP_ATTRS;
 	snapEnabled (false|true) "">
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include 
+	%OBJ_ATTRS;
+	layout CDATA #IMPLIED>
 	
 <!ELEMENT Rect EMPTY>
 <!ATTLIST Rect 
