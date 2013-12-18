@@ -60,6 +60,7 @@ public class VWheelActivity extends StageActivity {
         for (int i = 0; i < NUM_WHEELS; i++) {
             VWheel wheel = new VWheel();
             wheel.setGap(10);
+            wheel.setSnapEnabled(true);
             wheel.setSwipeEnabled(true);
             wheel.setSize(WHEEL_WIDTH, mDisplaySize.y);
 

@@ -2,10 +2,15 @@ package com.funzio.pure2D.containers;
 
 import android.view.MotionEvent;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
+import com.funzio.pure2D.animators.MoveAnimator;
 import com.funzio.pure2D.animators.VelocityAnimator;
+import com.funzio.pure2D.particles.nova.NovaConfig;
+import com.funzio.pure2D.ui.UIManager;
 
 /**
  * Wheel is an extended Group that allows you to spin!
@@ -14,7 +19,13 @@ import com.funzio.pure2D.animators.VelocityAnimator;
  */
 public class HWheel extends HGroup implements Wheel, AnimatorListener {
     // spinning
-    protected VelocityAnimator mAnimator;
+    protected float mSpinVelocity;
+    protected VelocityAnimator mVelocAnimator;
+
+    // snapping
+    protected boolean mSnapEnabled = false;
+    protected MoveAnimator mSnapAnimator;
+    private float mSnapAnchor;
 
     protected float mSwipeDelta = 0;
     protected float mSwipeVelocity = 0;
@@ -25,9 +36,9 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         mRepeating = true;
 
         // animator
-        mAnimator = new VelocityAnimator();
-        mAnimator.setListener(this);
-        addManipulator(mAnimator);
+        mVelocAnimator = new VelocityAnimator();
+        mVelocAnimator.setListener(this);
+        addManipulator(mVelocAnimator);
     }
 
     @Override
@@ -59,7 +70,8 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
     }
 
     public void spin(final float veloc, final float acceleration, final int maxSpinTime) {
-        mAnimator.start(veloc, acceleration, maxSpinTime);
+        mSpinVelocity = veloc;
+        mVelocAnimator.start(veloc, acceleration, maxSpinTime);
     }
 
     /**
@@ -77,7 +89,8 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
         final float accel = distance > 0 ? -acceleration : acceleration; // against veloc
         final float veloc = distance / duration + 0.5f * accel * duration; // Real physics!
-        mAnimator.start(-veloc, accel, duration);
+        mSpinVelocity = veloc;
+        mVelocAnimator.start(-veloc, accel, duration);
     }
 
     /**
@@ -125,42 +138,68 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
     @Override
     protected void startSwipe() {
         // stop animation first
-        mAnimator.stop();
+        mVelocAnimator.stop();
 
         super.startSwipe();
     }
 
     public void stop() {
-        mAnimator.stop();
+        mVelocAnimator.stop();
     }
 
     /**
      * @return the velocity
      */
     public float getVelocity() {
-        return mAnimator.getVelocity();
+        return mVelocAnimator.getVelocity();
     }
 
     /**
      * @return the Acceleration
      */
     public float getAcceleration() {
-        return mAnimator.getAcceleration();
+        return mVelocAnimator.getAcceleration();
     }
 
     /**
      * @return the maxSpinTime
      */
     public int getMaxSpinTime() {
-        return mAnimator.getDuration();
+        return mVelocAnimator.getDuration();
+    }
+
+    public boolean isSnapEnabled() {
+        return mSnapEnabled;
+    }
+
+    public void setSnapEnabled(final boolean snapEnabled) {
+        mSnapEnabled = snapEnabled;
     }
 
     public void onAnimationEnd(final Animator animator) {
-        // TODO to be overriden
+        if (animator == mVelocAnimator) {
+            if (mSnapEnabled) {
+                if (mSnapAnimator == null) {
+                    mSnapAnimator = new MoveAnimator(NovaConfig.INTER_DECELERATE);
+                    addManipulator(mSnapAnimator);
+                    mSnapAnimator.setTarget(null); // no target
+                    mSnapAnimator.setListener(this);
+                }
+
+                mSnapAnchor = mScrollPosition.x;
+                final float snapDelta = getSnapDelta(mSpinVelocity < 0);
+                mSnapAnimator.setDuration((int) Math.abs(snapDelta) * 5);
+                mSnapAnimator.start(0, 0, snapDelta, 0);
+            }
+        }
     }
 
     public void onAnimationUpdate(final Animator animator, final float value) {
-        scrollBy(-value, 0);
+        if (animator == mVelocAnimator) {
+            scrollBy(-value, 0);
+        } else if (animator == mSnapAnimator) {
+            scrollTo(mSnapAnchor + mSnapAnimator.getDelta().x * value, 0);
+        }
     }
 
     @Override
@@ -168,8 +207,18 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
         super.onTouchDown(event);
 
         // stop spining
-        if (mAnimator.isRunning() && mStoppable) {
-            mAnimator.stop();
+        if (mVelocAnimator.isRunning() && mStoppable) {
+            mVelocAnimator.stop();
+        }
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String snapEnabled = xmlParser.getAttributeValue(null, ATT_SNAP_ENABLED);
+        if (snapEnabled != null) {
+            setSnapEnabled(Boolean.valueOf(snapEnabled));
         }
     }
 }

@@ -10,6 +10,4 @@ public interface List extends Wheel {
     // out of bounds friction
     public static final float SCROLL_OOB_FRICTION = 0.4f;
 
-    // xml attributes
-    public static final String ATT_SNAP_ENABLED = "snapEnabled";
 }

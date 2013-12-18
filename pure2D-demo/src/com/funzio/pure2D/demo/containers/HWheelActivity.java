@@ -60,6 +60,7 @@ public class HWheelActivity extends StageActivity {
         for (int i = 0; i < NUM_WHEELS; i++) {
             HWheel wheel = new HWheel();
             wheel.setGap(10);
+            wheel.setSnapEnabled(true);
             wheel.setSwipeEnabled(true);
             wheel.setSize(mDisplaySize.x, WHEEL_HEIGHT);
 

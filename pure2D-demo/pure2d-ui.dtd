@@ -50,21 +50,23 @@
 	
 <!ELEMENT VWheel ANY>
 <!ATTLIST VWheel 
-	%LGROUP_ATTRS;>
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) #IMPLIED>
 	
 <!ELEMENT HWheel ANY>
 <!ATTLIST HWheel 
-	%LGROUP_ATTRS;>
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) #IMPLIED>
 	
 <!ELEMENT VScroll ANY>
 <!ATTLIST VScroll 
 	%LGROUP_ATTRS;
-	snapEnabled (false|true) "">
+	snapEnabled (false|true) #IMPLIED>
 	
 <!ELEMENT HScroll ANY>
 <!ATTLIST HScroll 
 	%LGROUP_ATTRS;
-	snapEnabled (false|true) "">
+	snapEnabled (false|true) #IMPLIED>
 
 <!ELEMENT include EMPTY>
 <!ATTLIST include 
