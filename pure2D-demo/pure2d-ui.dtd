@@ -31,6 +31,7 @@
 	"%GROUP_ATTRS;
  	%ALIGN;
  	childrenGap CDATA #IMPLIED
+ 	minCellSize CDATA #IMPLIED
  	boundsCheckEnabled (false|true) #IMPLIED
  	autoSleepChildren (false|true) #IMPLIED
  	">

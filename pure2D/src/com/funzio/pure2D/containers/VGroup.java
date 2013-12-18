@@ -73,7 +73,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 mStartY = mContentSize.y - offset;
                 // Log.v("long", ">>>i: " + i + " mStartIndex: " + mStartIndex + " mStartY: " + mStartY + " offset: " + offset + " itemPos: " + itemPos);
             } else {
-                itemPos += mChildren.get(i).getSize().y + mGap;
+                itemPos += Math.max(mMinCellSize, mChildren.get(i).getSize().y) + mGap;
             }
         }
     }
@@ -83,7 +83,7 @@ public class VGroup extends LinearGroup implements UIObject {
         for (int i = 0; i < mNumChildren; i++) {
             final PointF childSize = mChildren.get(i).getSize();
             mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
-            mContentSize.y += childSize.y + mGap;
+            mContentSize.y += Math.max(mMinCellSize, childSize.y) + mGap;
         }
 
         // update scroll max
@@ -122,7 +122,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
         if (y < 0) {
             if (positive) {
-                return y + (startChild.getSize().y + mGap);
+                return y + (Math.max(mMinCellSize, startChild.getSize().y) + mGap);
             } else {
                 return y;
             }
@@ -132,7 +132,7 @@ public class VGroup extends LinearGroup implements UIObject {
             } else {
                 int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
                 final DisplayObject newChild = getChildAt(newIndex);
-                return y - (newChild.getSize().y + mGap);
+                return y - (Math.max(mMinCellSize, newChild.getSize().y) + mGap);
             }
         }
     }
@@ -223,7 +223,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
 
                 // find nextY
-                nextY += childSize.y + mGap;
+                nextY += Math.max(mMinCellSize, childSize.y) + mGap;
             }
 
             if (mStartY > mGap) {
@@ -233,7 +233,7 @@ public class VGroup extends LinearGroup implements UIObject {
                     index += mNumChildren;
                 }
                 child = mChildren.get(index);
-                child.setPosition(child.getPosition().x, convertY(mStartY - child.getSize().y - mGap, child.getSize().y));
+                child.setPosition(child.getPosition().x, convertY(mStartY - Math.max(mMinCellSize, child.getSize().y) - mGap, child.getSize().y));
             }
         } else {
             // update content size
@@ -258,7 +258,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
 
                 // update sizes
-                nextY += childSize.y + mGap;
+                nextY += Math.max(mMinCellSize, childSize.y) + mGap;
             }
         }
     }
@@ -276,16 +276,23 @@ public class VGroup extends LinearGroup implements UIObject {
 
     @Override
     public void setGap(final float gap) {
-        mContentSize.y += (gap - mGap) * mNumChildren;
+        updateContentSize();
 
         super.setGap(gap);
+    }
+
+    @Override
+    public void setMinCellSize(final float minCellSize) {
+        super.setMinCellSize(minCellSize);
+
+        updateContentSize();
     }
 
     @Override
     protected void onAddedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
         mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
-        mContentSize.y += childSize.y + mGap;
+        mContentSize.y += Math.max(mMinCellSize, childSize.y) + mGap;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
@@ -297,7 +304,7 @@ public class VGroup extends LinearGroup implements UIObject {
     @Override
     protected void onRemovedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
-        mContentSize.y -= childSize.y + mGap;
+        mContentSize.y -= Math.max(mMinCellSize, childSize.y) + mGap;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);

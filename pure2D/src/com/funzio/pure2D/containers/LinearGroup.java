@@ -21,6 +21,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected static final String ATT_REPEATING = "repeating";
     protected static final String ATT_BOUNDS_CHECK_ENABLED = "boundsCheckEnabled";
     protected static final String ATT_AUTO_SLEEP_CHILDREN = "autoSleepChildren";
+    protected static final String ATT_MIN_CELL_SIZE = "minCellSize";
 
     protected float mGap = 0;
     protected float mOffsetX = 0;
@@ -31,6 +32,7 @@ public abstract class LinearGroup extends DisplayGroup {
     protected boolean mRepeating = false;
     protected boolean mBoundsCheckEnabled = true;
     protected boolean mAutoSleepChildren = false;
+    protected float mMinCellSize;
 
     private boolean mChildrenPositionInvalidated = false;
 
@@ -175,6 +177,17 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
+    public float getMinCellSize() {
+        return mMinCellSize;
+    }
+
+    public void setMinCellSize(final float minCellSize) {
+        mMinCellSize = minCellSize;
+
+        // reposition the children
+        invalidateChildrenPosition();
+    }
+
     @Override
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
@@ -197,6 +210,11 @@ public abstract class LinearGroup extends DisplayGroup {
         final String autoSleepChildren = xmlParser.getAttributeValue(null, ATT_AUTO_SLEEP_CHILDREN);
         if (autoSleepChildren != null) {
             setAutoSleepChildren(Boolean.valueOf(autoSleepChildren));
+        }
+
+        final String minCellSize = xmlParser.getAttributeValue(null, ATT_MIN_CELL_SIZE);
+        if (ATT_MIN_CELL_SIZE != null) {
+            setMinCellSize(Float.valueOf(minCellSize) * manager.getConfig().screen_scale);
         }
     }
 
