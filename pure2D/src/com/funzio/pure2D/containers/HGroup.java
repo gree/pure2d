@@ -262,19 +262,21 @@ public class HGroup extends LinearGroup implements UIObject {
         invalidateChildrenPosition();
     }
 
-    @Override
-    public void setGap(final float gap) {
-        updateContentSize();
-
-        super.setGap(gap);
-    }
-
-    @Override
-    public void setMinCellSize(final float minCellSize) {
-        super.setMinCellSize(minCellSize);
-
-        updateContentSize();
-    }
+    // @Override
+    // public void setGap(final float gap) {
+    // // dangerous
+    // updateContentSize();
+    //
+    // super.setGap(gap);
+    // }
+    //
+    // @Override
+    // public void setMinCellSize(final float minCellSize) {
+    // // dangerous
+    // updateContentSize();
+    //
+    // super.setMinCellSize(minCellSize);
+    // }
 
     @Override
     protected void onAddedChild(final DisplayObject child) {

@@ -127,7 +127,7 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
     }
 
     protected int getSnapDuration(final float distance) {
-        return (int) Math.abs(distance);
+        return (int) Math.abs(distance) * 2;
     }
 
     /**

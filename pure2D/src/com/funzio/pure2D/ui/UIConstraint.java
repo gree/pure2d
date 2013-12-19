@@ -332,6 +332,17 @@ public class UIConstraint {
             h = parentH - (t + b);
         }
 
+        // gap
+        if (childrenGapUnit != UNIT.UNSET && target instanceof LinearGroup) {
+            float g = 0;
+            if (childrenGapUnit == UNIT.PIXEL) {
+                g = childrenGap;
+            } else if (childrenGapUnit == UNIT.PERCENT) {
+                g = childrenGap * (target instanceof VGroup ? target.getHeight() : target.getWidth());
+            }
+            ((LinearGroup) target).setGap(g);
+        }
+
         // explicit width
         if (widthUnit == UNIT.PIXEL) {
             w = width;
@@ -348,17 +359,6 @@ public class UIConstraint {
             h = parentH * height;
         } else if (heightUnit == UNIT.WRAP && target instanceof DisplayGroup) {
             ((DisplayGroup) target).setWrapContentHeight(true);
-        }
-
-        // gap
-        if (childrenGapUnit != UNIT.UNSET && target instanceof LinearGroup) {
-            float g = 0;
-            if (childrenGapUnit == UNIT.PIXEL) {
-                g = childrenGap;
-            } else if (childrenGapUnit == UNIT.PERCENT) {
-                g = childrenGap * (target instanceof VGroup ? target.getHeight() : target.getWidth());
-            }
-            ((LinearGroup) target).setGap(g);
         }
 
         // x center

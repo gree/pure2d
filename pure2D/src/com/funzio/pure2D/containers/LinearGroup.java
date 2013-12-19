@@ -189,6 +189,20 @@ public abstract class LinearGroup extends DisplayGroup {
     }
 
     @Override
+    public void setWrapContentWidth(final boolean wrapWidth) {
+        super.setWrapContentWidth(wrapWidth);
+
+        invalidateChildrenPosition();
+    }
+
+    @Override
+    public void setWrapContentHeight(final boolean wrapHeight) {
+        super.setWrapContentHeight(wrapHeight);
+
+        invalidateChildrenPosition();
+    }
+
+    @Override
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 

@@ -238,8 +238,8 @@ public class VGroup extends LinearGroup implements UIObject {
         } else {
             // update content size
             updateContentSize();
-            float nextY = -mScrollPosition.y;
 
+            float nextY = -mScrollPosition.y;
             // alignment
             if ((mAlignment & Alignment.VERTICAL_CENTER) > 0) {
                 nextY += (mSize.y - mContentSize.y) * 0.5f;
@@ -274,19 +274,21 @@ public class VGroup extends LinearGroup implements UIObject {
         invalidateChildrenPosition();
     }
 
-    @Override
-    public void setGap(final float gap) {
-        updateContentSize();
-
-        super.setGap(gap);
-    }
-
-    @Override
-    public void setMinCellSize(final float minCellSize) {
-        super.setMinCellSize(minCellSize);
-
-        updateContentSize();
-    }
+    // @Override
+    // public void setGap(final float gap) {
+    // // dangerous
+    // updateContentSize();
+    //
+    // super.setGap(gap);
+    // }
+    //
+    // @Override
+    // public void setMinCellSize(final float minCellSize) {
+    // // dangerous
+    // updateContentSize();
+    //
+    // super.setMinCellSize(minCellSize);
+    // }
 
     @Override
     protected void onAddedChild(final DisplayObject child) {

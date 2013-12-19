@@ -127,7 +127,7 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
     }
 
     protected int getSnapDuration(final float distance) {
-        return (int) Math.abs(distance);
+        return (int) Math.abs(distance) * 2;
     }
 
     /**
