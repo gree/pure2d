@@ -208,6 +208,18 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
 
     public void onAnimationEnd(final Animator animator) {
         if (animator == mVelocAnimator) {
+
+            if (!mRepeating) {
+                final int round = Math.round(mScrollPosition.y);
+                if (round < 0) {
+                    snapTo(0);
+                    return;
+                } else if (round >= mScrollMax.y) {
+                    snapTo(mScrollMax.y);
+                    return;
+                }
+            }
+
             if (mSnapEnabled) {
                 snapTo(mScrollPosition.y + getSnapDelta(mSpinVelocity < 0));
             }
@@ -219,6 +231,14 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
             scrollBy(0, -value);
         } else if (animator == mSnapAnimator) {
             scrollTo(0, mSnapAnchor + mSnapAnimator.getDelta().y * value);
+        }
+
+        // out of range?
+        if (!mRepeating && animator == mVelocAnimator) {
+            final int round = Math.round(mScrollPosition.y);
+            if (round < 0 || round >= mScrollMax.y) {
+                mVelocAnimator.end();
+            }
         }
     }
 

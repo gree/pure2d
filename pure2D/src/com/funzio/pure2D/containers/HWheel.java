@@ -208,6 +208,18 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
 
     public void onAnimationEnd(final Animator animator) {
         if (animator == mVelocAnimator) {
+
+            if (!mRepeating) {
+                final int round = Math.round(mScrollPosition.x);
+                if (round < 0) {
+                    snapTo(0);
+                    return;
+                } else if (round >= mScrollMax.x) {
+                    snapTo(mScrollMax.x);
+                    return;
+                }
+            }
+
             if (mSnapEnabled) {
                 snapTo(mScrollPosition.x + getSnapDelta(mSpinVelocity < 0));
             }
@@ -219,6 +231,14 @@ public class HWheel extends HGroup implements Wheel, AnimatorListener {
             scrollBy(-value, 0);
         } else if (animator == mSnapAnimator) {
             scrollTo(mSnapAnchor + mSnapAnimator.getDelta().x * value, 0);
+        }
+
+        // out of range?
+        if (!mRepeating && animator == mVelocAnimator) {
+            final int round = Math.round(mScrollPosition.x);
+            if (round < 0 || round >= mScrollMax.x) {
+                mVelocAnimator.end();
+            }
         }
     }
 
