@@ -12,6 +12,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -344,13 +345,17 @@ public class Pure2DUtils {
             return bitmap;
         } else {
             Bitmap po2Bitmap;
+            Config config = bitmap.getConfig();
+            if (config == null) {
+                config = Bitmap.Config.ARGB_8888;
+            }
             try {
-                po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
+                po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, config);
             } catch (OutOfMemoryError e) {
                 try {
-                    po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, bitmap.getConfig());
+                    po2Bitmap = Bitmap.createBitmap(powWidth, powHeight, config);
                 } catch (OutOfMemoryError e1) {
-                    if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
+                    if (config == Bitmap.Config.ARGB_8888) {
                         try {
                             // try with lower quality
                             Log.w(Pure2D.TAG, "BITMAP CREATION FALLBACK: " + powWidth + " x " + powHeight, e1);
