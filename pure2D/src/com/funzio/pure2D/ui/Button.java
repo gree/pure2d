@@ -131,7 +131,19 @@ public class Button extends DisplayGroup implements UIObject {
         if (texture != mCurrentTexture) {
             mCurrentTexture = texture;
             mButtonSprite.setTexture(texture);
-            mTextureLoaded = false; // flag for update later
+
+            if (mCurrentTexture != null) {
+                final PointF size = mCurrentTexture.getSize();
+                final float w = Math.max(mSize.x, size.x);
+                final float h = Math.max(mSize.y, size.y);
+                if (w != mSize.x || h != mSize.y) {
+                    setSize(w, h);
+                }
+
+                mTextureLoaded = true;
+            } else {
+                mTextureLoaded = false; // flag for update later
+            }
         }
 
         // dim it if there is missing frame
