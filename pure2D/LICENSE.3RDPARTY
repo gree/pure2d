@@ -1,0 +1,11 @@
+This software is using the external libraries below.
+
+------------------------------
+Library : LWF - Lightweight SWF
+URL     : https://github.com/gree/lwf
+LICENSE : The zlib License
+------------------------------
+Library : Box2D
+URL     : http://box2d.org/
+LICENSE : The zlib License
+------------------------------
