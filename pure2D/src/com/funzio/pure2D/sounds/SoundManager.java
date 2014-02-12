@@ -336,8 +336,8 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     @Override
     public void onPrepared(final MediaPlayer mp) {
         // check first
+        mMediaPrepared = true;
         if (mMediaEnabled) {
-            mMediaPrepared = true;
             // start the media now
             mp.start();
         }
