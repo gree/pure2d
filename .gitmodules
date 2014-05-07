@@ -1,3 +1,3 @@
 [submodule "pure2D/jni/LWF/lwf"]
 	path = pure2D/jni/LWF/lwf
-	url = git@github.com:gree/lwf.git
+	url = https://github.com/gree/lwf.git
