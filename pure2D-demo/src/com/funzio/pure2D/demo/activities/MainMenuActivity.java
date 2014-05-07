@@ -26,11 +26,9 @@ import com.funzio.pure2D.demo.animations.AnimationMenuActivity;
 import com.funzio.pure2D.demo.astar.AstarMenuActivity;
 import com.funzio.pure2D.demo.buffers.BufferMenuActivity;
 import com.funzio.pure2D.demo.camera.CameraMenuActivity;
-import com.funzio.pure2D.demo.casino.CasinoMenuActivity;
 import com.funzio.pure2D.demo.containers.ContainerMenuActivity;
 import com.funzio.pure2D.demo.effects.EffectsMenuActivity;
 import com.funzio.pure2D.demo.loaders.LoaderMenuActivity;
-import com.funzio.pure2D.demo.mw.MWMenuActivity;
 import com.funzio.pure2D.demo.objects.ObjectMenuActivity;
 import com.funzio.pure2D.demo.particles.NovaMenuActivity;
 import com.funzio.pure2D.demo.particles.ParticleMenuActivity;
@@ -63,10 +61,8 @@ public class MainMenuActivity extends MenuActivity {
         addMenu(R.id.btn_physics, PhysicsMenuActivity.class);
         addMenu(R.id.btn_astar, AstarMenuActivity.class);
         addMenu(R.id.btn_loaders, LoaderMenuActivity.class);
-        addMenu(R.id.btn_mw, MWMenuActivity.class);
         addMenu(R.id.btn_ui, UIMenuActivity.class);
         addMenu(R.id.btn_pui_layouts, PUIMenuActivity.class);
-        addMenu(R.id.btn_casino, CasinoMenuActivity.class);
     }
 
 }
