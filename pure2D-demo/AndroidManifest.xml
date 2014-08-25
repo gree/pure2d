@@ -356,31 +356,6 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.funzio.pure2D.demo.mw.MWMenuActivity"
-            android:label="@string/modern_war"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.funzio.pure2D.demo.mw.ExplosionActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.funzio.pure2D.demo.mw.GroundUnitsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.funzio.pure2D.demo.mw.AirUnitsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.funzio.pure2D.demo.mw.SeaUnitsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
             android:name="com.funzio.pure2D.demo.animations.AnimationMenuActivity"
             android:label="@string/animations"
             android:screenOrientation="portrait" >
@@ -443,16 +418,6 @@
         <activity
             android:name="com.funzio.pure2D.demo.animations.SkeletonCacheActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.funzio.pure2D.demo.casino.CasinoMenuActivity"
-            android:label="@string/casino"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.funzio.pure2D.demo.casino.SlotMachineActivity"
-            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
     </application>
