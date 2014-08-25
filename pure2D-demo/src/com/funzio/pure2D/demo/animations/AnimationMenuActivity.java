@@ -21,10 +21,10 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.animations;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.particles.CoinExplosionActivity;
 import com.funzio.pure2D.demo.textures.ImageSequenceActivity;
+import com.longo.pure2D.demo.R;
 
 public class AnimationMenuActivity extends MenuActivity {
 

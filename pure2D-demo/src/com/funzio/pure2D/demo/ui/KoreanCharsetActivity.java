@@ -40,7 +40,6 @@ import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.AlphaAnimator;
 import com.funzio.pure2D.animators.ColorAnimator;
 import com.funzio.pure2D.containers.Alignment;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendModes;
@@ -50,6 +49,7 @@ import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
 import com.funzio.pure2D.text.Characters;
 import com.funzio.pure2D.text.TextOptions;
+import com.longo.pure2D.demo.R;
 
 /**
  * @author juni.kim

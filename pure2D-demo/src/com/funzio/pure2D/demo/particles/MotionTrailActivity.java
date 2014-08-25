@@ -28,12 +28,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+import com.longo.pure2D.demo.R;
 
 public class MotionTrailActivity extends StageActivity {
     private static final BlendFunc BLEND_FUNC_1 = new BlendFunc(GL10.GL_ONE, GL10.GL_ONE);

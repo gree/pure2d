@@ -32,12 +32,12 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.funzio.crimecity.game.model.CCMapDirection;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.DrawableTexture;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
+import com.longo.pure2D.demo.R;
 
 /**
  * @author long

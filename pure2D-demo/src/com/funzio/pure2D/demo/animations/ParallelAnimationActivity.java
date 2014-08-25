@@ -28,7 +28,7 @@ import com.funzio.pure2D.animators.MoveAnimator;
 import com.funzio.pure2D.animators.ParallelAnimator;
 import com.funzio.pure2D.animators.RotateAnimator;
 import com.funzio.pure2D.animators.SequenceAnimator;
-import com.funzio.pure2D.demo.R;
+import com.longo.pure2D.demo.R;
 
 public class ParallelAnimationActivity extends AnimationActivity {
 

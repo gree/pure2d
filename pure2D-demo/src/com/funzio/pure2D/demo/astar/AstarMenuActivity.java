@@ -21,9 +21,9 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.astar;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.containers.GridGroupActivity;
+import com.longo.pure2D.demo.R;
 
 public class AstarMenuActivity extends MenuActivity {
 

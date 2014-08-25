@@ -40,7 +40,6 @@ import com.funzio.pure2D.astar.AstarAdapter;
 import com.funzio.pure2D.astar.AstarNode;
 import com.funzio.pure2D.astar.AstarNodeSet;
 import com.funzio.pure2D.containers.GridGroup;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
@@ -50,6 +49,7 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.grid.HexGrid;
 import com.funzio.pure2D.grid.VerticalHexGrid;
 import com.funzio.pure2D.shapes.Sprite;
+import com.longo.pure2D.demo.R;
 
 public class AstarHexGridActivity extends StageActivity {
     private static final int GRID_CELL_RADIUS = 32;

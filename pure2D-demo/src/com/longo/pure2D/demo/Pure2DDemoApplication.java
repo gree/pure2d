@@ -19,24 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
-package com.funzio.pure2D.demo.particles;
+/**
+ * 
+ */
+package com.longo.pure2D.demo;
 
-import com.funzio.pure2D.demo.activities.MenuActivity;
-import com.longo.pure2D.demo.R;
+import com.funzio.pure2D.app.Pure2DAppplication;
 
-public class ParticleMenuActivity extends MenuActivity {
+/**
+ * @author long.ngo
+ */
+public class Pure2DDemoApplication extends Pure2DAppplication {
 
-    @Override
-    protected int getLayout() {
-        return R.layout.particle_menu;
+    private static Pure2DDemoApplication sInstance;
+
+    public Pure2DDemoApplication() {
+        // singleton
+        sInstance = this;
+    }
+
+    public static Pure2DDemoApplication getInstance() {
+        return sInstance;
     }
 
     @Override
-    protected void createMenus() {
-        addMenu(R.id.btn_simple_smoke, SimpleSmokeActivity.class);
-        addMenu(R.id.btn_motion_trails, MotionTrailActivity.class);
-        addMenu(R.id.btn_dynamic_emitters, DynamicEmitterActivity.class);
-        addMenu(R.id.btn_coin_explosion, CoinExplosionActivity.class);
+    public void onCreate() {
+        super.onCreate();
+
+        // TODO
     }
 
 }

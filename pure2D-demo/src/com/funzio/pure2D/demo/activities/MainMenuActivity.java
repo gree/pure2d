@@ -21,7 +21,6 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.activities;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.animations.AnimationMenuActivity;
 import com.funzio.pure2D.demo.astar.AstarMenuActivity;
 import com.funzio.pure2D.demo.buffers.BufferMenuActivity;
@@ -37,6 +36,7 @@ import com.funzio.pure2D.demo.pui.PUIMenuActivity;
 import com.funzio.pure2D.demo.simple3D.Simple3DMenuActivity;
 import com.funzio.pure2D.demo.textures.TextureMenuActivity;
 import com.funzio.pure2D.demo.ui.UIMenuActivity;
+import com.longo.pure2D.demo.R;
 
 public class MainMenuActivity extends MenuActivity {
 

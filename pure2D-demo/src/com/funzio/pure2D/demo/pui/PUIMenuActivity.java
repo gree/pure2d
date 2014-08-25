@@ -27,8 +27,8 @@ package com.funzio.pure2D.demo.pui;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
+import com.longo.pure2D.demo.R;
 
 /**
  * @author long

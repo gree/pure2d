@@ -21,8 +21,8 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.containers;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
+import com.longo.pure2D.demo.R;
 
 public class ContainerMenuActivity extends MenuActivity {
 

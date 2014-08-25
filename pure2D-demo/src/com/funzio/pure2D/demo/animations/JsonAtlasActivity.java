@@ -29,12 +29,12 @@ import android.widget.CheckBox;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.JsonAtlas;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
+import com.longo.pure2D.demo.R;
 
 public class JsonAtlasActivity extends StageActivity {
     private Texture mTexture;

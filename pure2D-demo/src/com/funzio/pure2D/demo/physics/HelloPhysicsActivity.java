@@ -27,6 +27,12 @@ package com.funzio.pure2D.demo.physics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.Fixture;
+import org.jbox2d.dynamics.joints.MouseJoint;
+import org.jbox2d.dynamics.joints.MouseJointDef;
+
 import android.content.Context;
 import android.graphics.PointF;
 import android.hardware.Sensor;
@@ -37,19 +43,13 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.Fixture;
-import org.jbox2d.dynamics.joints.MouseJoint;
-import org.jbox2d.dynamics.joints.MouseJointDef;
-
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite;
+import com.longo.pure2D.demo.R;
 
 public class HelloPhysicsActivity extends StageActivity implements SensorEventListener {
     private List<Texture> mTextures = new ArrayList<Texture>();

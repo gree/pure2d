@@ -29,11 +29,11 @@ import android.widget.CheckBox;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.Atlas;
 import com.funzio.pure2D.atlas.ImageSequenceAtlas;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.Clip;
 import com.funzio.pure2D.shapes.Sprite;
+import com.longo.pure2D.demo.R;
 
 public class ImageSequenceActivity extends StageActivity {
     private static final String IMAGE_DIR = "mayan/symbols/majors/priest";

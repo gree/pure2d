@@ -21,11 +21,11 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.textures;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.animations.HelloAtlasActivity;
 import com.funzio.pure2D.demo.buffers.FrameBufferActivity;
 import com.funzio.pure2D.demo.buffers.StencilBufferActivity;
+import com.longo.pure2D.demo.R;
 
 public class TextureMenuActivity extends MenuActivity {
 

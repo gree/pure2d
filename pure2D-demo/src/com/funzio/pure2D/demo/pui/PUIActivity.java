@@ -28,12 +28,12 @@ import android.view.View;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.demo.Pure2DDemoApplication;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UITextureManager;
+import com.longo.pure2D.demo.Pure2DDemoApplication;
 
 public class PUIActivity extends StageActivity {
     private UIManager mUIManager = Pure2DDemoApplication.getInstance().getUIManager();

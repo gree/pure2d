@@ -30,12 +30,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.DownloadTask;
 import com.funzio.pure2D.shapes.Sprite;
+import com.longo.pure2D.demo.R;
 
 public class LoaderServiceActivity extends StageActivity {
     private boolean mLoading = false;

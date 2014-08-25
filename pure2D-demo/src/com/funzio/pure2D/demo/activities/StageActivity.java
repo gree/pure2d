@@ -42,8 +42,8 @@ import android.widget.Toast;
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.BaseStage;
 import com.funzio.pure2D.Pure2D;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.gl.GLColor;
+import com.longo.pure2D.demo.R;
 
 public class StageActivity extends Activity implements OnTouchListener {
     final protected static int OBJ_INIT_NUM = 1000;

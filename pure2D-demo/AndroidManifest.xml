@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.funzio.pure2D.demo"
+    package="com.longo.pure2D.demo"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -12,21 +12,21 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.funzio.pure2D.demo.Pure2DDemoApplication"
+        android:name="com.longo.pure2D.demo.Pure2DDemoApplication"
         android:icon="@drawable/ic_launcher"
         android:installLocation="preferExternal"
         android:label="@string/app_name" >
         <service
-            android:name="com.funzio.pure2D.demo.loaders.HelloLoaderService"
+            android:name="com.longo.pure2D.demo.loaders.HelloLoaderService"
             android:exported="true"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="com.funzio.pure2D.demo.loaders.HelloLoaderService.INTENT_START" />
+                <action android:name="com.longo.pure2D.demo.loaders.HelloLoaderService.INTENT_START" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".activities.MainMenuActivity"
+            android:name="com.funzio.pure2D.demo.activities.MainMenuActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -36,132 +36,132 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".objects.ObjectMenuActivity"
+            android:name="com.funzio.pure2D.demo.objects.ObjectMenuActivity"
             android:label="@string/display_objects"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".objects.HelloObjectActivity"
+            android:name="com.funzio.pure2D.demo.objects.HelloObjectActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".objects.MultipleObjectActivity"
+            android:name="com.funzio.pure2D.demo.objects.MultipleObjectActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".objects.JumperActivity"
+            android:name="com.funzio.pure2D.demo.objects.JumperActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".objects.BouncerActivity"
+            android:name="com.funzio.pure2D.demo.objects.BouncerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".objects.LWFCharacterActivity"
+            android:name="com.funzio.pure2D.demo.objects.LWFCharacterActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".objects.LWFCinematicActivity"
+            android:name="com.funzio.pure2D.demo.objects.LWFCinematicActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.ContainerMenuActivity"
+            android:name="com.funzio.pure2D.demo.containers.ContainerMenuActivity"
             android:label="@string/containers"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".containers.DisplayGroupActivity"
+            android:name="com.funzio.pure2D.demo.containers.DisplayGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.UniGroupActivity"
+            android:name="com.funzio.pure2D.demo.containers.UniGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.UniGroupClipActivity"
+            android:name="com.funzio.pure2D.demo.containers.UniGroupClipActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.VGroupActivity"
+            android:name="com.funzio.pure2D.demo.containers.VGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.HGroupActivity"
+            android:name="com.funzio.pure2D.demo.containers.HGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.VWheelActivity"
+            android:name="com.funzio.pure2D.demo.containers.VWheelActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.HWheelActivity"
+            android:name="com.funzio.pure2D.demo.containers.HWheelActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.VWheel3DActivity"
+            android:name="com.funzio.pure2D.demo.containers.VWheel3DActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.HWheel3DActivity"
+            android:name="com.funzio.pure2D.demo.containers.HWheel3DActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".containers.GridGroupActivity"
+            android:name="com.funzio.pure2D.demo.containers.GridGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.ScrollActivity"
+            android:name="com.funzio.pure2D.demo.ui.ScrollActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.TextureMenuActivity"
+            android:name="com.funzio.pure2D.demo.textures.TextureMenuActivity"
             android:label="@string/textures"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".textures.HelloTextureActivity"
+            android:name="com.funzio.pure2D.demo.textures.HelloTextureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.Sprite9Activity"
+            android:name="com.funzio.pure2D.demo.textures.Sprite9Activity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.RepeatingTextureActivity"
+            android:name="com.funzio.pure2D.demo.textures.RepeatingTextureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.MultipleTextureActivity"
+            android:name="com.funzio.pure2D.demo.textures.MultipleTextureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.TexturePackerActivity"
+            android:name="com.funzio.pure2D.demo.textures.TexturePackerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.URLTextureActivity"
+            android:name="com.funzio.pure2D.demo.textures.URLTextureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
@@ -171,52 +171,52 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".buffers.FrameBufferActivity"
+            android:name="com.funzio.pure2D.demo.buffers.FrameBufferActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".textures.ImageSequenceActivity"
+            android:name="com.funzio.pure2D.demo.textures.ImageSequenceActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".buffers.BufferMenuActivity"
+            android:name="com.funzio.pure2D.demo.buffers.BufferMenuActivity"
             android:label="@string/textures"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".buffers.StencilBufferActivity"
+            android:name="com.funzio.pure2D.demo.buffers.StencilBufferActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.UIMenuActivity"
+            android:name="com.funzio.pure2D.demo.ui.UIMenuActivity"
             android:label="@string/ui_components"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".pui.PUIMenuActivity"
+            android:name="com.funzio.pure2D.demo.pui.PUIMenuActivity"
             android:label="@string/pui_xml_layouts"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ui.HelloTextActivity"
+            android:name="com.funzio.pure2D.demo.ui.HelloTextActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.KoreanCharsetActivity"
+            android:name="com.funzio.pure2D.demo.ui.KoreanCharsetActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.BitmapFontActivity"
+            android:name="com.funzio.pure2D.demo.ui.BitmapFontActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".ui.ButtonActivity"
+            android:name="com.funzio.pure2D.demo.ui.ButtonActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
@@ -226,97 +226,97 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".camera.CameraMenuActivity"
+            android:name="com.funzio.pure2D.demo.camera.CameraMenuActivity"
             android:label="@string/camera"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".camera.HelloCameraActivity"
+            android:name="com.funzio.pure2D.demo.camera.HelloCameraActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".camera.PerspectiveCameraActivity"
+            android:name="com.funzio.pure2D.demo.camera.PerspectiveCameraActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".simple3D.Simple3DMenuActivity"
+            android:name="com.funzio.pure2D.demo.simple3D.Simple3DMenuActivity"
             android:label="@string/simple_3d"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".simple3D.Rotation3DActivity"
+            android:name="com.funzio.pure2D.demo.simple3D.Rotation3DActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".particles.ParticleMenuActivity"
+            android:name="com.funzio.pure2D.demo.particles.ParticleMenuActivity"
             android:label="@string/simple_particles"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".particles.SimpleSmokeActivity"
+            android:name="com.funzio.pure2D.demo.particles.SimpleSmokeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".particles.MotionTrailActivity"
+            android:name="com.funzio.pure2D.demo.particles.MotionTrailActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".particles.DynamicEmitterActivity"
+            android:name="com.funzio.pure2D.demo.particles.DynamicEmitterActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".particles.CoinExplosionActivity"
+            android:name="com.funzio.pure2D.demo.particles.CoinExplosionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".particles.NovaMenuActivity"
+            android:name="com.funzio.pure2D.demo.particles.NovaMenuActivity"
             android:label="@string/nova_particle_system"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".particles.NovaActivity"
+            android:name="com.funzio.pure2D.demo.particles.NovaActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".effects.EffectsMenuActivity"
+            android:name="com.funzio.pure2D.demo.effects.EffectsMenuActivity"
             android:label="@string/effects"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".effects.SparksActivity"
+            android:name="com.funzio.pure2D.demo.effects.SparksActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".effects.MotionTrailShapeActivity"
+            android:name="com.funzio.pure2D.demo.effects.MotionTrailShapeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".effects.UniMotionTrailShapeActivity"
+            android:name="com.funzio.pure2D.demo.effects.UniMotionTrailShapeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".effects.MotionTrailPlotActivity"
+            android:name="com.funzio.pure2D.demo.effects.MotionTrailPlotActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".effects.UniMotionTrailPlotActivity"
+            android:name="com.funzio.pure2D.demo.effects.UniMotionTrailPlotActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".astar.AstarMenuActivity"
+            android:name="com.funzio.pure2D.demo.astar.AstarMenuActivity"
             android:label="@string/physics"
             android:screenOrientation="portrait" >
         </activity>
@@ -331,127 +331,127 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".physics.PhysicsMenuActivity"
+            android:name="com.funzio.pure2D.demo.physics.PhysicsMenuActivity"
             android:label="@string/physics"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".physics.HelloPhysicsActivity"
+            android:name="com.funzio.pure2D.demo.physics.HelloPhysicsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".loaders.LoaderMenuActivity"
+            android:name="com.funzio.pure2D.demo.loaders.LoaderMenuActivity"
             android:label="@string/loaders"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".loaders.LoaderServiceActivity"
+            android:name="com.funzio.pure2D.demo.loaders.LoaderServiceActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".loaders.LoaderAsyncActivity"
+            android:name="com.funzio.pure2D.demo.loaders.LoaderAsyncActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".mw.MWMenuActivity"
+            android:name="com.funzio.pure2D.demo.mw.MWMenuActivity"
             android:label="@string/modern_war"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".mw.ExplosionActivity"
+            android:name="com.funzio.pure2D.demo.mw.ExplosionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".mw.GroundUnitsActivity"
+            android:name="com.funzio.pure2D.demo.mw.GroundUnitsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".mw.AirUnitsActivity"
+            android:name="com.funzio.pure2D.demo.mw.AirUnitsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".mw.SeaUnitsActivity"
+            android:name="com.funzio.pure2D.demo.mw.SeaUnitsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.AnimationMenuActivity"
+            android:name="com.funzio.pure2D.demo.animations.AnimationMenuActivity"
             android:label="@string/animations"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".animations.HelloAtlasActivity"
+            android:name="com.funzio.pure2D.demo.animations.HelloAtlasActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.JsonAtlasActivity"
+            android:name="com.funzio.pure2D.demo.animations.JsonAtlasActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.MultiAtlasActivity"
+            android:name="com.funzio.pure2D.demo.animations.MultiAtlasActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.TweenAnimationsActivity"
+            android:name="com.funzio.pure2D.demo.animations.TweenAnimationsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.PathAnimationActivity"
+            android:name="com.funzio.pure2D.demo.animations.PathAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.BezierAnimationActivity"
+            android:name="com.funzio.pure2D.demo.animations.BezierAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.WaveAnimationActivity"
+            android:name="com.funzio.pure2D.demo.animations.WaveAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.TornadoAnimationActivity"
+            android:name="com.funzio.pure2D.demo.animations.TornadoAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.WhirlAnimationActivity"
+            android:name="com.funzio.pure2D.demo.animations.WhirlAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.ParallelAnimationActivity"
+            android:name="com.funzio.pure2D.demo.animations.ParallelAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.SkeletonActivity"
+            android:name="com.funzio.pure2D.demo.animations.SkeletonActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".animations.SkeletonCacheActivity"
+            android:name="com.funzio.pure2D.demo.animations.SkeletonCacheActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".casino.CasinoMenuActivity"
+            android:name="com.funzio.pure2D.demo.casino.CasinoMenuActivity"
             android:label="@string/casino"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".casino.SlotMachineActivity"
+            android:name="com.funzio.pure2D.demo.casino.SlotMachineActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>

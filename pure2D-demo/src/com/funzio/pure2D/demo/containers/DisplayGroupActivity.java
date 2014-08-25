@@ -29,12 +29,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.objects.Bouncer;
 import com.funzio.pure2D.demo.objects.SquareContainer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.longo.pure2D.demo.R;
 
 public class DisplayGroupActivity extends StageActivity {
     private List<Texture> mTextures = new ArrayList<Texture>();

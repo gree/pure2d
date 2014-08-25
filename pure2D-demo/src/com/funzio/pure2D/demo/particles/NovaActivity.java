@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.json.JSONException;
+
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,13 +35,10 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.atlas.AtlasFrameSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
 import com.funzio.pure2D.atlas.SingleFrameSet;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -51,6 +50,7 @@ import com.funzio.pure2D.particles.nova.NovaFactory;
 import com.funzio.pure2D.particles.nova.NovaLoader;
 import com.funzio.pure2D.particles.nova.NovaParticle;
 import com.funzio.pure2D.particles.nova.vo.NovaVO;
+import com.longo.pure2D.demo.R;
 
 public class NovaActivity extends StageActivity {
     private static final String TAG = NovaActivity.class.getSimpleName();

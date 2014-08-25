@@ -27,7 +27,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 
-import com.funzio.pure2D.demo.R;
+import com.longo.pure2D.demo.R;
 
 public class PhysicsMenuActivity extends Activity {
 

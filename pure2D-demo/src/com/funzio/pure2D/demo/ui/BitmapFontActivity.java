@@ -37,7 +37,6 @@ import com.funzio.pure2D.LoopModes;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.MoveAnimator;
 import com.funzio.pure2D.containers.Alignment;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -46,6 +45,7 @@ import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
 import com.funzio.pure2D.text.Characters;
 import com.funzio.pure2D.text.TextOptions;
+import com.longo.pure2D.demo.R;
 
 public class BitmapFontActivity extends StageActivity {
     private static final String TAG = BitmapFontActivity.class.getSimpleName();

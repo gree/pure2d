@@ -21,9 +21,9 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.simple3D;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.camera.PerspectiveCameraActivity;
+import com.longo.pure2D.demo.R;
 
 public class Simple3DMenuActivity extends MenuActivity {
     @Override

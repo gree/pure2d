@@ -31,11 +31,11 @@ import com.funzio.pure2D.atlas.FunzioAtlas;
 import com.funzio.pure2D.containers.HScroll;
 import com.funzio.pure2D.containers.VScroll;
 import com.funzio.pure2D.containers.Wheel;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Clip;
+import com.longo.pure2D.demo.R;
 
 public class ScrollActivity extends StageActivity {
     private static final int LIST_WIDTH = 150;

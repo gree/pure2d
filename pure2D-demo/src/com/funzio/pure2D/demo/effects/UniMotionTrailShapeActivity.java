@@ -28,7 +28,6 @@ import android.view.animation.Interpolator;
 
 import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.demo.animations.AnimationActivity;
 import com.funzio.pure2D.demo.objects.UniBouncer;
@@ -37,6 +36,7 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.uni.UniGroup;
+import com.longo.pure2D.demo.R;
 
 public class UniMotionTrailShapeActivity extends StageActivity {
 

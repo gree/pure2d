@@ -21,11 +21,11 @@
  ******************************************************************************/
 package com.funzio.pure2D.demo.ui;
 
-import com.funzio.pure2D.demo.R;
 import com.funzio.pure2D.demo.activities.MenuActivity;
 import com.funzio.pure2D.demo.containers.HWheelActivity;
 import com.funzio.pure2D.demo.containers.VWheelActivity;
 import com.funzio.pure2D.demo.textures.Sprite9Activity;
+import com.longo.pure2D.demo.R;
 
 public class UIMenuActivity extends MenuActivity {
 
