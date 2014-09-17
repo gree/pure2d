@@ -57,11 +57,11 @@ public class RecursiveTrajectoryAnimatorVO extends TrajectoryAnimatorVO {
         super.resetAnimator(emitIndex, target, animator);
 
         final RecursiveTrajectoryAnimator move = (RecursiveTrajectoryAnimator) animator;
-        if (move != null) {
-            if (deceleration_rate != null) {
-                move.setDecelerationRate(NovaConfig.getFloat(deceleration_rate, emitIndex, 0));
-            }
+        // if (move != null) {
+        if (deceleration_rate != null) {
+            move.setDecelerationRate(NovaConfig.getFloat(deceleration_rate, emitIndex, 0));
         }
+        // }
     }
 
 }

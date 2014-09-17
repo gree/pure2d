@@ -101,13 +101,13 @@ public class PageStacker implements Pageable.TransitionListener {
                 // slide out the current page
                 if (currentPage != null) {
                     currentPage.transitionOut(false);
-                }
 
-                // slide in the previous page
-                if (!currentPage.isPageFloating()) {
-                    if (previousPage != null) {
-                        mContainer.addChild(previousPage);
-                        previousPage.transitionIn(false);
+                    // slide in the previous page
+                    if (!currentPage.isPageFloating()) {
+                        if (previousPage != null) {
+                            mContainer.addChild(previousPage);
+                            previousPage.transitionIn(false);
+                        }
                     }
                 }
             }

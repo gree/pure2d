@@ -40,7 +40,7 @@ public class BufferTexture extends Texture {
         super(glState);
 
         // create an blank texture
-        load(null, Math.round(width), Math.round(height), 0);
+        load(null, width, height, 0);
     }
 
     /**

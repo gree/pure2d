@@ -128,7 +128,7 @@ public class NovaEmitter extends RectangularEmitter implements Reusable, Timelin
         mTimeline.start();
 
         // optional emitter animator
-        if (mEmitterVO.animator != null && mEmitterVO.animator != "") {
+        if (mEmitterVO.animator != null && !"".equals(mEmitterVO.animator)) {
             mAnimator = mFactory.createAnimator(this, mFactory.mNovaVO.getAnimatorVO(mEmitterVO.animator), -1);
 
             if (mAnimator != null) {
