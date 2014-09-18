@@ -60,6 +60,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     protected static final String ATT_TEXT = "text";
     protected static final String ATT_TEXT_ALIGN = "textAlign";
     protected static final String ATT_FONT = "font";
+    protected static final String ATT_SIZE = "size";
 
     protected BitmapFont mBitmapFont;
     protected TextOptions mTextOptions;
@@ -454,6 +455,15 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             if (bitmapFont != null) {
                 setBitmapFont(bitmapFont);
                 setText(manager.evalString(xmlParser.getAttributeValue(null, ATT_TEXT)));
+                final String sizeAttr = xmlParser.getAttributeValue(null, ATT_SIZE);
+                if (sizeAttr != null) {
+                    try {
+                        final int size = Integer.parseInt(sizeAttr);
+                        setScale(size / bitmapFont.getTextOptions().inTextPaint.getTextSize());
+                    } catch (NumberFormatException e) {
+                        Log.e(TAG, "Invalid value of 'size': " + sizeAttr);
+                    }
+                }
 
                 final String letterSpacing = xmlParser.getAttributeValue(null, ATT_LETTER_SPACING);
                 if (letterSpacing != null) {
