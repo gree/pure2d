@@ -503,7 +503,6 @@ public class Pure2DUtils {
         n = n | (n >> 4);
         n = n | (n >> 8);
         n = n | (n >> 16);
-        n = n | (n >> 32);
         return n + 1;
     }
 

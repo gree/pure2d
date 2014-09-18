@@ -86,7 +86,7 @@ public class TweenAnimator extends BaseAnimator {
                     timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
                 } else if (mLoopMode == LoopModes.LOOP_REVERSE) {
                     timeline = ((float) mElapsedTime % (float) mDuration) / mDuration;
-                    if (trips % 2 == 1) {
+                    if (trips % 2 != 0) {
                         // reverse
                         timeline = 1 - timeline;
                     }

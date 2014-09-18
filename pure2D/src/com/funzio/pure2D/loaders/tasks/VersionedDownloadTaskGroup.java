@@ -114,10 +114,11 @@ public class VersionedDownloadTaskGroup extends TaskGroup {
                                 fileHasSpecificVersion = true;
                                 Log.d(TAG, relativePathFromVersionFile + " has new version: " + remoteFileVersion);
                             }
+
+                            // put to the local version file
+                            localVersionProperties.put(relativePathFromVersionFile, remoteFileVersion);
                         }
 
-                        // put to the local version file
-                        localVersionProperties.put(relativePathFromVersionFile, remoteFileVersion);
                         // flag to update the file
                         localVersionFileUpdated |= fileHasSpecificVersion;
                     }

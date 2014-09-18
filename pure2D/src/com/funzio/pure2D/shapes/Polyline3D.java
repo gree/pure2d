@@ -46,7 +46,6 @@ public class Polyline3D extends Polyline {
         if (points instanceof Point3D[]) {
             final Point3D[] point3Ds = (Point3D[]) points;
 
-            mPoints = points;
             final int len = mPoints.length;
 
             allocateVertices(len * 2, VERTEX_POINTER_SIZE);// each point has upper and lower points
