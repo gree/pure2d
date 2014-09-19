@@ -356,31 +356,6 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name=".mw.MWMenuActivity"
-            android:label="@string/modern_war"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".mw.ExplosionActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".mw.GroundUnitsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".mw.AirUnitsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".mw.SeaUnitsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
             android:name=".animations.AnimationMenuActivity"
             android:label="@string/animations"
             android:screenOrientation="portrait" >
@@ -443,16 +418,6 @@
         <activity
             android:name=".animations.SkeletonCacheActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".casino.CasinoMenuActivity"
-            android:label="@string/casino"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".casino.SlotMachineActivity"
-            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
     </application>
