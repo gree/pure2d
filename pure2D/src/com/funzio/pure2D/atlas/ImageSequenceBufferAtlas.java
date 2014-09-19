@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -59,7 +57,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
     public static final String TAG = ImageSequenceBufferAtlas.class.getSimpleName();
 
     private GLState mGLState;
-    private GL10 mGL;
+    // private GL10 mGL;
     private BufferTexture mTexture;
     private FrameBuffer mFrameBuffer;
 
@@ -106,7 +104,7 @@ public class ImageSequenceBufferAtlas extends Atlas {
         Log.v(TAG, "ImageSequenceAtlas()");
 
         mGLState = glState;
-        mGL = mGLState.mGL;
+        // mGL = mGLState.mGL;
 
         if (!FrameBuffer.isSupported()) {
             Log.e(TAG, "FrameBuffer is not supported!\n" + Log.getStackTraceString(new Exception()));

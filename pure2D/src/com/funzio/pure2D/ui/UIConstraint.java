@@ -29,7 +29,6 @@ import android.graphics.PointF;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.LinearGroup;
@@ -87,7 +86,7 @@ public class UIConstraint {
     public UNIT childrenGapUnit = UNIT.UNSET;
 
     private UIConfigVO mUIConfigVO;
-    private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
+    // private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     private boolean mHasAttributes = false;
 
     public UIConstraint() {
@@ -100,7 +99,7 @@ public class UIConstraint {
 
     public void setAttributes(final XmlPullParser parser, final UIManager manager) {
         mUIConfigVO = manager.getConfig();
-        mAxisSystem = manager.getTextureManager().getGLState().getAxisSystem();
+        // mAxisSystem = manager.getTextureManager().getGLState().getAxisSystem();
         mHasAttributes = false;
 
         widthUnit = getAttributeUnit(parser, ATT_WIDTH);

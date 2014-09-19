@@ -49,7 +49,6 @@ public class Button extends DisplayGroup implements UIObject {
     protected int mState = STATE_UP;
     protected Texture[] mTextures;
 
-    protected boolean mTouchable = true; // true by default
     protected boolean mFocus = false;
     private int mTouchPointerID = -1;
 

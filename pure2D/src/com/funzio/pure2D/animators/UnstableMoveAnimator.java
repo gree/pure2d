@@ -124,7 +124,7 @@ public class UnstableMoveAnimator extends TweenAnimator {
                 int index = (int) Math.floor(mElapsedTime / mSegmentDuration);
                 if (index != mCurrentSegment) {
                     mCurrentSegment = index;
-                    if (index % 2 == 1) {
+                    if (index % 2 != 0) {
                         mModStartX = mModX;
                         mModStartY = mModY;
                         // go backward

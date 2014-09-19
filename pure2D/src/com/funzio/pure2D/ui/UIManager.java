@@ -151,9 +151,9 @@ public class UIManager {
     public TextureOptions getTextureOptions() {
         if (mTextureOptions == null) {
             mTextureOptions = TextureOptions.getDefault();
-            mTextureOptions.inMipmaps = mConfigVO.texture_manager.texture_options.mipmaps;
 
             if (mConfigVO != null) {
+                mTextureOptions.inMipmaps = mConfigVO.texture_manager.texture_options.mipmaps;
                 // apply scale to texture options
                 mTextureOptions.inScaleX = mTextureOptions.inScaleY = mConfigVO.screen_scale;
             }
