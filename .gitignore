@@ -31,6 +31,8 @@ proguard/
 *.ipr
 *.iws
 .idea/
+.gradle/
+gradle/
 
 # Html files
 *.html
