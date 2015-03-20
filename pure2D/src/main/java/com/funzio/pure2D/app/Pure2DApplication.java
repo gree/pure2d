@@ -34,7 +34,7 @@ import com.funzio.pure2D.ui.UIManager;
 /**
  * @author long.ngo
  */
-public class Pure2DAppplication extends Application {
+public class Pure2DApplication extends Application {
 
     protected UIManager mUIManager;
     protected SoundManager mSoundManager;
@@ -42,7 +42,7 @@ public class Pure2DAppplication extends Application {
     protected Handler mHandler;
     protected Toast mCurrentToast;
 
-    public Pure2DAppplication() {
+    public Pure2DApplication() {
         // TODO Auto-generated constructor stub
     }
 
@@ -93,7 +93,7 @@ public class Pure2DAppplication extends Application {
                     mCurrentToast = null;
                 }
 
-                mCurrentToast = Toast.makeText(Pure2DAppplication.this, text, duration);
+                mCurrentToast = Toast.makeText(Pure2DApplication.this, text, duration);
                 mCurrentToast.show();
             }
         });

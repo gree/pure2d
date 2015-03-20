@@ -24,12 +24,12 @@
  */
 package com.longo.pure2D.demo;
 
-import com.funzio.pure2D.app.Pure2DAppplication;
+import com.funzio.pure2D.app.Pure2DApplication;
 
 /**
  * @author long.ngo
  */
-public class Pure2DDemoApplication extends Pure2DAppplication {
+public class Pure2DDemoApplication extends Pure2DApplication {
 
     private static Pure2DDemoApplication sInstance;
 

@@ -17,7 +17,7 @@
         android:installLocation="preferExternal"
         android:label="@string/app_name" >
         <service
-            android:name="com.longo.pure2D.demo.loaders.HelloLoaderService"
+            android:name="com.funzio.pure2D.demo.loaders.HelloLoaderService"
             android:exported="true"
             android:label="@string/app_name" >
             <intent-filter>
