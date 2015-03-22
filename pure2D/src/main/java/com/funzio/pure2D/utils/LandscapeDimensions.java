@@ -27,7 +27,7 @@ package com.funzio.pure2D.utils;
 /**
  * @author long.ngo
  */
-public interface Dimensions {
+public interface LandscapeDimensions {
     // iphones
     public static final int IPHONE4_WIDTH = 960;
     public static final int IPHONE4_HEIGHT = 640;

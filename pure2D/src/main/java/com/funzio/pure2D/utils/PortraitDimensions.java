@@ -35,8 +35,8 @@ public interface PortraitDimensions {
     public static final int IPHONE5_HEIGHT = 1136;
 
     // ipads
-    public static final int IPAD_WIDTH = 1024;
-    public static final int IPAD_HEIGHT = 768;
-    public static final int IPAD3_WIDTH = 2048;
-    public static final int IPAD3_HEIGHT = 1536;
+    public static final int IPAD_WIDTH = 768;
+    public static final int IPAD_HEIGHT = 1024;
+    public static final int IPAD3_WIDTH = 1536;
+    public static final int IPAD3_HEIGHT = 2048;
 }
