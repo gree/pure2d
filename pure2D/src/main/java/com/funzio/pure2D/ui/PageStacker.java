@@ -40,10 +40,15 @@ public class PageStacker implements Pageable.TransitionListener {
     protected Container mContainer;
     protected ArrayList<Pageable> mPages = new ArrayList<Pageable>();
     protected int mNumPages = 0;
+
     protected Pageable mCurrentPage;
 
     public PageStacker(final Container container) {
         mContainer = container;
+    }
+
+    public Pageable getCurrentPage() {
+        return mCurrentPage;
     }
 
     public boolean pushPage(final Pageable page) {

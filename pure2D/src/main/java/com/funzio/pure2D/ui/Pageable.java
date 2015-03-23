@@ -24,6 +24,8 @@
  */
 package com.funzio.pure2D.ui;
 
+import android.view.KeyEvent;
+
 import com.funzio.pure2D.DisplayObject;
 
 /**
@@ -44,6 +46,10 @@ public interface Pageable extends DisplayObject {
     public TransitionListener getTransitionListener();
 
     public boolean isPageActive();
+
+    public boolean onKeyDown(final int keyCode, final KeyEvent event);
+
+    public boolean onKeyUp(final int keyCode, final KeyEvent event);
 
     public static interface TransitionListener {
         public void onTransitionInComplete(final Pageable page);

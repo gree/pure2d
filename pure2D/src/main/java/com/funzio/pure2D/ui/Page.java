@@ -24,6 +24,8 @@
  */
 package com.funzio.pure2D.ui;
 
+import android.view.KeyEvent;
+
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Animator.AnimatorListener;
 import com.funzio.pure2D.animators.MoveAnimator;
@@ -116,5 +118,19 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
     public void onAnimationUpdate(final Animator animator, final float value) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+        // TODO Auto-generated method stub
+
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(final int keyCode, final KeyEvent event) {
+        // TODO Auto-generated method stub
+
+        return false;
     }
 }
