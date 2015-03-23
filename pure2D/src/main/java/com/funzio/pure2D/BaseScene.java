@@ -291,7 +291,7 @@ public class BaseScene implements Scene {
             // mGLState.setCamera(mCamera);
 
             // init Texture manager with the new GL
-            mTextureManager = createDefaultTextureManager();
+            setTextureManager(createDefaultTextureManager());
             // assign to GLState
             mGLState.setTextureManager(mTextureManager);
 
