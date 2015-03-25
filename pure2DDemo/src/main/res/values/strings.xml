@@ -88,6 +88,7 @@
     <string name="repeating">Repeating</string>
     <string name="repeat">Repeat</string>
     <string name="vertical_wheel">Vertical Wheel</string>
+    <string name="vertical_data_list">Vertical Data List</string>
     <string name="horizontal_wheel">Horizontal Wheel</string>
     <string name="atlas_generator">Atlas Generator</string>
     <string name="image_sequence">Image Sequence</string>

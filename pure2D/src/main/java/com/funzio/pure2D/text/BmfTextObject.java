@@ -129,6 +129,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     }
 
     public void updateTextBounds() {
+        if (mFontMetrics == null) {
+            Log.w(TAG, "No BitmapFont set!");
+            return;
+        }
+
         // find the bounds, this is not 100% precised, so we need the below logic
         mFontMetrics.getTextBounds(mText, mTextBounds);
 

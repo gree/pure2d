@@ -35,6 +35,13 @@
         android:text="@string/vertical_wheel" />
 
     <Button
+        android:id="@+id/btn_vlist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/vertical_data_list" />
+
+    <Button
         android:id="@+id/btn_hwheel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
