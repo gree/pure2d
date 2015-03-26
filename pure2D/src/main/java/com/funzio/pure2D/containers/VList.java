@@ -22,6 +22,7 @@
  * ****************************************************************************
  */
 
+
 /**
  * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
@@ -72,6 +73,17 @@ public class VList<T extends Object> extends VWheel implements List {
      */
     public void setRepeating(boolean repeating) {
         mRepeating = repeating;
+
+        // check bounds
+        if (!mRepeating) {
+            if (mScrollPosition.y < 0) {
+                mScrollPosition.y = 0;
+            } else if (mScrollPosition.y > mVirtualScrollMax.y) {
+                mScrollPosition.y = mVirtualScrollMax.y;
+            }
+        }
+
+        invalidateChildrenNum();
     }
 
     @Override
@@ -225,66 +237,68 @@ public class VList<T extends Object> extends VWheel implements List {
         // find which data item index to start
         final float scrolledItems = mScrollPosition.y / (getCellHeight() + mGap);
         int itemIndex = 0;
-        int numLoopedItems = 0;
         if (mScrollPosition.y > 0) {
             itemIndex = (int) Math.ceil(scrolledItems);
         } else if (mScrollPosition.y < 0) {
-            numLoopedItems = (int) (-scrolledItems);
-            itemIndex = dataSize - numLoopedItems % dataSize;
+            itemIndex = (int) (scrolledItems);
         }
 
         // diff check
         //if (mChildrenNumInvalidated || oldStartIndex != newStartIndex || itemIndex != mDataStartIndex) {
-            mDataStartIndex = itemIndex;
-            Log.v(TAG, newStartIndex + " --- " + itemIndex);
+        mDataStartIndex = itemIndex;
+        // Log.v(TAG, newStartIndex + " --- " + itemIndex);
 
-            ItemRenderer child;
-            for (int i = 0; i < mNumChildren; i++) {
-                child = (ItemRenderer) mChildren.get((newStartIndex + i) % mNumChildren);
-                // re-set data for child
-                itemIndex = (mDataStartIndex + i) % dataSize;
+        ItemRenderer child;
+        for (int i = 0; i < mNumChildren; i++) {
+            child = (ItemRenderer) mChildren.get((newStartIndex + i) % mNumChildren);
+            // re-set data for child
+            itemIndex = mDataStartIndex + i;
+
+            if (mRepeating) {
+                // looping index
+                itemIndex = (itemIndex % dataSize + dataSize) % dataSize;
                 child.setData(itemIndex, mData.get(itemIndex));
-
-                if (mRepeating) {
-                    // always show
+                // always show
+                child.setVisible(true);
+            } else {
+                // check range
+                if (itemIndex >= 0 && itemIndex < dataSize) {
+                    child.setData(itemIndex, mData.get(itemIndex));
                     child.setVisible(true);
                 } else {
-                    if (mScrollPosition.y >= 0) {
-                        child.setVisible(mDataStartIndex + i < dataSize);
-                    } else {
-                        child.setVisible(i >= numLoopedItems);
-                    }
+                    child.setVisible(false);
                 }
             }
+        }
 
-            // base on VGroup logic
-            if (getStartY() > mGap) {
-                // fill the first item in to fill the space
-                int index = newStartIndex - 1;
-                if (index < 0) {
-                    index += mNumChildren;
-                }
-                child = (ItemRenderer) mChildren.get(index);
+        // base on VGroup logic
+        if (getStartY() > mGap) {
+            // fill the first item in to fill the space
+            int index = newStartIndex - 1;
+            if (index < 0) {
+                index += mNumChildren;
+            }
+            child = (ItemRenderer) mChildren.get(index);
 
-                // draw the first item to fill the space
-                itemIndex = (mDataStartIndex - 1) % dataSize;
-                if (itemIndex < 0) {
-                    itemIndex += dataSize;
-                }
-                // re-set data for child
+            // draw the first item to fill the space
+            itemIndex = mDataStartIndex - 1;
+
+            if (mRepeating) {
+                // looping index
+                itemIndex = (itemIndex % dataSize + dataSize) % dataSize;
                 child.setData(itemIndex, mData.get(itemIndex));
-
-                if (mRepeating) {
-                    // always show
+                // always show
+                child.setVisible(true);
+            } else {
+                // check range
+                if (itemIndex >= 0 && itemIndex < dataSize) {
+                    child.setData(itemIndex, mData.get(itemIndex));
                     child.setVisible(true);
                 } else {
-                    if (mScrollPosition.y >= 0) {
-                        child.setVisible(true);
-                    } else {
-                        child.setVisible(false);
-                    }
+                    child.setVisible(false);
                 }
             }
+        }
         //}
     }
 
@@ -383,8 +397,13 @@ public class VList<T extends Object> extends VWheel implements List {
             return false;
         }
 
+        // clear children
         removeAllChildren();
         mData.clear();
+
+        // reset scroll and stuff
+        stop();
+        scrollTo(0, 0);
         invalidateChildrenNum();
 
         return true;
