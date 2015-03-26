@@ -26,12 +26,30 @@ package com.funzio.pure2D.containers;
 
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 /**
  * @author long
  */
-public interface List extends Wheel {
+public interface List<T extends Object> extends Wheel {
     // out of bounds friction
     public static final float SCROLL_OOB_FRICTION = 0.4f;
+
+    public java.util.List<T> getData();
+
+    public void setData(java.util.List<T> data);
+
+    public boolean addItem(final T item);
+
+    public boolean addItem(final T item, final int index);
+
+    public boolean removeItem(final T item);
+
+    public boolean removeItem(final int index);
+
+    public boolean removeAllItems();
+
+    public T getItem(final int index);
 
     public void onItemTouch(MotionEvent event, ItemRenderer item);
 }

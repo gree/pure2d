@@ -778,6 +778,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         invalidate(CHILDREN);
     }
 
+    public void setChildrenVisible(boolean value) {
+        for (int i = 0; i < mNumChildren; i++) {
+            mChildren.get(i).setVisible(value);
+        }
+    }
+
     public boolean isWrapContentWidth() {
         return mWrapContentWidth;
     }

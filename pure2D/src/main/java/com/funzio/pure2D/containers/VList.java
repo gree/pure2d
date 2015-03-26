@@ -42,7 +42,7 @@ import java.util.ArrayList;
  *
  * @author long
  */
-public class VList<T extends Object> extends VWheel implements List {
+public class VList<T extends Object> extends VWheel implements List<T> {
     protected static final String TAG = VList.class.getSimpleName();
 
     protected Class<? extends ItemRenderer> mItemRenderer;
@@ -183,7 +183,6 @@ public class VList<T extends Object> extends VWheel implements List {
             }
         } else if (diff < 0) {
             for (int i = 0; i < -diff; i++) {
-                final ItemRenderer child = (ItemRenderer) mChildren.get(num + i);
                 removeChild(num + i);
             }
         }
@@ -370,6 +369,10 @@ public class VList<T extends Object> extends VWheel implements List {
         }
 
         if (mData.remove(item)) {
+            if (mData.size() == 0) {
+                setChildrenVisible(false);
+            }
+
             invalidateChildrenNum();
 
             return true;
@@ -384,6 +387,10 @@ public class VList<T extends Object> extends VWheel implements List {
         }
 
         if (mData.remove(index) != null) {
+            if (mData.size() == 0) {
+                setChildrenVisible(false);
+            }
+
             invalidateChildrenNum();
 
             return true;
@@ -398,8 +405,8 @@ public class VList<T extends Object> extends VWheel implements List {
         }
 
         // clear children
-        removeAllChildren();
         mData.clear();
+        setChildrenVisible(false);
 
         // reset scroll and stuff
         stop();
@@ -407,6 +414,10 @@ public class VList<T extends Object> extends VWheel implements List {
         invalidateChildrenNum();
 
         return true;
+    }
+
+    public T getItem(final int index) {
+        return mData == null ? null : mData.get(index);
     }
 
     @Override

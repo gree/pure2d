@@ -874,6 +874,13 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         invalidate(CHILDREN);
     }
 
+    public void setChildrenVisible(boolean value) {
+
+        for (int i = 0; i < mNumChildren; i++) {
+            mChildren.get(i).setVisible(value);
+        }
+    }
+
     public boolean isWrapContentWidth() {
         return mWrapContentWidth;
     }
