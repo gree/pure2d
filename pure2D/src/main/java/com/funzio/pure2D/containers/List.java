@@ -24,6 +24,8 @@
  */
 package com.funzio.pure2D.containers;
 
+import android.view.MotionEvent;
+
 /**
  * @author long
  */
@@ -31,4 +33,5 @@ public interface List extends Wheel {
     // out of bounds friction
     public static final float SCROLL_OOB_FRICTION = 0.4f;
 
+    public void onItemTouch(MotionEvent event, ItemRenderer item);
 }

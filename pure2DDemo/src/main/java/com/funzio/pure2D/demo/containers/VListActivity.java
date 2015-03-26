@@ -33,7 +33,8 @@ import android.view.View;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.containers.DisplayGroup;
-import com.funzio.pure2D.containers.ListItem;
+import com.funzio.pure2D.containers.ItemGroupRenderer;
+import com.funzio.pure2D.containers.ItemRenderer;
 import com.funzio.pure2D.containers.VList;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
@@ -43,6 +44,7 @@ import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.BmfTextObject;
 import com.funzio.pure2D.text.Characters;
 import com.funzio.pure2D.text.TextOptions;
+import com.longo.pure2D.demo.R;
 
 import java.util.ArrayList;
 
@@ -52,6 +54,12 @@ public class VListActivity extends StageActivity {
 
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
+    private VList<ItemData> mList;
+
+    @Override
+    protected int getLayout() {
+        return R.layout.stage_vlist;
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -104,19 +112,23 @@ public class VListActivity extends StageActivity {
         // data
         ArrayList<ItemData> data = new ArrayList<ItemData>();
         for (int i = 0; i < 20; i++) {
-            data.add(new ItemData(mBitmapFont, "Item " + i));
+            data.add(new ItemData(GLColor.createRandom(), mBitmapFont, "Item " + i));
         }
 
-        VList<ItemData> vlist = new VList<ItemData>();
-        vlist.setGap(10);
-//        vlist.setSnapEnabled(true);
-        vlist.setSwipeEnabled(true);
-        vlist.setSize(mDisplaySize.x, mDisplaySize.y);
-        vlist.setItemClass(MyListItem.class);
-        vlist.setData(data);
+        mList = new VList<ItemData>();
+        mList.setGap(10);
+//        mList.setSnapEnabled(true);
+        mList.setSwipeEnabled(true);
+        mList.setSize(mDisplaySize.x, mDisplaySize.y);
+        try {
+            mList.setItemRenderer(MyListItem.class);
+        } catch (Exception e) {
+            Log.e(TAG, null, e);
+        }
+        mList.setData(data);
 
         // add to scene
-        mScene.addChild(vlist);
+        mScene.addChild(mList);
     }
 
     @Override
@@ -132,48 +144,94 @@ public class VListActivity extends StageActivity {
         return true;
     }
 
+    public void onClickAdd(final View v) {
+        mStage.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                final int index = (int) Math.round(Math.random() * (mList.getData().size() - 1));
+                mList.addItem(new ItemData(GLColor.createRandom(), mBitmapFont, "Item Random " + index), index);
+            }
+        });
+    }
+
+    public void onClickRemove(final View v) {
+        mStage.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                final int index = (int) Math.round(Math.random() * (mList.getData().size() - 1));
+                mList.removeItem(index);
+            }
+        });
+    }
+
+    public void onClickClear(final View v) {
+        mStage.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mList.removeAllItems();
+            }
+        });
+    }
+
     public static class ItemData {
+        public GLColor bgColor;
         public BitmapFont font;
         public String label;
 
-        public ItemData(BitmapFont f, String l) {
+        public ItemData(GLColor color, BitmapFont f, String l) {
+            bgColor = color;
+            bgColor.a = 0.5f;
             font = f;
             label = l;
         }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 
-    public static class MyListItem extends DisplayGroup implements ListItem {
+    public static class MyListItem extends ItemGroupRenderer {
         private Rectangular mRect;
         private BmfTextObject mText;
 
         public MyListItem() {
             super();
 
+            // default size
+            setSize(1, 100);
+
             mRect = new Rectangular();
-            mRect.setSize(500, 100);
+            //mRect.setSize(mSize.x, mSize.y);
             mRect.setColor(new GLColor(0x99FFFFFF));
+            mRect.setTouchable(true); // for fun
             addChild(mRect);
 
             mText = new BmfTextObject();
             addChild(mText);
-
-            // match size
-            setSize(mRect.getSize());
         }
 
         @Override
-        public void setData(Object data) {
+        public void setSize(float w, float h) {
+            super.setSize(w, h);
+
+            if (mRect != null) {
+                // match size with parent
+                mRect.setSize(mSize.x, mSize.y);
+            }
+        }
+
+        @Override
+        public void setData(int index, Object data) {
+            super.setData(index, data);
+
+
             VListActivity.ItemData itemData = (VListActivity.ItemData) data;
+            mRect.setColor(itemData.bgColor);
             mText.setBitmapFont(itemData.font);
             mText.setText(itemData.label);
             //(mRect.getWidth() - mText.getWidth()) * 0.5f
             mText.setPosition(30, (mRect.getHeight() - mText.getHeight()) * 0.5f);
-        }
-
-        @Override
-        public Object getData() {
-            // TODO
-            return null;
         }
     }
 }

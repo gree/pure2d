@@ -5,9 +5,10 @@ import com.funzio.pure2D.Displayable;
 /**
  * Created by longngo on 3/24/15.
  */
-public interface ListItem extends Displayable {
+public interface ItemRenderer extends Displayable {
+    public void setData(int index, Object data);
 
-    public void setData(Object data);
+    public int getDataIndex();
 
     public Object getData();
 }

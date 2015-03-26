@@ -29,7 +29,7 @@ package com.funzio.pure2D.containers;
  * 
  * @author long
  */
-public class VScroll extends VWheel implements List {
+public class VScroll extends VWheel {
     public VScroll() {
         super();
 
@@ -44,9 +44,9 @@ public class VScroll extends VWheel implements List {
 
         // add friction when scroll out of bounds
         if (y < 0) {
-            y *= SCROLL_OOB_FRICTION;
+            y *= List.SCROLL_OOB_FRICTION;
         } else if (y > mScrollMax.y) {
-            y = mScrollMax.y + (y - mScrollMax.y) * SCROLL_OOB_FRICTION;
+            y = mScrollMax.y + (y - mScrollMax.y) * List.SCROLL_OOB_FRICTION;
         }
 
         super.scrollTo(x, y);

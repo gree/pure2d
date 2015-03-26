@@ -69,6 +69,13 @@
         android:layout_height="wrap_content"
         android:onClick="onClickButton"
         android:text="@string/scroll_groups" />
+
+    <Button
+        android:id="@+id/btn_vlist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="@string/vertical_data_list" />
     
 
 </LinearLayout>

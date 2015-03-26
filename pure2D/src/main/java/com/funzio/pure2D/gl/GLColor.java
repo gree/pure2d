@@ -153,4 +153,9 @@ public class GLColor {
     public static GLColor createInterpolatedColor(final GLColor color1, final GLColor color2, final float interValue) {
         return createInterpolatedColor(color1.toInt(), color2.toInt(), interValue);
     }
+
+    public static GLColor createRandom() {
+        return new GLColor((float) Math.random(), (float) Math.random(), (float) Math.random(), (float) Math.random());
+    }
+
 }

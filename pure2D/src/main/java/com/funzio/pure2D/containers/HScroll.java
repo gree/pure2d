@@ -29,7 +29,7 @@ package com.funzio.pure2D.containers;
  * 
  * @author long
  */
-public class HScroll extends HWheel implements List {
+public class HScroll extends HWheel {
     public HScroll() {
         super();
 
@@ -44,9 +44,9 @@ public class HScroll extends HWheel implements List {
 
         // add friction when scroll out of bounds
         if (x < 0) {
-            x *= SCROLL_OOB_FRICTION;
+            x *= List.SCROLL_OOB_FRICTION;
         } else if (x > mScrollMax.x) {
-            x = mScrollMax.x + (x - mScrollMax.x) * SCROLL_OOB_FRICTION;
+            x = mScrollMax.x + (x - mScrollMax.x) * List.SCROLL_OOB_FRICTION;
         }
 
         super.scrollTo(x, y);
