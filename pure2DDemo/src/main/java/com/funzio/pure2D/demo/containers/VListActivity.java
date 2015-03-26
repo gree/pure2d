@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.containers.DisplayGroup;
@@ -148,8 +149,13 @@ public class VListActivity extends StageActivity {
         mStage.queueEvent(new Runnable() {
             @Override
             public void run() {
-                final int index = (int) Math.round(Math.random() * (mList.getData().size() - 1));
-                mList.addItem(new ItemData(GLColor.createRandom(), mBitmapFont, "Item Random " + index), index);
+                final int size = mList.getData().size();
+                if (size > 0) {
+                    final int index = (int) Math.round(Math.random() * (size - 1));
+                    mList.addItem(new ItemData(GLColor.createRandom(), mBitmapFont, "Item Random " + size), index);
+                } else {
+                    mList.addItem(new ItemData(GLColor.createRandom(), mBitmapFont, "Item 0"));
+                }
             }
         });
     }
@@ -171,6 +177,10 @@ public class VListActivity extends StageActivity {
                 mList.removeAllItems();
             }
         });
+    }
+
+    public void onClickRepeating(final View view) {
+        mList.setRepeating(((CheckBox) view).isChecked());
     }
 
     public static class ItemData {
@@ -222,16 +232,20 @@ public class VListActivity extends StageActivity {
         }
 
         @Override
-        public void setData(int index, Object data) {
-            super.setData(index, data);
+        public boolean setData(int index, Object data) {
+            // diff check
+            if (super.setData(index, data)) {
+                VListActivity.ItemData itemData = (VListActivity.ItemData) data;
+                mRect.setColor(itemData.bgColor);
+                mText.setBitmapFont(itemData.font);
+                mText.setText(itemData.label);
+                //(mRect.getWidth() - mText.getWidth()) * 0.5f
+                mText.setPosition(30, (mRect.getHeight() - mText.getHeight()) * 0.5f);
 
+                return true;
+            }
 
-            VListActivity.ItemData itemData = (VListActivity.ItemData) data;
-            mRect.setColor(itemData.bgColor);
-            mText.setBitmapFont(itemData.font);
-            mText.setText(itemData.label);
-            //(mRect.getWidth() - mText.getWidth()) * 0.5f
-            mText.setPosition(30, (mRect.getHeight() - mText.getHeight()) * 0.5f);
+            return false;
         }
     }
 }

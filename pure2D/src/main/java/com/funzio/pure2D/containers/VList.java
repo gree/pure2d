@@ -176,7 +176,6 @@ public class VList<T extends Object> extends VWheel implements List {
             }
         }
 
-
         // update size and invalidate
         updateVirtualContentSize();
         invalidateChildrenPosition();
@@ -190,13 +189,13 @@ public class VList<T extends Object> extends VWheel implements List {
     protected int getNeededRenderers() {
 
         final int dataLen = mData.size();
-        int num = (int) Math.ceil(mSize.y / (getCellHeight() + mGap));
-        if (num < dataLen) {
+        int num = dataLen > 0 ? (int) Math.ceil(mSize.y / (getCellHeight() + mGap)) + 1 : 0;
+        /*if (num < dataLen) {
             // add another extra item
             num++;
         } else if (num > dataLen) {
             num = dataLen;
-        }
+        }*/
 
         return num;
     }
@@ -224,20 +223,20 @@ public class VList<T extends Object> extends VWheel implements List {
         final int newStartIndex = getStartIndex();
 
         // find which data item index to start
+        final float scrolledItems = mScrollPosition.y / (getCellHeight() + mGap);
         int itemIndex = 0;
         int numLoopedItems = 0;
         if (mScrollPosition.y > 0) {
-            int numClippedItems = (int) Math.ceil(mScrollPosition.y / (getCellHeight() + mGap));
-            itemIndex = numClippedItems;
+            itemIndex = (int) Math.ceil(scrolledItems);
         } else if (mScrollPosition.y < 0) {
-            numLoopedItems = (int) (-mScrollPosition.y / (getCellHeight() + mGap));
+            numLoopedItems = (int) (-scrolledItems);
             itemIndex = dataSize - numLoopedItems % dataSize;
         }
 
         // diff check
-        if (mChildrenNumInvalidated || oldStartIndex != newStartIndex || itemIndex != mDataStartIndex) {
+        //if (mChildrenNumInvalidated || oldStartIndex != newStartIndex || itemIndex != mDataStartIndex) {
             mDataStartIndex = itemIndex;
-            //Log.v(TAG, newStartIndex + " --- " + itemIndex);
+            Log.v(TAG, newStartIndex + " --- " + itemIndex);
 
             ItemRenderer child;
             for (int i = 0; i < mNumChildren; i++) {
@@ -246,8 +245,11 @@ public class VList<T extends Object> extends VWheel implements List {
                 itemIndex = (mDataStartIndex + i) % dataSize;
                 child.setData(itemIndex, mData.get(itemIndex));
 
-                if (!mRepeating) {
-                    if (mScrollPosition.y > 0) {
+                if (mRepeating) {
+                    // always show
+                    child.setVisible(true);
+                } else {
+                    if (mScrollPosition.y >= 0) {
                         child.setVisible(mDataStartIndex + i < dataSize);
                     } else {
                         child.setVisible(i >= numLoopedItems);
@@ -265,19 +267,25 @@ public class VList<T extends Object> extends VWheel implements List {
                 child = (ItemRenderer) mChildren.get(index);
 
                 // draw the first item to fill the space
-                itemIndex = mDataStartIndex % dataSize - 1;
-                if (!mRepeating) {
-                    if (mScrollPosition.y < 0) {
-                        child.setVisible(itemIndex >= 0);
-                    }
-                }
+                itemIndex = (mDataStartIndex - 1) % dataSize;
                 if (itemIndex < 0) {
                     itemIndex += dataSize;
                 }
                 // re-set data for child
                 child.setData(itemIndex, mData.get(itemIndex));
+
+                if (mRepeating) {
+                    // always show
+                    child.setVisible(true);
+                } else {
+                    if (mScrollPosition.y >= 0) {
+                        child.setVisible(true);
+                    } else {
+                        child.setVisible(false);
+                    }
+                }
             }
-        }
+        //}
     }
 
     protected void updateVirtualContentSize() {
@@ -377,6 +385,7 @@ public class VList<T extends Object> extends VWheel implements List {
 
         removeAllChildren();
         mData.clear();
+        invalidateChildrenNum();
 
         return true;
     }

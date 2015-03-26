@@ -9,7 +9,7 @@ import com.funzio.pure2D.Touchable;
  */
 public class ItemGroupRenderer extends DisplayGroup implements ItemRenderer, Touchable {
     protected List mList;
-    protected int mDataIndex;
+    protected int mDataIndex = -1;
     protected Object mData;
 
     public ItemGroupRenderer() {
@@ -17,9 +17,16 @@ public class ItemGroupRenderer extends DisplayGroup implements ItemRenderer, Tou
     }
 
     @Override
-    public void setData(int index, Object value) {
-        mDataIndex = index;
-        mData = value;
+    public boolean setData(int index, Object data) {
+        // diff check
+        if (mDataIndex != index || mData != data) {
+            mDataIndex = index;
+            mData = data;
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -46,6 +53,8 @@ public class ItemGroupRenderer extends DisplayGroup implements ItemRenderer, Tou
         super.onRemoved();
 
         mList = null;
+        mDataIndex = -1;
+        mData = null;
     }
 
     @Override
