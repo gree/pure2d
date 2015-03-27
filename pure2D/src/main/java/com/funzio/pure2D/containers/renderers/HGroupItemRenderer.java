@@ -1,18 +1,21 @@
-package com.funzio.pure2D.containers;
+package com.funzio.pure2D.containers.renderers;
 
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.containers.HGroup;
+import com.funzio.pure2D.containers.List;
 
 /**
  * Created by longngo on 3/25/15.
  */
-public class ItemGroupRenderer extends DisplayGroup implements ItemRenderer, Touchable {
+public class HGroupItemRenderer extends HGroup implements ItemRenderer, Touchable {
     protected List mList;
     protected int mDataIndex = -1;
     protected Object mData;
 
-    public ItemGroupRenderer() {
+    public HGroupItemRenderer() {
         super();
     }
 

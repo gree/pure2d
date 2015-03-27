@@ -1,4 +1,4 @@
-package com.funzio.pure2D.containers;
+package com.funzio.pure2D.containers.renderers;
 
 import com.funzio.pure2D.Displayable;
 

@@ -33,9 +33,7 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.BaseScene;
-import com.funzio.pure2D.containers.DisplayGroup;
-import com.funzio.pure2D.containers.ItemGroupRenderer;
-import com.funzio.pure2D.containers.ItemRenderer;
+import com.funzio.pure2D.containers.renderers.GroupItemRenderer;
 import com.funzio.pure2D.containers.VList;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
@@ -201,7 +199,7 @@ public class VListActivity extends StageActivity {
         }
     }
 
-    public static class MyListItem extends ItemGroupRenderer {
+    public static class MyListItem extends GroupItemRenderer {
         private Rectangular mRect;
         private BmfTextObject mText;
 

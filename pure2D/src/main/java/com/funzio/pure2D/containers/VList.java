@@ -34,6 +34,7 @@ import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.containers.renderers.ItemRenderer;
 
 import java.util.ArrayList;
 
