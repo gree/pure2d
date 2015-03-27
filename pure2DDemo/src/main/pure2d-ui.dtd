@@ -35,6 +35,13 @@
  	minCellSize CDATA #IMPLIED
  	boundsCheckEnabled (false|true) #IMPLIED
  	autoSleepChildren (false|true) #IMPLIED
+ 	swipeEnabled (false|true) #IMPLIED
+ 	">
+
+<!ENTITY % WHEEL_ATTRS
+	"%LGROUP_ATTRS;
+ 	snapEnabled (false|true) #IMPLIED
+ 	repeating (false|true) #IMPLIED
  	">
 
 <!ELEMENT Group ANY>
@@ -51,23 +58,27 @@
 	
 <!ELEMENT VWheel ANY>
 <!ATTLIST VWheel 
-	%LGROUP_ATTRS;
-	snapEnabled (false|true) #IMPLIED>
+	%WHEEL_ATTRS;>
 	
 <!ELEMENT HWheel ANY>
 <!ATTLIST HWheel 
-	%LGROUP_ATTRS;
-	snapEnabled (false|true) #IMPLIED>
+	%WHEEL_ATTRS;>
 	
 <!ELEMENT VScroll ANY>
 <!ATTLIST VScroll 
-	%LGROUP_ATTRS;
-	snapEnabled (false|true) #IMPLIED>
+	%WHEEL_ATTRS;>
 	
 <!ELEMENT HScroll ANY>
 <!ATTLIST HScroll 
-	%LGROUP_ATTRS;
-	snapEnabled (false|true) #IMPLIED>
+	%WHEEL_ATTRS;>
+
+<!ELEMENT VList ANY>
+<!ATTLIST VList
+	%WHEEL_ATTRS;>
+
+<!ELEMENT DataList ANY>
+<!ATTLIST DataList
+	%WHEEL_ATTRS;>
 
 <!ELEMENT include EMPTY>
 <!ATTLIST include 

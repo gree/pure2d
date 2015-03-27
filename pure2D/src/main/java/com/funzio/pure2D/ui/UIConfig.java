@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  ******************************************************************************/
 /**
- * 
+ *
  */
 package com.funzio.pure2D.ui;
 
@@ -31,11 +31,13 @@ import android.util.Log;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.containers.Alignment;
+import com.funzio.pure2D.containers.DataGrid;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.HGroup;
 import com.funzio.pure2D.containers.HScroll;
 import com.funzio.pure2D.containers.HWheel;
 import com.funzio.pure2D.containers.VGroup;
+import com.funzio.pure2D.containers.VList;
 import com.funzio.pure2D.containers.VScroll;
 import com.funzio.pure2D.containers.VWheel;
 import com.funzio.pure2D.shapes.Clip;
@@ -75,6 +77,8 @@ public class UIConfig {
         CLASS_MAP.put("HWheel", HWheel.class);
         CLASS_MAP.put("VScroll", VScroll.class);
         CLASS_MAP.put("HScroll", HScroll.class);
+        CLASS_MAP.put("VList", VList.class);
+        CLASS_MAP.put("DataGrid", DataGrid.class);
         CLASS_MAP.put("Rect", Rectangular.class);
         CLASS_MAP.put("Sprite", Sprite.class);
         CLASS_MAP.put("Sprite9", Sprite9.class);
@@ -82,6 +86,15 @@ public class UIConfig {
         CLASS_MAP.put("Button", Button.class);
         CLASS_MAP.put("Text", BmfTextObject.class);
         CLASS_MAP.put("NovaGroup", NovaGroup.class);
+    }
+
+    public static boolean registerClass(final String name, Class<? extends DisplayObject> clazz) {
+        if (CLASS_MAP.get(name) != null) {
+            return false;
+        }
+
+        CLASS_MAP.put(name, clazz);
+        return true;
     }
 
     @SuppressWarnings("unchecked")
