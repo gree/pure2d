@@ -10,17 +10,17 @@ import com.funzio.pure2D.containers.List;
 /**
  * Created by longngo on 3/25/15.
  */
-public class GroupItemRenderer extends DisplayGroup implements ItemRenderer, Touchable {
+public class GroupItemRenderer<T extends Object> extends DisplayGroup implements ItemRenderer<T>, Touchable {
     protected List mList;
     protected int mDataIndex = -1;
-    protected Object mData;
+    protected T mData;
 
     public GroupItemRenderer() {
         super();
     }
 
     @Override
-    public boolean setData(int index, Object data) {
+    public boolean setData(int index, T data) {
         // diff check
         if (mDataIndex != index || mData != data) {
             mDataIndex = index;
@@ -38,7 +38,7 @@ public class GroupItemRenderer extends DisplayGroup implements ItemRenderer, Tou
     }
 
     @Override
-    public Object getData() {
+    public T getData() {
         return mData;
     }
 

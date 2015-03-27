@@ -46,7 +46,7 @@ import java.util.ArrayList;
 public class VList<T extends Object> extends VWheel implements List<T> {
     protected static final String TAG = VList.class.getSimpleName();
 
-    protected Class<? extends ItemRenderer> mItemRenderer;
+    protected Class<? extends ItemRenderer<T>> mItemRenderer;
     protected java.util.List<T> mData;
 
     protected PointF mVirtualContentSize = new PointF();
@@ -132,10 +132,10 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         }
     }
 
-    public void setItemRenderer(Class<? extends ItemRenderer> clazz) throws Exception {
+    public void setItemRenderer(Class<? extends ItemRenderer<T>> clazz) throws Exception {
         mItemRenderer = clazz;
 
-        final ItemRenderer item = mItemRenderer.newInstance();
+        final ItemRenderer<T> item = mItemRenderer.newInstance();
         mItemSize.set(item.getSize());
 
         if (mData != null) {
@@ -143,7 +143,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         }
     }
 
-    public Class<? extends ItemRenderer> getItemClass() {
+    public Class<? extends ItemRenderer<T>> getItemClass() {
         return mItemRenderer;
     }
 
@@ -170,7 +170,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         if (diff > 0) {
             for (int i = 0; i < diff; i++) {
                 try {
-                    final ItemRenderer child = mItemRenderer.newInstance();
+                    final ItemRenderer<T> child = mItemRenderer.newInstance();
                     // auto set size
                     child.setSize(mSize.x, child.getHeight());
                     addChild((DisplayObject) child);
@@ -248,9 +248,9 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         mDataStartIndex = itemIndex;
         // Log.v(TAG, newStartIndex + " --- " + itemIndex);
 
-        ItemRenderer child;
+        ItemRenderer<T> child;
         for (int i = 0; i < mNumChildren; i++) {
-            child = (ItemRenderer) mChildren.get((newStartIndex + i) % mNumChildren);
+            child = (ItemRenderer<T>) mChildren.get((newStartIndex + i) % mNumChildren);
             // re-set data for child
             itemIndex = mDataStartIndex + i;
 
@@ -278,7 +278,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
             if (index < 0) {
                 index += mNumChildren;
             }
-            child = (ItemRenderer) mChildren.get(index);
+            child = (ItemRenderer<T>) mChildren.get(index);
 
             // draw the first item to fill the space
             itemIndex = mDataStartIndex - 1;
@@ -426,7 +426,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
     }
 
     @Override
-    public void onItemTouch(MotionEvent event, ItemRenderer item) {
+    public void onItemTouch(MotionEvent event, ItemRenderer<T> item) {
         Log.v(TAG, "onItemTouch(), Index:" + item.getDataIndex() + ": " + item.getData());
     }
 }

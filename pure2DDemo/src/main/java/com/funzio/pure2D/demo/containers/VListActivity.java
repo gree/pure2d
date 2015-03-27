@@ -199,7 +199,7 @@ public class VListActivity extends StageActivity {
         }
     }
 
-    public static class MyListItem extends GroupItemRenderer {
+    public static class MyListItem extends GroupItemRenderer<ItemData> {
         private Rectangular mRect;
         private BmfTextObject mText;
 
@@ -230,7 +230,7 @@ public class VListActivity extends StageActivity {
         }
 
         @Override
-        public boolean setData(int index, Object data) {
+        public boolean setData(int index, ItemData data) {
             // diff check
             if (super.setData(index, data)) {
                 VListActivity.ItemData itemData = (VListActivity.ItemData) data;

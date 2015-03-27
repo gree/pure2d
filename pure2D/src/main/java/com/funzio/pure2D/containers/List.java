@@ -51,5 +51,7 @@ public interface List<T extends Object> extends Wheel {
 
     public T getItem(final int index);
 
-    public void onItemTouch(MotionEvent event, ItemRenderer item);
+    public void setItemRenderer(Class<? extends ItemRenderer<T>> clazz) throws Exception;
+
+    public void onItemTouch(MotionEvent event, ItemRenderer<T> item);
 }
