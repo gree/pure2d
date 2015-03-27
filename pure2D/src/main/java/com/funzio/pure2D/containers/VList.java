@@ -224,7 +224,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
 
     @Override
     protected void positionChildren() {
-        final int dataSize = mData.size();
+        final int dataSize = mData == null ? 0 : mData.size();
         if (mNumChildren == 0 || dataSize == 0) {
             // nothing to position
             return;
