@@ -43,7 +43,7 @@ import java.util.ArrayList;
  *
  * @author long
  */
-public class VList<T extends Object> extends VWheel implements List<T> {
+public class VList<T> extends VWheel implements List<T> {
     protected static final String TAG = VList.class.getSimpleName();
 
     protected Class<? extends ItemRenderer<T>> mItemRenderer;
@@ -111,10 +111,8 @@ public class VList<T extends Object> extends VWheel implements List<T> {
             final int round = Math.round(mScrollPosition.y);
             if (round < 0) {
                 snapTo(0);
-                return;
             } else if (round >= mVirtualScrollMax.y) {
                 snapTo(mVirtualScrollMax.y);
-                return;
             }
         }
     }
@@ -132,6 +130,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void setItemRenderer(Class<? extends ItemRenderer<T>> clazz) throws Exception {
         mItemRenderer = clazz;
 
@@ -143,7 +142,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         }
     }
 
-    public Class<? extends ItemRenderer<T>> getItemClass() {
+    public Class<? extends ItemRenderer<T>> getItemRenderer() {
         return mItemRenderer;
     }
 
@@ -195,21 +194,19 @@ public class VList<T extends Object> extends VWheel implements List<T> {
 
     /**
      * Determine how many children needed to fill this list
-     *
-     * @return
      */
     protected int getNeededRenderers() {
 
         final int dataLen = mData.size();
-        int num = dataLen > 0 ? (int) Math.ceil(mSize.y / (getCellHeight() + mGap)) + 1 : 0;
+        return dataLen > 0 ? (int) Math.ceil(mSize.y / (getChildHeight(null) + mGap)) + 1 : 0;
         /*if (num < dataLen) {
             // add another extra item
             num++;
         } else if (num > dataLen) {
             num = dataLen;
-        }*/
-
+        }
         return num;
+        */
     }
 
     @Override
@@ -223,6 +220,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void positionChildren() {
         final int dataSize = mData == null ? 0 : mData.size();
         if (mNumChildren == 0 || dataSize == 0) {
@@ -230,12 +228,12 @@ public class VList<T extends Object> extends VWheel implements List<T> {
             return;
         }
 
-        final int oldStartIndex = getStartIndex();
+        //final int oldStartIndex = getStartIndex();
         super.positionChildren();
         final int newStartIndex = getStartIndex();
 
         // find which data item index to start
-        final float scrolledItems = mScrollPosition.y / (getCellHeight() + mGap);
+        final float scrolledItems = mScrollPosition.y / (getChildHeight(null) + mGap);
         int itemIndex = 0;
         if (mScrollPosition.y > 0) {
             itemIndex = (int) Math.ceil(scrolledItems);
@@ -307,7 +305,7 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         int len = mData != null ? mData.size() : 0;
 
         mVirtualContentSize.x = mItemSize.x > mContentSize.x ? mItemSize.x : mContentSize.x;
-        mVirtualContentSize.y = getCellHeight() * len + mGap * (len - 1);
+        mVirtualContentSize.y = getChildHeight(null) * len + mGap * (len - 1);
 
         // update scroll max
         mVirtualScrollMax.x = Math.max(0, mVirtualContentSize.x - mSize.x);
@@ -318,7 +316,9 @@ public class VList<T extends Object> extends VWheel implements List<T> {
         mChildrenNumInvalidated = true;
     }
 
-    protected float getCellHeight() {
+    @Override
+    protected float getChildHeight(DisplayObject child) {
+        // complete override parent's and assume all the cells are equal
         return Math.max(mItemSize.y, mMinCellSize);
     }
 

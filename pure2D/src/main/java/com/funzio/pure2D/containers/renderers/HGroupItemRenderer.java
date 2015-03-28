@@ -10,7 +10,7 @@ import com.funzio.pure2D.containers.List;
 /**
  * Created by longngo on 3/25/15.
  */
-public class HGroupItemRenderer<T extends Object> extends HGroup implements ItemRenderer<T>, Touchable {
+public class HGroupItemRenderer<T> extends HGroup implements ItemRenderer<T>, Touchable {
     protected List mList;
     protected int mDataIndex = -1;
     protected T mData;

@@ -209,6 +209,14 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
+    protected float getChildWidth(final DisplayObject child) {
+        return Math.max(child.getWidth(), mMinCellSize);
+    }
+
+    protected float getChildHeight(final DisplayObject child) {
+        return Math.max(child.getHeight(), mMinCellSize);
+    }
+
     @Override
     public void setWrapContentWidth(final boolean wrapWidth) {
         super.setWrapContentWidth(wrapWidth);
