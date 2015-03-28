@@ -69,7 +69,7 @@ public class HGroup extends LinearGroup implements UIObject {
             return;
         }
 
-        int offset = Math.round(mScrollPosition.x % mContentSize.x); // needs to be rounded up
+        float offset = mScrollPosition.x % mContentSize.x; // needs to be rounded up?
         offset += (offset < 0) ? mContentSize.x : 0;
         // easy case
         if (offset == 0) {

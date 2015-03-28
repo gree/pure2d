@@ -76,7 +76,7 @@ public class VGroup extends LinearGroup implements UIObject {
             return;
         }
 
-        int offset = Math.round(mScrollPosition.y % mContentSize.y); // needs to be rounded up
+        float offset = mScrollPosition.y % mContentSize.y; // needs to be rounded up?
         offset += (offset < 0) ? mContentSize.y : 0;
         // easy case
         if (offset == 0) {
