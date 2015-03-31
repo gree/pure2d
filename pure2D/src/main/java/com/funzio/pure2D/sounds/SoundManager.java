@@ -152,6 +152,20 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
+    public void playDuration(final int key, final int duration) {
+        // Log.v(TAG, "play(" + key + ")");
+
+        play(key);
+
+        // stop later
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stop(key);
+            }
+        }, duration);
+    }
+
     private int privatePlay(final int soundID, final int loop) {
         // Log.v(TAG, "play(" + sound + ")");
 
