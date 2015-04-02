@@ -134,8 +134,10 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     }
 
     public void updateTextBounds() {
-        if (mFontMetrics == null) {
-            Log.w(TAG, "No BitmapFont set!");
+        if (mFontMetrics == null || mText == null) {
+            if (mFontMetrics == null) {
+                Log.w(TAG, "No BitmapFont set!: " + mId);
+            }
             return;
         }
 

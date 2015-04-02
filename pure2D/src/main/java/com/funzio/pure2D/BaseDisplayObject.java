@@ -61,6 +61,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected static final String ATT_BLEND_MODE = "blendMode";
     protected static final String ATT_ORIGIN_AT_CENTER = "originAtCenter";
     protected static final String ATT_ROTATION = "rotation";
+    protected static final String ATT_SCALE = "scale";
+    protected static final String ATT_SCALE_X = "scaleX";
+    protected static final String ATT_SCALE_Y = "scaleY";
     protected static final String ATT_VISIBLE = "visible";
     protected static final String ATT_AUTO_UPDATE_BOUNDS = "autoUpdateBounds";
     protected static final String ATT_ANIMATOR = "animator";
@@ -1264,6 +1267,21 @@ public abstract class BaseDisplayObject implements DisplayObject {
         final String alpha = xmlParser.getAttributeValue(null, ATT_ALPHA);
         if (alpha != null) {
             mAlpha = Float.valueOf(alpha);
+        }
+
+        final String scale = xmlParser.getAttributeValue(null, ATT_SCALE);
+        if (scale != null) {
+            mScale.x = mScale.y = Float.valueOf(scale);
+        }
+
+        final String scaleX = xmlParser.getAttributeValue(null, ATT_SCALE_X);
+        if (scaleX != null) {
+            mScale.x = Float.valueOf(scaleX);
+        }
+
+        final String scaleY = xmlParser.getAttributeValue(null, ATT_SCALE_Y);
+        if (scaleY != null) {
+            mScale.y = Float.valueOf(scaleY);
         }
 
         final String rotation = xmlParser.getAttributeValue(null, ATT_ROTATION);

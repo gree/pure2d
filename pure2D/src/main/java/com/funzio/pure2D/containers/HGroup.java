@@ -218,7 +218,12 @@ public class HGroup extends LinearGroup implements UIObject {
         DisplayObject child;
         PointF childSize;
 
+        final int oldStartIndex = mStartIndex;
         findStartIndex();
+        if (mStartIndex != oldStartIndex) {
+            // internal callback
+            onStartIndexChange(oldStartIndex);
+        }
         if (mRepeating) {
             float nextX = mStartX;
             for (int i = 0; i < mNumChildren; i++) {
@@ -445,6 +450,10 @@ public class HGroup extends LinearGroup implements UIObject {
     protected void onTouchDown(final MotionEvent event) {
         // TODO Auto-generated method stub
 
+    }
+
+    protected void onStartIndexChange(final int oldValue) {
+        // TODO
     }
 
     @Override

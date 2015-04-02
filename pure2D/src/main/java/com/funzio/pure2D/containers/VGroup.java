@@ -230,7 +230,12 @@ public class VGroup extends LinearGroup implements UIObject {
         DisplayObject child;
         PointF childSize;
 
+        final int oldStartIndex = mStartIndex;
         findStartIndex();
+        if (mStartIndex != oldStartIndex) {
+            // internal callback
+            onStartIndexChange(oldStartIndex);
+        }
         if (mRepeating) {
             float nextY = mStartY;
             for (int i = 0; i < mNumChildren; i++) {
@@ -481,6 +486,10 @@ public class VGroup extends LinearGroup implements UIObject {
     protected void onTouchDown(final MotionEvent event) {
         // TODO Auto-generated method stub
 
+    }
+
+    protected void onStartIndexChange(final int oldValue) {
+        // TODO
     }
 
     @Override
