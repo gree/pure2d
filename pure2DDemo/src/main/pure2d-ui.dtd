@@ -17,6 +17,7 @@
 	animator CDATA #IMPLIED
 	color CDATA #IMPLIED
 	alpha CDATA #IMPLIED
+	visible (false|true) #IMPLIED
 	%BLEND_MODE;
 	touchable (false|true) #IMPLIED
 	originAtCenter (false|true) #IMPLIED
@@ -36,6 +37,7 @@
  	boundsCheckEnabled (false|true) #IMPLIED
  	autoSleepChildren (false|true) #IMPLIED
  	swipeEnabled (false|true) #IMPLIED
+ 	reversed (false|true) #IMPLIED
  	">
 
 <!ENTITY % WHEEL_ATTRS
@@ -127,6 +129,7 @@
 	%OBJ_ATTRS;
 	%TEXT_ALIGN;
 	font CDATA #IMPLIED
+	letterSpacing CDATA #IMPLIED
 	text CDATA #IMPLIED>
 
 <!ELEMENT Button ANY>

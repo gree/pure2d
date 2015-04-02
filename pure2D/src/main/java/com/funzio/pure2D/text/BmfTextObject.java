@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  ******************************************************************************/
 /**
- * 
+ *
  */
 package com.funzio.pure2D.text;
 
@@ -71,6 +71,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     protected String mText = "";
     protected int mTextAlignment = Alignment.LEFT;
     protected RectF mTextBounds = new RectF();
+    protected float mLetterSpacing = 0.0123f; // default = not-set
 
     private int mSceneAxis = -1;
     private QuadMeshTextureCoordBuffer mTextureCoordBuffer;
@@ -119,6 +120,10 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         return mBitmapFont;
     }
 
+    protected float getLetterSpacing() {
+        return mLetterSpacing != 0.0123f || mFontMetrics == null ? mLetterSpacing : mFontMetrics.letterSpacing;
+    }
+
     public void setBitmapFont(final BitmapFont bitmapFont) {
         mBitmapFont = bitmapFont;
         mTextOptions = bitmapFont.getTextOptions();
@@ -148,7 +153,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             ch = mText.charAt(i);
 
             if (ch == Characters.SPACE) {
-                nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
+                nextX += mFontMetrics.whitespace + getLetterSpacing();
             } else if (ch == Characters.NEW_LINE) {
                 nextX = 0;
 
@@ -163,7 +168,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             } else {
                 frame = mBitmapFont.getCharFrame(ch);
                 if (frame != null) {
-                    nextX += frame.getSize().x + mFontMetrics.letterSpacing;
+                    nextX += frame.getSize().x + getLetterSpacing();
                 } else {
                     Log.e(TAG, "Missing Text Frame: " + ch, new Exception());
                 }
@@ -335,7 +340,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                 ch = sScratchText.charAt(i);
 
                 if (ch == Characters.SPACE) {
-                    nextX += mFontMetrics.whitespace + mFontMetrics.letterSpacing;
+                    nextX += mFontMetrics.whitespace + getLetterSpacing();
                 } else if (ch == Characters.NEW_LINE) {
 
                     // alignment
@@ -367,7 +372,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                         }
 
                         // find next x
-                        nextX += frameSize.x + mFontMetrics.letterSpacing;
+                        nextX += frameSize.x + getLetterSpacing();
                     }
                 }
             }
@@ -393,7 +398,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     /**
      * Enable/disable cache. With the new method of QuadMeshBuffer, Cache is not necessary faster.
-     * 
+     *
      * @param cacheEnabled
      */
     @Deprecated
@@ -462,7 +467,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
                 final String letterSpacing = xmlParser.getAttributeValue(null, ATT_LETTER_SPACING);
                 if (letterSpacing != null) {
-                    mFontMetrics.letterSpacing = Float.valueOf(letterSpacing);
+                    mLetterSpacing = Float.valueOf(letterSpacing);
                 }
             } else {
                 Log.e(TAG, "Font not found: " + font, new Exception());
