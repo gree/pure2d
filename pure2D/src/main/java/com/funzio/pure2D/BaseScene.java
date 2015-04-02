@@ -139,6 +139,20 @@ public class BaseScene implements Scene {
     }
 
     /**
+     * Remove an Event queued by #queueEvent(final Runnable r, final int delayMillis)
+     * @param r
+     * @return
+     */
+    final public boolean removeEvent(final Runnable r) {
+        if (mStage != null && mStage.getHandler() != null) {
+            mStage.getHandler().removeCallbacks(r);
+        }
+
+        // always success now
+        return true;
+    }
+
+    /**
      * @param stage the stage to set
      */
     public void setStage(final Stage stage) {

@@ -80,6 +80,8 @@ public interface Scene extends Renderer, Container {
 
     public boolean queueEvent(final Runnable r, final int delayMillis);
 
+    public boolean removeEvent(final Runnable r);
+
     public void pause();
 
     public void resume();
