@@ -42,6 +42,7 @@ public class PageStacker implements Pageable.TransitionListener {
     protected int mNumPages = 0;
 
     protected Pageable mCurrentPage;
+    protected float mDimmedAlpha = 0.5f;
 
     public PageStacker(final Container container) {
         mContainer = container;
@@ -68,6 +69,11 @@ public class PageStacker implements Pageable.TransitionListener {
                         // slide out the previous page
                         if (previousPage != null) {
                             previousPage.transitionOut(true);
+                        }
+                    } else {
+                        if (previousPage != null) {
+                            // dim
+                            previousPage.setAlpha(mDimmedAlpha);
                         }
                     }
 
@@ -114,6 +120,11 @@ public class PageStacker implements Pageable.TransitionListener {
                         mContainer.addChild(previousPage);
                         previousPage.transitionIn(false);
                     }
+                } else {
+                    if (previousPage != null) {
+                        // undim
+                        previousPage.setAlpha(1f);
+                    }
                 }
             }
         });
@@ -132,6 +143,15 @@ public class PageStacker implements Pageable.TransitionListener {
     // public void setContainer(final Container container) {
     // mContainer = container;
     // }
+
+
+    public float getDimmedAlpha() {
+        return mDimmedAlpha;
+    }
+
+    public void setDimmedAlpha(final float dimmedAlpha) {
+        mDimmedAlpha = dimmedAlpha;
+    }
 
     @Override
     public void onTransitionInComplete(final Pageable page) {
