@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,15 +19,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.ui;
 
 import android.graphics.PointF;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
@@ -35,6 +35,8 @@ import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.LinearGroup;
 import com.funzio.pure2D.containers.VGroup;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
+
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * @author long.ngo
@@ -90,15 +92,20 @@ public class UIConstraint {
     private int mAxisSystem = Scene.AXIS_BOTTOM_LEFT;
     private boolean mHasAttributes = false;
 
+    protected UIManager mUIManager;
+
     public UIConstraint() {
         // TODO Auto-generated constructor stub
     }
 
     public UIConstraint(final XmlPullParser parser, final UIManager manager) {
         setAttributes(parser, manager);
+
+        mUIManager = manager;
     }
 
     public void setAttributes(final XmlPullParser parser, final UIManager manager) {
+        mUIManager = manager;
         mUIConfigVO = manager.getConfig();
         mAxisSystem = manager.getTextureManager().getGLState().getAxisSystem();
         mHasAttributes = false;
@@ -270,7 +277,7 @@ public class UIConstraint {
     }
 
     protected float getAttributeValue(final XmlPullParser parser, final String att) {
-        final String valueSt = parser.getAttributeValue(null, att);
+        final String valueSt = mUIManager.evalString(parser.getAttributeValue(null, att));
         if (valueSt != null && valueSt.length() > 0) {
             if (valueSt.endsWith(VAL_PERCENT)) {
                 return Float.valueOf(valueSt.substring(0, valueSt.length() - 1).trim()) / 100; // pre-cal
@@ -283,7 +290,7 @@ public class UIConstraint {
     }
 
     protected UNIT getAttributeUnit(final XmlPullParser parser, final String att) {
-        final String valueSt = parser.getAttributeValue(null, att);
+        final String valueSt = mUIManager.evalString(parser.getAttributeValue(null, att));
         if (valueSt != null && valueSt.length() > 0) {
             if (valueSt.equals(VAL_WRAP_CONTENT)) {
                 return UNIT.WRAP;
