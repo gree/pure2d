@@ -282,7 +282,7 @@ public class Button extends DisplayGroup implements UIObject {
 
         final String source = xmlParser.getAttributeValue(null, "source");
         if (source != null) {
-            final String[] sources = source.split(",");
+            final String[] sources = manager.evalString(source).split(",");
             if (sources.length > 0) {
                 final Texture[] textures = new Texture[sources.length];
                 int i = 0;
@@ -295,7 +295,7 @@ public class Button extends DisplayGroup implements UIObject {
         }
 
         if (xmlParser.getAttributeValue(null, "patches") != null) {
-            final String[] patches = xmlParser.getAttributeValue(null, "patches").split(",");
+            final String[] patches = manager.evalString(xmlParser.getAttributeValue(null, "patches")).split(",");
             final float configScale = manager.getConfig().screen_scale;
             final float left = patches.length >= 1 ? Float.valueOf(patches[0].trim()) * configScale : 0;
             final float right = patches.length >= 2 ? Float.valueOf(patches[1].trim()) * configScale : 0;
