@@ -33,8 +33,8 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import com.funzio.pure2D.BaseScene;
+import com.funzio.pure2D.containers.HList;
 import com.funzio.pure2D.containers.renderers.GroupItemRenderer;
-import com.funzio.pure2D.containers.VList;
 import com.funzio.pure2D.demo.activities.StageActivity;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -47,17 +47,17 @@ import com.longo.pure2D.demo.R;
 
 import java.util.ArrayList;
 
-public class VListActivity extends StageActivity {
-    private static final String TAG = VListActivity.class.getSimpleName();
+public class HListActivity extends StageActivity {
+    private static final String TAG = HListActivity.class.getSimpleName();
     private static final String FONT_PATH = "fonts/foo.ttf";
 
     private BitmapFont mBitmapFont;
     private Typeface mTypeface;
-    private VList<ItemData> mList;
+    private HList<ItemData> mList;
 
     @Override
     protected int getLayout() {
-        return R.layout.stage_vlist;
+        return R.layout.stage_hlist;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class VListActivity extends StageActivity {
             data.add(new ItemData(GLColor.createRandom(), mBitmapFont, "Item " + i));
         }
 
-        mList = new VList<ItemData>();
+        mList = new HList<ItemData>();
         mList.setGap(10);
 //        mList.setSnapEnabled(true);
         mList.setSwipeEnabled(true);
@@ -207,7 +207,7 @@ public class VListActivity extends StageActivity {
             super();
 
             // default size
-            setSize(1, 100);
+            setSize(100, 1);
 
             mRect = new Rectangular();
             //mRect.setSize(mSize.x, mSize.y);
@@ -217,6 +217,7 @@ public class VListActivity extends StageActivity {
 
             mText = new BmfTextObject();
             mText.setOriginAtCenter();
+            mText.setRotation(90);
             addChild(mText);
         }
 
@@ -234,7 +235,7 @@ public class VListActivity extends StageActivity {
         public boolean setData(int index, ItemData data) {
             // diff check
             if (super.setData(index, data)) {
-                VListActivity.ItemData itemData = (VListActivity.ItemData) data;
+                HListActivity.ItemData itemData = (HListActivity.ItemData) data;
                 mRect.setColor(itemData.bgColor);
                 mText.setBitmapFont(itemData.font);
                 mText.setText(itemData.label);

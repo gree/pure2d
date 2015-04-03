@@ -86,7 +86,8 @@ public class HGroup extends LinearGroup implements UIObject {
             if (i == mNumChildren - 1) {
                 mStartX = mContentSize.x - offset;
             } else {
-                itemPos += Math.max(mMinCellSize, mChildren.get(i).getSize().x) + mGap;
+
+                itemPos +=  getChildWidth(mChildren.get(i)) + mGap;
             }
         }
     }
@@ -94,8 +95,9 @@ public class HGroup extends LinearGroup implements UIObject {
     protected void updateContentSize() {
         mContentSize.x = mContentSize.y = 0;
         for (int i = 0; i < mNumChildren; i++) {
-            final PointF childSize = mChildren.get(i).getSize();
-            mContentSize.x += Math.max(mMinCellSize, childSize.x) + mGap;
+            final DisplayObject child = mChildren.get(i);
+            final PointF childSize = child.getSize();
+            mContentSize.x += getChildWidth(child) + mGap;
             mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
         }
 
@@ -135,7 +137,7 @@ public class HGroup extends LinearGroup implements UIObject {
 
         if (x < 0) {
             if (positive) {
-                return x + (Math.max(mMinCellSize, startChild.getSize().x) + mGap);
+                return x + (getChildWidth(startChild) + mGap);
             } else {
                 return x;
             }
@@ -145,7 +147,7 @@ public class HGroup extends LinearGroup implements UIObject {
             } else {
                 int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
                 final DisplayObject newChild = getChildAt(newIndex);
-                return x - (Math.max(mMinCellSize, newChild.getSize().x) + mGap);
+                return x - (getChildWidth(newChild) + mGap);
             }
         }
     }
@@ -237,7 +239,7 @@ public class HGroup extends LinearGroup implements UIObject {
                 child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // find nextX
-                nextX += Math.max(mMinCellSize, childSize.x) + mGap;
+                nextX += getChildWidth(child) + mGap;
             }
 
             if (mStartX > mGap) {
@@ -247,7 +249,7 @@ public class HGroup extends LinearGroup implements UIObject {
                     index += mNumChildren;
                 }
                 child = mChildren.get(index);
-                child.setPosition(mStartX - Math.max(mMinCellSize, child.getSize().x) - mGap, child.getPosition().y);
+                child.setPosition(mStartX - getChildWidth(child) - mGap, child.getPosition().y);
             }
         } else {
             // update content size
@@ -272,7 +274,7 @@ public class HGroup extends LinearGroup implements UIObject {
                 child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // update sizes
-                nextX += Math.max(mMinCellSize, childSize.x) + mGap;
+                nextX += getChildWidth(child) + mGap;
             }
         }
     }
@@ -307,7 +309,7 @@ public class HGroup extends LinearGroup implements UIObject {
     @Override
     protected void onAddedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
-        mContentSize.x += Math.max(mMinCellSize, childSize.x) + mGap;
+        mContentSize.x += getChildWidth(child) + mGap;
         mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
 
         // update scroll max
@@ -320,7 +322,7 @@ public class HGroup extends LinearGroup implements UIObject {
     @Override
     protected void onRemovedChild(final DisplayObject child) {
         final PointF childSize = child.getSize();
-        mContentSize.x -= Math.max(mMinCellSize, childSize.x) + mGap;
+        mContentSize.x -= getChildWidth(child) + mGap;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);

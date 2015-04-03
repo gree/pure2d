@@ -22,6 +22,7 @@
 package com.funzio.pure2D.demo.ui;
 
 import com.funzio.pure2D.demo.activities.MenuActivity;
+import com.funzio.pure2D.demo.containers.HListActivity;
 import com.funzio.pure2D.demo.containers.HWheelActivity;
 import com.funzio.pure2D.demo.containers.VListActivity;
 import com.funzio.pure2D.demo.containers.VWheelActivity;
@@ -46,5 +47,6 @@ public class UIMenuActivity extends MenuActivity {
         addMenu(R.id.btn_bitmap_font, BitmapFontActivity.class);
         addMenu(R.id.btn_korean_bitmap_font, KoreanCharsetActivity.class);
         addMenu(R.id.btn_vlist, VListActivity.class);
+        addMenu(R.id.btn_hlist, HListActivity.class);
     }
 }

@@ -111,6 +111,11 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
+            android:name="com.funzio.pure2D.demo.containers.HListActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name="com.funzio.pure2D.demo.containers.HWheelActivity"
             android:screenOrientation="sensorPortrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/stage_template" />
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:onClick="onClickAdd"
+        android:text="@string/add" />
+
+    <Button
+        android:id="@+id/btn_remove"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="80dp"
+        android:onClick="onClickRemove"
+        android:text="@string/remove" />
+
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="130dp"
+        android:onClick="onClickClear"
+        android:text="@string/clear" />
+
+    <CheckBox
+        android:id="@+id/cb_repeating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="180dp"
+        android:checked="false"
+        android:onClick="onClickRepeating"
+        android:text="@string/repeating" />
+
+</RelativeLayout>
