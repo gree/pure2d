@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,31 +19,35 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.ui;
-
-import java.util.ArrayList;
 
 import android.util.Log;
 
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.gl.GLColor;
+
+import java.util.ArrayList;
 
 /**
  * @author long.ngo
  */
 public class PageStacker implements Pageable.TransitionListener {
-
     protected static final String TAG = PageStacker.class.getSimpleName();
+    protected static final GLColor DIMMED_COLOR = new GLColor(0xFF666666);
 
     protected Container mContainer;
     protected ArrayList<Pageable> mPages = new ArrayList<Pageable>();
     protected int mNumPages = 0;
 
     protected Pageable mCurrentPage;
-    protected float mDimmedAlpha = 0.5f;
+    protected GLColor mDimmedColor = DIMMED_COLOR;
+
+    private ArrayList<GLColor> mDimmedStack = new ArrayList<>();
 
     public PageStacker(final Container container) {
         mContainer = container;
@@ -73,11 +78,12 @@ public class PageStacker implements Pageable.TransitionListener {
                     } else {
                         if (previousPage != null) {
                             // dim
-                            previousPage.setAlpha(mDimmedAlpha);
+                            mDimmedStack.add(previousPage.getColor());
+                            previousPage.setColor(mDimmedColor);
                         }
                     }
 
-                    // slind in the current page
+                    // slide in the current page
                     mContainer.addChild(page);
                     page.transitionIn(true);
                 }
@@ -123,7 +129,9 @@ public class PageStacker implements Pageable.TransitionListener {
                 } else {
                     if (previousPage != null) {
                         // undim
-                        previousPage.setAlpha(1f);
+                        if (mDimmedStack.size() > 0) {
+                            previousPage.setColor(mDimmedStack.remove(mDimmedStack.size() - 1));
+                        }
                     }
                 }
             }
@@ -145,12 +153,12 @@ public class PageStacker implements Pageable.TransitionListener {
     // }
 
 
-    public float getDimmedAlpha() {
-        return mDimmedAlpha;
+    public GLColor getDimmedColor() {
+        return mDimmedColor;
     }
 
-    public void setDimmedAlpha(final float dimmedAlpha) {
-        mDimmedAlpha = dimmedAlpha;
+    public void setDimmedColor(final GLColor dimmedColor) {
+        mDimmedColor = dimmedColor;
     }
 
     @Override
