@@ -33,6 +33,7 @@ import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.containers.DataGrid;
 import com.funzio.pure2D.containers.DisplayGroup;
+import com.funzio.pure2D.containers.GridGroup;
 import com.funzio.pure2D.containers.HGroup;
 import com.funzio.pure2D.containers.HList;
 import com.funzio.pure2D.containers.HScroll;
@@ -74,6 +75,7 @@ public class UIConfig {
         CLASS_MAP.put("Group", DisplayGroup.class);
         CLASS_MAP.put("VGroup", VGroup.class);
         CLASS_MAP.put("HGroup", HGroup.class);
+        CLASS_MAP.put("GridGroup", GridGroup.class);
         CLASS_MAP.put("VWheel", VWheel.class);
         CLASS_MAP.put("HWheel", HWheel.class);
         CLASS_MAP.put("VScroll", VScroll.class);

@@ -49,6 +49,7 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
 
     protected float mSwipeDelta = 0;
     protected float mSwipeVelocity = 0;
+    protected float mSwipeVelocityMultiplier = 1f;
     protected boolean mStoppable = true;
 
     public VWheel() {
@@ -66,7 +67,7 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         super.swipe(delta);
 
         // average velocity
-        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f;
+        mSwipeVelocity = (mSwipeVelocity + (delta - mSwipeDelta) / Scene.DEFAULT_MSPF) * 0.5f * mSwipeVelocityMultiplier;
         mSwipeDelta = delta;
     }
 
@@ -80,6 +81,14 @@ public class VWheel extends VGroup implements Wheel, Animator.AnimatorListener {
         // reset
         mSwipeDelta = 0;
         mSwipeVelocity = 0;
+    }
+
+    public float getSwipeVelocityMultiplier() {
+        return mSwipeVelocityMultiplier;
+    }
+
+    public void setSwipeVelocityMultiplier(final float swipeVelocityMultiplier) {
+        mSwipeVelocityMultiplier = swipeVelocityMultiplier;
     }
 
     public void spin(final float veloc) {

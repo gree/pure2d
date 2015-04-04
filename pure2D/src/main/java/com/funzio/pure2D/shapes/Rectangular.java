@@ -43,6 +43,8 @@ import com.funzio.pure2D.ui.UIObject;
  */
 public class Rectangular extends Shape implements UIObject {
 
+    protected static final String ATT_TOUCHABLE = "touchable";
+
     protected boolean mTouchable;
     protected boolean mModal;
     protected boolean mFocus;
@@ -180,7 +182,7 @@ public class Rectangular extends Shape implements UIObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String touchable = xmlParser.getAttributeValue(null, "touchable");
+        final String touchable = xmlParser.getAttributeValue(null, ATT_TOUCHABLE);
         if (touchable != null) {
             setTouchable(Boolean.valueOf(touchable));
         }
