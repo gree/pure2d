@@ -34,11 +34,19 @@ import com.funzio.pure2D.gl.gl10.VertexBuffer;
 import com.funzio.pure2D.gl.gl10.textures.QuadMeshTextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
+import com.funzio.pure2D.ui.UIConfig;
+import com.funzio.pure2D.ui.UIManager;
+
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * @author long.ngo
  */
 public class UniGroup extends AbstractUniGroup implements StackableObject {
+
+    // XML attributes
+    protected static final String ATT_ASYNC = "async";
+    protected static final String ATT_SOURCE = "source";
 
     protected QuadMeshBuffer mMeshBuffer;
     protected QuadMeshTextureCoordBuffer mTextureCoordBuffer;
@@ -171,6 +179,17 @@ public class UniGroup extends AbstractUniGroup implements StackableObject {
     @Override
     public boolean isStackable() {
         return mStackable;
+    }
+
+    @Override
+    public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
+        super.setXMLAttributes(xmlParser, manager);
+
+        final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
+        if (source != null && !source.endsWith(UIConfig.FILE_JSON)) {
+            final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
+            setTexture(manager.getTextureManager().getUriTexture(manager.evalString(source), null, async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
+        }
     }
 
 }

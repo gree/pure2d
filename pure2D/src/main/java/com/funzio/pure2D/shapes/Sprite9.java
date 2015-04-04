@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,37 +19,49 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.shapes;
 
 import android.graphics.RectF;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.gl.gl10.GLState;
-import com.funzio.pure2D.gl.gl10.QuadBuffer;
+import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
-import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.ui.UIManager;
+import com.funzio.pure2D.uni.UniGroup;
+import com.funzio.pure2D.uni.UniSprite;
+
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * @author long
  */
-public class Sprite9 extends Rectangular {
+public class Sprite9 extends UniGroup {
     protected static final int NUM_PATCHES = 9;
 
     private RectF m9Patches;
-    private QuadBuffer[] mQuadBuffers;
-    private TextureCoordBuffer[] mCoordBuffers;
 
     private boolean m9PatchEnabled = true;
     private boolean mHasPatches = false;
     private boolean mSizeToTexture = false;
+
+    public Sprite9() {
+        super();
+
+        UniSprite sprite;
+        for (int i = 0; i < NUM_PATCHES; i++) {
+            sprite = new UniSprite();
+            sprite.setSizeToTexture(false);
+            sprite.setSizeToFrame(false);
+            sprite.setAtlasFrame(new AtlasFrame(mTexture, i, null));
+            // sprite.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS | Pure2D.DEBUG_FLAG_WIREFRAME);
+            addChild(sprite);
+        }
+    }
 
     public void set9Patches(final float left, final float right, final float top, final float bottom) {
         if (m9Patches == null) {
@@ -59,7 +72,7 @@ public class Sprite9 extends Rectangular {
 
         mHasPatches = left > 0 || right > 0 || top > 0 || bottom > 0;
 
-        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        invalidate(CHILDREN);
     }
 
     public RectF get9Patches() {
@@ -73,7 +86,7 @@ public class Sprite9 extends Rectangular {
     public void set9PatchEnabled(final boolean value) {
         m9PatchEnabled = value;
 
-        invalidate(InvalidateFlags.TEXTURE_COORDS);
+        invalidate(CHILDREN);
     }
 
     public boolean isSizeToTexture() {
@@ -108,112 +121,114 @@ public class Sprite9 extends Rectangular {
             setSize(texture.getSize());
         } else {
             // invalidate the 9 patches
-            invalidate(TEXTURE_COORDS);
+            invalidate(CHILDREN);
         }
     }
 
     @Override
-    protected void validateTextureCoordBuffer() {
-        if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
-            super.validateTextureCoordBuffer();
-            return;
-        }
-
-        // init the arrays
-        if (mQuadBuffers == null) {
-            mQuadBuffers = new QuadBuffer[NUM_PATCHES];
-            mCoordBuffers = new TextureCoordBuffer[NUM_PATCHES];
-
-            for (int i = 0; i < NUM_PATCHES; i++) {
-                mQuadBuffers[i] = new QuadBuffer();
-                mCoordBuffers[i] = new TextureCoordBuffer();
+    protected void updateChildren(final int deltaTime) {
+        if ((mInvalidateFlags & (CHILDREN | TEXTURE | SIZE)) != 0) {
+            if (mTexture == null) {
+                super.updateChildren(deltaTime);
+                return;
             }
-        }
 
-        // some constants
-        final float textureW = mTexture.getSize().x;
-        final float textureH = mTexture.getSize().y;
-        final float tsx = mTexture.mCoordScaleX;
-        final float tsy = mTexture.mCoordScaleY;
-        float left = m9Patches.left;
-        float right = m9Patches.right;
-        float top = m9Patches.top;
-        float bottom = m9Patches.bottom;
-        float middleW = mSize.x - left - right;
-        float middleH = mSize.y - top - bottom;
-        // if width is too small
-        if (middleW < 0) {
-            left = right = 0;
-            middleW = mSize.x;
-        }
-        // if height is too small
-        if (middleH < 0) {
-            top = bottom = 0;
-            middleH = mSize.y;
-        }
+            // some constants
+            final float textureW = mTexture.getSize().x;
+            final float textureH = mTexture.getSize().y;
+            float left = m9PatchEnabled ? m9Patches.left : 0;
+            float right = m9PatchEnabled ? m9Patches.right : 0;
+            float top = m9PatchEnabled ? m9Patches.top : 0;
+            float bottom = m9PatchEnabled ? m9Patches.bottom : 0;
+            float middleW = mSize.x - left - right;
+            float middleH = mSize.y - top - bottom;
+            // if width is too small
+            if (middleW < 0) {
+                left = right = 0;
+                middleW = mSize.x;
+            }
+            // if height is too small
+            if (middleH < 0) {
+                top = bottom = 0;
+                middleH = mSize.y;
+            }
 
-        // vertices
-        final float[] widths = {
-                left, middleW, right
-        };
-        final float[] heights = {
-                bottom, middleH, top
-        };
-        // swap for AXIS_TOP_LEFT
-        if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-            heights[0] = top;
-            heights[2] = bottom;
-        }
+            // vertices
+            final float[] widths = {
+                    left, middleW, right
+            };
+            final float[] heights = {
+                    bottom, middleH, top
+            };
+            // swap for AXIS_TOP_LEFT
+            if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+                heights[0] = top;
+                heights[2] = bottom;
+            }
 
-        // texture coordinates
-        final float[] scaleX = {
-                left / textureW, (textureW - left - right) / textureW, right / textureW
-        };
-        final float[] scaleY = {
-                bottom / textureH, (textureH - top - bottom) / textureH, top / textureH
-        };
-        // swap for AXIS_TOP_LEFT
-        if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-            final float temp = scaleY[0];
-            scaleY[0] = scaleY[2];
-            scaleY[2] = temp;
-        }
+            // texture coordinates
+            final float[] scaleX = {
+                    left, (textureW - left - right), right
+            };
+            final float[] scaleY = {
+                    bottom, (textureH - top - bottom), top
+            };
+            // swap for AXIS_TOP_LEFT
+            if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+                final float temp = scaleY[0];
+                scaleY[0] = scaleY[2];
+                scaleY[2] = temp;
+            }
 
-        float vx = 0, vy = 0; // vertex start x,y
-        float tx = 0, ty = 1, tyInverted = 0; // texture coord start x,y
-        int index = 0;
-        for (int row = 0; row < 3; row++) {
-            float vh = heights[row];
-            float th = scaleY[row];
-            vx = 0;
-            tx = 0;
+            float vx = 0, vy = 0; // vertex start x,y
+            float tx = 0, ty = textureH, tyInverted = 0; // texture coord start x,y
+            int index = 0;
+            UniSprite sprite;
+            AtlasFrame frame;
+            for (int row = 0; row < 3; row++) {
+                float vh = heights[row];
+                float th = scaleY[row];
+                vx = 0;
+                tx = 0;
 
-            for (int col = 0; col < 3; col++) {
-                float vw = widths[col];
-                float tw = scaleX[col];
+                for (int col = 0; col < 3; col++) {
+                    float vw = widths[col];
+                    float tw = scaleX[col];
 
-                // set the quad values
-                mQuadBuffers[index].setRect(vx, vy, vw, vh);
+                    // set the quad values
+                    sprite = (UniSprite) mChildren.get(index);
 
-                // set the coordinates
-                if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-                    mCoordBuffers[index].setRectFlipVertical(tx * tsx, tyInverted * tsy, tw * tsx, th * tsy);
-                } else {
-                    mCoordBuffers[index].setRectFlipVertical(tx * tsx, ty * tsy, tw * tsx, -th * tsy);
+                    // set the coordinates
+                    if (tw != 0 && th != 0) {
+                        sprite.setVisible(true);
+                        sprite.setPosition(vx, vy);
+                        sprite.setSize(vw, vh);
+                        frame = sprite.getAtlasFrame();
+                        frame.setTexture(mTexture);
+
+                        if (mScene != null && mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+                            frame.setRect(tx, tyInverted + th, tx + tw, tyInverted);
+                        } else {
+                            frame.setRect(tx, ty - th, tx + tw, ty);
+                        }
+                        sprite.setAtlasFrame(frame); // apply
+                        // Log.e("long", mTexture + " " + sprite.getAtlasFrame().toString());
+                    } else {
+                        sprite.setVisible(false);
+                    }
+
+                    vx += vw;
+                    tx += tw;
+                    index++;
                 }
 
-                vx += vw;
-                tx += tw;
-                index++;
+                vy += vh;
+                ty -= th;
+                tyInverted += th;
             }
-
-            vy += vh;
-            ty -= th;
-            tyInverted += th;
         }
 
-        // clear flag: texture coords
-        validate(InvalidateFlags.TEXTURE_COORDS);
+        super.updateChildren(deltaTime);
     }
 
     @Override
@@ -221,40 +236,7 @@ public class Sprite9 extends Rectangular {
         super.setSize(w, h);
 
         // also invalidate coordinates
-        invalidate(InvalidateFlags.TEXTURE_COORDS);
-    }
-
-    @Override
-    protected boolean drawChildren(final GLState glState) {
-        // texture check
-        if (mTexture == null || !m9PatchEnabled || !mHasPatches) {
-            return super.drawChildren(glState);
-        }
-
-        // color buffer
-        if (mColorBuffer == null) {
-            glState.setColorArrayEnabled(false);
-        } else {
-            // apply color buffer
-            mColorBuffer.apply(glState);
-        }
-
-        // bind the texture
-        mTexture.bind();
-
-        // check and draw the quads
-        QuadBuffer quad;
-        for (int i = 0; i < NUM_PATCHES; i++) {
-            quad = mQuadBuffers[i];
-            // only draw when the quad is set
-            if (quad.hasSize()) {
-                // now draw, woo hoo!
-                mCoordBuffers[i].apply(glState);
-                quad.draw(glState);
-            }
-        }
-
-        return true;
+        invalidate(CHILDREN);
     }
 
     @Override
@@ -277,7 +259,5 @@ public class Sprite9 extends Rectangular {
         super.dispose();
 
         m9Patches = null;
-        mQuadBuffers = null;
-        mCoordBuffers = null;
     }
 }
