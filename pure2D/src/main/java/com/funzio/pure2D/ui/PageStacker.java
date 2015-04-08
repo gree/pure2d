@@ -46,6 +46,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
     protected Pageable mCurrentPage;
     protected GLColor mDimmedColor = DIMMED_COLOR;
+    protected Pageable.TransitionListener mTransitionListener;
 
     private ArrayList<GLColor> mDimmedStack = new ArrayList<>();
 
@@ -165,7 +166,10 @@ public class PageStacker implements Pageable.TransitionListener {
     public void onTransitionInComplete(final Pageable page) {
         Log.v(TAG, "onTransitionInComplete(): " + page);
 
-        // TODO Auto-generated method stub
+        // forward callback
+        if (mTransitionListener != null) {
+            mTransitionListener.onTransitionInComplete(page);
+        }
     }
 
     @Override
@@ -180,6 +184,18 @@ public class PageStacker implements Pageable.TransitionListener {
                 mContainer.removeChild(page);
             }
         });
+
+        // forward callback
+        if (mTransitionListener != null) {
+            mTransitionListener.onTransitionOutComplete(page);
+        }
     }
 
+    public Pageable.TransitionListener getTransitionListener() {
+        return mTransitionListener;
+    }
+
+    public void setTransitionListener(final Pageable.TransitionListener transitionListener) {
+        mTransitionListener = transitionListener;
+    }
 }
