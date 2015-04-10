@@ -417,6 +417,10 @@ public class HList<T> extends HWheel implements List<T> {
         return true;
     }
 
+    public int getDataStartIndex() {
+        return mDataStartIndex;
+    }
+
     public T getItem(final int index) {
         return mData == null ? null : mData.get(index);
     }

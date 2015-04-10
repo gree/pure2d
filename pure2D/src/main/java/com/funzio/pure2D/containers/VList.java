@@ -425,6 +425,10 @@ public class VList<T> extends VWheel implements List<T> {
        return mData.set(index, item);
     }
 
+    public int getDataStartIndex() {
+        return mDataStartIndex;
+    }
+
     @Override
     public void onItemTouch(MotionEvent event, ItemRenderer<T> item) {
         // Log.v(TAG, "onItemTouch(), Index:" + item.getDataIndex() + ": " + item.getData());
