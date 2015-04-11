@@ -32,6 +32,12 @@ import android.graphics.Color;
 public class GLColor {
     public static final GLColor BLACK = new GLColor(0, 0, 0, 1f);
     public static final GLColor WHITE = new GLColor(1f, 1f, 1f, 1f);
+    public static final GLColor RED = new GLColor(1f, 0f, 0f, 1f);
+    public static final GLColor GREEN = new GLColor(0f, 1f, 0f, 1f);
+    public static final GLColor BLUE = new GLColor(0f, 0f, 1f, 1f);
+    public static final GLColor YELLOW = new GLColor(1f, 1f, 0f, 1f);
+    public static final GLColor CYAN = new GLColor(0f, 1f, 1f, 1f);
+    public static final GLColor PURPLE = new GLColor(1f, 0f, 1f, 1f);
 
     public float r = 0;
     public float g = 0;
