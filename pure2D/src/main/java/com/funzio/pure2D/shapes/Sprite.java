@@ -81,10 +81,10 @@ public class Sprite extends Rectangular {
         }
     }
 
-    @Override
+    /*@Override
     public boolean shouldDraw(final RectF globalViewRect) {
         return super.shouldDraw(globalViewRect) && (mTexture != null && mTexture.isLoaded());
-    }
+    }*/
 
     public boolean isSizeToFrame() {
         return mSizeToFrame;

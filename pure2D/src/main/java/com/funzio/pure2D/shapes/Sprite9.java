@@ -239,10 +239,10 @@ public class Sprite9 extends UniGroup {
         invalidate(CHILDREN);
     }
 
-    @Override
+    /*@Override
     public boolean shouldDraw(final RectF globalViewRect) {
         return super.shouldDraw(globalViewRect) && (mTexture != null && mTexture.isLoaded());
-    }
+    }*/
 
     @Override
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
