@@ -119,7 +119,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public void play(final int key) {
         // Log.v(TAG, "play(" + key + ")");
 
-        Soundable soundable = mSoundMap.get(key);
+        final Soundable soundable = mSoundMap.get(key);
         if (soundable != null) {
             Message msg = new Message();
             msg.arg1 = soundable.getSoundID();
@@ -152,22 +152,48 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
-    public void playDuration(final int key, final int duration) {
-        // Log.v(TAG, "play(" + key + ")");
+    public int playDuration(final int key, final int loop, final int duration) {
+        // Log.v(TAG, "playDuration(" + key + ")");
 
-        play(key);
+        final int streamID = forcePlay(key, loop);
+        if (streamID != 0) {
+            // stop later
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopStream(streamID);
+                }
+            }, duration);
+        }
 
-        // stop later
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stop(key);
+        return streamID;
+    }
+
+    /**
+     * Play synchronously instead of queueing. Not ideal for common usage.
+     * @param key
+     * @param loop
+     * @return stream ID
+     */
+    public int forcePlay(final int key, final int loop) {
+        // Log.v(TAG, "forcePlay(" + sound + ")");
+
+        final Soundable soundable = mSoundMap.get(key);
+        if (soundable != null) {
+            final int streamID =  privatePlay(soundable.getSoundID(), loop);
+            if (streamID != 0) {
+                mStreamIds.put(soundable.getSoundID(), streamID);
             }
-        }, duration);
+
+            return streamID;
+        } else {
+            Log.e(TAG, "Unable to play sound: " + key);
+            return -1;
+        }
     }
 
     private int privatePlay(final int soundID, final int loop) {
-        // Log.v(TAG, "play(" + sound + ")");
+        // Log.v(TAG, "privatePlay(" + sound + ")");
 
         if (mSoundEnabled && soundID > 0) {
             final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -266,6 +292,14 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         if (streamID > 0) {
             mSoundPool.stop(streamID);
             mStreamIds.delete(soundID);
+        }
+    }
+
+    public void stopStream(final int streamID) {
+        mSoundPool.stop(streamID);
+        final int index = mStreamIds.indexOfValue(streamID);
+        if (index >= 0) {
+            mStreamIds.removeAt(index);
         }
     }
 
