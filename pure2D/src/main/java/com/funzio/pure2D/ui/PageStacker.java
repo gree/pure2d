@@ -48,7 +48,7 @@ public class PageStacker implements Pageable.TransitionListener {
     protected GLColor mDimmedColor = DIMMED_COLOR;
     protected Pageable.TransitionListener mTransitionListener;
 
-    private ArrayList<GLColor> mDimmedStack = new ArrayList<>();
+    private ArrayList<GLColor> mDimmedStack = new ArrayList<GLColor>();
 
     public PageStacker(final Container container) {
         mContainer = container;

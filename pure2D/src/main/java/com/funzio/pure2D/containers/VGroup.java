@@ -267,10 +267,11 @@ public class VGroup extends LinearGroup implements UIObject {
 
             float nextY = -mScrollPosition.y;
             // alignment
+            final float actualHeight = mContentSize.y - (mNumChildren > 0 ? mGap : 0); // remove the extra gap
             if ((mAlignment & Alignment.VERTICAL_CENTER) > 0) {
-                nextY += (mSize.y - mContentSize.y) * 0.5f;
+                nextY += (mSize.y - actualHeight) * 0.5f;
             } else if ((mAlignment & Alignment.TOP) > 0) {
-                nextY += (mSize.y - mContentSize.y);
+                nextY += (mSize.y - actualHeight);
             }
 
             for (int i = 0; i < mNumChildren; i++) {

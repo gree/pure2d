@@ -257,10 +257,11 @@ public class HGroup extends LinearGroup implements UIObject {
 
             float nextX = -mScrollPosition.x;
             // alignment
+            final float actualWidth = mContentSize.x - (mNumChildren > 0 ? mGap : 0); // remove the extra gap
             if ((mAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                nextX += (mSize.x - mContentSize.x) * 0.5f;
+                nextX += (mSize.x - actualWidth) * 0.5f;
             } else if ((mAlignment & Alignment.RIGHT) > 0) {
-                nextX += (mSize.x - mContentSize.x);
+                nextX += (mSize.x - actualWidth);
             }
 
             for (int i = 0; i < mNumChildren; i++) {
