@@ -30,6 +30,8 @@ import com.funzio.pure2D.Manipulatable;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.shapes.Polyline;
 
+import java.util.Arrays;
+
 /**
  * @author long
  */
@@ -40,8 +42,8 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     protected int mNumPoints = DEFAULT_NUM_POINTS;
     protected float mMotionEasingX = DEFAULT_MOTION_EASING;
     protected float mMotionEasingY = DEFAULT_MOTION_EASING;
-    protected int mMinLength = 1;
-    protected int mSegmentLength = 0;
+    protected float mMinLength = 1;
+    protected float mSegmentLength = 0;
 
     protected Manipulatable mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
@@ -132,6 +134,12 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
                             // move toward the leading point
                             p1.x += dx * mMotionEasingX;
                             p1.y += dy * mMotionEasingY;
+
+                            // show vertex
+                            setColorMultipliersAt(i, 1);
+                        } else {
+                            // hide vertex
+                            setColorMultipliersAt(i, 0);
                         }
                     }
                 }
@@ -158,6 +166,9 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         if (mTotalLength <= mMinLength) {
             // flag done
             mFollowingHead = false;
+
+            // hide all vertices
+            Arrays.fill(mColorMultipliers, 0);
         }
     }
 
@@ -233,11 +244,11 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
         setPoints(mPoints);
     }
 
-    public int getMinLength() {
+    public float getMinLength() {
         return mMinLength;
     }
 
-    public void setMinLength(final int totalLength) {
+    public void setMinLength(final float totalLength) {
         mMinLength = totalLength;
         mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
     }

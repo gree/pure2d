@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,13 +19,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.shapes;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
@@ -45,6 +45,10 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.uni.UniContainer;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
+import java.util.Arrays;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * @author long
  */
@@ -61,6 +65,7 @@ public class Polyline extends Shape implements StackableObject {
 
     protected GLColor[] mStrokeColors;
     protected float[] mColorValues;
+    protected float[] mColorMultipliers;
 
     protected float[] mVertices;
     protected int mVerticesNum = 0;
@@ -326,7 +331,7 @@ public class Polyline extends Shape implements StackableObject {
 
     /**
      * Set the beginning and end caps' widths. This works similarly as the 9-patch technique.
-     * 
+     *
      * @param cap1
      * @param cap2
      */
@@ -339,7 +344,7 @@ public class Polyline extends Shape implements StackableObject {
 
     /**
      * Repeat the texture to fill the body of this polyline
-     * 
+     *
      * @param repeating
      */
     public void setTextureRepeating(final boolean repeating) {
@@ -391,6 +396,7 @@ public class Polyline extends Shape implements StackableObject {
         if (mPoints == null || mPoints.length == 0 || colors == null || colors.length == 0) {
             mColorValues = null;
             mColorBuffer = null;
+            mColorMultipliers = null;
             return;
         }
 
@@ -417,6 +423,8 @@ public class Polyline extends Shape implements StackableObject {
 
         if (mColorValues == null || (mVerticesNum * 4) > mColorValues.length) {
             mColorValues = new float[mVerticesNum * 4]; // each vertex has 4 floats
+            mColorMultipliers = new float[mVerticesNum * 4];
+            Arrays.fill(mColorMultipliers, 1f);
         }
 
         final int range = mPoints.length - 1;
@@ -513,7 +521,7 @@ public class Polyline extends Shape implements StackableObject {
 
             // update colors
             if (mColorValues != null) {
-                ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index + i, 1, colorIndex, mColorValues);
+                ((QuadMeshColorBuffer) colorBuffer).setValuesAt(index + i, 1, colorIndex, mColorValues, mColorMultipliers);
             }
 
             // optional
@@ -527,6 +535,11 @@ public class Polyline extends Shape implements StackableObject {
         }
 
         return numCells;
+    }
+
+    protected void setColorMultipliersAt(final int vertexIndex, final float value) {
+        final int start = vertexIndex * 8;
+        Arrays.fill(mColorMultipliers, start, start + 8, value);
     }
 
     @Override
