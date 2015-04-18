@@ -65,6 +65,15 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
     public void transitionIn(final boolean pushing) {
         mPageActive = true;
 
+        // do the actual animation
+        animateIn(pushing);
+    }
+
+    /**
+     * Override this for the actual animation
+     * @param pushing
+     */
+    protected void animateIn(final boolean pushing) {
         mTransitionAnimator.stop();
         mTransitionAnimator.start(0, -mSize.y, 0, 0);
     }
@@ -72,6 +81,16 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
     @Override
     public void transitionOut(final boolean pushing) {
         mPageActive = false;
+
+        // do the actual animation
+        animateOut(pushing);
+    }
+
+    /**
+     * Override this for the actual animation
+     * @param pushing
+     */
+    protected void animateOut(final boolean pushing) {
         mTransitionAnimator.stop();
         mTransitionAnimator.start(0, -mSize.y);
     }
