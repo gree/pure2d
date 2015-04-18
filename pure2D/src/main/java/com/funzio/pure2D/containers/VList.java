@@ -20,6 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * ****************************************************************************
+ *
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 
 
@@ -417,12 +419,21 @@ public class VList<T> extends VWheel implements List<T> {
         return true;
     }
 
+    /**
+     * Resetting all the child renderers' data
+     */
+    public void resetChildren() {
+        for (int i = 0; i < mNumChildren; i++) {
+            ((ItemRenderer<T>) mChildren.get(i)).setData(-1, null);
+        }
+    }
+
     public T getItem(final int index) {
         return mData == null ? null : mData.get(index);
     }
 
     public T setItem(final int index, T item) {
-       return mData.set(index, item);
+        return mData.set(index, item);
     }
 
     public int getDataStartIndex() {

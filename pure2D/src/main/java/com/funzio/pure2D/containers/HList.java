@@ -417,6 +417,15 @@ public class HList<T> extends HWheel implements List<T> {
         return true;
     }
 
+    /**
+     * Resetting all the child renderers' data
+     */
+    public void resetChildren() {
+        for (int i = 0; i < mNumChildren; i++) {
+            ((ItemRenderer<T>) mChildren.get(i)).setData(-1, null);
+        }
+    }
+
     public int getDataStartIndex() {
         return mDataStartIndex;
     }
