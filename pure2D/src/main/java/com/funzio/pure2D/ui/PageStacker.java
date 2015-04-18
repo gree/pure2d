@@ -77,7 +77,7 @@ public class PageStacker implements Pageable.TransitionListener {
                             previousPage.transitionOut(true);
                         }
                     } else {
-                        if (previousPage != null) {
+                        if (previousPage != null && page.isModal()) {
                             // dim
                             mDimmedStack.add(previousPage.getColor());
                             previousPage.setColor(mDimmedColor);
@@ -128,7 +128,7 @@ public class PageStacker implements Pageable.TransitionListener {
                         previousPage.transitionIn(false);
                     }
                 } else {
-                    if (previousPage != null) {
+                    if (previousPage != null && currentPage.isModal()) {
                         // undim
                         if (mDimmedStack.size() > 0) {
                             previousPage.setColor(mDimmedStack.remove(mDimmedStack.size() - 1));
