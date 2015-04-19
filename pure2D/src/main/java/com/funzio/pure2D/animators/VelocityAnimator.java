@@ -29,6 +29,8 @@ public class VelocityAnimator extends BaseAnimator {
     protected float mAcceleration = 0;
     protected float mVelocity = 0;
     protected int mPendingElapse = 0;
+    protected float mMinVelocity = Float.MIN_VALUE;
+    protected float mMaxVelocity = Float.MAX_VALUE;
 
     public VelocityAnimator() {
         super();
@@ -97,6 +99,11 @@ public class VelocityAnimator extends BaseAnimator {
         return mLifespan - mElapsedTime;
     }
 
+    public void setVelocityRange(final float min, final float max) {
+        mMinVelocity = min;
+        mMaxVelocity = max;
+    }
+
     @Override
     public boolean update(final int deltaTime) {
         if (mRunning) {
@@ -116,6 +123,12 @@ public class VelocityAnimator extends BaseAnimator {
 
                 float deltaVeloc = mAcceleration * myDeltaTime;
                 float newVeloc = mVelocity + deltaVeloc;
+                // range check
+                if (newVeloc < mMinVelocity) {
+                    newVeloc = mMinVelocity;
+                } else if (newVeloc > mMaxVelocity) {
+                    newVeloc = mMaxVelocity;
+                }
 
                 // scroll now
                 float delta = mVelocity * myDeltaTime + 0.5f * deltaVeloc * myDeltaTime; // Real physics, Newton's
