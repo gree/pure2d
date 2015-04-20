@@ -197,7 +197,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     @Override
     public boolean update(final int deltaTime) {
         // find axis system
-        if (mSceneAxis < 0) {
+        if (mScene != null && mSceneAxis < 0) {
             mSceneAxis = mScene.getAxisSystem();
         }
 

@@ -60,6 +60,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected static final String ATT_ALPHA = "alpha";
     protected static final String ATT_BLEND_MODE = "blendMode";
     protected static final String ATT_ORIGIN_AT_CENTER = "originAtCenter";
+    protected static final String ATT_ORIGIN_X = "originX";
+    protected static final String ATT_ORIGIN_Y = "originY";
     protected static final String ATT_ROTATION = "rotation";
     protected static final String ATT_SCALE = "scale";
     protected static final String ATT_SCALE_X = "scaleX";
@@ -1247,6 +1249,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
             mDebugFlags = Boolean.valueOf(debug) ? Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS | Pure2D.DEBUG_FLAG_WIREFRAME : 0;
         }
 
+        // origin
+        final String originX = xmlParser.getAttributeValue(null, ATT_ORIGIN_X);
+        if (originX != null) {
+            mOrigin.x = Float.valueOf(originX);
+        }
+        final String originY = xmlParser.getAttributeValue(null, ATT_ORIGIN_Y);
+        if (originY != null) {
+            mOrigin.y = Float.valueOf(originY);
+        }
+        setOrigin(mOrigin.x, mOrigin.y);
         final String originAtCenter = xmlParser.getAttributeValue(null, ATT_ORIGIN_AT_CENTER);
         if (originAtCenter != null) {
             if (Boolean.valueOf(originAtCenter)) {

@@ -98,6 +98,19 @@ public class PageStacker implements Pageable.TransitionListener {
         return false;
     }
 
+    protected Pageable dismissPage() {
+        final Pageable currentPage = popPage();
+        if (currentPage != null) {
+            currentPage.onDismiss();
+        }
+
+        return currentPage;
+    }
+
+    /**
+     * Pop the last page
+     * @return
+     */
     public Pageable popPage() {
         if (mNumPages == 0) {
             return null;
@@ -139,6 +152,25 @@ public class PageStacker implements Pageable.TransitionListener {
         });
 
         return currentPage;
+    }
+
+    /**
+     * Pop all the way to the specified page
+     * @param page
+     * @return
+     */
+    public int popPage(final Pageable page) {
+        final int index = mPages.indexOf(page);
+        if (index >= 0 && index < mNumPages) {
+            final int diff = mNumPages - index;
+            for (int i = 0; i < diff; i++) {
+                popPage();
+            }
+
+            return diff;
+        }
+
+        return 0;
     }
 
     public int getNumPages() {
@@ -189,6 +221,29 @@ public class PageStacker implements Pageable.TransitionListener {
         if (mTransitionListener != null) {
             mTransitionListener.onTransitionOutComplete(page);
         }
+    }
+
+    public boolean onBackPressed() {
+        if (mNumPages > 1) {
+
+            if (mCurrentPage.onBackPressed()) {
+                // let page completely take control
+                return true;
+            } else if (mCurrentPage.isDismissible()) {
+                // sync on GL Thread
+                mContainer.queueEvent(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        dismissPage();
+                    }
+                });
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Pageable.TransitionListener getTransitionListener() {
