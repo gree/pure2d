@@ -173,6 +173,20 @@ public class PageStacker implements Pageable.TransitionListener {
         return 0;
     }
 
+    public int popToPage(final Pageable page) {
+        final int index = mPages.indexOf(page);
+        if (index >= 0 && index < mNumPages) {
+            final int diff = mNumPages - index - 1;
+            for (int i = 0; i < diff; i++) {
+                popPage();
+            }
+
+            return diff;
+        }
+
+        return 0;
+    }
+
     public int getNumPages() {
         return mNumPages;
     }
