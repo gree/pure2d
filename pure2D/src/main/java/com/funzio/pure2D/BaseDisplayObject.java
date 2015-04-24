@@ -423,7 +423,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @return the position
      */
-    final public PointF getPosition() {
+    public PointF getPosition() {
         return mPosition;
     }
 

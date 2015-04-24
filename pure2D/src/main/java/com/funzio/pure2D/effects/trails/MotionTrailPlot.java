@@ -143,6 +143,15 @@ public class MotionTrailPlot extends BaseDisplayObject implements MotionTrail, S
         invalidate(CHILDREN);
     }
 
+    /**
+     * Need to also override this since we override setPosition()
+     * @return
+     */
+    @Override
+    public PointF getPosition() {
+        return mNumPoints > 0 ? mPoints[0] : null;
+    }
+
     @Override
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
