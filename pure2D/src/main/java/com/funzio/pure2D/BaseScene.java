@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,21 +19,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -49,6 +41,16 @@ import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.ui.UITextureManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author long
@@ -120,36 +122,39 @@ public class BaseScene implements Scene {
         return true;
     }
 
-    final public boolean queueEvent(final Runnable r, final int delayMillis) {
+    final public Runnable queueEvent(final Runnable r, final int delayMillis) {
         if (mStage != null && mStage.getHandler() != null) {
-            mStage.getHandler().postDelayed(new Runnable() {
+            final Runnable postRunnable = new Runnable() {
 
                 @Override
                 public void run() {
                     // queue on GL thread
                     queueEvent(r);
                 }
-            }, delayMillis);
+            };
+            mStage.getHandler().postDelayed(postRunnable, delayMillis);
+
+            return postRunnable;
         } else {
             r.run();
         }
 
-        // always success now
-        return true;
+        return null;
     }
 
     /**
-     * Remove an Event queued by #queueEvent(final Runnable r, final int delayMillis)
+     * Remove all Events queued by #queueEvent(final Runnable r, final int delayMillis)
      * @param r
      * @return
      */
-    final public boolean removeEvent(final Runnable r) {
+    final public boolean removeEvents(final Runnable r) {
         if (mStage != null && mStage.getHandler() != null) {
             mStage.getHandler().removeCallbacks(r);
+
+            return true;
         }
 
-        // always success now
-        return true;
+        return false;
     }
 
     /**
@@ -571,7 +576,7 @@ public class BaseScene implements Scene {
 
     /**
      * This needs to be called on GL Thread
-     * 
+     *
      * @param color the color to set.
      */
     public void setColor(final GLColor color) {
@@ -594,7 +599,7 @@ public class BaseScene implements Scene {
 
     /**
      * Set the default Blending function for all child objects
-     * 
+     *
      * @param defaultBlendFunc
      */
     public void setDefaultBlendFunc(final BlendFunc defaultBlendFunc) {
@@ -727,7 +732,7 @@ public class BaseScene implements Scene {
 
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
-     * 
+     *
      * @param child1
      * @param child2
      * @return
@@ -752,7 +757,7 @@ public class BaseScene implements Scene {
 
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
-     * 
+     *
      * @param index1
      * @param index2
      * @return
@@ -777,7 +782,7 @@ public class BaseScene implements Scene {
 
     /**
      * Get the number of children, not including grand children
-     * 
+     *
      * @see #getNumGrandChildren()
      */
     public int getNumChildren() {
@@ -786,7 +791,7 @@ public class BaseScene implements Scene {
 
     /**
      * Get number of children including grand children
-     * 
+     *
      * @see #getNumChildren()
      */
     public int getNumGrandChildren() {
@@ -869,7 +874,7 @@ public class BaseScene implements Scene {
 
     /**
      * Converts a local point to a global point, without allocating new PointF
-     * 
+     *
      * @param local
      * @param result
      */
@@ -880,7 +885,7 @@ public class BaseScene implements Scene {
 
     /**
      * Scene is the top level of the hierachy.
-     * 
+     *
      * @return the copied point of the input
      */
     final public PointF globalToLocal(final PointF global) {
@@ -889,7 +894,7 @@ public class BaseScene implements Scene {
 
     /**
      * Converts a global point to a local point, without allocating new PointF
-     * 
+     *
      * @param global
      * @param result
      */
@@ -900,7 +905,7 @@ public class BaseScene implements Scene {
 
     /**
      * Get the Screen's coordinates from a global point relative to this scene
-     * 
+     *
      * @param globalX
      * @param globalY
      */
@@ -931,7 +936,7 @@ public class BaseScene implements Scene {
 
     /**
      * Get the global coordinates from the Screen's coordinates
-     * 
+     *
      * @param screenX
      * @param screenY
      */
@@ -971,7 +976,7 @@ public class BaseScene implements Scene {
 
     /**
      * Convert a Global Point to a Pixel Point on the Stage
-     * 
+     *
      * @param globalX
      * @param globalY
      * @param result
@@ -996,7 +1001,7 @@ public class BaseScene implements Scene {
 
     /**
      * Convert a Global Rectangle to a Pixel Rectangle on the Stage
-     * 
+     *
      * @param globalRect
      * @param result
      */
@@ -1028,7 +1033,7 @@ public class BaseScene implements Scene {
 
     /**
      * Convert y based on the Axis system
-     * 
+     *
      * @param y
      * @param size
      * @return
@@ -1085,7 +1090,7 @@ public class BaseScene implements Scene {
 
     /**
      * Note: only use this within onTouchEvent()
-     * 
+     *
      * @hide
      */
     public PointF getTouchedPoint() {
@@ -1094,7 +1099,7 @@ public class BaseScene implements Scene {
 
     /**
      * Note: only use this within onTouchEvent()
-     * 
+     *
      * @hide
      */
     public PointF getTouchedPoint(final int pointerIndex) {
@@ -1103,7 +1108,7 @@ public class BaseScene implements Scene {
 
     /**
      * Note: only use this within onTouchEvent()
-     * 
+     *
      * @hide
      */
     public int getPointerCount() {
@@ -1153,7 +1158,7 @@ public class BaseScene implements Scene {
 
     /**
      * for Debugging.
-     * 
+     *
      * @return a string that has all the children in Tree format
      */
     public String getObjectTree() {
@@ -1172,7 +1177,7 @@ public class BaseScene implements Scene {
 
     /**
      * For Debugging. Group object with the same type and count
-     * 
+     *
      * @return
      */
     public String countObjectsByType() {
