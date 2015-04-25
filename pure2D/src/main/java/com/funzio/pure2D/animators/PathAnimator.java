@@ -27,6 +27,8 @@ package com.funzio.pure2D.animators;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 
+import java.util.List;
+
 /**
  * @author long
  */
@@ -48,6 +50,16 @@ public class PathAnimator extends TweenAnimator {
 
     public void setValues(final PointF... points) {
         setValues(points.length, points);
+    }
+
+    public void setValues(final List<PointF> points) {
+        int size = points.size();
+        mPoints = new PointF[size];
+        for (int i = 0; i < size; i++) {
+            mPoints[i] = points.get(i);
+        }
+
+        setValues(mPoints.length, mPoints);
     }
 
     public void setValues(final int limit, final PointF... points) {
