@@ -96,7 +96,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
      */
     public void setText(final String text) {
         mText = text;
-        invalidate(CHILDREN);
+        invalidate(CHILDREN | BOUNDS);
     }
 
     /**
@@ -202,7 +202,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         }
 
         // update text bounds
-        if ((mInvalidateFlags & CHILDREN) != 0 || mSize.x <= 1 || mSize.y <= 1) {
+        if ((mInvalidateFlags & (CHILDREN | BOUNDS)) != 0 || mSize.x <= 1 || mSize.y <= 1) {
             updateTextBounds();
         }
 
