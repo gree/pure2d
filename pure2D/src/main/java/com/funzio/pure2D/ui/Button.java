@@ -32,6 +32,7 @@ import org.xmlpull.v1.XmlPullParser;
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite9;
 
@@ -89,6 +90,7 @@ public class Button extends DisplayGroup implements UIObject {
 
     protected void createChildren() {
         mButtonSprite = new Sprite9();
+        mButtonSprite.setBlendFunc(BlendModes.PREMULTIPLIED_ALPHA_FUNC);
         mButtonSprite.setAutoUpdateBounds(true);
         addChild(mButtonSprite);
     }
