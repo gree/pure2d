@@ -287,19 +287,24 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     }
 
     public void stop(final int soundID) {
-        int streamID = mStreamIds.get(soundID, -1);
+        synchronized (mStreamIds) {
+            int streamID = mStreamIds.get(soundID, -1);
 
-        if (streamID > 0) {
-            mSoundPool.stop(streamID);
-            mStreamIds.delete(soundID);
+            if (streamID > 0) {
+                mSoundPool.stop(streamID);
+                mStreamIds.delete(soundID);
+            }
         }
     }
 
     public void stopStream(final int streamID) {
-        mSoundPool.stop(streamID);
-        final int index = mStreamIds.indexOfValue(streamID);
-        if (index >= 0) {
-            mStreamIds.removeAt(index);
+        synchronized (mStreamIds) {
+            mSoundPool.stop(streamID);
+
+            final int index = mStreamIds.indexOfValue(streamID);
+            if (index >= 0) {
+                mStreamIds.removeAt(index);
+            }
         }
     }
 
@@ -365,10 +370,10 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public void dispose() {
         synchronized (mSoundMap) {
             mSoundMap.clear();
+            mStreamIds.clear();
         }
 
         mSoundPool.release();
-        mStreamIds.clear();
 
         releaseMedia();
     }
