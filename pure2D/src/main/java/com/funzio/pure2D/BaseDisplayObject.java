@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,23 +19,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D;
-
-import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.Manipulator;
@@ -49,6 +45,12 @@ import com.funzio.pure2D.ui.UIConstraint;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.utils.Pure2DUtils;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * @author long
  */
@@ -60,6 +62,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     protected static final String ATT_ALPHA = "alpha";
     protected static final String ATT_BLEND_MODE = "blendMode";
     protected static final String ATT_ORIGIN_AT_CENTER = "originAtCenter";
+    protected static final String ATT_PIVOT_AT_CENTER = "pivotAtCenter";
     protected static final String ATT_ORIGIN_X = "originX";
     protected static final String ATT_ORIGIN_Y = "originY";
     protected static final String ATT_ROTATION = "rotation";
@@ -120,6 +123,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     private boolean mHasOrigin = false;
     private boolean mOriginAtCenter = false;
+    private boolean mPivotAtCenter = false;
     private GLColor mBlendColor;
     private PointF mGlobalPosition;
 
@@ -146,7 +150,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * This is used for 3D projection
-     * 
+     *
      * @return
      * @see #setPerspectiveEnabled(boolean)
      */
@@ -390,7 +394,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Toggles the heart-beat. If set to false, the update() does NOT get called. This can be used for optimization.
-     * 
+     *
      * @see com.funzio.pure2D.IDisplayObject#setAlive(boolean)
      * @see #update(int)
      */
@@ -463,7 +467,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Set the Z-depth
-     * 
+     *
      * @see #setAlphaTestEnabled(boolean)
      */
     public void setZ(final float z) {
@@ -508,7 +512,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         // check center
         if (mOriginAtCenter) {
-            if (x != mSize.x * 0.5f || y != mSize.y * 0.5f) {
+            if (Math.abs(x - mSize.x * 0.5f) >= 1 || Math.abs(y - mSize.y * 0.5f) >= 1) {
                 // no longer center
                 mOriginAtCenter = false;
             }
@@ -550,6 +554,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mPivot.x = mSize.x * 0.5f;
         mPivot.y = mSize.y * 0.5f;
 
+        // flag
+        mPivotAtCenter = true;
+
         invalidate(PIVOT);
     }
 
@@ -585,6 +592,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (mOriginAtCenter) {
             // auto center
             setOrigin(w * 0.5f, h * 0.5f);
+        }
+
+        if (mPivotAtCenter) {
+            setPivot(w * 0.5f, h * 0.5f);
         }
 
         invalidate(SIZE);
@@ -861,7 +872,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Enable Alpha Test. This can be useful when doing depth sorting but also a Performance-Killer. Make sure you know what you're doing!
-     * 
+     *
      * @param alphaTestEnabled
      * @see #setZ(float)
      */
@@ -929,7 +940,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Converts a local point to a global point, without allocating new PointF
-     * 
+     *
      * @param local
      * @param result
      */
@@ -950,7 +961,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Converts a global point to a local point, without allocating new PointF
-     * 
+     *
      * @param global
      * @param result
      */
@@ -975,7 +986,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Get global position of this object
-     * 
+     *
      * @return the global point
      */
     public PointF getGlobalPosition() {
@@ -1094,7 +1105,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * Get the Global Bounds of this object that takes translation, rotation and scale factors into account.
-     * 
+     *
      * @return
      */
     final public RectF getBounds() {
@@ -1118,7 +1129,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     /**
      * This needs to be set to true if using Camera clipping.
-     * 
+     *
      * @param autoUpdateBounds the autoUpdateBounds to set
      */
     public void setAutoUpdateBounds(final boolean autoUpdateBounds) {
@@ -1263,6 +1274,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
         if (originAtCenter != null) {
             if (Boolean.valueOf(originAtCenter)) {
                 setOriginAtCenter();
+            }
+        }
+
+        final String pivotAtCenter = xmlParser.getAttributeValue(null, ATT_PIVOT_AT_CENTER);
+        if (pivotAtCenter != null) {
+            if (Boolean.valueOf(pivotAtCenter)) {
+                setPivotAtCenter();
             }
         }
 
