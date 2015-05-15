@@ -1233,9 +1233,9 @@ public class BaseScene implements Scene {
     }
 
     public Bitmap createBitmap(final int x, final int y, final int w, final int h) throws OutOfMemoryError {
-        int bitmapBuffer[] = new int[w * h];
-        int bitmapSource[] = new int[w * h];
-        IntBuffer intBuffer = IntBuffer.wrap(bitmapBuffer);
+        final int bitmapBuffer[] = new int[w * h];
+        final int bitmapSource[] = new int[w * h];
+        final IntBuffer intBuffer = IntBuffer.wrap(bitmapBuffer);
         intBuffer.position(0);
 
         try {
@@ -1245,10 +1245,10 @@ public class BaseScene implements Scene {
                 offset1 = i * w;
                 offset2 = (h - i - 1) * w;
                 for (int j = 0; j < w; j++) {
-                    int texturePixel = bitmapBuffer[offset1 + j];
-                    int blue = (texturePixel >> 16) & 0xff;
-                    int red = (texturePixel << 16) & 0x00ff0000;
-                    int pixel = (texturePixel & 0xff00ff00) | red | blue;
+                    final int texturePixel = bitmapBuffer[offset1 + j];
+                    final int blue = (texturePixel >> 16) & 0xff;
+                    final int red = (texturePixel << 16) & 0x00ff0000;
+                    final int pixel = (texturePixel & 0xff00ff00) | red | blue;
                     bitmapSource[offset2 + j] = pixel;
                 }
             }
