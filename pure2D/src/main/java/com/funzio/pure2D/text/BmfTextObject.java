@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,21 +19,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
  *
  */
 package com.funzio.pure2D.text;
 
-import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
@@ -49,6 +45,12 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.DummyDrawer;
 import com.funzio.pure2D.ui.UIConfig;
 import com.funzio.pure2D.ui.UIManager;
+
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author long
@@ -298,7 +300,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     @Override
     protected boolean drawChildren(final GLState glState) {
         // sanity check
-        if (mBitmapFont == null || mTexture == null) {
+        if (mBitmapFont == null || mTexture == null || mText == null) {
             return false;
         }
 
@@ -309,19 +311,21 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             sScratchText = mText;
             final boolean axisFlipped = (mSceneAxis == Scene.AXIS_TOP_LEFT);
             final int length = sScratchText.length();
-            float nextX, nextY = mTextBounds.bottom;
+            float nextX = 0, nextY = mTextBounds.bottom;
             char ch;
             AtlasFrame frame;
             PointF frameSize;
 
             // alignment
             int lineIndex = 0;
-            if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
-            } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                nextX = (mSize.x - mLineWidths.get(lineIndex));
-            } else {
-                nextX = 0;
+            if (lineIndex < mLineWidths.size()) {
+                if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                    nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                    nextX = (mSize.x - mLineWidths.get(lineIndex));
+                } else {
+                    nextX = 0;
+                }
             }
 
             // init mesh buffer
@@ -347,12 +351,14 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
                     // alignment
                     lineIndex++;
-                    if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                        nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
-                    } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                        nextX = (mSize.x - mLineWidths.get(lineIndex));
-                    } else {
-                        nextX = 0;
+                    if (lineIndex < mLineWidths.size()) {
+                        if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                            nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                        } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
+                            nextX = (mSize.x - mLineWidths.get(lineIndex));
+                        } else {
+                            nextX = 0;
+                        }
                     }
 
                     // next y
