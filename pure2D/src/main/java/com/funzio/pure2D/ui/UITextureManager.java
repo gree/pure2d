@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,15 +19,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.ui;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 import android.content.res.Resources;
 import android.util.Log;
@@ -49,6 +47,11 @@ import com.funzio.pure2D.text.BitmapFont;
 import com.funzio.pure2D.text.TextOptions;
 import com.funzio.pure2D.ui.vo.FontVO;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author long.ngo
@@ -121,7 +124,7 @@ public class UITextureManager extends TextureManager {
 
     /**
      * Create and cache a texture synchronously from a specified URI. If this texture is already in cache, it simply returns the cache version.
-     * 
+     *
      * @param textureUri
      * @return
      */
@@ -131,9 +134,9 @@ public class UITextureManager extends TextureManager {
 
     /**
      * Create and cache a texture synchronously from a specified URI. If this texture is already in cache, it simply returns the cache version.
-     * 
+     *
      * @param textureUri
-     * @param options can be null. If this is null, it used the Texture Options defined in UI Config file.
+     * @param options    can be null. If this is null, it used the Texture Options defined in UI Config file.
      * @return
      */
     public Texture getUriTexture(final String textureUri, final TextureOptions options) {
@@ -142,10 +145,10 @@ public class UITextureManager extends TextureManager {
 
     /**
      * Create and cache a texture from a specified URI. If this texture is already in cache, it simply returns the cache version.
-     * 
+     *
      * @param textureUri
      * @param async
-     * @param options can be null. If this is null, it used the Texture Options defined in UI Config file.
+     * @param options    can be null. If this is null, it used the Texture Options defined in UI Config file.
      * @return
      * @see Pure2DURI
      */
@@ -210,7 +213,7 @@ public class UITextureManager extends TextureManager {
 
     /**
      * Load a Json atlas file
-     * 
+     *
      * @param assets
      * @param jsonUri
      * @return
@@ -407,6 +410,33 @@ public class UITextureManager extends TextureManager {
             }
 
             mNovaFactories.clear();
+        }
+    }
+
+    /**
+     * Load all textures from a subdir in assets folder
+     *
+     * @param dir
+     * @param recursive
+     */
+    public void loadAssetTextures(final String dir, final boolean recursive) {
+        Log.i(TAG, "loadAssetTextures(): " + dir + ", " + recursive);
+        try {
+            final String fileList[] = mAssets.list(dir);
+            for (final String filename : fileList) {
+                final String filePath = dir == null || dir.isEmpty() ? filename : dir + "/" + filename;
+                final String subFiles[] = mAssets.list(filePath);
+                if (subFiles.length > 0) {
+                    // folder
+                    if (recursive) {
+                        loadAssetTextures(filePath, recursive);
+                    }
+                } else if (filename.endsWith(".png") || filename.endsWith(".jpg")) {
+                    getUriTexture("asset://" + filePath);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Listing Files Error!", e);
         }
     }
 
