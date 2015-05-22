@@ -59,7 +59,7 @@ public class BitmapFont {
     private BitmapFontMetrics mFontMetrics;
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
-        this(characters, textOptions, 1024);
+        this(characters, textOptions, 512);
     }
 
     public BitmapFont(final String characters, final TextOptions textOptions, final int textureMaxSize) {
