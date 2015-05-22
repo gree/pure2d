@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,20 +19,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.utils;
+
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
-
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.util.Log;
 
 /**
  * @author long
@@ -63,6 +65,8 @@ public class RectPacker {
     private final ArrayList<Point> mPoints2Remove = new ArrayList<Point>();
     private final Rect mTempRect = new Rect();
     private final Rect mTempBounds = new Rect();
+    private int mHMin = 1;  // spacing between horizontal lines
+    private int mVMin = 1;  // spacing between vertical lines
 
     public RectPacker(final int maxWidth, final boolean forcePO2) {
         mMaxWidth = maxWidth;
@@ -83,6 +87,20 @@ public class RectPacker {
 
     public void setQuickMode(final boolean quickMode) {
         mQuickMode = quickMode;
+    }
+
+    /**
+     * Set spacing between horizontal and vertical lines.
+     * This can speed up the packing logic but less space-efficient.
+     *
+     * @param horizontal
+     * @param vertical
+     */
+    public void setMinSpacing(final int horizontal, final int vertical) {
+        //Log.v(TAG, "setMinSpacing(): " + horizontal + ", " + vertical);
+
+        mHMin = horizontal;
+        mVMin = vertical;
     }
 
     public Rect occupy(final int rectWidth, final int rectHeight) {
@@ -119,8 +137,10 @@ public class RectPacker {
             mRectNum++;
 
             // add the lines
-            mHLines.add(newRect.bottom);
-            mVLines.add(newRect.right);
+            final int h = mHMin <= 1 ? newRect.right : (int) Math.ceil((float) newRect.right / mHMin) * mHMin;
+            final int v = mVMin <= 1 ? newRect.bottom : (int) Math.ceil((float) newRect.bottom / mVMin) * mVMin;
+            mHLines.add(h);
+            mVLines.add(v);
 
             // Log.e("long", mHotPoints.toString());
 

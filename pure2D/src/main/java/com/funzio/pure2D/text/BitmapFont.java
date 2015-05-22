@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,15 +19,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.text;
-
-import java.util.HashMap;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,6 +38,10 @@ import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.utils.RectPacker;
+
+import java.util.HashMap;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author long
@@ -57,7 +59,7 @@ public class BitmapFont {
     private BitmapFontMetrics mFontMetrics;
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
-        this(characters, textOptions, 512);
+        this(characters, textOptions, 1024);
     }
 
     public BitmapFont(final String characters, final TextOptions textOptions, final int textureMaxSize) {
@@ -69,11 +71,14 @@ public class BitmapFont {
         mRectPacker = new RectPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
         mRectPacker.setQuickMode(true);
         mRectPacker.setRotationEnabled(false);
+        // for faster operation
+        final int minSpacing = (int) (textOptions.inTextPaint.getTextSize() * textOptions.inScaleY);
+        mRectPacker.setMinSpacing(minSpacing / 4, minSpacing / 2);
     }
 
     /**
      * This can only called on GL Thread
-     * 
+     *
      * @param glState
      * @return
      */
@@ -83,7 +88,7 @@ public class BitmapFont {
 
     /**
      * This can only called on GL Thread
-     * 
+     *
      * @param textureManager
      * @return
      */
