@@ -58,6 +58,15 @@ public class BitmapFont {
     private float[] mCharPositions;
     private BitmapFontMetrics mFontMetrics;
 
+    private TextureManager.TextureRunnable mLoadRunnable = new TextureManager.TextureRunnable() {
+        @Override
+        public void run(final Texture texture) {
+            final Bitmap bitmap = createBitmap();
+            texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
+            bitmap.recycle();
+        }
+    };
+
     public BitmapFont(final String characters, final TextOptions textOptions) {
         this(characters, textOptions, 512);
     }
@@ -71,9 +80,11 @@ public class BitmapFont {
         mRectPacker = new RectPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
         mRectPacker.setQuickMode(true);
         mRectPacker.setRotationEnabled(false);
-        // for faster operation
-        final int minSpacing = (int) (textOptions.inTextPaint.getTextSize() * textOptions.inScaleY);
-        mRectPacker.setMinSpacing(minSpacing / 4, minSpacing / 2);
+        // for faster operation if NPOT
+        if (!mTextOptions.inPo2) {
+            final int minSpacing = (int) (textOptions.inTextPaint.getTextSize() * textOptions.inScaleY);
+            mRectPacker.setMinSpacing(minSpacing / 4, minSpacing / 4);
+        }
     }
 
     /**
@@ -94,15 +105,7 @@ public class BitmapFont {
      */
     public Texture load(final TextureManager textureManager) {
         if (mTexture == null) {
-            mTexture = textureManager.createDynamicTexture(new TextureManager.TextureRunnable() {
-
-                @Override
-                public void run(final Texture texture) {
-                    final Bitmap bitmap = createBitmap();
-                    texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
-                    bitmap.recycle();
-                }
-            });
+            mTexture = textureManager.createDynamicTexture(mLoadRunnable);
 
             mTexture.reload();
             mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output

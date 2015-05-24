@@ -118,15 +118,21 @@ public class RectPacker {
         if (newRect != null) {
             // find the new points
             for (Integer hline : mHLines) {
-                if (hline < newRect.bottom && !isOccupied(newRect.right, hline)) {
-                    mHotPoints.add(new Point(newRect.right, hline));
-                    // break; // wrong
+                if (hline < newRect.bottom) {
+                    if (!isOccupied(newRect.right, hline)) {
+                        mHotPoints.add(new Point(newRect.right, hline));
+                    }
+                } else {
+                    break;
                 }
             }
             for (Integer vline : mVLines) {
-                if (vline < newRect.right && !isOccupied(vline, newRect.bottom)) {
-                    mHotPoints.add(new Point(vline, newRect.bottom));
-                    // break; // wrong
+                if (vline < newRect.right) {
+                    if (!isOccupied(vline, newRect.bottom)) {
+                        mHotPoints.add(new Point(vline, newRect.bottom));
+                    }
+                } else {
+                    break;
                 }
             }
 
