@@ -94,15 +94,15 @@ public class BitmapFont {
      */
     public Texture load(final TextureManager textureManager) {
         if (mTexture == null) {
-            mTexture = textureManager.createDynamicTexture(new Runnable() {
+            mTexture = textureManager.createDynamicTexture(new TextureManager.TextureRunnable() {
 
                 @Override
-                public void run() {
+                public void run(final Texture texture) {
                     final Bitmap bitmap = createBitmap();
-                    mTexture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
+                    texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
                     bitmap.recycle();
                 }
-            }, null);
+            });
 
             mTexture.reload();
             mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output

@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,15 +19,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.gl.gl10.textures;
-
-import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -35,6 +33,10 @@ import android.util.Log;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.text.TextOptions;
+
+import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author long
@@ -77,7 +79,7 @@ public class TextureManager {
 
     /**
      * Get the Expiration check interval (in ms)
-     * 
+     *
      * @return
      */
     public int getExpirationCheckInterval() {
@@ -86,7 +88,7 @@ public class TextureManager {
 
     /**
      * Set how often (in ms) this Manager should check for all the Textures' expiration. By default, it doesn't check at all.
-     * 
+     *
      * @param expirationCheckInterval
      * @see Texture.#setExpirationTime(int)
      */
@@ -96,7 +98,7 @@ public class TextureManager {
 
     /**
      * Call this when GL changed
-     * 
+     *
      * @param gl
      * @param res
      */
@@ -120,7 +122,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a Drawable
-     * 
+     *
      * @param drawable
      * @param config
      * @return
@@ -138,7 +140,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a Drawable asynchronously
-     * 
+     *
      * @param drawable
      * @param config
      * @return
@@ -156,7 +158,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from an AssetManager
-     * 
+     *
      * @param assetManager
      * @param filePath
      * @param config
@@ -175,7 +177,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from an AssetManager asynchronously
-     * 
+     *
      * @param assetManager
      * @param filePath
      * @param config
@@ -194,7 +196,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a file
-     * 
+     *
      * @param filePath
      * @param config
      * @return
@@ -212,7 +214,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a file asynchronously
-     * 
+     *
      * @param filePath
      * @param config
      * @return
@@ -230,7 +232,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a URL
-     * 
+     *
      * @param url
      * @param options
      * @return
@@ -248,7 +250,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a URL asynchronously
-     * 
+     *
      * @param url
      * @param options
      * @return
@@ -266,7 +268,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a URL and Cache synchronously
-     * 
+     *
      * @param fileUrl
      * @param cachePath
      * @param options
@@ -285,7 +287,7 @@ public class TextureManager {
 
     /**
      * Create a new Texture from a URL and Cache asynchronously
-     * 
+     *
      * @param fileUrl
      * @param cachePath
      * @param options
@@ -305,7 +307,7 @@ public class TextureManager {
 
     /**
      * Create a new Text Texture
-     * 
+     *
      * @param text
      * @param options
      * @return
@@ -323,7 +325,7 @@ public class TextureManager {
 
     /**
      * This is used for FrameBuffer
-     * 
+     *
      * @param width
      * @param height
      * @return
@@ -341,19 +343,18 @@ public class TextureManager {
 
     /**
      * Create a new general Texture with your own reload logic
-     * 
+     *
      * @param text
-     * @param options
      * @return
      */
-    public Texture createDynamicTexture(final Runnable loadRunnable, final TextureOptions options) {
+    public Texture createDynamicTexture(final TextureRunnable loadRunnable) {
         Log.v(TAG, String.format("createDynamicTexture()"));
 
         final Texture texture = new Texture(mGLState) {
 
             @Override
             public void reload() {
-                loadRunnable.run();
+                loadRunnable.run(this);
             }
         };
 
@@ -365,7 +366,7 @@ public class TextureManager {
 
     /**
      * Add a new texture which created outside this manager
-     * 
+     *
      * @param texture
      * @return
      */
@@ -375,7 +376,7 @@ public class TextureManager {
 
     /**
      * Remove and Unload a specific Texture.
-     * 
+     *
      * @param texture
      */
     public void removeTexture(final Texture texture) {
@@ -432,8 +433,8 @@ public class TextureManager {
     }
 
     /**
-     * @hide For internal use only. Do NOT call!
      * @param deltaTime
+     * @hide For internal use only. Do NOT call!
      */
     public void update(final int deltaTime) {
         // negative check
@@ -455,5 +456,9 @@ public class TextureManager {
 
     public int getNumTextures() {
         return mTextures.size();
+    }
+
+    public interface TextureRunnable {
+        void run(final Texture texture);
     }
 }
