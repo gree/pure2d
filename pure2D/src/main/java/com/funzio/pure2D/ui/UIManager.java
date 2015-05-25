@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,9 +19,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.ui;
 
@@ -29,15 +31,15 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Pure2DURI;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * @author long.ngo
@@ -57,6 +59,7 @@ public class UIManager {
     private UILoader mLoader;
 
     private UIConfigVO mConfigVO;
+    private Thread.UncaughtExceptionHandler mExceptionHandler;
 
     private UIManager() {
         mLoader = new UILoader(this);
@@ -100,9 +103,18 @@ public class UIManager {
         }
     }
 
+    public Thread.UncaughtExceptionHandler getExceptionHandler() {
+        return mExceptionHandler;
+    }
+
+    public UIManager setExceptionHandler(final Thread.UncaughtExceptionHandler exceptionHandler) {
+        mExceptionHandler = exceptionHandler;
+        return this;
+    }
+
     /**
      * Load a config file, synchronously
-     * 
+     *
      * @param assets
      * @param filePath
      */
@@ -136,16 +148,40 @@ public class UIManager {
         return mConfigVO;
     }
 
-    public DisplayObject load(final XmlPullParser parser) {
-        return mLoader.load(parser);
+    public DisplayObject load(final XmlPullParser parser) throws UIException {
+        try {
+            return mLoader.load(parser);
+        } catch (Exception e) {
+            if (mExceptionHandler != null) {
+                mExceptionHandler.uncaughtException(Thread.currentThread(), e);
+            }
+
+            throw new UIException(e);
+        }
     }
 
-    public DisplayObject load(final String xmlString) {
-        return mLoader.load(xmlString);
+    public DisplayObject load(final String xmlString) throws UIException {
+        try {
+            return mLoader.load(xmlString);
+        } catch (Exception e) {
+            if (mExceptionHandler != null) {
+                mExceptionHandler.uncaughtException(Thread.currentThread(), e);
+            }
+
+            throw new UIException(e);
+        }
     }
 
-    public DisplayObject load(final int xmlResource) {
-        return mLoader.load(mResources.getXml(xmlResource));
+    public DisplayObject load(final int xmlResource) throws UIException {
+        try {
+            return mLoader.load(mResources.getXml(xmlResource));
+        } catch (Exception e) {
+            if (mExceptionHandler != null) {
+                mExceptionHandler.uncaughtException(Thread.currentThread(), e);
+            }
+
+            throw new UIException(e);
+        }
     }
 
     public TextureOptions getTextureOptions() {
@@ -198,6 +234,12 @@ public class UIManager {
     public XmlPullParser getXMLByName(final String xmlName) {
         final int id = mResources.getIdentifier(xmlName, "xml", mPackageName);
         return mResources.getXml(id);
+    }
+
+    public static class UIException extends RuntimeException {
+        public UIException(final Throwable throwable) {
+            super(throwable);
+        }
     }
 
 }
