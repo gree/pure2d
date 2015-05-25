@@ -85,7 +85,7 @@ public class BitmapFont {
         // for faster operation if NPOT
         if (!mTextOptions.inPo2) {
             final int minSpacing = (int) (textOptions.inTextPaint.getTextSize() * textOptions.inScaleY);
-            mRectPacker.setMinSpacing(minSpacing / 4, minSpacing / 4);
+            mRectPacker.setMinSpacing(minSpacing / 4, minSpacing / 2);
         }
     }
 
