@@ -31,6 +31,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.atlas.AtlasFrame;
@@ -47,6 +48,7 @@ import javax.microedition.khronos.opengles.GL10;
  * @author long
  */
 public class BitmapFont {
+    private static final String TAG = BitmapFont.class.getSimpleName();
 
     private final TextOptions mTextOptions;
     private final String mCharacters;
@@ -62,7 +64,7 @@ public class BitmapFont {
         @Override
         public void run(final Texture texture) {
             final Bitmap bitmap = createBitmap();
-            texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
+            texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), mTextOptions.inMipmaps);
             bitmap.recycle();
         }
     };
@@ -104,6 +106,8 @@ public class BitmapFont {
      * @return
      */
     public Texture load(final TextureManager textureManager) {
+        Log.i(TAG, "load(): " + mTextOptions.toString());
+
         if (mTexture == null) {
             mTexture = textureManager.createDynamicTexture(mLoadRunnable);
 
@@ -224,5 +228,10 @@ public class BitmapFont {
         // Log.e("long", "draw time: " + time + "ms");
 
         return bitmap;
+    }
+
+    @Override
+    public String toString() {
+        return mTextOptions.toString();
     }
 }

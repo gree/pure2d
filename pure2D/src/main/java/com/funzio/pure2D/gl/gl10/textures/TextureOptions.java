@@ -77,6 +77,6 @@ public class TextureOptions extends BitmapFactory.Options {
 
     @Override
     public String toString() {
-        return String.format("[%.1f, %.1f, %s]", inScaleX, inScaleY, inPo2 ? "POT" : "NPOT");
+        return String.format("[%.1f, %.1f, %s, %d]", inScaleX, inScaleY, inPo2 ? "POT" : "NPOT", inMipmaps);
     }
 }

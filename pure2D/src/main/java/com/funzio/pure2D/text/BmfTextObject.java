@@ -60,6 +60,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     // xml attributes
     protected static final String ATT_LETTER_SPACING = "letterSpacing";
     protected static final String ATT_TEXT = "text";
+    protected static final String ATT_TEXT_SIZE = "textSize";
     protected static final String ATT_TEXT_ALIGN = "textAlign";
     protected static final String ATT_FONT = "font";
 
@@ -86,6 +87,8 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     // a copy of text for rendering without being interrupted
     private static String sScratchText;
+    private float mTextSize = 0f;
+    private float mTextScale = 1f;
 
     // protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
 
@@ -131,8 +134,29 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         mTextOptions = bitmapFont.getTextOptions();
         mFontMetrics = mBitmapFont.getFontMetrics();
 
+        // apply text size
+        setTextSize(mTextSize <= 0 ? bitmapFont.getTextOptions().inTextPaint.getTextSize() : mTextSize);
+
         mTexture = bitmapFont.getTexture();
         invalidate(TEXTURE | CHILDREN);
+    }
+
+    public float getTextSize() {
+        return mTextSize;
+    }
+
+    public BmfTextObject setTextSize(final float textSize) {
+        mTextSize = textSize;
+
+        if (mBitmapFont != null) {
+            mTextScale = textSize / mBitmapFont.getTextOptions().inTextPaint.getTextSize();
+        } else {
+            mTextScale = 1f;
+        }
+
+        invalidate(BOUNDS);
+
+        return this;
     }
 
     public void updateTextBounds() {
@@ -193,7 +217,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         mTextBounds.right = mTextBounds.left + width - 1;
 
         // auto update size
-        setSize(mTextBounds.right - mTextBounds.left + 1, mTextBounds.bottom - mTextBounds.top + 1);
+        setSize((mTextBounds.right - mTextBounds.left + 1) * mTextScale, (mTextBounds.bottom - mTextBounds.top + 1) * mTextScale);
     }
 
     @Override
@@ -217,7 +241,17 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             return false;
         }
 
+        // scale text
+        final float sx = mScale.x;
+        final float sy = mScale.y;
+        if (mTextScale != 1) {
+            mScale.x *= mTextScale;
+            mScale.y *= mTextScale;
+        }
         drawStart(glState);
+        // restore the original scale
+        mScale.x = sx;
+        mScale.y = sy;
 
         // no color buffer supported
         glState.setColorArrayEnabled(false);
@@ -320,9 +354,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             int lineIndex = 0;
             if (lineIndex < mLineWidths.size()) {
                 if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                    nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                    nextX = (mSize.x - mLineWidths.get(lineIndex) * mTextScale) * 0.5f;
                 } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                    nextX = (mSize.x - mLineWidths.get(lineIndex));
+                    nextX = (mSize.x - mLineWidths.get(lineIndex) * mTextScale);
                 } else {
                     nextX = 0;
                 }
@@ -353,9 +387,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                     lineIndex++;
                     if (lineIndex < mLineWidths.size()) {
                         if ((mTextAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
-                            nextX = (mSize.x - mLineWidths.get(lineIndex)) * 0.5f;
+                            nextX = (mSize.x - mLineWidths.get(lineIndex) * mTextScale) * 0.5f;
                         } else if ((mTextAlignment & Alignment.RIGHT) > 0) {
-                            nextX = (mSize.x - mLineWidths.get(lineIndex));
+                            nextX = (mSize.x - mLineWidths.get(lineIndex) * mTextScale);
                         } else {
                             nextX = 0;
                         }
@@ -459,7 +493,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     }
 
     protected float convertY(final float y, final float size) {
-        return mSceneAxis == Scene.AXIS_BOTTOM_LEFT ? y : mSize.y - y - size;
+        return mSceneAxis == Scene.AXIS_BOTTOM_LEFT ? y : mSize.y - (y + size) * mTextScale;
     }
 
     @Override
@@ -485,6 +519,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         final String textAlign = xmlParser.getAttributeValue(null, ATT_TEXT_ALIGN);
         if (textAlign != null) {
             setTextAlignment(UIConfig.getAlignment(textAlign));
+        }
+
+        final String textSize = xmlParser.getAttributeValue(null, ATT_TEXT_SIZE);
+        if (textSize != null) {
+            setTextSize(Float.valueOf(manager.evalString(textSize)));
         }
 
     }
