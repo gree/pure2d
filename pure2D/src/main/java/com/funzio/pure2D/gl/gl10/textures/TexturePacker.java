@@ -38,7 +38,7 @@ import com.funzio.pure2D.atlas.Atlas;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.utils.Pure2DUtils;
-import com.funzio.pure2D.utils.RectPacker;
+import com.funzio.pure2D.utils.RectBinPacker;
 
 /**
  * @author long
@@ -50,7 +50,7 @@ public class TexturePacker {
     private Texture mTexture;
 
     private Atlas mAtlas;
-    private RectPacker mRectPacker;
+    private RectBinPacker mRectPacker;
     private Resources mResources;
     private String mPackageName;
 
@@ -63,8 +63,7 @@ public class TexturePacker {
         mPackageName = packageName;
         mTextureOptions = (textureOptions == null) ? TextureOptions.getDefault() : textureOptions;
 
-        mRectPacker = new RectPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextureOptions.inPo2);
-        mRectPacker.setQuickMode(true);
+        mRectPacker = new RectBinPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextureOptions.inPo2);
         mRectPacker.setRotationEnabled(false);
     }
 

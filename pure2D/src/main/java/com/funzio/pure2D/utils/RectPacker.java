@@ -38,6 +38,7 @@ import java.util.TreeSet;
 /**
  * @author long
  */
+@Deprecated
 public class RectPacker {
     private static final String TAG = RectPacker.class.getSimpleName();
 

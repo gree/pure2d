@@ -31,6 +31,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.funzio.pure2D.Pure2D;
@@ -38,7 +39,7 @@ import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
-import com.funzio.pure2D.utils.RectPacker;
+import com.funzio.pure2D.utils.RectBinPacker;
 
 import java.util.HashMap;
 
@@ -55,7 +56,7 @@ public class BitmapFont {
     private Texture mTexture;
 
     private HashMap<Character, AtlasFrame> mCharFrames = new HashMap<Character, AtlasFrame>();
-    private RectPacker mRectPacker;
+    private RectBinPacker mRectPacker;
     private PointF[] mCharOffsets;
     private float[] mCharPositions;
     private BitmapFontMetrics mFontMetrics;
@@ -70,23 +71,21 @@ public class BitmapFont {
     };
 
     public BitmapFont(final String characters, final TextOptions textOptions) {
-        this(characters, textOptions, 512);
+        this(characters, textOptions, 0);
     }
 
-    public BitmapFont(final String characters, final TextOptions textOptions, final int textureMaxSize) {
+    public BitmapFont(final String characters, final TextOptions textOptions, int textureMaxSize) {
         mTextOptions = (textOptions == null) ? TextOptions.getDefault() : textOptions;
         mCharacters = characters;
 
         mFontMetrics = new BitmapFontMetrics(mTextOptions);
 
-        mRectPacker = new RectPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
-        mRectPacker.setQuickMode(true);
-        mRectPacker.setRotationEnabled(false);
-        // for faster operation if NPOT
-        if (!mTextOptions.inPo2) {
-            final int minSpacing = (int) (textOptions.inTextPaint.getTextSize() * textOptions.inScaleY);
-            mRectPacker.setMinSpacing(minSpacing / 4, minSpacing / 2);
+        // auto size
+        if (textureMaxSize <= 0) {
+            textureMaxSize = Pure2D.GL_MAX_TEXTURE_SIZE;
         }
+        mRectPacker = new RectBinPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
+        mRectPacker.setRotationEnabled(false);
     }
 
     /**
@@ -152,7 +151,7 @@ public class BitmapFont {
     protected void findCharOffsets() {
         final Rect bounds = new Rect();
 
-        // long start = SystemClock.elapsedRealtime();
+        final long start = SystemClock.elapsedRealtime();
 
         // find the bounds
         final int length = mCharacters.length();
@@ -179,9 +178,7 @@ public class BitmapFont {
             mCharOffsets[i] = new PointF(bounds.left * mTextOptions.inScaleX, -bounds.top * mTextOptions.inScaleY);
         }
 
-        // long time = SystemClock.elapsedRealtime() - start;
-        // start = SystemClock.elapsedRealtime();
-        // Log.e("long", "=> " + mRectPacker.getWidth() + " " + mRectPacker.getHeight() + " " + time + "ms");
+        Log.i(TAG, String.format("Packing Result: (%d, %d) in %d ms", mRectPacker.getWidth(), mRectPacker.getHeight(), SystemClock.elapsedRealtime() - start));
     }
 
     @SuppressWarnings("deprecation")

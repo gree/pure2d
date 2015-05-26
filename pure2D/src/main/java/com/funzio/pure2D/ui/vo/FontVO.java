@@ -82,7 +82,7 @@ public class FontVO {
         stroke_size = (float) json.optDouble("stroke_size", 0);
         stroke_color = json.optString("stroke_color", "");
 
-        texture_size = json.optInt("texture_size", 512);
+        texture_size = json.optInt("texture_size", 0);
         texture_mipmaps = json.optInt("texture_mipmaps", 0);
     }
 
