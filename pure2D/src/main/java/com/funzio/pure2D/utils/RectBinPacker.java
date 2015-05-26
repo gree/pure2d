@@ -123,8 +123,7 @@ public class RectBinPacker {
 
         // new root
         mRoot = new Node(mRoot.x, mRoot.y, mRoot.width + w, mRoot.height);
-        mRoot.mRight = right;
-        mRoot.mDown = down;
+        mRoot.split(down, right);
 
         // occupy it
         return right.occupy(w, h);
@@ -136,8 +135,7 @@ public class RectBinPacker {
 
         // new root
         mRoot = new Node(mRoot.x, mRoot.y, mRoot.width, mRoot.height + h);
-        mRoot.mRight = right;
-        mRoot.mDown = down;
+        mRoot.split(down, right);
 
         // occupy it
         return down.occupy(w, h);
@@ -209,6 +207,17 @@ public class RectBinPacker {
             }
 
             return null;
+        }
+
+        public boolean split(final Node down, final Node right) {
+            // sanity check
+            if (mOccupied) return false;
+
+            mOccupied = true;
+            mDown = down;
+            mRight = right;
+
+            return true;
         }
 
         public Rect occupy(final int w, final int h) {
