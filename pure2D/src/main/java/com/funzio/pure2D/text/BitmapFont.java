@@ -105,7 +105,7 @@ public class BitmapFont {
      * @return
      */
     public Texture load(final TextureManager textureManager) {
-        Log.i(TAG, "load(): " + mTextOptions.toString());
+        Log.i(TAG, String.format("load(): %d chars, %s", mCharacters.length(), mTextOptions.toString()));
 
         if (mTexture == null) {
             mTexture = textureManager.createDynamicTexture(mLoadRunnable);

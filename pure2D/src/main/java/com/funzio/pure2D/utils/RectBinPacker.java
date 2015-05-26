@@ -47,11 +47,15 @@ public class RectBinPacker {
     private final Node mRoot;
 
     public RectBinPacker(final int maxWidth, final boolean forcePO2) {
+        this(512, maxWidth, forcePO2);
+    }
+
+    public RectBinPacker(final int minWidth, final int maxWidth, final boolean forcePO2) {
         mMaxWidth = maxWidth;
         mForcePO2 = forcePO2;
 
         // minimum size
-        mRoot = new Node(0, 0, 512, 512);
+        mRoot = new Node(0, 0, minWidth, minWidth);
     }
 
     public boolean isRotationEnabled() {
@@ -74,6 +78,8 @@ public class RectBinPacker {
 
             return node.mOccupiedRect;
         } else {
+            // TODO check rotation
+
             // grow it
             final Rect newRect = growAndOccupy(w, h);
             if (newRect == null) {
@@ -128,13 +134,11 @@ public class RectBinPacker {
     }
 
     protected Rect growRight(final int w, final int h) {
-        final Node node = mRoot.growRight(w);
-        return node.occupy(w, h);
+        return mRoot.growRight(w).occupy(w, h);
     }
 
     protected Rect growDown(final int w, final int h) {
-        final Node node = mRoot.growDown(h);
-        return node.occupy(w, h);
+        return mRoot.growDown(h).occupy(w, h);
     }
 
     public void reset() {
@@ -203,6 +207,14 @@ public class RectBinPacker {
             mOccupiedRect = new Rect(x, y, x + w, y + h);
 
             // split it
+            if (height > h) {
+                mDown = new Node(x, y + h, width, height - h);
+            }
+            if (width > w) {
+                mRight = new Node(x + w, y, width - w, h);
+            }
+
+            /*
             final int r = (width - w) * h;
             final int d = w * (height - h);
             if (d > r) {
@@ -217,7 +229,7 @@ public class RectBinPacker {
                 if (d > 0) {
                     mDown = new Node(x, y + h, w, height - h);
                 }
-            }
+            }*/
 
             return mOccupiedRect;
         }
