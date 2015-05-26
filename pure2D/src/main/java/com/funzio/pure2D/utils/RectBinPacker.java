@@ -44,7 +44,7 @@ public class RectBinPacker {
     private final boolean mForcePO2;
     private boolean mRotationEnabled = false;
 
-    private final Node mRoot;
+    private Node mRoot;
 
     public RectBinPacker(final int maxWidth, final boolean forcePO2) {
         this(512, maxWidth, forcePO2);
@@ -69,14 +69,14 @@ public class RectBinPacker {
     public Rect occupy(final int w, final int h) {
         final Node node = findNode(mRoot, w, h);
         if (node != null) {
-            node.occupy(w, h);
+            final Rect newRect = node.occupy(w, h);
 
             // update the bounds
-            mBounds.union(node.mOccupiedRect);
+            mBounds.union(newRect);
             // add to list
-            mRects.add(node.mOccupiedRect);
+            mRects.add(newRect);
 
-            return node.mOccupiedRect;
+            return newRect;
         } else {
             // TODO check rotation
 
@@ -134,11 +134,29 @@ public class RectBinPacker {
     }
 
     protected Rect growRight(final int w, final int h) {
-        return mRoot.growRight(w).occupy(w, h);
+        final Node down = mRoot;
+        final Node right = new Node(mRoot.x + mRoot.width, mRoot.y, w, mRoot.height);
+
+        // new root
+        mRoot = new Node(mRoot.x, mRoot.y, mRoot.width + w, mRoot.height);
+        mRoot.mRight = right;
+        mRoot.mDown = down;
+
+        // occupy it
+        return right.occupy(w, h);
     }
 
     protected Rect growDown(final int w, final int h) {
-        return mRoot.growDown(h).occupy(w, h);
+        final Node down = new Node(mRoot.x, mRoot.y + mRoot.height, mRoot.width, h);
+        final Node right = mRoot;
+
+        // new root
+        mRoot = new Node(mRoot.x, mRoot.y, mRoot.width, mRoot.height + h);
+        mRoot.mRight = right;
+        mRoot.mDown = down;
+
+        // occupy it
+        return down.occupy(w, h);
     }
 
     public void reset() {
@@ -171,7 +189,6 @@ public class RectBinPacker {
         private int width;
         private int height;
 
-        protected Rect mOccupiedRect;
         protected Node mDown;
         protected Node mRight;
 
@@ -183,28 +200,11 @@ public class RectBinPacker {
         }
 
         public void reset() {
-            mOccupiedRect = null;
             mDown = mRight = null;
         }
 
-        public Node growRight(final int w) {
-            //mDown = null;
-            mRight = new Node(x + width, y, w, height);
-            width += w;
-
-            return mRight;
-        }
-
-        public Node growDown(final int h) {
-            //mRight = null;
-            mDown = new Node(x, y + height, width, h);
-            height += h;
-
-            return mDown;
-        }
-
         public Rect occupy(final int w, final int h) {
-            mOccupiedRect = new Rect(x, y, x + w, y + h);
+            final Rect rect = new Rect(x, y, x + w, y + h);
 
             // split it
             if (height > h) {
@@ -214,7 +214,7 @@ public class RectBinPacker {
                 mRight = new Node(x + w, y, width - w, h);
             }
 
-            /*
+            /* // selective split
             final int r = (width - w) * h;
             final int d = w * (height - h);
             if (d > r) {
@@ -231,7 +231,7 @@ public class RectBinPacker {
                 }
             }*/
 
-            return mOccupiedRect;
+            return rect;
         }
 
         public boolean hasChildren() {
