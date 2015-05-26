@@ -173,8 +173,9 @@ public class RectBinPacker {
         private int width;
         private int height;
 
-        protected Node mDown;
-        protected Node mRight;
+        private Node mDown;
+        private Node mRight;
+        private boolean mOccupied;
 
         public Node(final int x, final int y, final int w, final int h) {
             this.x = x;
@@ -185,10 +186,11 @@ public class RectBinPacker {
 
         public void reset() {
             mDown = mRight = null;
+            mOccupied = false;
         }
 
         public Node findNode(final int w, final int h) {
-            if (hasChildren()) {
+            if (mOccupied) {
                 if (mRight != null) {
                     final Node node = mRight.findNode(w, h);
                     if (node != null) {
@@ -210,7 +212,11 @@ public class RectBinPacker {
         }
 
         public Rect occupy(final int w, final int h) {
+            // sanity check
+            if (mOccupied) return null;
+
             final Rect rect = new Rect(x, y, x + w, y + h);
+            mOccupied = true;   // flag
 
             // split it
             if (height > h) {
@@ -238,10 +244,6 @@ public class RectBinPacker {
             }*/
 
             return rect;
-        }
-
-        public boolean hasChildren() {
-            return mDown != null || mRight != null;
         }
 
     }
