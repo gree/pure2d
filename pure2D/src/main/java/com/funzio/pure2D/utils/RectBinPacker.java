@@ -67,7 +67,7 @@ public class RectBinPacker {
     }
 
     public Rect occupy(final int w, final int h) {
-        final Node node = findNode(mRoot, w, h);
+        final Node node = mRoot.findNode(w, h);
         if (node != null) {
             final Rect newRect = node.occupy(w, h);
 
@@ -93,22 +93,6 @@ public class RectBinPacker {
 
                 return newRect;
             }
-        }
-
-        return null;
-    }
-
-    protected Node findNode(final Node root, final int w, final int h) {
-        if (root == null) return null;
-
-        if (root.hasChildren()) {
-            final Node node = findNode(root.mRight, w, h);
-            if (node != null) {
-                return node;
-            }
-            return findNode(root.mDown, w, h);
-        } else if (w <= root.width && h <= root.height) {
-            return root;
         }
 
         return null;
@@ -201,6 +185,28 @@ public class RectBinPacker {
 
         public void reset() {
             mDown = mRight = null;
+        }
+
+        public Node findNode(final int w, final int h) {
+            if (hasChildren()) {
+                if (mRight != null) {
+                    final Node node = mRight.findNode(w, h);
+                    if (node != null) {
+                        return node;
+                    }
+                }
+
+                if (mDown != null) {
+                    final Node node = mDown.findNode(w, h);
+                    if (node != null) {
+                        return node;
+                    }
+                }
+            } else if (w <= width && h <= height) {
+                return this;
+            }
+
+            return null;
         }
 
         public Rect occupy(final int w, final int h) {
