@@ -81,7 +81,7 @@ public class AssetTexture extends Texture {
             load(bitmap, dimensions[0], dimensions[1], options != null ? options.inMipmaps : 0);
             bitmap.recycle();
         } else {
-            Log.e(TAG, "Unable to load bitmap: " + filePath);
+            Log.e(TAG, "Unable to load bitmap: " + filePath, new Exception());
             // callback, regardless whether it's successful or not
             if (mListener != null) {
                 mListener.onTextureLoad(this);
