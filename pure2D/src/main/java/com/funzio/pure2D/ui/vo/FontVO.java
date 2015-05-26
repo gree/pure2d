@@ -45,7 +45,7 @@ public class FontVO {
     public String style;
     public String characters;
 
-    public float size;
+    public String size; // localizable
     public String typeface;
     public String color;
     public float padding_x;
@@ -56,11 +56,14 @@ public class FontVO {
     public float shadow_dx;
     public float shadow_dy;
 
-    public float stroke_size;
+    public String stroke_size;  // localizable
     public String stroke_color;
 
+    @Deprecated
     public int texture_size;
     public int texture_mipmaps;
+
+    private float mScale = 1f;
 
     public FontVO(final JSONObject json) throws JSONException {
         name = json.getString("name");
@@ -68,7 +71,7 @@ public class FontVO {
         style = json.optString("style");
         characters = json.optString("characters");
 
-        size = (float) json.optDouble("size", 10);
+        size = json.optString("size", "10");
         typeface = json.optString("typeface");
         color = json.optString("color", "#FFFFFFFF");
         padding_x = (float) json.optDouble("padding_x", 0);
@@ -79,7 +82,7 @@ public class FontVO {
         shadow_dx = (float) json.optDouble("shadow_dx", 0);
         shadow_dy = (float) json.optDouble("shadow_dy", 0);
 
-        stroke_size = (float) json.optDouble("stroke_size", 0);
+        stroke_size = json.optString("stroke_size", "0");
         stroke_color = json.optString("stroke_color", "");
 
         texture_size = json.optInt("texture_size", 0);
@@ -101,17 +104,18 @@ public class FontVO {
             options.inTextPaint.setTypeface(Typeface.create(typeface, TextOptions.getTypefaceStyle(style)));
         }
 
-        options.inTextPaint.setTextSize(Float.valueOf(size));
+        options.inTextPaint.setTextSize(Float.valueOf(manager.evalString(size)) * mScale);
         options.inTextPaint.setColor(Color.parseColor(color));
 
-        options.inPaddingX = padding_x;
-        options.inPaddingY = padding_y;
+        options.inPaddingX = padding_x * mScale;
+        options.inPaddingY = padding_y * mScale;
 
         // stroke
-        if (stroke_size > 0) {
+        final float ss = Float.valueOf(manager.evalString(stroke_size)) * mScale;
+        if (ss > 0) {
             options.inStrokePaint = new TextPaint(options.inTextPaint);
             options.inStrokePaint.setColor(Color.parseColor(stroke_color));
-            options.inStrokePaint.setTextSize(stroke_size);
+            options.inStrokePaint.setTextSize(ss);
         }
 
         // shadow
@@ -119,23 +123,14 @@ public class FontVO {
             if (options.inStrokePaint == null) {
                 options.inStrokePaint = new TextPaint(options.inTextPaint);
             }
-            options.inStrokePaint.setShadowLayer(shadow_radius, shadow_dx, shadow_dy, Color.parseColor(shadow_color));
+            options.inStrokePaint.setShadowLayer(shadow_radius * mScale, shadow_dx * mScale, shadow_dy * mScale, Color.parseColor(shadow_color));
         }
 
         return options;
     }
 
     public void applyScale(final float scale) {
-
-        size *= scale;
-        padding_x *= scale;
-        padding_y *= scale;
-
-        shadow_radius *= scale;
-        shadow_dx *= scale;
-        shadow_dy *= scale;
-
-        stroke_size *= scale;
+        mScale = scale;
     }
 
 }
