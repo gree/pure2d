@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,10 +20,6 @@
  * THE SOFTWARE.
  ******************************************************************************/
 package com.funzio.pure2D.uni;
-
-import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -43,6 +39,10 @@ import com.funzio.pure2D.gl.gl10.BlendFunc;
 import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 
+import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * @author long
  */
@@ -52,7 +52,8 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     // for debugging
     protected int mDebugFlags = 0;
 
-    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode());
+    protected static int ID = 0;
+    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode()) + "_" + (ID++);
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);
@@ -198,7 +199,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * Toggles the heart-beat. If set to false, the update() does NOT get called. This can be used for optimization.
-     * 
+     *
      * @see #update(int)
      */
     public void setAlive(final boolean value) {
@@ -282,7 +283,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * Set the Z-depth
-     * 
+     *
      * @see #setAlphaTestEnabled(boolean)
      */
     public void setZ(final float z) {
@@ -654,7 +655,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * Converts a local point to a global point, without allocating new PointF
-     * 
+     *
      * @param local
      * @param result
      */
@@ -675,7 +676,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * Converts a global point to a local point, without allocating new PointF
-     * 
+     *
      * @param global
      * @param result
      */
@@ -776,7 +777,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * Get global position of this object
-     * 
+     *
      * @return the global point
      */
     public PointF getGlobalPosition() {
@@ -810,7 +811,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * Get the Global Bounds of this object that takes translation, rotation and scale factors into account.
-     * 
+     *
      * @return
      */
     final public RectF getBounds() {
@@ -834,7 +835,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
 
     /**
      * This needs to be set to true if using Camera clipping.
-     * 
+     *
      * @param autoUpdateBounds the autoUpdateBounds to set
      */
     public void setAutoUpdateBounds(final boolean autoUpdateBounds) {
