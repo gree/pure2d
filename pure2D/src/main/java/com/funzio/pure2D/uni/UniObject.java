@@ -53,7 +53,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     protected int mDebugFlags = 0;
 
     protected static int ID = 0;
-    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode()) + "_" + (ID++);
+    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode()) + "_" + (++ID);
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);
