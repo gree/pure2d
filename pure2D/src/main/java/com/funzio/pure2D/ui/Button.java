@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,16 +18,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.ui;
 
 import android.graphics.PointF;
 import android.view.MotionEvent;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
@@ -37,10 +35,16 @@ import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.shapes.Sprite9;
 
+import org.xmlpull.v1.XmlPullParser;
+
 /**
  * @author long
  */
 public class Button extends DisplayGroup implements UIObject {
+    protected static final String ATT_SOURCE = "source";
+    protected static final String ATT_PATCHES = "patches";
+    protected static final String ATT_ASYNC = "async";
+
     public static final GLColor DIMMED_COLOR = new GLColor(0.75f, 0.75f, 0.75f, 1f);
 
     public static final int STATE_UP = 0;
@@ -151,7 +155,7 @@ public class Button extends DisplayGroup implements UIObject {
         }
 
         mState = state;
-        final Texture texture = mTextures == null || mTextures.length == 0 ? null : mTextures[Math.min(state, mTextures.length - 1)];
+        final Texture texture = getStateTexture(state);
         if (texture != mCurrentTexture) {
             mCurrentTexture = texture;
             mButtonSprite.setTexture(texture);
@@ -172,6 +176,10 @@ public class Button extends DisplayGroup implements UIObject {
 
         // dim it if there is missing frame
         setColor((texture == null || state >= mTextures.length) ? DIMMED_COLOR : null);
+    }
+
+    protected Texture getStateTexture(final int state) {
+        return (mTextures == null || mTextures.length == 0) ? null : mTextures[Math.min(state, mTextures.length - 1)];
     }
 
     public boolean isEnabled() {
@@ -217,7 +225,7 @@ public class Button extends DisplayGroup implements UIObject {
 
     /**
      * Note: This is called from UI-Thread
-     * 
+     *
      * @hide
      */
     @Override
@@ -252,10 +260,14 @@ public class Button extends DisplayGroup implements UIObject {
                 mTouchPointerID = -1;
                 // unflag focus
                 mFocus = false;
-                setState(STATE_UP);
 
                 // hit test
                 final boolean hit = hitTest(touchedPoint.x, touchedPoint.y);
+                // local callback
+                onTouchUp(hit);
+
+                setState(STATE_UP);
+                
                 // event
                 if (mTouchListener != null) {
                     mTouchListener.onTouchUp(this, hit);
@@ -280,17 +292,21 @@ public class Button extends DisplayGroup implements UIObject {
         return false;
     }
 
+    protected void onTouchUp(final boolean hit) {
+        // TODO
+    }
+
     @Override
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String source = xmlParser.getAttributeValue(null, "source");
+        final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
         if (source != null) {
             final String[] sources = manager.evalString(source).split(",");
             if (sources.length > 0) {
                 final Texture[] textures = new Texture[sources.length];
                 int i = 0;
-                final String async = xmlParser.getAttributeValue(null, "async");
+                final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
                 for (String s : sources) {
                     textures[i++] = manager.getTextureManager().getUriTexture(s, null, async != null ? Boolean.valueOf(async) : true);
                 }
@@ -298,8 +314,8 @@ public class Button extends DisplayGroup implements UIObject {
             }
         }
 
-        if (xmlParser.getAttributeValue(null, "patches") != null) {
-            final String[] patches = manager.evalString(xmlParser.getAttributeValue(null, "patches")).split(",");
+        if (xmlParser.getAttributeValue(null, ATT_PATCHES) != null) {
+            final String[] patches = manager.evalString(xmlParser.getAttributeValue(null, ATT_PATCHES)).split(",");
             final float configScale = manager.getConfig().screen_scale;
             final float left = patches.length >= 1 ? Float.valueOf(patches[0].trim()) * configScale : 0;
             final float right = patches.length >= 2 ? Float.valueOf(patches[1].trim()) * configScale : 0;
