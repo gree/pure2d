@@ -188,6 +188,26 @@ public class UIManager {
         }
     }
 
+    /**
+     * Load content of <merge> in a XML into a specified parent
+     *
+     * @param xmlResource
+     * @param parent
+     * @return
+     * @throws UIException
+     */
+    public DisplayObject loadMerge(final int xmlResource, final Container parent) throws UIException {
+        try {
+            return mLoader.loadMerge(mResources.getXml(xmlResource), parent);
+        } catch (Exception e) {
+            if (mExceptionHandler != null) {
+                mExceptionHandler.uncaughtException(Thread.currentThread(), e);
+            }
+
+            throw new UIException(e);
+        }
+    }
+
     public DisplayObject load(final String xmlString) throws UIException {
         try {
             return mLoader.load(xmlString);
