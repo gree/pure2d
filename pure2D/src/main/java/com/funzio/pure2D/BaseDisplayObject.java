@@ -77,7 +77,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     // for debugging
     protected int mDebugFlags = 0;
 
-    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode());
+    protected static int ID = 0;
+    protected String mId = getClass().getSimpleName() + '_' + Integer.toHexString(hashCode()) + "_" + (++ID);
 
     // dimensions and size
     protected PointF mPosition = new PointF(0, 0);

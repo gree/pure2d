@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendModes;
@@ -221,13 +222,14 @@ public class Button extends DisplayGroup implements UIObject {
      */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (!mEnabled || mScene == null) {
+        final Scene scene = mScene;
+        if (!mEnabled || scene == null) {
             return false;
         }
 
         final int action = event.getActionMasked();
         final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final PointF touchedPoint = mScene.getTouchedPoint(pointerIndex);
+        final PointF touchedPoint = scene.getTouchedPoint(pointerIndex);
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (!mFocus && hitTest(touchedPoint.x, touchedPoint.y)) {
@@ -266,7 +268,7 @@ public class Button extends DisplayGroup implements UIObject {
         } else if (action == MotionEvent.ACTION_MOVE) {
             final int touchPointerIndex = event.findPointerIndex(mTouchPointerID);
             if (mFocus && touchPointerIndex >= 0) {
-                final PointF movePoint = mScene.getTouchedPoint(touchPointerIndex);
+                final PointF movePoint = scene.getTouchedPoint(touchPointerIndex);
                 if (hitTest(movePoint.x, movePoint.y)) {
                     setState(STATE_DOWN);
                 } else {

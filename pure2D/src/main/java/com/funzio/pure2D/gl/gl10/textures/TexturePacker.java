@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,9 +19,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.gl.gl10.textures;
 
@@ -36,7 +38,7 @@ import com.funzio.pure2D.atlas.Atlas;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.utils.Pure2DUtils;
-import com.funzio.pure2D.utils.RectPacker;
+import com.funzio.pure2D.utils.RectBinPacker;
 
 /**
  * @author long
@@ -48,7 +50,7 @@ public class TexturePacker {
     private Texture mTexture;
 
     private Atlas mAtlas;
-    private RectPacker mRectPacker;
+    private RectBinPacker mRectPacker;
     private Resources mResources;
     private String mPackageName;
 
@@ -61,14 +63,13 @@ public class TexturePacker {
         mPackageName = packageName;
         mTextureOptions = (textureOptions == null) ? TextureOptions.getDefault() : textureOptions;
 
-        mRectPacker = new RectPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextureOptions.inPo2);
-        mRectPacker.setQuickMode(true);
+        mRectPacker = new RectBinPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextureOptions.inPo2);
         mRectPacker.setRotationEnabled(false);
     }
 
     /**
      * This can only called on GL Thread
-     * 
+     *
      * @param glState
      * @return
      */
@@ -78,26 +79,26 @@ public class TexturePacker {
 
     /**
      * This can only called on GL Thread
-     * 
+     *
      * @param textureManager
      * @return
      */
     public Texture createTexture(final TextureManager textureManager, final String... uris) {
         if (mTexture == null) {
-            mTexture = textureManager.createDynamicTexture(new Runnable() {
+            mTexture = textureManager.createDynamicTexture(new TextureManager.TextureRunnable() {
 
                 @Override
-                public void run() {
+                public void run(final Texture texture) {
                     final Bitmap bitmap = createBitmap(uris);
                     if (bitmap != null) {
-                        mTexture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
+                        texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
                         bitmap.recycle();
                     }
 
                     // apply texture to atlas
-                    mAtlas.getMasterFrameSet().setTexture(mTexture);
+                    mAtlas.getMasterFrameSet().setTexture(texture);
                 }
-            }, mTextureOptions);
+            });
 
             mTexture.reload();
             // mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output

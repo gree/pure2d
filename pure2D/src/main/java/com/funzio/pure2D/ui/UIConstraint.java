@@ -277,6 +277,10 @@ public class UIConstraint {
     }
 
     protected float getAttributeValue(final XmlPullParser parser, final String att) {
+        if (parser == null) {
+            return 0;
+        }
+
         final String valueSt = mUIManager.evalString(parser.getAttributeValue(null, att));
         if (valueSt != null && valueSt.length() > 0) {
             if (valueSt.endsWith(VAL_PERCENT)) {
@@ -290,6 +294,10 @@ public class UIConstraint {
     }
 
     protected UNIT getAttributeUnit(final XmlPullParser parser, final String att) {
+        if (parser == null) {
+            return UNIT.UNSET;
+        }
+
         final String valueSt = mUIManager.evalString(parser.getAttributeValue(null, att));
         if (valueSt != null && valueSt.length() > 0) {
             if (valueSt.equals(VAL_WRAP_CONTENT)) {

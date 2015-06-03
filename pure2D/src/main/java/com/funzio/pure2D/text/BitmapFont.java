@@ -1,16 +1,17 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,62 +19,78 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.text;
-
-import java.util.HashMap;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.SystemClock;
+import android.util.Log;
 
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.atlas.AtlasFrame;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
-import com.funzio.pure2D.utils.RectPacker;
+import com.funzio.pure2D.utils.RectBinPacker;
+
+import java.util.HashMap;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author long
  */
 public class BitmapFont {
+    private static final String TAG = BitmapFont.class.getSimpleName();
 
     private final TextOptions mTextOptions;
     private final String mCharacters;
     private Texture mTexture;
 
     private HashMap<Character, AtlasFrame> mCharFrames = new HashMap<Character, AtlasFrame>();
-    private RectPacker mRectPacker;
+    private RectBinPacker mRectPacker;
     private PointF[] mCharOffsets;
     private float[] mCharPositions;
     private BitmapFontMetrics mFontMetrics;
 
+    private TextureManager.TextureRunnable mLoadRunnable = new TextureManager.TextureRunnable() {
+        @Override
+        public void run(final Texture texture) {
+            final Bitmap bitmap = createBitmap();
+            texture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), mTextOptions.inMipmaps);
+            bitmap.recycle();
+        }
+    };
+
     public BitmapFont(final String characters, final TextOptions textOptions) {
-        this(characters, textOptions, 512);
+        this(characters, textOptions, 0);
     }
 
-    public BitmapFont(final String characters, final TextOptions textOptions, final int textureMaxSize) {
+    public BitmapFont(final String characters, final TextOptions textOptions, int textureMaxSize) {
         mTextOptions = (textOptions == null) ? TextOptions.getDefault() : textOptions;
         mCharacters = characters;
 
         mFontMetrics = new BitmapFontMetrics(mTextOptions);
 
-        mRectPacker = new RectPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
-        mRectPacker.setQuickMode(true);
+        // auto size
+        if (textureMaxSize <= 0) {
+            textureMaxSize = Pure2D.GL_MAX_TEXTURE_SIZE;
+        }
+        mRectPacker = new RectBinPacker(Math.min(textureMaxSize, Pure2D.GL_MAX_TEXTURE_SIZE), mTextOptions.inPo2);
         mRectPacker.setRotationEnabled(false);
     }
 
     /**
      * This can only called on GL Thread
-     * 
+     *
      * @param glState
      * @return
      */
@@ -83,21 +100,15 @@ public class BitmapFont {
 
     /**
      * This can only called on GL Thread
-     * 
+     *
      * @param textureManager
      * @return
      */
     public Texture load(final TextureManager textureManager) {
-        if (mTexture == null) {
-            mTexture = textureManager.createDynamicTexture(new Runnable() {
+        Log.i(TAG, String.format("load(): %d chars, %s", mCharacters.length(), mTextOptions.toString()));
 
-                @Override
-                public void run() {
-                    final Bitmap bitmap = createBitmap();
-                    mTexture.load(bitmap, bitmap.getWidth(), bitmap.getHeight(), 0);
-                    bitmap.recycle();
-                }
-            }, null);
+        if (mTexture == null) {
+            mTexture = textureManager.createDynamicTexture(mLoadRunnable);
 
             mTexture.reload();
             mTexture.setFilters(GL10.GL_LINEAR, GL10.GL_LINEAR); // better output
@@ -140,7 +151,7 @@ public class BitmapFont {
     protected void findCharOffsets() {
         final Rect bounds = new Rect();
 
-        // long start = SystemClock.elapsedRealtime();
+        final long start = SystemClock.elapsedRealtime();
 
         // find the bounds
         final int length = mCharacters.length();
@@ -167,9 +178,7 @@ public class BitmapFont {
             mCharOffsets[i] = new PointF(bounds.left * mTextOptions.inScaleX, -bounds.top * mTextOptions.inScaleY);
         }
 
-        // long time = SystemClock.elapsedRealtime() - start;
-        // start = SystemClock.elapsedRealtime();
-        // Log.e("long", "=> " + mRectPacker.getWidth() + " " + mRectPacker.getHeight() + " " + time + "ms");
+        Log.i(TAG, String.format("Packing Result: (%d, %d) in %d ms", mRectPacker.getWidth(), mRectPacker.getHeight(), SystemClock.elapsedRealtime() - start));
     }
 
     @SuppressWarnings("deprecation")
@@ -216,5 +225,10 @@ public class BitmapFont {
         // Log.e("long", "draw time: " + time + "ms");
 
         return bitmap;
+    }
+
+    @Override
+    public String toString() {
+        return mTextOptions.toString();
     }
 }
