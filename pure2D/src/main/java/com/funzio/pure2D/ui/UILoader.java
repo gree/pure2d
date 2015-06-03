@@ -45,6 +45,7 @@ public class UILoader {
     protected static final String TAG = UILoader.class.getSimpleName();
 
     private static final String INCLUDE = "include";
+    private static final String MERGE = "merge";
     private static final String ATT_LAYOUT = "layout";
 
     private XmlPullParserFactory mFactory;
@@ -72,15 +73,37 @@ public class UILoader {
     public DisplayObject load(final XmlPullParser parser) throws Exception {
         Log.v(TAG, "load(): " + parser);
 
-        int eventType = parser.next();
-        if (eventType == XmlResourceParser.START_DOCUMENT) {
-            eventType = parser.next();
-        }
-
-        return parseNode(parser);
+        return loadMerge(parser, null);
     }
 
-    protected DisplayObject parseNode(final XmlPullParser parser) throws Exception {
+    /**
+     * Load content of <merge> in a XML into a specified parent
+     *
+     * @param parser
+     * @param parent
+     * @return
+     * @throws Exception
+     */
+    public DisplayObject loadMerge(final XmlPullParser parser, final Container parent) throws Exception {
+        Log.v(TAG, "loadMerge(): " + parser + ", " + parent);
+
+        int eventType = parser.next();
+        if (eventType == XmlResourceParser.START_DOCUMENT) {
+            parser.next();
+        }
+
+        return parseNode(parser, parent);
+    }
+
+    /**
+     * Load a XML node
+     *
+     * @param parser
+     * @param parent: this only works for xml starts with a <merge> or will be ignored
+     * @return
+     * @throws Exception
+     */
+    protected DisplayObject parseNode(final XmlPullParser parser, final Container parent) throws Exception {
         int eventType = -1;
         String nodeName = "";
         eventType = parser.getEventType();
@@ -99,6 +122,8 @@ public class UILoader {
                         displayObject.setXMLAttributes(parser, mUIManager);
                     }
                 }
+            } else if (nodeName.equals(MERGE)) {
+                displayObject = (DisplayObject) parent;
             } else {
                 // create by class name
                 final Class<? extends DisplayObject> theClass = UIConfig.getClassByName(nodeName);
@@ -115,7 +140,7 @@ public class UILoader {
 
                 if (eventType == XmlResourceParser.START_TAG) {
                     if (displayObject instanceof Container) {
-                        final DisplayObject child = parseNode(parser);
+                        final DisplayObject child = parseNode(parser, null);
                         if (child != null) {
                             ((Container) displayObject).addChild(child);
                         }
