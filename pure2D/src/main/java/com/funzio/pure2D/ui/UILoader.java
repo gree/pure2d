@@ -124,6 +124,10 @@ public class UILoader {
                 }
             } else if (nodeName.equals(MERGE)) {
                 displayObject = (DisplayObject) parent;
+                if (displayObject != null) {
+                    // you can also override the attributes
+                    displayObject.setXMLAttributes(parser, mUIManager);
+                }
             } else {
                 // create by class name
                 final Class<? extends DisplayObject> theClass = UIConfig.getClassByName(nodeName);
