@@ -150,6 +150,7 @@ public class UIConfig {
 
     public static boolean isUnknownUri(final String uri) {
         return !uri.startsWith(Pure2DURI.HTTP) //
+                && !uri.startsWith(Pure2DURI.HTTPS) //
                 && !uri.startsWith(Pure2DURI.DRAWABLE) //
                 && !uri.startsWith(Pure2DURI.ASSET) //
                 && !uri.startsWith(Pure2DURI.FILE) //

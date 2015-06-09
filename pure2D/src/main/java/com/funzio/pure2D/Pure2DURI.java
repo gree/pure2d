@@ -35,6 +35,7 @@ public class Pure2DURI {
     public static final String ASSET = "asset://";
     public static final String FILE = "file://";
     public static final String HTTP = "http://";
+    public static final String HTTPS = "https://";
     public static final String CACHE = "cache://";
 
     public static String getPathFromUri(final String uri) {
@@ -80,6 +81,10 @@ public class Pure2DURI {
 
     public static final String http(final String path) {
         return HTTP + path;
+    }
+
+    public static final String https(final String path) {
+        return HTTPS + path;
     }
 
     public static final String cache(final String path) {
