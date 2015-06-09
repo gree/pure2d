@@ -100,7 +100,7 @@ public class UIManager {
         // release all textures
         if (mTextureManager != null) {
             mTextureManager.reset();
-            mTextureManager = null;
+            //mTextureManager = null;
         }
     }
 
