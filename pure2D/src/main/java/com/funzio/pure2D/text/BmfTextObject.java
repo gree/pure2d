@@ -56,6 +56,7 @@ import javax.microedition.khronos.opengles.GL10;
  * @author long
  */
 public class BmfTextObject extends BaseDisplayObject implements Cacheable {
+    public static final String TAG = BmfTextObject.class.getSimpleName();
 
     // xml attributes
     protected static final String ATT_LETTER_SPACING = "letterSpacing";
@@ -89,6 +90,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     private static String sScratchText;
     private float mTextSize = 0f;
     private float mTextScale = 1f;
+
+    private float mTextureWidth;
+    private float mTextureHeight;
 
     // protected int mCacheProjection = Scene.AXIS_BOTTOM_LEFT;
 
@@ -198,7 +202,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                 if (frame != null) {
                     nextX += frame.getSize().x + getLetterSpacing();
                 } else {
-                    Log.e(TAG, "Missing Text Frame: " + ch, new Exception());
+                    Log.w(TAG, "Adding new char: " + ch);
+                    // add new char on the fly
+                    mBitmapFont.addCharacter(ch);
                 }
             }
 
@@ -232,11 +238,25 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             updateTextBounds();
         }
 
+        // check if texture size changed? it happens when new Characters added.
+        if (mTexture != null) {
+            final PointF size = mTexture.getSize();
+            if (size.x != mTextureWidth || size.y != mTextureHeight) {
+                mTextureWidth = size.x;
+                mTextureHeight = size.y;
+                invalidate(CHILDREN);
+            }
+        }
+
         return super.update(deltaTime);
     }
 
     @Override
     public boolean draw(final GLState glState) {
+        if (mBitmapFont != null && mBitmapFont.isInvalidate()) {
+            mBitmapFont.validate();
+        }
+
         if (mText == null || mText.length() == 0) {
             return false;
         }
