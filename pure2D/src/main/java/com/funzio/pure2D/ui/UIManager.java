@@ -33,6 +33,7 @@ import android.util.Log;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Pure2DURI;
+import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.gl.gl10.textures.TextureOptions;
 import com.funzio.pure2D.loaders.tasks.ReadTextFileTask;
 import com.funzio.pure2D.ui.vo.UIConfigVO;
@@ -99,7 +100,7 @@ public class UIManager {
         // release all textures
         if (mTextureManager != null) {
             mTextureManager.reset();
-            mTextureManager = null;
+            //mTextureManager = null;
         }
     }
 
@@ -148,9 +149,56 @@ public class UIManager {
         return mConfigVO;
     }
 
+    /**
+     * Load a XML layout
+     *
+     * @param parser
+     * @return
+     * @throws UIException
+     */
     public DisplayObject load(final XmlPullParser parser) throws UIException {
         try {
             return mLoader.load(parser);
+        } catch (Exception e) {
+            if (mExceptionHandler != null) {
+                mExceptionHandler.uncaughtException(Thread.currentThread(), e);
+            }
+
+            throw new UIException(e);
+        }
+    }
+
+    /**
+     * Load content of <merge> in a XML into a specified parent
+     *
+     * @param parser
+     * @param parent
+     * @return
+     * @throws UIException
+     */
+    public DisplayObject loadMerge(final XmlPullParser parser, final Container parent) throws UIException {
+        try {
+            return mLoader.loadMerge(parser, parent);
+        } catch (Exception e) {
+            if (mExceptionHandler != null) {
+                mExceptionHandler.uncaughtException(Thread.currentThread(), e);
+            }
+
+            throw new UIException(e);
+        }
+    }
+
+    /**
+     * Load content of <merge> in a XML into a specified parent
+     *
+     * @param xmlResource
+     * @param parent
+     * @return
+     * @throws UIException
+     */
+    public DisplayObject loadMerge(final int xmlResource, final Container parent) throws UIException {
+        try {
+            return mLoader.loadMerge(mResources.getXml(xmlResource), parent);
         } catch (Exception e) {
             if (mExceptionHandler != null) {
                 mExceptionHandler.uncaughtException(Thread.currentThread(), e);

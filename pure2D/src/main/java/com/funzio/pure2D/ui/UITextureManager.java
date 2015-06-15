@@ -187,7 +187,7 @@ public class UITextureManager extends TextureManager {
             } else if (textureUri.startsWith(Pure2DURI.ASSET)) {
                 // load from bundle assets
                 texture = createAssetTexture(actualPath, textureOptions, async);
-            } else if (textureUri.startsWith(Pure2DURI.HTTP)) {
+            } else if (textureUri.startsWith(Pure2DURI.HTTP) || textureUri.startsWith(Pure2DURI.HTTPS)) {
                 // load from bundle assets
                 texture = createURLTexture(actualPath, textureOptions, async);
             } else if (textureUri.startsWith(Pure2DURI.CACHE)) {
@@ -250,7 +250,7 @@ public class UITextureManager extends TextureManager {
                     } else {
                         atlas.load(actualPath, mUIConfigVO.screen_scale);
                     }
-                } else if (jsonUri.startsWith(Pure2DURI.HTTP)) {
+                } else if (jsonUri.startsWith(Pure2DURI.HTTP) || jsonUri.startsWith(Pure2DURI.HTTPS)) {
                     if (async) {
                         atlas.loadURLAsync(actualPath, null, mUIConfigVO.screen_scale);
                     } else {
@@ -310,7 +310,7 @@ public class UITextureManager extends TextureManager {
                 } else {
                     novaLoader.load(null, actualPath);
                 }
-            } else if (jsonUri.startsWith(Pure2DURI.HTTP)) {
+            } else if (jsonUri.startsWith(Pure2DURI.HTTP) || jsonUri.startsWith(Pure2DURI.HTTPS)) {
                 if (async) {
                     novaLoader.loadURLAsync(actualPath, null);
                 } else {

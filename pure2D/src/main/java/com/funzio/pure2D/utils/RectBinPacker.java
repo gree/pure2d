@@ -235,7 +235,7 @@ public class RectBinPacker {
                 mRight = new Node(x + w, y, width - w, h);
             }
 
-            /* // selective split
+            /*// selective split
             final int r = (width - w) * h;
             final int d = w * (height - h);
             if (d > r) {

@@ -3,6 +3,7 @@
 	<!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
 	<!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
 	<!ENTITY % ASYNC "async (true|false)  #IMPLIED">
+	<!ENTITY % SELECTED "selected (true|false)  #IMPLIED">
 
 	<!ENTITY % OBJ_ATTRS
 		"id CDATA #IMPLIED
@@ -131,4 +132,12 @@
 		%GROUP_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		patches CDATA #IMPLIED>
+
+	<!ELEMENT ToggleButton ANY>
+	<!ATTLIST ToggleButton
+		%GROUP_ATTRS;
+		%SOURCE;
+		%ASYNC;
+		%SELECTED;
 		patches CDATA #IMPLIED>

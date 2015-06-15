@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,17 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.utils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -49,6 +43,12 @@ import com.funzio.pure2D.loaders.tasks.URLLoadBitmapTask;
 import com.funzio.pure2D.text.TextOptions;
 import com.funzio.pure2D.ui.UIConfig;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * @author long
  */
@@ -60,7 +60,7 @@ public class Pure2DUtils {
 
     /**
      * Create a texture from an asset file
-     * 
+     *
      * @param assetManager
      * @param assetPath
      * @param options
@@ -78,7 +78,7 @@ public class Pure2DUtils {
 
     /**
      * Create a texture from a resource
-     * 
+     *
      * @param resources
      * @param resourceID
      * @param options
@@ -101,7 +101,7 @@ public class Pure2DUtils {
 
     /**
      * Create a texture from a file with a specified path
-     * 
+     *
      * @param filePath
      * @param options
      * @param outDimensions
@@ -123,7 +123,7 @@ public class Pure2DUtils {
 
     /**
      * Create a texture from a stream
-     * 
+     *
      * @param stream
      * @param options
      * @param outDimensions
@@ -145,7 +145,7 @@ public class Pure2DUtils {
 
     /**
      * Create a bitmap from a URL
-     * 
+     *
      * @param url
      * @param options
      * @param outDimensions
@@ -168,7 +168,7 @@ public class Pure2DUtils {
 
     /**
      * Create a bitmap from a uri. For example: asset://images/image1.png
-     * 
+     *
      * @param resources only required when uri is @drawable/ or asset://
      * @param packageName only required when uri is @drawable/
      * @param uri
@@ -194,7 +194,7 @@ public class Pure2DUtils {
         } else if (uri.startsWith(Pure2DURI.ASSET)) {
             // load from bundle assets
             bitmap = getAssetBitmap(resources.getAssets(), actualPath, options, outDimensions);
-        } else if (uri.startsWith(Pure2DURI.HTTP)) {
+        } else if (uri.startsWith(Pure2DURI.HTTP) || uri.startsWith(Pure2DURI.HTTPS)) {
             // load from http
             bitmap = getURLBitmap(actualPath, options, outDimensions);
         }
@@ -204,7 +204,7 @@ public class Pure2DUtils {
 
     /**
      * Get dimensions of a Bitmap by its uri.
-     * 
+     *
      * @param resources
      * @param packageName
      * @param uri
@@ -232,7 +232,7 @@ public class Pure2DUtils {
             } else if (uri.startsWith(Pure2DURI.ASSET)) {
                 // load from bundle assets
                 BitmapFactory.decodeStream(resources.getAssets().open(actualPath), null, temp);
-            } else if (uri.startsWith(Pure2DURI.HTTP)) {
+            } else if (uri.startsWith(Pure2DURI.HTTP) || uri.startsWith(Pure2DURI.HTTPS)) {
                 // load from http
                 final URLLoadBitmapTask task = new URLLoadBitmapTask(actualPath, temp);
                 task.run();
@@ -252,7 +252,7 @@ public class Pure2DUtils {
 
     /**
      * Create a bitmap with a specific text rendered on
-     * 
+     *
      * @param text
      * @param options
      * @param outDimensions
@@ -299,7 +299,7 @@ public class Pure2DUtils {
 
     /**
      * Check and convert the bitmap to (Power of 2) if required
-     * 
+     *
      * @param bitmap
      * @param options
      * @param outDimensions
@@ -339,7 +339,7 @@ public class Pure2DUtils {
 
     /**
      * Scale the specified bitmap to the size of the closest-power-of-2 of the current size
-     * 
+     *
      * @param bitmap
      * @param outDimensions
      * @return
@@ -409,7 +409,7 @@ public class Pure2DUtils {
 
     /**
      * non-premultiplied alpha version of GLUtils.texImage2D(). Note: this method is Slow and should only be used when really necessary!
-     * 
+     *
      * @param gl
      * @param bitmap
      * @see GLUtils.texImage2D()
@@ -463,7 +463,7 @@ public class Pure2DUtils {
 
     /**
      * Scale the specified bitmap to the size of the closest-power-of-2 of the current size
-     * 
+     *
      * @param bitmap
      * @param outDimensions
      * @return
@@ -492,7 +492,7 @@ public class Pure2DUtils {
 
     /**
      * Calculates the next highest power of two for a given integer.
-     * 
+     *
      * @param n the number
      * @return a power of two equal to or higher than n
      */
@@ -513,7 +513,7 @@ public class Pure2DUtils {
 
     /**
      * Find the smallest area that contains multiples rect defined by width & height
-     * 
+     *
      * @param width
      * @param height
      * @param num

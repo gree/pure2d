@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,13 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
  *
  */
 package com.funzio.pure2D.ui;
-
-import java.util.HashMap;
 
 import android.util.Log;
 
@@ -48,6 +46,8 @@ import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.shapes.Sprite9;
 import com.funzio.pure2D.text.BmfTextObject;
 
+import java.util.HashMap;
+
 /**
  * @author long.ngo
  */
@@ -70,6 +70,7 @@ public class UIConfig {
     public static final String FILE_PNG = ".png";
 
     private static final HashMap<String, Class<? extends DisplayObject>> CLASS_MAP = new HashMap<String, Class<? extends DisplayObject>>();
+
     static {
         CLASS_MAP.put("DisplayGroup", DisplayGroup.class);
         CLASS_MAP.put("Group", DisplayGroup.class);
@@ -88,6 +89,7 @@ public class UIConfig {
         CLASS_MAP.put("Sprite9", Sprite9.class);
         CLASS_MAP.put("Clip", Clip.class);
         CLASS_MAP.put("Button", Button.class);
+        CLASS_MAP.put("ToggleButton", ToggleButton.class);
         CLASS_MAP.put("Text", BmfTextObject.class);
         CLASS_MAP.put("NovaGroup", NovaGroup.class);
     }
@@ -148,6 +150,7 @@ public class UIConfig {
 
     public static boolean isUnknownUri(final String uri) {
         return !uri.startsWith(Pure2DURI.HTTP) //
+                && !uri.startsWith(Pure2DURI.HTTPS) //
                 && !uri.startsWith(Pure2DURI.DRAWABLE) //
                 && !uri.startsWith(Pure2DURI.ASSET) //
                 && !uri.startsWith(Pure2DURI.FILE) //

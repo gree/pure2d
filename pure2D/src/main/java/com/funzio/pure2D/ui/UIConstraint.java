@@ -107,7 +107,9 @@ public class UIConstraint {
     public void setAttributes(final XmlPullParser parser, final UIManager manager) {
         mUIManager = manager;
         mUIConfigVO = manager.getConfig();
-        mAxisSystem = manager.getTextureManager().getGLState().getAxisSystem();
+        if (manager.getTextureManager() != null) {
+            mAxisSystem = manager.getTextureManager().getGLState().getAxisSystem();
+        }
         mHasAttributes = false;
 
         widthUnit = getAttributeUnit(parser, ATT_WIDTH);
