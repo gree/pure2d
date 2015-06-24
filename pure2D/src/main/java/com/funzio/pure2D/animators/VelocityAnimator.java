@@ -34,6 +34,8 @@ public class VelocityAnimator extends BaseAnimator {
     protected float mMinVelocity = Float.NEGATIVE_INFINITY;
     protected float mMaxVelocity = Float.POSITIVE_INFINITY;
 
+    protected boolean mAutoStop = true; // auto stop when velocity changes direction or zero
+
     public VelocityAnimator() {
         super();
     }
@@ -110,7 +112,7 @@ public class VelocityAnimator extends BaseAnimator {
     public boolean update(final int deltaTime) {
         if (mRunning) {
 
-            if (mVelocity != 0 && ((mLifespan > 0 && mElapsedTime < mLifespan) || mLifespan <= 0)) {
+            if ((!mAutoStop || mVelocity != 0) && ((mLifespan > 0 && mElapsedTime < mLifespan) || mLifespan <= 0)) {
 
                 int myDeltaTime = deltaTime + mPendingElapse;
                 mPendingElapse = 0;
@@ -137,7 +139,7 @@ public class VelocityAnimator extends BaseAnimator {
                 onUpdate(delta);
 
                 // direction changed or time's up?
-                if ((mLifespan <= 0 && newVeloc * mVelocity <= 0) || isTimeUp) {
+                if ((mAutoStop && mLifespan <= 0 && newVeloc * mVelocity <= 0) || isTimeUp) {
                     mVelocity = 0;
                     // done! do callback
                     end();
@@ -155,6 +157,15 @@ public class VelocityAnimator extends BaseAnimator {
         }
 
         return false;
+    }
+
+    public boolean isAutoStop() {
+        return mAutoStop;
+    }
+
+    public VelocityAnimator setAutoStop(final boolean autoStop) {
+        mAutoStop = autoStop;
+        return this;
     }
 
     protected void onUpdate(final float value) {
