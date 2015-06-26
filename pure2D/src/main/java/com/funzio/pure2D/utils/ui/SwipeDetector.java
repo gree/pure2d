@@ -33,7 +33,8 @@ import android.view.View;
 public class SwipeDetector implements View.OnTouchListener {
 
     private SwipeListener mListener;
-    private float mMinDistance = 100;
+    private float mMinX = 100;
+    private float mMinY = 100;
     private float mDownX, mDownY;
 
     public SwipeDetector(final SwipeListener listener, final View view) {
@@ -59,12 +60,21 @@ public class SwipeDetector implements View.OnTouchListener {
         mListener = listener;
     }
 
-    public float getMinDistance() {
-        return mMinDistance;
+    public float getMinX() {
+        return mMinX;
     }
 
-    public void setMinDistance(final float minDistance) {
-        mMinDistance = minDistance;
+    public float getMinY() {
+        return mMinY;
+    }
+
+    public void setThreshold(final float minX, final float minY) {
+        mMinX = minX;
+        mMinY = minY;
+    }
+
+    public void setThreshold(final float min) {
+        mMinX = mMinY = min;
     }
 
     public boolean onTouch(final View view, final MotionEvent event) {
@@ -81,26 +91,44 @@ public class SwipeDetector implements View.OnTouchListener {
                 return true;
             }
             case MotionEvent.ACTION_UP: {
-                float deltaX = mDownX - event.getX();
-                float deltaY = mDownY - event.getY();
+                final float deltaX = mDownX - event.getX();
+                final float deltaY = mDownY - event.getY();
+                final float adx = Math.abs(deltaX);
+                final float ady = Math.abs(deltaY);
 
-                // horizontal
-                if (Math.abs(deltaX) > mMinDistance) {
-                    // left or right
-                    if (deltaX < 0) {
-                        mListener.onSwipeLeftToRight();
-                    } else if (deltaX > 0) {
-                        mListener.onSwipeRightToLeft();
+                if (adx > ady) {
+                    // horizontal first
+                    if (adx >= mMinX) {
+                        // left or right
+                        if (deltaX < 0) {
+                            mListener.onSwipeRight();
+                        } else if (deltaX > 0) {
+                            mListener.onSwipeLeft();
+                        }
+                    } else if (ady >= mMinY) {
+                        // up or down
+                        if (deltaY < 0) {
+                            mListener.onSwipeDown();
+                        } else if (deltaY > 0) {
+                            mListener.onSwipeUp();
+                        }
                     }
-                }
-
-                // vertical
-                if (Math.abs(deltaY) > mMinDistance) {
-                    // top or down
-                    if (deltaY < 0) {
-                        mListener.onSwipeTopToBottom();
-                    } else if (deltaY > 0) {
-                        mListener.onSwipeBottomToTop();
+                } else {
+                    // verical first
+                    if (ady >= mMinY) {
+                        // up or down
+                        if (deltaY < 0) {
+                            mListener.onSwipeDown();
+                        } else if (deltaY > 0) {
+                            mListener.onSwipeUp();
+                        }
+                    } else if (adx >= mMinX) {
+                        // left or right
+                        if (deltaX < 0) {
+                            mListener.onSwipeRight();
+                        } else if (deltaX > 0) {
+                            mListener.onSwipeLeft();
+                        }
                     }
                 }
 
@@ -111,12 +139,12 @@ public class SwipeDetector implements View.OnTouchListener {
     }
 
     public static interface SwipeListener {
-        public void onSwipeRightToLeft();
+        public void onSwipeLeft();
 
-        public void onSwipeLeftToRight();
+        public void onSwipeRight();
 
-        public void onSwipeTopToBottom();
+        public void onSwipeDown();
 
-        public void onSwipeBottomToTop();
+        public void onSwipeUp();
     }
 }
