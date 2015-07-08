@@ -385,6 +385,14 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         if (mTextureLoaded) {
             onTextureLoaded(texture);
         }
+
+        // apply texture to children as well
+        for (int i = 0; i < mNumChildren; i++) {
+            final StackableObject child = mChildren.get(i);
+            if (child instanceof AbstractUniGroup) {
+                ((AbstractUniGroup) child).setTexture(texture);
+            }
+        }
     }
 
     @Override
