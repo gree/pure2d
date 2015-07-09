@@ -88,8 +88,9 @@ public class SwipeDetector implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN: {
                 mDownX = event.getX();
                 mDownY = event.getY();
-                return true;
+                return false;
             }
+
             case MotionEvent.ACTION_UP: {
                 final float deltaX = mDownX - event.getX();
                 final float deltaY = mDownY - event.getY();
@@ -101,16 +102,16 @@ public class SwipeDetector implements View.OnTouchListener {
                     if (adx >= mMinX) {
                         // left or right
                         if (deltaX < 0) {
-                            mListener.onSwipeRight();
+                            return mListener.onSwipeRight();
                         } else if (deltaX > 0) {
-                            mListener.onSwipeLeft();
+                            return mListener.onSwipeLeft();
                         }
                     } else if (ady >= mMinY) {
                         // up or down
                         if (deltaY < 0) {
-                            mListener.onSwipeDown();
+                            return mListener.onSwipeDown();
                         } else if (deltaY > 0) {
-                            mListener.onSwipeUp();
+                            return mListener.onSwipeUp();
                         }
                     }
                 } else {
@@ -118,33 +119,32 @@ public class SwipeDetector implements View.OnTouchListener {
                     if (ady >= mMinY) {
                         // up or down
                         if (deltaY < 0) {
-                            mListener.onSwipeDown();
+                            return mListener.onSwipeDown();
                         } else if (deltaY > 0) {
-                            mListener.onSwipeUp();
+                            return mListener.onSwipeUp();
                         }
                     } else if (adx >= mMinX) {
                         // left or right
                         if (deltaX < 0) {
-                            mListener.onSwipeRight();
+                            return mListener.onSwipeRight();
                         } else if (deltaX > 0) {
-                            mListener.onSwipeLeft();
+                            return mListener.onSwipeLeft();
                         }
                     }
                 }
-
-                return true;
             }
         }
+        
         return false;
     }
 
-    public static interface SwipeListener {
-        public void onSwipeLeft();
+    public interface SwipeListener {
+        boolean onSwipeLeft();
 
-        public void onSwipeRight();
+        boolean onSwipeRight();
 
-        public void onSwipeDown();
+        boolean onSwipeDown();
 
-        public void onSwipeUp();
+        boolean onSwipeUp();
     }
 }
