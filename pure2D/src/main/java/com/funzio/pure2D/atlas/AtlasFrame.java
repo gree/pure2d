@@ -266,10 +266,17 @@ public class AtlasFrame {
     }
 
     public AtlasFrame clone() {
+        AtlasFrame frame;
         if (mTexture != null) {
-            return new AtlasFrame(mTexture, mIndex, mName, mRect);
+            frame = new AtlasFrame(mTexture, mIndex, mName, mRect);
         } else {
-            return new AtlasFrame(mAtlas, mIndex, mName, mRect);
+            frame = new AtlasFrame(mAtlas, mIndex, mName, mRect);
         }
+
+        if (mOffset != null) {
+            frame.mOffset = new PointF(mOffset.x, mOffset.y);
+        }
+
+        return frame;
     }
 }
