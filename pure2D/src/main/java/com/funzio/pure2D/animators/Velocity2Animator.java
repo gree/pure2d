@@ -165,16 +165,10 @@ public class Velocity2Animator extends BaseAnimator {
                 final float newSpeedSquared = newVelocX * newVelocX + newVelocY * newVelocY;
                 // speed range check
                 if (newSpeedSquared < mMinSpeed * mMinSpeed) {
-                    /*final float angle = (float) Math.atan2(newVelocY, newVelocX);
-                    newVelocX = mMinSpeed * (float) Math.cos(angle);
-                    newVelocY = mMinSpeed * (float) Math.sin(angle);*/
                     final float f = mMinSpeed / (float) Math.sqrt(newSpeedSquared);
                     newVelocX *= f;
                     newVelocY *= f;
                 } else if (newSpeedSquared > mMaxSpeed * mMaxSpeed) {
-                    //final float angle = (float) Math.atan2(newVelocY, newVelocX);
-                    /*newVelocX = mMaxSpeed * (float) Math.cos(angle);
-                    newVelocY = mMaxSpeed * (float) Math.sin(angle);*/
                     final float f = mMaxSpeed / (float) Math.sqrt(newSpeedSquared);
                     newVelocX *= f;
                     newVelocY *= f;

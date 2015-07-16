@@ -62,6 +62,7 @@ public class UniVList<T> extends UniVWheel implements List<T> {
 
     private boolean mRepeating = false;
     private boolean mChildrenNumInvalidated = false;
+    protected float mOOBTraction = SCROLL_OOB_FRICTION;
 
     public UniVList() {
         super();
@@ -99,9 +100,9 @@ public class UniVList<T> extends UniVWheel implements List<T> {
         // add friction when scroll out of bounds
         if (!mRepeating) {
             if (y < 0) {
-                y *= SCROLL_OOB_FRICTION;
+                y *= mOOBTraction;
             } else if (y > mVirtualScrollMax.y) {
-                y = mVirtualScrollMax.y + (y - mVirtualScrollMax.y) * SCROLL_OOB_FRICTION;
+                y = mVirtualScrollMax.y + (y - mVirtualScrollMax.y) * mOOBTraction;
             }
         }
 
@@ -442,6 +443,15 @@ public class UniVList<T> extends UniVWheel implements List<T> {
 
     public int getDataStartIndex() {
         return mDataStartIndex;
+    }
+
+    public float getOOBTraction() {
+        return mOOBTraction;
+    }
+
+    public UniVList setOOBTraction(final float OOBTraction) {
+        mOOBTraction = OOBTraction;
+        return this;
     }
 
     @Override

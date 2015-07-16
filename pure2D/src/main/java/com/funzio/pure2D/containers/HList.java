@@ -20,6 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * ****************************************************************************
+ *
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ *
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 
 
@@ -56,6 +60,7 @@ public class HList<T> extends HWheel implements List<T> {
 
     private boolean mRepeating = false;
     private boolean mChildrenNumInvalidated = false;
+    protected float mOOBTraction = SCROLL_OOB_FRICTION;
 
     public HList() {
         super();
@@ -93,9 +98,9 @@ public class HList<T> extends HWheel implements List<T> {
         // add friction when scroll out of bounds
         if (!mRepeating) {
             if (x < 0) {
-                x *= SCROLL_OOB_FRICTION;
+                x *= mOOBTraction;
             } else if (x > mVirtualScrollMax.x) {
-                x = mVirtualScrollMax.x + (x - mVirtualScrollMax.x) * SCROLL_OOB_FRICTION;
+                x = mVirtualScrollMax.x + (x - mVirtualScrollMax.x) * mOOBTraction;
             }
         }
 
@@ -435,7 +440,16 @@ public class HList<T> extends HWheel implements List<T> {
     }
 
     public T setItem(final int index, T item) {
-       return mData.set(index, item);
+        return mData.set(index, item);
+    }
+
+    public float getOOBTraction() {
+        return mOOBTraction;
+    }
+
+    public HList setOOBTraction(final float OOBTraction) {
+        mOOBTraction = OOBTraction;
+        return this;
     }
 
     @Override

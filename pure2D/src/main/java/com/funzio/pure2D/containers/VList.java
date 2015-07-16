@@ -22,6 +22,12 @@
  * ****************************************************************************
  *
  * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ *
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ *
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ *
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 
 
@@ -58,6 +64,7 @@ public class VList<T> extends VWheel implements List<T> {
 
     private boolean mRepeating = false;
     private boolean mChildrenNumInvalidated = false;
+    protected float mOOBTraction = SCROLL_OOB_FRICTION;
 
     public VList() {
         super();
@@ -95,9 +102,9 @@ public class VList<T> extends VWheel implements List<T> {
         // add friction when scroll out of bounds
         if (!mRepeating) {
             if (y < 0) {
-                y *= SCROLL_OOB_FRICTION;
+                y *= mOOBTraction;
             } else if (y > mVirtualScrollMax.y) {
-                y = mVirtualScrollMax.y + (y - mVirtualScrollMax.y) * SCROLL_OOB_FRICTION;
+                y = mVirtualScrollMax.y + (y - mVirtualScrollMax.y) * mOOBTraction;
             }
         }
 
@@ -438,6 +445,15 @@ public class VList<T> extends VWheel implements List<T> {
 
     public int getDataStartIndex() {
         return mDataStartIndex;
+    }
+
+    public float getOOBTraction() {
+        return mOOBTraction;
+    }
+
+    public VList setOOBTraction(final float OOBTraction) {
+        mOOBTraction = OOBTraction;
+        return this;
     }
 
     @Override
