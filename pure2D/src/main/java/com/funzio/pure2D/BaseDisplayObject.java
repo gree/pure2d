@@ -538,15 +538,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setPivot(final PointF pivot) {
-        mPivot.x = pivot.x;
-        mPivot.y = pivot.y;
-
-        invalidate(PIVOT);
+        setPivot(pivot.x, pivot.y);
     }
 
     public void setPivot(final float x, final float y) {
         mPivot.x = x;
         mPivot.y = y;
+
+        // check center
+        if (mPivotAtCenter) {
+            if (Math.abs(x - mSize.x * 0.5f) >= 1 || Math.abs(y - mSize.y * 0.5f) >= 1) {
+                // no longer center
+                mPivotAtCenter = false;
+            }
+        }
 
         invalidate(PIVOT);
     }
@@ -559,6 +564,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mPivotAtCenter = true;
 
         invalidate(PIVOT);
+    }
+
+    public boolean isPivotAtCenter() {
+        return mPivotAtCenter;
     }
 
     /**

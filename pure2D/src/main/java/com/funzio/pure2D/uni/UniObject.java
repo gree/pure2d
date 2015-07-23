@@ -86,7 +86,8 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     protected float mAlpha = 1;
 
     protected boolean mHasOrigin = false;
-    protected boolean mOriginAtCenter = false;
+    private boolean mOriginAtCenter = false;
+    private boolean mPivotAtCenter = false;
 
     protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
@@ -353,15 +354,20 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     public void setPivot(final PointF pivot) {
-        mPivot.x = pivot.x;
-        mPivot.y = pivot.y;
-
-        invalidate(PIVOT);
+        setPivot(pivot.x, pivot.y);
     }
 
     public void setPivot(final float x, final float y) {
         mPivot.x = x;
         mPivot.y = y;
+
+        // check center
+        if (mPivotAtCenter) {
+            if (Math.abs(x - mSize.x * 0.5f) >= 1 || Math.abs(y - mSize.y * 0.5f) >= 1) {
+                // no longer center
+                mPivotAtCenter = false;
+            }
+        }
 
         invalidate(PIVOT);
     }
@@ -370,7 +376,14 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         mPivot.x = mSize.x * 0.5f;
         mPivot.y = mSize.y * 0.5f;
 
+        // flag
+        mPivotAtCenter = true;
+
         invalidate(PIVOT);
+    }
+
+    public boolean isPivotAtCenter() {
+        return mPivotAtCenter;
     }
 
     /**
@@ -405,6 +418,10 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         if (mOriginAtCenter) {
             // auto center
             setOrigin(w * 0.5f, h * 0.5f);
+        }
+
+        if (mPivotAtCenter) {
+            setPivot(w * 0.5f, h * 0.5f);
         }
 
         invalidate(SIZE);
