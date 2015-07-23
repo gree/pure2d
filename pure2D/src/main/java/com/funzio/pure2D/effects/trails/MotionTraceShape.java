@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,43 +18,35 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
-/**
- * 
  */
 package com.funzio.pure2D.effects.trails;
 
 import android.graphics.PointF;
 
 import com.funzio.pure2D.Manipulatable;
-import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.shapes.Polyline;
-
-import java.util.Arrays;
 
 /**
  * @author long
+ *
+ *         This is similar to MotionTrailShape; however the points are not easing, for tracing motion precisely.
  */
-public class MotionTrailShape extends Polyline implements MotionTrail {
+public class MotionTraceShape extends Polyline implements MotionTrail {
     public static final int DEFAULT_NUM_POINTS = 10;
-    public static final float DEFAULT_MOTION_EASING = 0.5f;
 
     protected int mNumPoints = DEFAULT_NUM_POINTS;
-    protected float mMotionEasingX = DEFAULT_MOTION_EASING;
-    protected float mMotionEasingY = DEFAULT_MOTION_EASING;
     protected float mMinLength = 1;
     protected float mSegmentLength = 0;
 
     protected Manipulatable mTarget;
     protected PointF mTargetOffset = new PointF(0, 0);
     protected Object mData;
-    private boolean mFollowingHead = false;
 
-    public MotionTrailShape() {
+    public MotionTraceShape() {
         this(null);
     }
 
-    public MotionTrailShape(final Manipulatable target) {
+    public MotionTraceShape(final Manipulatable target) {
         super();
 
         // set default num points
@@ -67,8 +59,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
 
     @Override
     public void reset(final Object... params) {
-        mMotionEasingX = mMotionEasingY = DEFAULT_MOTION_EASING;
-
         setPointsAt(0, 0);
     }
 
@@ -86,16 +76,29 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     public void setPosition(final float x, final float y) {
         if (mNumPoints > 0) {
             if (!mPoints[0].equals(x, y)) {
+                if (mNumPoints > 1) {
+                    final PointF p1 = mPoints[1];
+                    final float dx = x - p1.x;
+                    final float dy = y - p1.y;
+                    // long enough to shift?
+                    if (mMinLength <= 1 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
+                        // shift them
+                        shiftPoints();
+                    }
+                }
+
+                // move head forward
                 mPoints[0].set(x, y);
 
-                // flag
-                mFollowingHead = true;
+                // apply
+                //setPoints(mNumPointsUsed, mPoints);
             }
         }
     }
 
     /**
      * Need to also override this since we override setPosition()
+     *
      * @return
      */
     @Override
@@ -106,87 +109,45 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     @Override
     public void move(final float dx, final float dy) {
         if (mNumPoints > 0) {
-            mPoints[0].offset(dx, dy);
-
-            // flag
-            mFollowingHead = true;
+            final PointF p0 = mPoints[0];
+            setPosition(p0.x + dx, p0.y + dy);
         }
     }
 
     @Override
     public boolean update(final int deltaTime) {
 
-        if (mNumPoints > 0) {
-
-            if (!mFollowingHead && mTarget != null) {
-                final PointF p1 = mTarget.getPosition();
-                final float dx = p1.x - (mPoints[0].x - mTargetOffset.x);
-                final float dy = p1.y - (mPoints[0].y - mTargetOffset.y);
-                if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
-                    // flag
-                    mFollowingHead = true;
-                }
-            }
-
-            if (mFollowingHead) {
-                // calculate time loop for consistency with different framerate
-                final int loop = deltaTime / Scene.DEFAULT_MSPF;
-                PointF p1, p2;
-                float dx, dy;
-                for (int n = 0; n < loop; n++) {
-                    for (int i = mNumPoints - 1; i > 0; i--) {
-                        p1 = mPoints[i];
-                        p2 = mPoints[i - 1];
-                        dx = p2.x - p1.x;
-                        dy = p2.y - p1.y;
-                        if (mMinLength <= 1 || (dx * dx + dy * dy) > (mSegmentLength * mSegmentLength)) {
-                            // move toward the leading point
-                            p1.x += dx * mMotionEasingX;
-                            p1.y += dy * mMotionEasingY;
-
-                            // show vertex
-                            setColorMultipliersAt(i, 1);
-                        } else {
-                            // hide vertex
-                            setColorMultipliersAt(i, 0);
-                        }
-                    }
-                }
-
-                // follow the target
-                if (mTarget != null) {
-                    // set the head
-                    final PointF pos = mTarget.getPosition();
-                    mPoints[0].set(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
-                }
-
-                // apply
-                setPoints(mPoints);
-            }
+        // follow the target
+        if (mTarget != null) {
+            // set the head
+            final PointF pos = mTarget.getPosition();
+            // move head
+            setPosition(pos.x + mTargetOffset.x, pos.y + mTargetOffset.y);
         }
+
+        // force invalidate
+        setPoints(mNumPointsUsed, mPoints);
 
         return super.update(deltaTime);
     }
 
-    @Override
+    /*@Override
     protected void validateVertices() {
         super.validateVertices();
 
         if (mTotalLength <= mMinLength) {
-            // flag done
-            mFollowingHead = false;
-
             // hide all vertices
             Arrays.fill(mColorMultipliers, 0);
         }
-    }
+    }*/
 
     public int getNumPoints() {
         return mNumPoints;
     }
 
     public void setNumPoints(final int numPoints) {
-        mNumPointsUsed = mNumPoints = numPoints;
+        mNumPointsUsed = 1; // start with 1 point
+        mNumPoints = numPoints;
 
         if (numPoints < 2) {
             mPoints = null;
@@ -210,7 +171,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
 
             // optimize
             mTotalLength = 0;
-            mFollowingHead = false;
         }
 
         // re-count, each point has 2 vertices
@@ -239,8 +199,22 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
             mPoints[i].set(x, y);
         }
 
-        // apply
-        setPoints(mPoints);
+        // start with the first point
+        setPoints(1, mPoints);
+    }
+
+    protected int shiftPoints() {
+        // add another point if available
+        if (mNumPointsUsed < mNumPoints) {
+            mNumPointsUsed++;
+        }
+
+        // shift them
+        for (int i = mNumPointsUsed - 1; i > 0; i--) {
+            mPoints[i].set(mPoints[i - 1]);
+        }
+
+        return mNumPointsUsed;
     }
 
     public float getMinLength() {
@@ -250,26 +224,6 @@ public class MotionTrailShape extends Polyline implements MotionTrail {
     public void setMinLength(final float totalLength) {
         mMinLength = totalLength;
         mSegmentLength = mMinLength / (mNumPoints < 2 ? 1 : mNumPoints - 1);
-    }
-
-    public float getMotionEasingX() {
-        return mMotionEasingX;
-    }
-
-    public float getMotionEasingY() {
-        return mMotionEasingY;
-    }
-
-    /**
-     * @param easing, must be from 0 to 1
-     */
-    public void setMotionEasing(final float easing) {
-        mMotionEasingX = mMotionEasingY = easing;
-    }
-
-    public void setMotionEasing(final float easingX, final float easingY) {
-        mMotionEasingX = easingX;
-        mMotionEasingY = easingY;
     }
 
     public PointF getTargetOffset() {
