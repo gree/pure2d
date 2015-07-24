@@ -25,7 +25,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Displayable;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Parentable;
@@ -682,9 +681,9 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         if (mParent != null && !(mParent instanceof Scene)) {
             mParent.localToGlobal(result, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (mParent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) mParent).getOrigin();
                 result.x -= parentOrigin.x;
                 result.y -= parentOrigin.y;
             }
@@ -701,9 +700,9 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         if (mParent != null && !(mParent instanceof Scene)) {
             mParent.globalToLocal(global, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (mParent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) mParent).getOrigin();
                 result.x += parentOrigin.x;
                 result.y += parentOrigin.y;
             }
