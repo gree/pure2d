@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,25 +18,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
  *
  */
 package com.funzio.pure2D.atlas;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.content.res.AssetManager;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.loaders.AsyncTaskExecuter;
@@ -47,6 +38,15 @@ import com.funzio.pure2D.loaders.tasks.URLLoadJsonTask;
 import com.funzio.pure2D.loaders.tasks.URLLoadTextTask;
 import com.funzio.pure2D.loaders.tasks.WriteTextFileTask;
 import com.funzio.pure2D.particles.nova.NovaConfig;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author long
@@ -270,6 +270,9 @@ public class JsonAtlas extends Atlas {
                                 if (loopMode != null) {
                                     newSet.setLoopMode(NovaConfig.getLoopMode(loopMode));
                                 }
+
+                                // framerate
+                                newSet.setFps(set.optInt("fps"));
 
                                 // add to the subsets
                                 addSubFrameSet(newSet);
