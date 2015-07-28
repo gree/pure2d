@@ -129,8 +129,13 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         return mBitmapFont;
     }
 
-    protected float getLetterSpacing() {
+    public float getLetterSpacing() {
         return mLetterSpacing != 0.0123f || mFontMetrics == null ? mLetterSpacing : mFontMetrics.letterSpacing;
+    }
+
+    public BmfTextObject setLetterSpacing(final float letterSpacing) {
+        mLetterSpacing = letterSpacing;
+        return this;
     }
 
     public void setBitmapFont(final BitmapFont bitmapFont) {
