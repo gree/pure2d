@@ -27,6 +27,7 @@
 package com.funzio.pure2D.ui.vo;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 
@@ -58,6 +59,7 @@ public class FontVO {
 
     public String stroke_size;  // localizable
     public String stroke_color;
+    public String stroke_join;
 
     @Deprecated
     public int texture_size;
@@ -84,6 +86,7 @@ public class FontVO {
 
         stroke_size = json.optString("stroke_size", "0");
         stroke_color = json.optString("stroke_color", "");
+        stroke_join = json.optString("stroke_join", "round");
 
         texture_size = json.optInt("texture_size", 0);
         texture_mipmaps = json.optInt("texture_mipmaps", 0);
@@ -114,8 +117,11 @@ public class FontVO {
         final float ss = Float.valueOf(manager.evalString(stroke_size)) * mScale;
         if (ss > 0) {
             options.inStrokePaint = new TextPaint(options.inTextPaint);
+            options.inStrokePaint.setStyle(Paint.Style.STROKE);
             options.inStrokePaint.setColor(Color.parseColor(stroke_color));
-            options.inStrokePaint.setTextSize(ss);
+            options.inStrokePaint.setTextSize(Float.valueOf(manager.evalString(size)) * mScale);
+            options.inStrokePaint.setStrokeWidth(ss);
+            options.inStrokePaint.setStrokeJoin(getJoinFromString(stroke_join));
         }
 
         // shadow
@@ -131,6 +137,16 @@ public class FontVO {
 
     public void applyScale(final float scale) {
         mScale = scale;
+    }
+
+    public static Paint.Join getJoinFromString(final String join) {
+        if ("bevel".equalsIgnoreCase(join)) {
+            return Paint.Join.BEVEL;
+        } else if ("miter".equalsIgnoreCase(join)) {
+            return Paint.Join.MITER;
+        } else {
+            return Paint.Join.ROUND;
+        }
     }
 
 }
