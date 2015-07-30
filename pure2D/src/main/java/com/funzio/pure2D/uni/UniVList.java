@@ -20,15 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * ****************************************************************************
- *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
- *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 
 
 /**
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers.
+ * This is a clone from VList but derives from UniGroup instead for batch drawing.
  */
 package com.funzio.pure2D.uni;
 
@@ -271,6 +268,7 @@ public class UniVList<T> extends UniVWheel implements List<T> {
                     child.setData(itemIndex, mData.get(itemIndex));
                     child.setVisible(true);
                 } else {
+                    child.setData(itemIndex, null);
                     child.setVisible(false);
                 }
             }

@@ -21,14 +21,11 @@
  * THE SOFTWARE.
  * ****************************************************************************
  *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
- *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 
 
 /**
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ * This Horizontal List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 package com.funzio.pure2D.containers;
 
@@ -269,6 +266,7 @@ public class HList<T> extends HWheel implements List<T> {
                     child.setData(itemIndex, mData.get(itemIndex));
                     child.setVisible(true);
                 } else {
+                    child.setData(itemIndex, null);
                     child.setVisible(false);
                 }
             }

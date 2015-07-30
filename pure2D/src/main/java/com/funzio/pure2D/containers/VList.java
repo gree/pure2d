@@ -21,13 +21,6 @@
  * THE SOFTWARE.
  * ****************************************************************************
  *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
- *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
- *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
- *
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 
 
@@ -273,6 +266,7 @@ public class VList<T> extends VWheel implements List<T> {
                     child.setData(itemIndex, mData.get(itemIndex));
                     child.setVisible(true);
                 } else {
+                    child.setData(itemIndex, null);
                     child.setVisible(false);
                 }
             }
