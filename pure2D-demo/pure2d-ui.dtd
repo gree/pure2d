@@ -1,0 +1,125 @@
+<!ENTITY % ALIGN "align (center|left|right|top|bottom|vcenter|hcenter)  #IMPLIED">
+<!ENTITY % TEXT_ALIGN "textAlign (center|left|right)  #IMPLIED">
+<!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
+<!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
+<!ENTITY % ASYNC "async (true|false)  #IMPLIED">
+
+<!ENTITY % OBJ_ATTRS
+ 	"id CDATA #IMPLIED
+	width CDATA #IMPLIED
+	height CDATA #IMPLIED
+	left CDATA #IMPLIED
+	right CDATA #IMPLIED
+	top CDATA #IMPLIED
+	bottom CDATA #IMPLIED
+	centerX CDATA #IMPLIED
+	centerY CDATA #IMPLIED
+	animator CDATA #IMPLIED
+	color CDATA #IMPLIED
+	alpha CDATA #IMPLIED
+	%BLEND_MODE;
+	originAtCenter (false|true) #IMPLIED
+	autoUpdateBounds (false|true) #IMPLIED
+	debug (false|true) #IMPLIED">
+	
+<!ENTITY % GROUP_ATTRS
+ 	"%OBJ_ATTRS;
+ 	clippingEnabled (false|true) #IMPLIED
+	cacheEnabled (false|true) #IMPLIED">
+	
+<!ENTITY % LGROUP_ATTRS
+	"%GROUP_ATTRS;
+ 	%ALIGN;
+ 	childrenGap CDATA #IMPLIED
+ 	minCellSize CDATA #IMPLIED
+ 	boundsCheckEnabled (false|true) #IMPLIED
+ 	autoSleepChildren (false|true) #IMPLIED
+ 	">
+
+<!ELEMENT Group ANY>
+<!ATTLIST Group 
+	%GROUP_ATTRS;>
+	
+<!ELEMENT VGroup ANY>
+<!ATTLIST VGroup 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT HGroup ANY>
+<!ATTLIST HGroup 
+	%LGROUP_ATTRS;>
+	
+<!ELEMENT VWheel ANY>
+<!ATTLIST VWheel 
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) #IMPLIED>
+	
+<!ELEMENT HWheel ANY>
+<!ATTLIST HWheel 
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) #IMPLIED>
+	
+<!ELEMENT VScroll ANY>
+<!ATTLIST VScroll 
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) #IMPLIED>
+	
+<!ELEMENT HScroll ANY>
+<!ATTLIST HScroll 
+	%LGROUP_ATTRS;
+	snapEnabled (false|true) #IMPLIED>
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include 
+	%OBJ_ATTRS;
+	layout CDATA #IMPLIED>
+	
+<!ELEMENT Rect EMPTY>
+<!ATTLIST Rect 
+	%OBJ_ATTRS;>
+
+<!ELEMENT Sprite EMPTY>
+<!ATTLIST Sprite 
+	%OBJ_ATTRS;
+	%SOURCE;
+	%ASYNC;>
+	
+<!ELEMENT Sprite9 EMPTY>
+<!ATTLIST Sprite9 
+	%OBJ_ATTRS;
+	%SOURCE;
+	%ASYNC;
+	patches CDATA #IMPLIED>
+	
+<!ELEMENT Clip EMPTY>
+<!ATTLIST Clip 
+	%OBJ_ATTRS;
+	%SOURCE;
+	%ASYNC;
+	playAt CDATA #IMPLIED
+	stopAt CDATA #IMPLIED>
+	
+<!ELEMENT NovaGroup ANY>
+<!ATTLIST NovaGroup 
+	%OBJ_ATTRS;
+	%SOURCE;
+	%ASYNC;
+	autoStart (false|true) #IMPLIED
+	container CDATA #IMPLIED
+	paramNum CDATA #IMPLIED
+	param0 CDATA #IMPLIED
+	param1 CDATA #IMPLIED
+	param2 CDATA #IMPLIED>
+	
+<!ELEMENT Text EMPTY>
+<!ATTLIST Text 
+	%OBJ_ATTRS;
+	%TEXT_ALIGN;
+	font CDATA #IMPLIED
+	text CDATA #IMPLIED>
+
+<!ELEMENT Button ANY>
+<!ATTLIST Button 
+	%GROUP_ATTRS;
+	%SOURCE;
+	%ASYNC;
+	patches CDATA #IMPLIED>
