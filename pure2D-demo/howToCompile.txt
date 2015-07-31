@@ -1,0 +1,9 @@
+Here is how to run the pure2d-demo using Android Studio:
+
+1. Import Eclipse project, select the 'pure2d-demo' folder under pure2d/ (this folder)
+    - destination should not be under git control
+    - leave all boxes checked
+
+2. Synchronize the project (under File menu)
+
+3. Run pure2Ddemo

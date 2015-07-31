@@ -1,0 +1,210 @@
+*** Here's how to add a shader to a DisplayObject in pure2d:
+
+1. Add a shader object, (in its own file) extending ShaderProgram or MultiShaderProgram
+
+2. Add to the target DisplayObject class:
+2a. Declare a member of type ShaderProgram, with a singleton accessor
+2b. Override drawChildren() to set the new shader (glState.useShaderProgram())
+2c. Implement shaderSetup() to support shader-specific uniforms and multiple textures
+
+
+*** Here's a simplified shader example:
+
+ADD SHADER FILE:
+package ...;
+
+import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl20.MultiShaderProgram;
+import com.funzio.pure2D.gl.gl20.DefaultAlias;
+
+public class SampleShaderProgram extends MultiShaderProgram implements DefaultAlias {
+    private static final String SOURCE_VERTEX_T_C_cC = "" + // Texture modulated by Gouraud per-vertex color and const color
+        "uniform mat4 " + UNIFORM_MAT4_TRANSFORM + ";\n" + //
+        "attribute vec2 " + ATTRIB_VEC2_POSITION + ";\n" + //
+        "attribute vec2 " + ATTRIB_VEC2_TEXCOORDS + ";\n" + //
+        "attribute vec4 " + ATTRIB_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_TEXCOORDS + ";\n" + //
+        "varying vec4 " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "void main() {\n" + //
+        "  " + VARYING_VEC2_TEXCOORDS + " = " + ATTRIB_VEC2_TEXCOORDS + ";\n" + //
+        "  " + VARYING_VEC4_VERTEXCOLOR + " = " + ATTRIB_VEC4_VERTEXCOLOR + ";\n" + //
+        "  gl_Position = " + UNIFORM_MAT4_TRANSFORM + " * vec4(" + ATTRIB_VEC2_POSITION + ", 0.0, 1.0);\n" + //
+        "}";
+    private static final String SOURCE_FRAGMENT_T_C_cC = "" + //
+        "precision highp float;\n" + //
+        "uniform sampler2D " + UNIFORM_SAMPLER2D_TEXTURE + ";\n" + //
+        "uniform vec4 " + UNIFORM_VEC4_COLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_TEXCOORDS + ";\n" + //
+        "varying vec4 " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "void main() {\n" + //
+        "  vec4 sample = texture2D(" + UNIFORM_SAMPLER2D_TEXTURE + ", " + VARYING_VEC2_TEXCOORDS + ") * " + UNIFORM_VEC4_COLOR + " * " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "  gl_FragColor = sample;\n" + //
+        "}";
+
+    public SampleShaderProgram() {
+        super();
+        setupVariant(0, SOURCE_VERTEX_T_C_cC, SOURCE_FRAGMENT_T_C_cC);
+    }
+}
+
+ADD TO DISPLAYOBJECT:
+// ...
+import com.funzio.pure2D.gl.gl20.ShaderProgram;
+import com.funzio.pure2D.gl.gl20.SampleShaderProgram;
+import com.funzio.pure2D.gl.gl10.GLState;
+// ...
+private ShaderProgram mSampleProgram;
+private ShaderProgram getSampleShaderProgram() {
+    if (mSampleProgram == null) {
+        mSampleProgram = new SampleShaderProgram();
+    }
+
+    return mSampleProgram;
+}
+
+@Override
+protected boolean drawChildren(final GLState glState) {
+    final ShaderProgram program = glState.getShaderProgram();
+    glState.useShaderProgram(getSampleShaderProgram());             // select the shader
+
+    boolean b = super.drawChildren(glState);
+
+    glState.useShaderProgram(program);
+
+    return b;
+}
+// ...
+
+
+*** A more complex shader example that can handle different render modes (textured and untextured) and requires uniforms:
+
+ADD SHADER FILE:
+package ...;
+
+import com.funzio.pure2D.gl.gl10.GLState;
+import com.funzio.pure2D.gl.gl20.MultiShaderProgram;
+import com.funzio.pure2D.gl.gl20.DefaultAlias;
+
+public class SampleShaderProgram extends MultiShaderProgram implements DefaultAlias {
+    private static final String SOURCE_VERTEX_T_C_cC = "" + // Texture modulated by Gouraud per-vertex color and const color
+        "uniform mat4 " + UNIFORM_MAT4_TRANSFORM + ";\n" + //
+        "uniform mat4 " + UNIFORM_MAT4_MV_TRANSFORM + ";\n" + //
+        "attribute vec2 " + ATTRIB_VEC2_POSITION + ";\n" + //
+        "attribute vec2 " + ATTRIB_VEC2_TEXCOORDS + ";\n" + //
+        "attribute vec4 " + ATTRIB_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_TEXCOORDS + ";\n" + //
+        "varying vec4 " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_POSITION + ";\n" + //
+        "void main() {\n" + //
+        "  " + VARYING_VEC2_TEXCOORDS + " = " + ATTRIB_VEC2_TEXCOORDS + ";\n" + //
+        "  " + VARYING_VEC4_VERTEXCOLOR + " = " + ATTRIB_VEC4_VERTEXCOLOR + ";\n" + //
+        "  " + VARYING_VEC2_POSITION + " = (" + UNIFORM_MAT4_MV_TRANSFORM + " * vec4(" + ATTRIB_VEC2_POSITION + ", 0.0, 1.0)).xy"+GROUND_RADIUS_XY_CORRECTION+";\n" + //
+        "  gl_Position = " + UNIFORM_MAT4_TRANSFORM + " * vec4(" + ATTRIB_VEC2_POSITION + ", 0.0, 1.0);\n" + //
+        "}";
+    private static final String SOURCE_FRAGMENT_T_C_cC = "" + //
+        "precision highp float;\n" + //
+        "uniform sampler2D " + UNIFORM_SAMPLER2D_TEXTURE + ";\n" + //
+        "uniform vec4 " + UNIFORM_VEC4_COLOR + ";\n" + //
+        "uniform float " + UNIFORM_HEXUTIL_RADIUS + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_TEXCOORDS + ";\n" + //
+        "varying vec4 " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_POSITION + ";\n" + //
+        "void main() {\n" + //
+        "  vec4 sample = texture2D(" + UNIFORM_SAMPLER2D_TEXTURE + ", " + VARYING_VEC2_TEXCOORDS + ") * " + UNIFORM_VEC4_COLOR + " * " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "  float x = " + VARYING_VEC2_POSITION + ".x / 1.732;\n" + //
+        "  float y = " + VARYING_VEC2_POSITION + ".y;\n" + //
+        "  float d = sqrt(x*x + y*y) - " + UNIFORM_HEXUTIL_RADIUS + ";\n" + //
+        "  d = clamp(d"+GROUND_RADIUS_D_CORRECTION+", 0.0, 0.5);\n" + //
+        "  sample.rgb *= 1.0 - d;\n" + //
+        "  gl_FragColor = sample;\n" + //
+        "}";
+
+    private static final String SOURCE_VERTEX_C_cC = "" + // Gouraud modulated by const color
+        "uniform mat4 " + UNIFORM_MAT4_TRANSFORM + ";\n" + //
+        "uniform mat4 " + UNIFORM_MAT4_MV_TRANSFORM + ";\n" + //
+        "attribute vec2 " + ATTRIB_VEC2_POSITION + ";\n" + //
+        "attribute vec4 " + ATTRIB_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec4 " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_POSITION + ";\n" + //
+        "void main() {\n" + //
+        "  " + VARYING_VEC4_VERTEXCOLOR + " = " + ATTRIB_VEC4_VERTEXCOLOR + ";\n" + //
+        "  " + VARYING_VEC2_POSITION + " = (" + UNIFORM_MAT4_MV_TRANSFORM + " * vec4(" + ATTRIB_VEC2_POSITION + ", 0.0, 1.0)).xy"+GROUND_RADIUS_XY_CORRECTION+";\n" + //
+        "  gl_Position = " + UNIFORM_MAT4_TRANSFORM + " * vec4(" + ATTRIB_VEC2_POSITION + ", 0.0, 1.0);\n" + //
+        "}";
+    private static final String SOURCE_FRAGMENT_C_cC = "" + //
+        "precision highp float;\n" + //
+        "uniform vec4 " + UNIFORM_VEC4_COLOR + ";\n" + //
+        "uniform float " + UNIFORM_HEXUTIL_RADIUS + ";\n" + //
+        "varying vec4 " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "varying vec2 " + VARYING_VEC2_POSITION + ";\n" + //
+        "void main() {\n" + //
+        "  vec4 sample = " + UNIFORM_VEC4_COLOR + " * " + VARYING_VEC4_VERTEXCOLOR + ";\n" + //
+        "  float x = " + VARYING_VEC2_POSITION + ".x / 1.732;\n" + //
+        "  float y = " + VARYING_VEC2_POSITION + ".y;\n" + //
+        "  float d = sqrt(x*x + y*y) - " + UNIFORM_HEXUTIL_RADIUS + ";\n" + //
+        "  d = clamp(d"+GROUND_RADIUS_D_CORRECTION+", 0.0, 0.5);\n" + //
+        "  sample.rgb *= 1.0 - d;\n" + //
+        "  gl_FragColor = sample;\n" + //
+        "}";
+
+    public SampleShaderProgram() {      // set up all variants of this shader
+        super();
+        setupVariant(0, SOURCE_VERTEX_C_cC, SOURCE_FRAGMENT_C_cC);
+        setupVariant(1, SOURCE_VERTEX_T_C_cC, SOURCE_FRAGMENT_T_C_cC);
+    }
+
+    @Override
+    public int getVariantIdx(GLState glState) {     // select a single variant for the current render pass
+        int idx = 0;
+        if ((glState.getTexture() != null) && (glState.getTextureCoordBuffer() != null) && glState.mTextureCoordArrayEnabled) idx += 1;
+        return idx;
+    }
+}
+
+ADD TO DISPLAYOBJECT:
+// ...
+import android.opengl.GLES20;
+import com.funzio.pure2D.gl.gl20.ShaderProgram;
+import com.funzio.pure2D.gl.gl20.SampleShaderProgram;
+import com.funzio.pure2D.gl.gl10.GLState;
+// ...
+private ShaderProgram mSampleProgram;
+private ShaderProgram getSampleShaderProgram() {
+    if (mSampleProgram == null) {
+        mSampleProgram = new SampleShaderProgram();
+    }
+
+    return mSampleProgram;
+}
+
+@Override
+protected boolean drawChildren(final GLState glState) {
+    final ShaderProgram program = glState.getShaderProgram();
+    glState.useShaderProgram(getSampleShaderProgram());            // select the shader
+
+    boolean b = super.drawChildren(glState);
+
+    glState.useShaderProgram(program);
+
+    return b;
+}
+
+@Override
+protected void shaderSetup(final GLState glState) {       // override to populate uniforms, etc
+    glState.bindShaderProgram();    // do this early to set up GLES for calls below (later call is not costly)
+
+    final int uniformmv = glState.getUniformLocation(DefaultAlias.UNIFORM_MAT4_MV_TRANSFORM);
+    if (uniformmv >= 0) {
+        GLES20.glUniformMatrix4fv(uniformmv, 1, false, glState.getViewMatrix().values, 0);
+    }
+
+    final int uniformradius = glState.getUniformLocation(DefaultAlias.UNIFORM_HEXUTIL_RADIUS);
+    if (uniformradius >= 0) {
+        GLES20.glUniform1f(uniformradius, (HexUtil.getRadius() / HexUtil.TILE_VERTICAL_SHIFT_NATURAL_COORDS) * GroundShaderProgram.GROUND_RADIUS_R_CORRECTION);
+    }
+
+    // note that additional texture units (beyond the GLState-supported one) can also be set up here...
+}
+// ...
+
+
