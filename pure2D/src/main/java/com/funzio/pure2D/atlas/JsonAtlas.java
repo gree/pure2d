@@ -258,10 +258,18 @@ public class JsonAtlas extends Atlas {
                                 // add the frames
                                 final int numFrames = subFrames.length();
                                 for (int j = 0; j < numFrames; j++) {
-                                    final int frameIndex = subFrames.getInt(j);
-                                    if (frameIndex < totalFrames) {
-                                        // Log.e(TAG, j + ": " + getFrame(frameIndex));
-                                        newSet.addFrame(getFrame(frameIndex));
+                                    final Object frameNameOrIndex = subFrames.get(j);
+                                    AtlasFrame frame = null;
+                                    if (frameNameOrIndex instanceof String) {
+                                        frame = getFrame((String) frameNameOrIndex);
+                                    } else if (frameNameOrIndex instanceof Integer) {
+                                        frame = getFrame((Integer) frameNameOrIndex);
+                                    }
+
+                                    if (frame != null) {
+                                        newSet.addFrame(frame);
+                                    } else {
+                                        Log.e(TAG, "Frame Not Found: " + frameNameOrIndex, new Exception());
                                     }
                                 }
 
