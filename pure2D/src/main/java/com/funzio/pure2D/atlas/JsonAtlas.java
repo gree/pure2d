@@ -232,6 +232,8 @@ public class JsonAtlas extends Atlas {
             if (loopMode != null) {
                 getMasterFrameSet().setLoopMode(NovaConfig.getLoopMode(loopMode));
             }
+            int loopCount = meta.optInt("loop_count", -1);
+            getMasterFrameSet().setLoopCount(loopCount);
 
             // create the master frame set
             final JSONArray frames = jsonObject.getJSONArray("frames");
@@ -278,6 +280,8 @@ public class JsonAtlas extends Atlas {
                                 if (loopMode != null) {
                                     newSet.setLoopMode(NovaConfig.getLoopMode(loopMode));
                                 }
+                                loopCount = set.optInt("loop_count", -1);
+                                newSet.setLoopCount(loopCount);
 
                                 // framerate
                                 newSet.setFps(set.optInt("fps"));

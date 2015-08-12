@@ -41,6 +41,7 @@ public class AtlasFrameSet {
     protected Texture mTexture;
     protected int mFps = 0;
     protected int mLoopMode = -1; // ignored
+    protected int mLoopCount = -1; // forever
 
     public AtlasFrameSet(final String name) {
         mName = name;
@@ -198,6 +199,15 @@ public class AtlasFrameSet {
 
     public void setLoopMode(final int loopMode) {
         mLoopMode = loopMode;
+    }
+
+    public int getLoopCount() {
+        return mLoopCount;
+    }
+
+    public AtlasFrameSet setLoopCount(final int loopCount) {
+        mLoopCount = loopCount;
+        return this;
     }
 
     public static AtlasFrameSet createReversedFrameSet(final AtlasFrameSet frameSet) {
