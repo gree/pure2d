@@ -134,12 +134,13 @@ public class Sprite9 extends UniGroup {
             }
 
             // some constants
+            final boolean patching = m9PatchEnabled && mHasPatches;
             final float textureW = mTexture.getSize().x;
             final float textureH = mTexture.getSize().y;
-            float left = m9PatchEnabled ? m9Patches.left : 0;
-            float right = m9PatchEnabled ? m9Patches.right : 0;
-            float top = m9PatchEnabled ? m9Patches.top : 0;
-            float bottom = m9PatchEnabled ? m9Patches.bottom : 0;
+            float left = patching ? m9Patches.left : 0;
+            float right = patching ? m9Patches.right : 0;
+            float top = patching ? m9Patches.top : 0;
+            float bottom = patching ? m9Patches.bottom : 0;
             float middleW = mSize.x - left - right;
             float middleH = mSize.y - top - bottom;
             // if width is too small
