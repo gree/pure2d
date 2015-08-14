@@ -4,6 +4,8 @@
 	<!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
 	<!ENTITY % ASYNC "async (true|false)  #IMPLIED">
 	<!ENTITY % SELECTED "selected (true|false)  #IMPLIED">
+	<!ENTITY % FLIP_X "flipX (true|false)  #IMPLIED">
+	<!ENTITY % FLIP_Y "flipY (true|false)  #IMPLIED">
 
 	<!ENTITY % OBJ_ATTRS
 		"id CDATA #IMPLIED
@@ -132,6 +134,8 @@
 		%GROUP_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		%FLIP_X;
+		%FLIP_Y;
 		patches CDATA #IMPLIED>
 
 	<!ELEMENT ToggleButton ANY>
@@ -139,5 +143,7 @@
 		%GROUP_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		%FLIP_X;
+		%FLIP_Y;
 		%SELECTED;
 		patches CDATA #IMPLIED>

@@ -44,6 +44,8 @@ public class Button extends DisplayGroup implements UIObject {
     protected static final String ATT_SOURCE = "source";
     protected static final String ATT_PATCHES = "patches";
     protected static final String ATT_ASYNC = "async";
+    protected static final String ATT_FLIP_X = "flipX";
+    protected static final String ATT_FLIP_Y = "flipY";
 
     public static final GLColor DIMMED_COLOR = new GLColor(0.75f, 0.75f, 0.75f, 1f);
 
@@ -95,6 +97,7 @@ public class Button extends DisplayGroup implements UIObject {
 
     protected void createChildren() {
         mButtonSprite = new Sprite9();
+        mButtonSprite.setPivotAtCenter();
         mButtonSprite.setBlendFunc(BlendModes.PREMULTIPLIED_ALPHA_FUNC);
         mButtonSprite.setAutoUpdateBounds(true);
         addChild(mButtonSprite);
@@ -267,7 +270,7 @@ public class Button extends DisplayGroup implements UIObject {
                 onTouchUp(hit);
 
                 setState(STATE_UP);
-                
+
                 // event
                 if (mTouchListener != null) {
                     mTouchListener.onTouchUp(this, hit);
@@ -322,6 +325,14 @@ public class Button extends DisplayGroup implements UIObject {
             final float top = patches.length >= 3 ? Float.valueOf(patches[2].trim()) * configScale : 0;
             final float bottom = patches.length >= 4 ? Float.valueOf(patches[3].trim()) * configScale : 0;
             set9Patches(left, right, top, bottom);
+        }
+
+        final String flipXSt = xmlParser.getAttributeValue(null, ATT_FLIP_X);
+        final boolean flipX = (flipXSt == null) ? false : Boolean.valueOf(flipXSt);
+        final String flipYSt = xmlParser.getAttributeValue(null, ATT_FLIP_Y);
+        final boolean flipY = (flipYSt == null) ? false : Boolean.valueOf(flipYSt);
+        if (flipX || flipY) {
+            mButtonSprite.setScale(flipX ? -1 : 1, flipY ? -1 : 1);
         }
     }
 
