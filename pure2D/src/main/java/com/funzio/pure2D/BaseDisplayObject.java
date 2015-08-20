@@ -310,7 +310,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public boolean update(final int deltaTime) {
         // check constraints first ,only apply it when size or parent changed
         if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0) {
-            mUIConstraint.apply(this, mParent);
+            mUIConstraint.apply(this, getParent());
         }
 
         // update the manipulators if there's any
@@ -370,8 +370,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         // invalidate generally, NOT!
         // mInvalidateFlags = ALL;
 
-        if (mParent != null) {
-            mParent.invalidate(CHILDREN);
+        final Parentable parent = getParent();
+        if (parent != null) {
+            parent.invalidate(CHILDREN);
         }
     }
 
@@ -381,8 +382,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void invalidate(final int flags) {
         mInvalidateFlags |= flags;
 
-        if (mParent != null) {
-            mParent.invalidate(CHILDREN);
+        final Parentable parent = getParent();
+        if (parent != null) {
+            parent.invalidate(CHILDREN);
         }
     }
 
@@ -748,9 +750,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof Displayable) {
-            final Displayable parent = (Displayable) mParent;
-            final GLColor parentColor = parent.getInheritedColor();
+        final Parentable parent = getParent();
+        if (parent instanceof Displayable) {
+            final GLColor parentColor = ((Displayable) parent).getInheritedColor();
             if (parentColor != null) {
                 mBlendColor.multiply(parentColor);
             }
@@ -762,10 +764,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
     final public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
-        } else if (mParent != null && mParent instanceof Displayable) {
-            return ((Displayable) mParent).getInheritedBlendFunc();
         } else {
-            return null;
+            final Parentable parent = getParent();
+            if (parent instanceof Displayable) {
+                return ((Displayable) parent).getInheritedBlendFunc();
+            } else {
+                return null;
+            }
         }
     }
 
@@ -957,12 +962,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
     final public void localToGlobal(final PointF local, final PointF result) {
         result.x = (local == null ? 0 : local.x) + mPosition.x;
         result.y = (local == null ? 0 : local.y) + mPosition.y;
-        if (mParent != null && !(mParent instanceof Scene)) {
-            mParent.localToGlobal(result, result);
+        final Parentable parent = getParent();
+        if (parent != null && !(parent instanceof Scene)) {
+            parent.localToGlobal(result, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (parent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) parent).getOrigin();
                 result.x -= parentOrigin.x;
                 result.y -= parentOrigin.y;
             }
@@ -976,12 +982,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param result
      */
     final public void globalToLocal(final PointF global, final PointF result) {
-        if (mParent != null && !(mParent instanceof Scene)) {
-            mParent.globalToLocal(global, result);
+        final Parentable parent = getParent();
+        if (parent != null && !(parent instanceof Scene)) {
+            parent.globalToLocal(global, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (parent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) parent).getOrigin();
                 result.x += parentOrigin.x;
                 result.y += parentOrigin.y;
             }
@@ -1110,7 +1117,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     protected Matrix getParentMatrix() {
-        return mParent != null ? mParent.getMatrix() : null;
+        final Parentable parent = getParent();
+        return parent != null ? parent.getMatrix() : null;
     }
 
     /**
@@ -1243,7 +1251,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setId(final String id) {
-        if (mParent != null) {
+        if (getParent() != null) {
             throw new Pure2DException("Object is already contained. ID cannot be changed!");
         }
 

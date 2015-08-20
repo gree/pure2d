@@ -142,7 +142,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
             if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS)) {
                 // check constraints first, only apply it when size or parent changed
                 if (mUIConstraint != null) {
-                    mUIConstraint.apply(this, mParent);
+                    mUIConstraint.apply(this, getParent());
                 }
 
                 // re-cal the matrix

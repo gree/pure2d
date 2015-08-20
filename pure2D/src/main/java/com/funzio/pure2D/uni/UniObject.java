@@ -542,7 +542,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         }
 
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof Displayable) {
+        if (mParent instanceof Displayable) {
             final Displayable parent = (Displayable) mParent;
             final GLColor parentColor = parent.getInheritedColor();
             if (parentColor != null) {
@@ -556,7 +556,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     final public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
-        } else if (mParent != null && mParent instanceof Displayable) {
+        } else if (mParent instanceof Displayable) {
             return ((Displayable) mParent).getInheritedBlendFunc();
         } else {
             return null;
