@@ -248,11 +248,27 @@ public class VList<T> extends VWheel implements List<T> {
         mDataStartIndex = itemIndex;
         // Log.v(TAG, newStartIndex + " --- " + itemIndex);
 
-        ItemRenderer<T> child;
+        // base on VGroup logic, first the first child index
+        int firstChildIndex = -1;
+        if (getStartY() > mGap) {
+            // fill the first item in to fill the space
+            firstChildIndex = newStartIndex - 1;
+            if (firstChildIndex < 0) {
+                firstChildIndex += mNumChildren;
+            }
+        }
+        // now apply data to all children
         for (int i = 0; i < mNumChildren; i++) {
-            child = (ItemRenderer<T>) mChildren.get((newStartIndex + i) % mNumChildren);
-            // re-set data for child
-            itemIndex = mDataStartIndex + i;
+            final int childIndex = (newStartIndex + i) % mNumChildren;
+            if (firstChildIndex >= 0 && childIndex == firstChildIndex) {
+                // draw the first item to fill the space
+                itemIndex = mDataStartIndex - 1;
+            } else {
+                // re-set data for child
+                itemIndex = mDataStartIndex + i;
+            }
+
+            final ItemRenderer<T> child = (ItemRenderer<T>) mChildren.get(childIndex);
 
             if (mRepeating) {
                 // looping index
@@ -271,36 +287,6 @@ public class VList<T> extends VWheel implements List<T> {
                 }
             }
         }
-
-        // base on VGroup logic
-        if (getStartY() > mGap) {
-            // fill the first item in to fill the space
-            int index = newStartIndex - 1;
-            if (index < 0) {
-                index += mNumChildren;
-            }
-            child = (ItemRenderer<T>) mChildren.get(index);
-
-            // draw the first item to fill the space
-            itemIndex = mDataStartIndex - 1;
-
-            if (mRepeating) {
-                // looping index
-                itemIndex = (itemIndex % dataSize + dataSize) % dataSize;
-                child.setData(itemIndex, mData.get(itemIndex));
-                // always show
-                child.setVisible(true);
-            } else {
-                // check range
-                if (itemIndex >= 0 && itemIndex < dataSize) {
-                    child.setData(itemIndex, mData.get(itemIndex));
-                    child.setVisible(true);
-                } else {
-                    child.setVisible(false);
-                }
-            }
-        }
-        //}
     }
 
     protected void updateVirtualContentSize() {
