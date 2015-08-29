@@ -92,12 +92,12 @@ public class Clip extends Sprite implements Playable {
                 mCurrentFrame = 0;
             }
 
+            setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
+
             // reset origin at center
             if (isOriginAtCenter()) {
                 setOriginAtCenter();
             }
-
-            setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
         } else {
             mNumFrames = 0;
         }

@@ -77,15 +77,18 @@ public class UniClip extends UniSprite implements Playable {
             }
             setLoopCount(frameSet.getLoopCount());
 
-            // start from first frame
-            mCurrentFrame = 0;
+            // check current frame
+            if (mCurrentFrame >= mNumFrames) {
+                // start from first frame
+                mCurrentFrame = 0;
+            }
+
+            setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
 
             // reset origin at center
             if (isOriginAtCenter()) {
                 setOriginAtCenter();
             }
-
-            setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
         } else {
             mNumFrames = 0;
         }
