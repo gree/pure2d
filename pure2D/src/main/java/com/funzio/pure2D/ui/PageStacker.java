@@ -218,6 +218,16 @@ public class PageStacker implements Pageable.TransitionListener {
         mDimmedColor = dimmedColor;
     }
 
+    /**
+     * Should be called when Activity/Scene resumes
+     */
+    public void onResume() {
+        if (mCurrentPage != null) {
+            // callback, simulate the brought up event
+            mCurrentPage.onBroughtUp();
+        }
+    }
+
     @Override
     public void onTransitionInComplete(final Pageable page) {
         Log.v(TAG, "onTransitionInComplete(): " + page);
