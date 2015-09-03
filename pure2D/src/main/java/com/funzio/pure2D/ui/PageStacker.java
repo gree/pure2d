@@ -77,10 +77,15 @@ public class PageStacker implements Pageable.TransitionListener {
                             previousPage.transitionOut(true);
                         }
                     } else {
-                        if (previousPage != null && page.isModal()) {
-                            // dim
-                            mDimmedStack.add(previousPage.getColor());
-                            previousPage.setColor(mDimmedColor);
+                        if (previousPage != null) {
+                            if (page.isModal()) {
+                                // dim
+                                mDimmedStack.add(previousPage.getColor());
+                                previousPage.setColor(mDimmedColor);
+                            }
+
+                            // callback
+                            previousPage.onBroughtDown();
                         }
                     }
 
@@ -109,6 +114,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
     /**
      * Pop the last page
+     *
      * @return
      */
     public Pageable popPage() {
@@ -141,11 +147,14 @@ public class PageStacker implements Pageable.TransitionListener {
                         previousPage.transitionIn(false);
                     }
                 } else {
-                    if (previousPage != null && currentPage.isModal()) {
+                    if (previousPage != null) {
                         // undim
-                        if (mDimmedStack.size() > 0) {
+                        if (currentPage.isModal() && mDimmedStack.size() > 0) {
                             previousPage.setColor(mDimmedStack.remove(mDimmedStack.size() - 1));
                         }
+
+                        // callback
+                        previousPage.onBroughtUp();
                     }
                 }
             }
@@ -156,6 +165,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
     /**
      * Pop all the way to the specified page
+     *
      * @param page
      * @return
      */
