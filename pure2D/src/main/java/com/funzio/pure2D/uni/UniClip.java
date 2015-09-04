@@ -83,10 +83,11 @@ public class UniClip extends UniSprite implements Playable {
                 mCurrentFrame = 0;
             }
 
+            final boolean center = isOriginAtCenter();
             setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
 
             // reset origin at center
-            if (isOriginAtCenter()) {
+            if (center) {
                 setOriginAtCenter();
             }
         } else {
