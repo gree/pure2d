@@ -57,6 +57,8 @@ public interface Scene extends Renderer, Container {
 
     public int getAxisSystem();
 
+    public int getCurrentFps();
+
     public Camera getCamera();
 
     public void setCamera(final Camera camera);
