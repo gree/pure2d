@@ -761,7 +761,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mBlendColor;
     }
 
-    final public BlendFunc getInheritedBlendFunc() {
+    public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
         } else {
