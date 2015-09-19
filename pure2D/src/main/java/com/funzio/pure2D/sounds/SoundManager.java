@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,6 +36,8 @@ import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+
+import java.io.IOException;
 
 public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener, OnErrorListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
@@ -171,6 +173,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     /**
      * Play synchronously instead of queueing. Not ideal for common usage.
+     *
      * @param key
      * @param loop
      * @return stream ID
@@ -180,7 +183,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
         final Soundable soundable = mSoundMap.get(key);
         if (soundable != null) {
-            final int streamID =  privatePlay(soundable.getSoundID(), loop);
+            final int streamID = privatePlay(soundable.getSoundID(), loop);
             if (streamID != 0) {
                 mStreamIds.put(soundable.getSoundID(), streamID);
             }
@@ -203,7 +206,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         return 0;
     }
 
-    public void play(final Media media) throws IllegalStateException {
+    public void play(final Media media) throws IllegalStateException, IOException {
         // initialize
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
@@ -223,6 +226,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setVolume(mMediaVolume, mMediaVolume);
 
+        // this can also throw IOException
         mMediaPlayer.prepareAsync();
     }
 
@@ -332,7 +336,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     /**
      * Find a sound by the sound ID
-     * 
+     *
      * @param soundID
      * @return
      * @see #getSound(int)
@@ -354,7 +358,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     /**
      * Find a sound by Key
-     * 
+     *
      * @param key
      * @return
      * @see #getSoundByID(int)
