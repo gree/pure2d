@@ -19,9 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/**
- *
- */
+
 package com.funzio.pure2D.uni;
 
 import android.graphics.Matrix;
@@ -216,6 +214,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         // NOTE: this clipping method doesn't work for Rotation!!!
         if (mClippingEnabled) {
+            if ((mInvalidateFlags & BOUNDS) != 0) {
+                // hmm we need this
+                updateBounds();
+                //mInvalidateFlags &= ~BOUNDS;
+            }
+
             mOriginalScissorEnabled = glState.isScissorTestEnabled();
             if (mOriginalScissorEnabled) {
                 // backup the current scissor

@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,24 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
-/**
- * 
- */
-package com.funzio.pure2D.containers;
 
-import java.util.ArrayList;
+package com.funzio.pure2D.containers;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UIObject;
+
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
 
 /**
  * @author long
@@ -87,7 +85,7 @@ public class HGroup extends LinearGroup implements UIObject {
                 mStartX = mContentSize.x - offset;
             } else {
 
-                itemPos +=  getChildWidth(mChildren.get(i)) + mGap;
+                itemPos += getChildWidth(mChildren.get(i)) + mGap;
             }
         }
     }
@@ -447,7 +445,7 @@ public class HGroup extends LinearGroup implements UIObject {
 
     /**
      * This is called when a touch down
-     * 
+     *
      * @param event
      */
     protected void onTouchDown(final MotionEvent event) {
