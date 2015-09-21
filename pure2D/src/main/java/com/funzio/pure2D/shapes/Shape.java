@@ -50,12 +50,12 @@ public class Shape extends BaseDisplayObject {
     // XML attributes
     protected static final String ATT_ASYNC = "async";
     protected static final String ATT_SOURCE = "source";
-    protected static final String ATT_REPEATING_TEXTURE = "repeatingTexture";
+    protected static final String ATT_TEXTURE_REPEAT = "textureRepeat";
 
     protected VertexBuffer mVertexBuffer;
 
     protected Texture mTexture;
-    private boolean mRepeatingTexture;
+    private boolean mTextureRepeat;
     private boolean mTextureLoaded;
     protected TextureCoordBuffer mTextureCoordBuffer;
     protected TextureCoordBuffer mTextureCoordBufferScaled;
@@ -86,15 +86,26 @@ public class Shape extends BaseDisplayObject {
         mTexture = texture;
         mTextureLoaded = mTexture != null ? mTexture.isLoaded() : false;
 
+        if (mTextureRepeat && texture != null && !texture.isRepeating()) {
+            // auto set repeat
+            texture.setRepeat(GL10.GL_REPEAT, GL10.GL_REPEAT);
+        }
+
         invalidate(mTextureLoaded ? (TEXTURE | TEXTURE_COORDS) : TEXTURE);
     }
 
-    public boolean isRepeatingTexture() {
-        return mRepeatingTexture;
+    public boolean isTextureRepeat() {
+        return mTextureRepeat;
     }
 
-    public Shape setRepeatingTexture(final boolean repeatingTexture) {
-        mRepeatingTexture = repeatingTexture;
+    public Shape setTextureRepeat(final boolean textureRepeat) {
+        mTextureRepeat = textureRepeat;
+
+        if (textureRepeat && mTexture != null && !mTexture.isRepeating()) {
+            // auto set repeat
+            mTexture.setRepeat(GL10.GL_REPEAT, GL10.GL_REPEAT);
+        }
+
         return this;
     }
 
@@ -128,7 +139,7 @@ public class Shape extends BaseDisplayObject {
         super.setSize(w, h);
 
         // repeating texture?
-        if (mRepeatingTexture && mTexture != null && mTexture.isRepeating()) {
+        if (mTextureRepeat && mTexture != null) {
             invalidate(TEXTURE_COORDS);
         }
     }
@@ -146,12 +157,12 @@ public class Shape extends BaseDisplayObject {
 
         // scale to match with the Texture scale, for optimization
         if (mTexture != null && mTextureCoordBuffer != null) {
-            if (mTexture.mCoordScaleX != 1 || mTexture.mCoordScaleY != 1 || (mRepeatingTexture && mTexture.isRepeating())) {
+            if (mTexture.mCoordScaleX != 1 || mTexture.mCoordScaleY != 1 || mTextureRepeat) {
                 // scale the values
                 final float[] scaledValues = mTextureCoordBuffer.getValues().clone();
                 float sx = mTexture.mCoordScaleX;
                 float sy = mTexture.mCoordScaleY;
-                if (mRepeatingTexture) {
+                if (mTextureRepeat) {
                     if (mTexture.isRepeatingS()) {
                         sx *= mSize.x / mTexture.getSize().x;
                     }
@@ -340,9 +351,9 @@ public class Shape extends BaseDisplayObject {
             setTexture(manager.getTextureManager().getUriTexture(manager.evalString(source), null, async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
         }
 
-        final String repeating = xmlParser.getAttributeValue(null, ATT_REPEATING_TEXTURE);
+        final String repeating = xmlParser.getAttributeValue(null, ATT_TEXTURE_REPEAT);
         if (repeating != null) {
-            setRepeatingTexture(Boolean.valueOf(repeating));
+            setTextureRepeat(Boolean.valueOf(repeating));
         }
     }
 
