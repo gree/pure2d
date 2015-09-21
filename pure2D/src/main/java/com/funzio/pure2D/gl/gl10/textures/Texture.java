@@ -189,6 +189,18 @@ public abstract class Texture {
         }
     }
 
+    public boolean isRepeating() {
+        return mRepeatS == GL10.GL_REPEAT || mRepeatT == GL10.GL_REPEAT;
+    }
+
+    public boolean isRepeatingS() {
+        return mRepeatS == GL10.GL_REPEAT;
+    }
+
+    public boolean isRepeatingT() {
+        return mRepeatT == GL10.GL_REPEAT;
+    }
+
     // public void buildMipmaps() {
     // if (mGL instanceof GL11) {
     // mGL.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);

@@ -2,6 +2,7 @@
 	<!ENTITY % TEXT_ALIGN "textAlign (center|left|right)  #IMPLIED">
 	<!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
 	<!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
+	<!ENTITY % REPEATING_TEXTURE "repeatingTexture (true|false)  #IMPLIED">
 	<!ENTITY % ASYNC "async (true|false)  #IMPLIED">
 	<!ENTITY % SELECTED "selected (true|false)  #IMPLIED">
 	<!ENTITY % FLIP_X "flipX (true|false)  #IMPLIED">
@@ -25,6 +26,7 @@
 	alpha CDATA #IMPLIED
 	visible (false|true) #IMPLIED
 	%BLEND_MODE;
+	%REPEATING_TEXTURE;
 	touchable (false|true) #IMPLIED
 	originAtCenter (false|true) #IMPLIED
 	pivotAtCenter (false|true) #IMPLIED
