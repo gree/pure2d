@@ -39,6 +39,7 @@ import org.xmlpull.v1.XmlPullParser;
  */
 public class Clip extends Sprite implements Playable {
     // XML attributes
+    protected static final String ATT_FRAME_SET = "frameSet";
     protected static final String ATT_PLAY_AT = "playAt";
     protected static final String ATT_STOP_AT = "stopAt";
 
@@ -284,7 +285,9 @@ public class Clip extends Sprite implements Playable {
         final String source = xmlParser.getAttributeValue(null, ATT_SOURCE);
         if (source != null && source.endsWith(UIConfig.FILE_JSON)) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
-            setAtlasFrameSet(manager.getTextureManager().getUriAtlas(manager.evalString(source), async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
+            final String frameSet = xmlParser.getAttributeValue(null, ATT_FRAME_SET);
+
+            setAtlasFrameSet(manager.getTextureManager().getUriAtlas(manager.evalString(source), async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC, frameSet));
 
             final String playAt = xmlParser.getAttributeValue(null, ATT_PLAY_AT);
             if (playAt != null) {

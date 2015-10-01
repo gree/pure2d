@@ -127,6 +127,14 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
+    public void scrollToChildAt(final int childIndex) {
+        if (childIndex >= mNumChildren) {
+            return;
+        }
+
+        scrollTo(getChildAt(childIndex));
+    }
+
     public void scrollBy(final float dx, final float dy) {
         mScrollPosition.x += dx;
         mScrollPosition.y += dy;

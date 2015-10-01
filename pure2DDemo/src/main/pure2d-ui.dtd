@@ -107,6 +107,7 @@
 		%OBJ_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		frameSet CDATA #IMPLIED
 		playAt CDATA #IMPLIED
 		stopAt CDATA #IMPLIED>
 
