@@ -171,7 +171,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
         }
 
-        setNumDrawingChildren(numDrawingChildren);
+        if (mNumDrawingChildren != numDrawingChildren) {
+            setNumDrawingChildren(numDrawingChildren);
+        }
 
         // diff check
         if (sx != mSize.x || sy != mSize.y) {
