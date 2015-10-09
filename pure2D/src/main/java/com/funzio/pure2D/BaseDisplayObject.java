@@ -445,12 +445,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param position the position to set
      */
     public void setPosition(final float x, final float y) {
+        // diff check
+        if (mPosition.x == x && mPosition.y == y) {
+            return;
+        }
+
         mPosition.x = x;
         mPosition.y = y;
         invalidate(POSITION);
+
+
     }
 
     public void setX(final float x) {
+        // diff check
+        if (mPosition.x == x) {
+            return;
+        }
+
         mPosition.x = x;
         invalidate(POSITION);
     }
@@ -460,6 +472,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setY(final float y) {
+        // diff check
+        if (mPosition.y == y) {
+            return;
+        }
+
         mPosition.y = y;
         invalidate(POSITION);
     }
@@ -474,6 +491,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @see #setAlphaTestEnabled(boolean)
      */
     public void setZ(final float z) {
+        // diff check
+        if (mZ == z) {
+            return;
+        }
+
         mZ = z;
         invalidate(POSITION);
     }
@@ -483,15 +505,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void moveTo(final float x, final float y) {
-        mPosition.x = x;
-        mPosition.y = y;
-        invalidate(POSITION);
+        setPosition(x, y);
     }
 
     public void move(final float dx, final float dy) {
-        mPosition.x += dx;
-        mPosition.y += dy;
-        invalidate(POSITION);
+        setPosition(mPosition.x + dx, mPosition.y + dy);
     }
 
     /**
