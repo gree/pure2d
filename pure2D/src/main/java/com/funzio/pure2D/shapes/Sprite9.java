@@ -72,7 +72,7 @@ public class Sprite9 extends UniGroup {
 
         mHasPatches = left > 0 || right > 0 || top > 0 || bottom > 0;
 
-        invalidate(CHILDREN);
+        invalidate(VERTICES);
     }
 
     public RectF get9Patches() {
@@ -86,7 +86,7 @@ public class Sprite9 extends UniGroup {
     public void set9PatchEnabled(final boolean value) {
         m9PatchEnabled = value;
 
-        invalidate(CHILDREN);
+        invalidate(VERTICES);
     }
 
     public boolean isSizeToTexture() {
@@ -121,13 +121,13 @@ public class Sprite9 extends UniGroup {
             setSize(texture.getSize());
         } else {
             // invalidate the 9 patches
-            invalidate(CHILDREN);
+            invalidate(VERTICES);
         }
     }
 
     @Override
     protected void updateChildren(final int deltaTime) {
-        if ((mInvalidateFlags & (CHILDREN | TEXTURE | SIZE)) != 0) {
+        if ((mInvalidateFlags & (VERTICES | TEXTURE | SIZE)) != 0) {
             if (mTexture == null) {
                 super.updateChildren(deltaTime);
                 return;
@@ -237,7 +237,7 @@ public class Sprite9 extends UniGroup {
         super.setSize(w, h);
 
         // also invalidate coordinates
-        invalidate(CHILDREN);
+        invalidate(VERTICES);
     }
 
     /*@Override
