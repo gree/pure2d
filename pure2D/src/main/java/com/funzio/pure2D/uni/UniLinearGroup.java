@@ -66,7 +66,8 @@ public abstract class UniLinearGroup extends UniGroup {
         super.updateChildren(deltaTime);
 
         // adjust the positions when necessary
-        if (mChildrenPositionInvalidated || (mInvalidateFlags & CHILDREN) != 0) {
+        // NOTE: do NOT use CHILDREN flag, perf killer!
+        if (mChildrenPositionInvalidated /*|| (mInvalidateFlags & CHILDREN) != 0*/) {
             positionChildren();
             mChildrenPositionInvalidated = false;
 
@@ -80,7 +81,7 @@ public abstract class UniLinearGroup extends UniGroup {
 
     protected void invalidateChildrenPosition() {
         mChildrenPositionInvalidated = true;
-        invalidate(InvalidateFlags.CHILDREN);
+        //invalidate(InvalidateFlags.CHILDREN);
     }
 
     /**
@@ -181,7 +182,8 @@ public abstract class UniLinearGroup extends UniGroup {
     public void setBoundsCheckEnabled(final boolean checking) {
         mBoundsCheckEnabled = checking;
 
-        invalidate(InvalidateFlags.CHILDREN);
+        mChildrenPositionInvalidated = true;
+        //invalidate(InvalidateFlags.CHILDREN);
     }
 
     public boolean isAutoSleepChildren() {
