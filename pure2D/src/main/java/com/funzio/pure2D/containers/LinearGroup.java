@@ -65,7 +65,7 @@ public abstract class LinearGroup extends DisplayGroup {
 
         // adjust the positions when necessary
         // NOTE: do NOT use CHILDREN flag, perf killer!
-        if (mChildrenPositionInvalidated /*|| (mInvalidateFlags & CHILDREN) != 0*/) {
+        if (mChildrenPositionInvalidated || (mInvalidateFlags & SIZE) != 0) {
             positionChildren();
             mChildrenPositionInvalidated = false;
 
