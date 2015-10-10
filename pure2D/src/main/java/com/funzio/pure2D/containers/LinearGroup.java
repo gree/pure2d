@@ -29,7 +29,6 @@ package com.funzio.pure2D.containers;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.ui.UIConfig;
 import com.funzio.pure2D.ui.UIManager;
 

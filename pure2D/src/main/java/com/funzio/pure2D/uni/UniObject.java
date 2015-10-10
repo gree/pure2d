@@ -170,6 +170,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     /**
      * @hide
      */
+    @Deprecated
     final public void invalidate() {
         // invalidate generally, NOT!
         // mInvalidateFlags = ALL;
