@@ -98,7 +98,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0);
 
         DisplayObject child;
-        float temp, sx = mSize.x, sy = mSize.y;
+        float sx = 0, sy = 0;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
 
@@ -118,23 +118,19 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
             // match content size
             if (mWrapContentWidth) {
-                temp = child.getX() + child.getWidth() - child.getOrigin().x;
-                if (temp > sx) {
-                    sx = temp;
-                }
+                sx = Math.max(sx, child.getX() + child.getWidth() - child.getOrigin().x);
             }
             if (mWrapContentHeight) {
-                temp = child.getY() + child.getHeight() - child.getOrigin().y;
-                if (temp > sy) {
-                    sy = temp;
-                }
+                sy = Math.max(sy, child.getY() + child.getHeight() - child.getOrigin().y);
             }
         }
 
         // diff check
-        if (sx != mSize.x || sy != mSize.y) {
+        final boolean changedW = mWrapContentWidth && sx != mSize.x;
+        final boolean changedH = mWrapContentHeight && sy != mSize.y;
+        if (changedW || changedH) {
             // apply
-            setSize(sx, sy);
+            setSize(changedW ? sx : mSize.x, changedH ? sy : mSize.y);
 
             // size changed? need to re-update bounds, in the same frame
             if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS)) {
