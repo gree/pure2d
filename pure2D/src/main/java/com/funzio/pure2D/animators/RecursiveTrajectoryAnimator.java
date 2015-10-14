@@ -86,12 +86,12 @@ public class RecursiveTrajectoryAnimator extends TrajectoryAnimator {
 
     protected void onLoop(final int trips) {
         if (mListener instanceof TrajectoryListener) {
-            ((TrajectoryListener) mListener).onLoop(this, trips);
+            ((TrajectoryListener) mListener).onAnimationLoop(this, trips);
         }
     }
 
     public interface TrajectoryListener extends Animator.AnimatorListener {
-        void onLoop(final Animator animator, final int trips);
+        void onAnimationLoop(final Animator animator, final int trips);
     }
 
 }
