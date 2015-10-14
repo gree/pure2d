@@ -149,6 +149,15 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
             mInvalidateFlags |= VERTICES;
         }
 
+        updateChildren(deltaTime);
+
+        // validate transform AFTER updateMatrix()
+        mInvalidateFlags &= ~(BOUNDS);
+
+        return mNumManipulators > 0;
+    }
+
+    protected void updateChildren(final int deltaTime) {
         // apply to the vertices
         if ((mInvalidateFlags & VERTICES) != 0) {
             // check visibility
@@ -160,11 +169,6 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
                 mInvalidateFlags &= ~VERTICES;
             }
         }
-
-        // validate transform AFTER updateMatrix()
-        mInvalidateFlags &= ~(BOUNDS);
-
-        return mNumManipulators > 0;
     }
 
     /**
