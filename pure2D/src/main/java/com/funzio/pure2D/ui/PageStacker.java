@@ -73,6 +73,7 @@ public class PageStacker implements Pageable.TransitionListener {
                 public void run() {
                     if (!page.isPageFloating()) {
                         // slide out the previous page
+                        final Pageable previousPage = findPreviousPageOf(page);
                         if (previousPage != null) {
                             previousPage.transitionOut(true);
                         }
@@ -101,6 +102,23 @@ public class PageStacker implements Pageable.TransitionListener {
         }
 
         return false;
+    }
+
+    /**
+     * Find the previous non-floating page in the stack
+     *
+     * @return
+     */
+    protected Pageable findPreviousPageOf(final Pageable page) {
+        final int index = page != null ? mPages.indexOf(page) - 1 : mPages.size() - 1;
+        for (int i = index; i >= 0; i--) {
+            final Pageable previous = mPages.get(i);
+            if (!previous.isPageFloating()) {
+                return previous;
+            }
+        }
+
+        return null;
     }
 
     protected Pageable dismissPage() {
@@ -142,6 +160,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
                 // slide in the previous page
                 if (!currentPage.isPageFloating()) {
+                    final Pageable previousPage = findPreviousPageOf(null);
                     if (previousPage != null) {
                         mContainer.addChild(previousPage);
                         previousPage.transitionIn(false);
