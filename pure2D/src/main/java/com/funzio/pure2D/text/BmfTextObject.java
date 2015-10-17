@@ -246,6 +246,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         // update text bounds
         if ((mInvalidateFlags & (CHILDREN | BOUNDS)) != 0 || mSize.x <= 1 || mSize.y <= 1) {
             updateTextBounds();
+
+            // re-apply constaint
+            if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0) {
+                mUIConstraint.apply(this, getParent());
+            }
         }
 
         // check if texture size changed? it happens when new Characters added.
@@ -260,12 +265,17 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
     }
 
     @Override
+    public boolean shouldDraw(final RectF globalViewRect) {
+        return super.shouldDraw(globalViewRect) && mText != null && !mText.isEmpty();
+    }
+
+    @Override
     public boolean draw(final GLState glState) {
         if (mBitmapFont != null && mBitmapFont.isInvalidate()) {
             mBitmapFont.validate();
         }
 
-        if (mText == null || mText.length() == 0) {
+        if (mText == null || mText.isEmpty() || !mVisible) {
             return false;
         }
 
