@@ -38,9 +38,15 @@ public interface Soundable {
 
     public int getPriority();
 
-    public void setPriority(final int priority);
+    public Soundable setPriority(final int priority);
 
     public int getLoop();
 
-    public void setLoop(final int loop);
+    public Soundable setLoop(final int loop);
+
+    public Soundable setVolume(final float left, final float right);
+
+    public float getVolumeLeft() ;
+
+    public float getVolumeRight();
 }
