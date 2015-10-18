@@ -334,6 +334,20 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
+    public int unloadAll() {
+        synchronized (mSoundMap) {
+            final int len = mSoundMap.size();
+            for (int i = 0; i < len; i++) {
+                final Soundable sound = mSoundMap.get(mSoundMap.keyAt(i));
+                mSoundPool.unload(sound.getSoundID());
+            }
+
+            mSoundMap.clear();
+
+            return len;
+        }
+    }
+
     /**
      * Find a sound by the sound ID
      *
