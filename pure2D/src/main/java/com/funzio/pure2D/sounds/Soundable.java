@@ -44,6 +44,10 @@ public interface Soundable {
 
     public Soundable setLoop(final int loop);
 
+    public float getRate();
+
+    public Soundable setRate(final float rate);
+
     public Soundable setVolume(final float left, final float right);
 
     public float getVolumeLeft() ;

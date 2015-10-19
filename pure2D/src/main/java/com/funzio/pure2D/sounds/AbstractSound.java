@@ -29,6 +29,7 @@ public abstract class AbstractSound implements Soundable {
     protected int mSoundID = 0;
     protected int mPriority = 5;    // average
     protected int mLoop = 0;
+    protected float mRate = 1f;
     protected long mLength = -1;
 
     protected float mVolumeLeft = -1;   // use default
@@ -63,6 +64,17 @@ public abstract class AbstractSound implements Soundable {
     public AbstractSound setLoop(final int loop) {
         mLoop = loop;
 
+        return this;
+    }
+
+    @Override
+    public float getRate() {
+        return mRate;
+    }
+
+    @Override
+    public AbstractSound setRate(final float rate) {
+        mRate = rate;
         return this;
     }
 

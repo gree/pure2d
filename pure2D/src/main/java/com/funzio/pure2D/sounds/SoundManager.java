@@ -207,7 +207,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
             if (volLeft < 0) volLeft = volDefault;
             float volRight = sound.getVolumeRight();
             if (volRight < 0) volRight = volDefault;
-            return mSoundPool.play(sound.getSoundID(), volLeft, volRight, sound.getPriority(), loop, 1f);
+            return mSoundPool.play(sound.getSoundID(), volLeft, volRight, sound.getPriority(), loop, sound.getRate());
         }
 
         return 0;
