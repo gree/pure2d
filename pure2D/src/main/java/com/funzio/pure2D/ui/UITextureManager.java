@@ -441,7 +441,10 @@ public class UITextureManager extends TextureManager {
             // also release the textures
             final Set<String> keys = mAtlasFrames.keySet();
             for (String key : keys) {
-                mAtlasFrames.get(key).setTexture(null);
+                final AtlasFrameSet frameSet = mAtlasFrames.get(key); 
+                if (frameSet != null) {
+                     frameSet.setTexture(null); 
+                }
             }
 
             mAtlasFrames.clear();
