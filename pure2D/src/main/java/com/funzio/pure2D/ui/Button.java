@@ -167,7 +167,7 @@ public class Button extends DisplayGroup implements UIObject {
                 final PointF size = mCurrentTexture.getSize();
                 final float w = Math.max(mSize.x, size.x);
                 final float h = Math.max(mSize.y, size.y);
-                if (w != mSize.x || h != mSize.y) {
+                if ((mSize.x <= 0) && (w != mSize.x || h != mSize.y)) {
                     setSize(w, h);
                 }
 
