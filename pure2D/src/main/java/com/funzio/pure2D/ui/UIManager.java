@@ -252,10 +252,12 @@ public class UIManager {
         mTextureManager = textureManager;
 
         // apply the config
-        if (mTextureManager != null) {
-            mTextureManager.setUIManager(this); // 2-way link
-        }
+        if (textureManager != null) {
+            textureManager.setUIManager(this); // 2-way link
 
+            // time to preload some assets
+            textureManager.preloadAssets();
+        }
     }
 
     public UITextureManager getTextureManager() {
