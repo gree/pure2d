@@ -27,6 +27,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
@@ -388,7 +389,8 @@ public class HGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            if (mScene == null) {
+            final Scene scene = mScene;
+            if (scene == null) {
                 return controlled;
             }
 
@@ -397,7 +399,7 @@ public class HGroup extends LinearGroup implements UIObject {
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
-                final PointF global = mScene.getTouchedPoint(pointerIndex);
+                final PointF global = scene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         mSwipeAnchor = global.x;
@@ -412,12 +414,12 @@ public class HGroup extends LinearGroup implements UIObject {
             } else if (action == MotionEvent.ACTION_MOVE) {
                 final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
                 if (swipePointerIndex >= 0) {
-                    final float deltaX = mScene.getTouchedPoint(swipePointerIndex).x - mSwipeAnchor;
+                    final float deltaX = scene.getTouchedPoint(swipePointerIndex).x - mSwipeAnchor;
                     if (mSwipeAnchor >= 0) {
                         if (!mSwiping) {
                             if (Math.abs(deltaX) >= mSwipeMinThreshold) {
                                 // re-anchor
-                                mSwipeAnchor = mScene.getTouchedPoint(swipePointerIndex).x;
+                                mSwipeAnchor = scene.getTouchedPoint(swipePointerIndex).x;
 
                                 startSwipe();
                             }
