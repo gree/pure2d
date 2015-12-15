@@ -28,8 +28,6 @@ package com.funzio.pure2D.uni;
 
 import android.graphics.PointF;
 
-import com.funzio.pure2D.DisplayObject;
-import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.ui.UIConfig;
@@ -121,7 +119,7 @@ public abstract class UniLinearGroup extends UniGroup {
         invalidateChildrenPosition();
     }
 
-    public void scrollTo(final DisplayObject child) {
+    public void scrollTo(final StackableObject child) {
         PointF pos = child.getPosition();
         mScrollPosition.x = pos.x;
         mScrollPosition.y = pos.y;

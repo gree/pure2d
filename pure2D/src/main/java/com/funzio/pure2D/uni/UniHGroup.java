@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,16 +18,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
-/**
- *
- */
+ ******************************************************************************/
+
 package com.funzio.pure2D.uni;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
+import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.Touchable;
@@ -43,19 +42,16 @@ import java.util.ArrayList;
 /**
  * @author long
  */
-public class UniVGroup extends UniLinearGroup implements UIObject {
-
+public class UniHGroup extends UniLinearGroup implements UIObject {
     // xml attributes
     protected static final String ATT_SWIPE_ENABLED = "swipeEnabled";
-    protected static final String ATT_REVERSED = "reversed";
 
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 
     private int mStartIndex = 0;
-    private float mStartY = 0;
+    private float mStartX = 0;
 
-    // swiping
     protected boolean mSwipeEnabled = false;
     protected float mSwipeMinThreshold = 0;
     protected boolean mSwiping = false;
@@ -64,21 +60,18 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
     private float mAnchoredScroll = -1;
     private int mSwipePointerID = -1;
 
-    // positive orientation should be true by default
-    protected boolean mPositiveOrientation = true;
-
-    public UniVGroup() {
+    public UniHGroup() {
         super();
     }
 
     private void findStartIndex() {
-        mStartY = mStartIndex = 0;
-        if (mContentSize.y <= 0) {
+        mStartX = mStartIndex = 0;
+        if (mContentSize.x <= 0) {
             return;
         }
 
-        float offset = mScrollPosition.y % mContentSize.y; // needs to be rounded up?
-        offset += (offset < 0) ? mContentSize.y : 0;
+        float offset = mScrollPosition.x % mContentSize.x; // needs to be rounded up?
+        offset += (offset < 0) ? mContentSize.x : 0;
         // easy case
         if (offset == 0) {
             return;
@@ -88,14 +81,14 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
         for (int i = 0; i < mNumChildren; i++) {
             if (offset <= itemPos) {
                 mStartIndex = i;
-                mStartY = itemPos - offset;
+                mStartX = itemPos - offset;
                 return;
             }
             if (i == mNumChildren - 1) {
-                mStartY = mContentSize.y - offset;
-                // Log.v("long", ">>>i: " + i + " mStartIndex: " + mStartIndex + " mStartY: " + mStartY + " offset: " + offset + " itemPos: " + itemPos);
+                mStartX = mContentSize.x - offset;
             } else {
-                itemPos += getChildHeight(mChildren.get(i)) + mGap;
+
+                itemPos += getChildWidth(mChildren.get(i)) + mGap;
             }
         }
     }
@@ -103,9 +96,10 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
     protected void updateContentSize() {
         mContentSize.x = mContentSize.y = 0;
         for (int i = 0; i < mNumChildren; i++) {
-            final PointF childSize = mChildren.get(i).getSize();
-            mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
-            mContentSize.y += getChildHeight(mChildren.get(i)) + mGap;
+            final StackableObject child = mChildren.get(i);
+            final PointF childSize = child.getSize();
+            mContentSize.x += getChildWidth(child) + mGap;
+            mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
         }
 
         // update scroll max
@@ -118,13 +112,13 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
         return mStartIndex;
     }
 
-    public float getStartY() {
-        return mStartY;
+    public float getStartX() {
+        return mStartX;
     }
 
     @Override
     public void scrollTo(final StackableObject child) {
-        mScrollPosition.y = child.getPosition().y;
+        mScrollPosition.x = child.getPosition().x;
 
         // reposition the children
         invalidateChildrenPosition();
@@ -140,21 +134,21 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
         }
 
         final StackableObject startChild = getChildAt(mStartIndex);
-        final float y = startChild.getY();
+        final float x = startChild.getX();
 
-        if (y < 0) {
+        if (x < 0) {
             if (positive) {
-                return y + (getChildHeight(startChild) + mGap);
+                return x + (getChildWidth(startChild) + mGap);
             } else {
-                return y;
+                return x;
             }
         } else {
             if (positive) {
-                return y;
+                return x;
             } else {
                 int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
                 final StackableObject newChild = getChildAt(newIndex);
-                return y - (getChildHeight(newChild) + mGap);
+                return x - (getChildWidth(newChild) + mGap);
             }
         }
     }
@@ -188,46 +182,42 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
                 if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
                     int j = mVisibleTouchables.size();
-                    while (j > 0 && ((StackableObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                    while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
                 }
             } else {
                 if (mAutoSleepChildren) {
-                    // send child to sleep
+                    // send child to slepp
                     child.setAlive(false);
                 }
             }
         }
 
         // if there's an empty space at the beginning
-        // if (mRepeating && mStartY > mGap) {
+        // if (mRepeating && mStartX > mGap) {
         // // draw the first item to fill the space
         // int index = mStartIndex - 1;
         // if (index < 0) {
         // index += mNumChildren;
         // }
-        // StackableObject child = mChildren.get(index);
+        // DisplayObject child = mChildren.get(index);
         // PointF oldPos = child.getPosition();
         // float oldX = oldPos.x;
         // float oldY = oldPos.y;
-        // child.setPosition(oldX, mStartY - child.getSize().y - mGap);
+        // child.setPosition(mStartX - child.getSize().x - mGap, oldY);
         // child.draw(glState);
         // child.setPosition(oldX, oldY);
         // }
 
-        return super.drawChildren(glState);
-    }
-
-    protected float convertY(final float y, final float size) {
-        return mPositiveOrientation ? y : mSize.y - y - size;
+        return true;
     }
 
     @Override
     protected void positionChildren() {
-        float nextX = -mScrollPosition.x;
-        float alignedX = 0;
+        float nextY = -mScrollPosition.y;
+        float alignedY = 0;
         StackableObject child;
         PointF childSize;
 
@@ -238,55 +228,55 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
             onStartIndexChange(oldStartIndex);
         }
         if (mRepeating) {
-            float nextY = mStartY;
+            float nextX = mStartX;
             for (int i = 0; i < mNumChildren; i++) {
                 child = mChildren.get((i + mStartIndex) % mNumChildren);
                 childSize = child.getSize();
-                if ((mAlignment & Alignment.HORIZONTAL_CENTER) != 0) {
-                    alignedX = (mSize.x - childSize.x) * 0.5f;
-                } else if ((mAlignment & Alignment.RIGHT) != 0) {
-                    alignedX = (mSize.x - childSize.x);
+                if ((mAlignment & Alignment.VERTICAL_CENTER) != 0) {
+                    alignedY = (mSize.y - childSize.y) * 0.5f;
+                } else if ((mAlignment & Alignment.TOP) != 0) {
+                    alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
-                // find nextY
-                nextY += getChildHeight(child) + mGap;
+                // find nextX
+                nextX += getChildWidth(child) + mGap;
             }
 
-            if (mStartY > mGap) {
+            if (mStartX > mGap) {
                 // draw the first item to fill the space
                 int index = mStartIndex - 1;
                 if (index < 0) {
                     index += mNumChildren;
                 }
                 child = mChildren.get(index);
-                child.setPosition(child.getPosition().x, convertY(mStartY - getChildHeight(child) - mGap, child.getSize().y));
+                child.setPosition(mStartX - getChildWidth(child) - mGap, child.getPosition().y);
             }
         } else {
             // update content size
             updateContentSize();
 
-            float nextY = -mScrollPosition.y;
+            float nextX = -mScrollPosition.x;
             // alignment
-            final float actualHeight = mContentSize.y - (mNumChildren > 0 ? mGap : 0); // remove the extra gap
-            if ((mAlignment & Alignment.VERTICAL_CENTER) > 0) {
-                nextY += (mSize.y - actualHeight) * 0.5f;
-            } else if ((mAlignment & Alignment.TOP) > 0) {
-                nextY += (mSize.y - actualHeight);
+            final float actualWidth = mContentSize.x - (mNumChildren > 0 ? mGap : 0); // remove the extra gap
+            if ((mAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                nextX += (mSize.x - actualWidth) * 0.5f;
+            } else if ((mAlignment & Alignment.RIGHT) > 0) {
+                nextX += (mSize.x - actualWidth);
             }
 
             for (int i = 0; i < mNumChildren; i++) {
                 child = mChildren.get(i);
                 childSize = child.getSize();
-                if ((mAlignment & Alignment.HORIZONTAL_CENTER) != 0) {
-                    alignedX = (mSize.x - childSize.x) * 0.5f;
-                } else if ((mAlignment & Alignment.RIGHT) != 0) {
-                    alignedX = (mSize.x - childSize.x);
+                if ((mAlignment & Alignment.VERTICAL_CENTER) != 0) {
+                    alignedY = (mSize.y - childSize.y) * 0.5f;
+                } else if ((mAlignment & Alignment.TOP) != 0) {
+                    alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // update sizes
-                nextY += getChildHeight(child) + mGap;
+                nextX += getChildWidth(child) + mGap;
             }
         }
     }
@@ -321,8 +311,8 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
     @Override
     protected void onAddedChild(final StackableObject child) {
         final PointF childSize = child.getSize();
-        mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
-        mContentSize.y += getChildHeight(child) + mGap;
+        mContentSize.x += getChildWidth(child) + mGap;
+        mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
@@ -333,8 +323,8 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
 
     @Override
     protected void onRemovedChild(final StackableObject child) {
-        //final PointF childSize = child.getSize();
-        mContentSize.y -= getChildHeight(child) + mGap;
+        final PointF childSize = child.getSize();
+        mContentSize.x -= getChildWidth(child) + mGap;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
@@ -373,37 +363,22 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
     }
 
     protected void startSwipe() {
-        mAnchoredScroll = mScrollPosition.y;
+        mAnchoredScroll = mScrollPosition.x;
         mSwiping = true;
     }
 
     protected void stopSwipe() {
         mSwipeAnchor = -1;
-        mSwipePointerID = -1;
         mSwiping = false;
+        mSwipePointerID = -1;
     }
 
     protected void swipe(final float delta) {
-        scrollTo(0, mAnchoredScroll - delta);
+        scrollTo(mAnchoredScroll - delta, 0);
     }
 
     public boolean isSwiping() {
         return mSwiping;
-    }
-
-    public boolean isPositiveOrientation() {
-        return mPositiveOrientation;
-    }
-
-    /**
-     * Change display order of the children
-     *
-     * @param positive
-     */
-    public void setPositiveOrientation(final boolean positive) {
-        mPositiveOrientation = positive;
-
-        invalidateChildrenPosition();
     }
 
     @Override
@@ -416,7 +391,8 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            if (mScene == null) {
+            final Scene scene = mScene;
+            if (scene == null) {
                 return controlled;
             }
 
@@ -425,10 +401,10 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
-                final PointF global = mScene.getTouchedPoint(pointerIndex);
+                final PointF global = scene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
-                        mSwipeAnchor = global.y;
+                        mSwipeAnchor = global.x;
                         // keep pointer id
                         mSwipePointerID = event.getPointerId(pointerIndex);
                     }
@@ -440,26 +416,17 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
             } else if (action == MotionEvent.ACTION_MOVE) {
                 final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
                 if (swipePointerIndex >= 0) {
-                    float deltaY = mScene.getTouchedPoint(swipePointerIndex).y - mSwipeAnchor;
-                    if (mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-                        // flip
-                        deltaY = -deltaY;
-                    }
-
-                    if (!mPositiveOrientation) {
-                        // flip again
-                        deltaY = -deltaY;
-                    }
+                    final float deltaX = scene.getTouchedPoint(swipePointerIndex).x - mSwipeAnchor;
                     if (mSwipeAnchor >= 0) {
                         if (!mSwiping) {
-                            if (Math.abs(deltaY) >= mSwipeMinThreshold) {
+                            if (Math.abs(deltaX) >= mSwipeMinThreshold) {
                                 // re-anchor
-                                mSwipeAnchor = mScene.getTouchedPoint(swipePointerIndex).y;
+                                mSwipeAnchor = scene.getTouchedPoint(swipePointerIndex).x;
 
                                 startSwipe();
                             }
                         } else {
-                            swipe(deltaY);
+                            swipe(deltaX);
                         }
                     }
                 }
@@ -498,14 +465,10 @@ public class UniVGroup extends UniLinearGroup implements UIObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String reversed = xmlParser.getAttributeValue(null, ATT_REVERSED);
-        if (reversed != null) {
-            setPositiveOrientation(!Boolean.valueOf(reversed));
-        }
-
         final String swipeEnabled = xmlParser.getAttributeValue(null, ATT_SWIPE_ENABLED);
         if (swipeEnabled != null) {
             setSwipeEnabled(Boolean.valueOf(swipeEnabled));
         }
     }
+
 }
