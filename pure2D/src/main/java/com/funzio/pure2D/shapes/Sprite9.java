@@ -202,6 +202,7 @@ public class Sprite9 extends UniGroup {
                     // set the coordinates
                     if (tw != 0 && th != 0) {
                         sprite.setVisible(true);
+                        sprite.setAlive(true);
                         sprite.setPosition(vx, vy);
                         sprite.setSize(vw, vh);
                         frame = sprite.getAtlasFrame();
@@ -216,6 +217,7 @@ public class Sprite9 extends UniGroup {
                         // Log.e("long", mTexture + " " + sprite.getAtlasFrame().toString());
                     } else {
                         sprite.setVisible(false);
+                        sprite.setAlive(false);
                     }
 
                     vx += vw;
