@@ -58,6 +58,8 @@ public class Sprite9 extends UniGroup {
             sprite.setSizeToTexture(false);
             sprite.setSizeToFrame(false);
             sprite.setAtlasFrame(new AtlasFrame(mTexture, i, null));
+            sprite.setVisible(false);
+            sprite.setAlive(false);
             // sprite.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS | Pure2D.DEBUG_FLAG_WIREFRAME);
             addChild(sprite);
         }
