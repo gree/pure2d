@@ -281,7 +281,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
             if (mCurrentPage.onBackPressed()) {
                 // let page completely take control
-                return true;
+                //return true;
             } else if (mCurrentPage.isDismissible()) {
                 // sync on GL Thread
                 mContainer.queueEvent(new Runnable() {
@@ -292,8 +292,11 @@ public class PageStacker implements Pageable.TransitionListener {
                     }
                 });
 
-                return true;
+                //return true;
             }
+
+            // maybe also take control?
+            return true;
         }
 
         return false;
