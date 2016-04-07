@@ -40,6 +40,7 @@ import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.BlendFunc;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 import com.funzio.pure2D.ui.UITextureManager;
@@ -91,7 +92,7 @@ public class BaseScene implements Scene {
 
     // extra
     private GLColor mColor = new GLColor(0f, 0f, 0f, 1f);
-    private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
+    private BlendFunc mDefaultBlendFunc = BlendModes.DEFAULT_FUNC;
     private Listener mListener;
 
     // axis system
