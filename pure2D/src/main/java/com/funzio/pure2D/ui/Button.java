@@ -64,6 +64,7 @@ public class Button extends DisplayGroup implements UIObject {
     protected Sprite9 mButtonSprite;
     protected DisplayObject mContentGroup;
 
+    protected boolean mDimOnPressed = false;
     protected TouchListener mTouchListener;
 
     private Texture mCurrentTexture;
@@ -178,7 +179,11 @@ public class Button extends DisplayGroup implements UIObject {
         }
 
         // dim it if there is missing frame
-        setColor((texture == null || state >= mTextures.length) ? DIMMED_COLOR : null);
+        setColor((((texture == null || state >= mTextures.length) && mState != STATE_UP)
+                || (mState == STATE_DOWN && mDimOnPressed)
+                || (mState == STATE_DISABLED))
+                ? DIMMED_COLOR
+                : null);
     }
 
     protected Texture getStateTexture(final int state) {
