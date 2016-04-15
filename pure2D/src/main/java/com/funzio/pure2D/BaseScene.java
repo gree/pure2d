@@ -104,6 +104,7 @@ public class BaseScene implements Scene {
     private ArrayList<Touchable> mVisibleTouchables;
     private ArrayList<PointF> mTouchedPoints = new ArrayList<PointF>();
     private int mPointerCount = 0;
+    private long mDeltaTime;
 
     public BaseScene() {
     }
@@ -200,6 +201,10 @@ public class BaseScene implements Scene {
 
     final public int getAxisSystem() {
         return mAxisSystem;
+    }
+
+    public long getDeltaTime() {
+        return mDeltaTime;
     }
 
     final public int getCurrentFps() {
@@ -395,9 +400,9 @@ public class BaseScene implements Scene {
             // delta time
             final long now = SystemClock.elapsedRealtime();
             // final float delta = ((now - mStartTime) / 1000000f);
-            final long delta = now - mStartTime;
+            mDeltaTime = now - mStartTime;
 
-            if (delta == 0) {
+            if (mDeltaTime == 0) {
                 // NOTE: delta can be 0 (when nothing draws) on some devices such as S2, S3...
                 // We need to force invalidate!
                 invalidate();
@@ -407,7 +412,7 @@ public class BaseScene implements Scene {
                 int sleepTime = 0;
                 // compensate the framerate around the target fps
                 if (mTargetFps > 0) {
-                    float targetDelta = (mTargetDuration - delta);
+                    float targetDelta = (mTargetDuration - mDeltaTime);
                     if (targetDelta > 0) { // too fast?
                         if (mDownTime > targetDelta) {
                             mDownTime -= targetDelta;
@@ -430,7 +435,7 @@ public class BaseScene implements Scene {
                 }
 
                 // calculate frame rate
-                mFrameCountDuration += delta + sleepTime;
+                mFrameCountDuration += mDeltaTime + sleepTime;
                 if (mFrameCountDuration <= 1000) {
                     mFrameCount++;
                 } else {
@@ -442,7 +447,7 @@ public class BaseScene implements Scene {
                 // camera update
                 if (mCamera != null) {
                     // update the camera
-                    mCamera.update((int) delta);
+                    mCamera.update((int) mDeltaTime);
                 }
 
                 // update children
@@ -450,13 +455,13 @@ public class BaseScene implements Scene {
                     child = mChildren.get(i);
                     if (child.isAlive()) {
                         // heart beat
-                        child.update((int) delta);
+                        child.update((int) mDeltaTime);
                     }
                 }
             }
 
             // update texture manager
-            mTextureManager.update((int) delta);
+            mTextureManager.update((int) mDeltaTime);
         }
 
         // draw children if needed
