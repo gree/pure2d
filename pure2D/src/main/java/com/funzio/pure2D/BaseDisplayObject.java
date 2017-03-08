@@ -1328,7 +1328,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         final String color = xmlParser.getAttributeValue(null, ATT_COLOR);
         if (color != null) {
-            mColor = new GLColor(Color.parseColor(color));
+            mColor = new GLColor(Color.parseColor(manager.evalString(color)));
         }
 
         final String alpha = xmlParser.getAttributeValue(null, ATT_ALPHA);
