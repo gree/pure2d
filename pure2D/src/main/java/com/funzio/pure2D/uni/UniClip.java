@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,9 +18,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.uni;
 
@@ -35,6 +35,9 @@ import com.funzio.pure2D.atlas.AtlasFrameSet;
  */
 public class UniClip extends UniSprite implements Playable {
     private int mLoop = LOOP_REPEAT;
+    private int mLoopCount = -1; // forever
+    private int mTripCount = 0;
+
     private boolean mPlaying = true;
     private int mCurrentFrame = 0;
     private int mPreviousFrame = -1;
@@ -56,7 +59,13 @@ public class UniClip extends UniSprite implements Playable {
     }
 
     public void setAtlasFrameSet(final AtlasFrameSet frameSet) {
+        // diff check
+        if (mFrameSet == frameSet) {
+            return;
+        }
+
         mFrameSet = frameSet;
+        mTripCount = 0;
 
         if (frameSet != null) {
             mNumFrames = frameSet.getNumFrames();
@@ -66,11 +75,21 @@ public class UniClip extends UniSprite implements Playable {
             if (loopMode >= 0) {
                 setLoop(loopMode);
             }
+            setLoopCount(frameSet.getLoopCount());
 
-            // start from first frame
-            mCurrentFrame = 0;
+            // check current frame
+            if (mCurrentFrame >= mNumFrames) {
+                // start from first frame
+                mCurrentFrame = 0;
+            }
 
+            final boolean center = isOriginAtCenter();
             setAtlasFrame(mNumFrames > 0 ? frameSet.getFrame(mCurrentFrame) : null);
+
+            // reset origin at center
+            if (center) {
+                setOriginAtCenter();
+            }
         } else {
             mNumFrames = 0;
         }
@@ -130,13 +149,38 @@ public class UniClip extends UniSprite implements Playable {
                 mCurrentFrame += frames;
                 if (mLoop == LOOP_REPEAT) {
                     if (mCurrentFrame >= mNumFrames) {
-                        mCurrentFrame %= mNumFrames;
+                        mTripCount++;
+                        if (mLoopCount >= 0 && mTripCount > mLoopCount) {
+                            stopAt(mNumFrames - 1);
+
+                            // callback
+                            onClipEnd(mFrameSet);
+                        } else {
+                            mCurrentFrame %= mNumFrames;
+
+                            // callback
+                            onClipLoop(mFrameSet);
+                        }
                     }
                 } else if (mLoop == LOOP_REVERSE) {
                     final int cycle = (mNumFrames - 1) * 2;
                     mCurrentFrame = mAccumulatedFrames % cycle;
                     if (mCurrentFrame >= mNumFrames) {
                         mCurrentFrame = cycle - mCurrentFrame;
+                    }
+
+                    final int trips = mAccumulatedFrames / mNumFrames;
+                    if (trips > mTripCount) {
+                        mTripCount = trips;
+                        if (mLoopCount >= 0 && mTripCount > mLoopCount) {
+                            stop();
+
+                            // callback
+                            onClipEnd(mFrameSet);
+                        } else {
+                            // callback
+                            onClipLoop(mFrameSet);
+                        }
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
@@ -156,6 +200,7 @@ public class UniClip extends UniSprite implements Playable {
 
     public void play() {
         mPlaying = true;
+        mTripCount = 0;
     }
 
     public void playAt(final int frame) {
@@ -188,6 +233,15 @@ public class UniClip extends UniSprite implements Playable {
         mLoop = type;
     }
 
+    public int getLoopCount() {
+        return mLoopCount;
+    }
+
+    public UniClip setLoopCount(final int loopCount) {
+        mLoopCount = loopCount;
+        return this;
+    }
+
     /**
      * @return the currentFrame
      */
@@ -207,6 +261,10 @@ public class UniClip extends UniSprite implements Playable {
     }
 
     protected void onClipEnd(final AtlasFrameSet frameSet) {
+        // TODO
+    }
+
+    protected void onClipLoop(final AtlasFrameSet frameSet) {
         // TODO
     }
 

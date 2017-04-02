@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,17 +18,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
-/**
- * 
  */
+
 package com.funzio.pure2D.shapes;
-
-import java.util.Arrays;
-
-import javax.microedition.khronos.opengles.GL10;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Pure2D;
@@ -43,6 +35,12 @@ import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.ui.UIConfig;
 import com.funzio.pure2D.ui.UIManager;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.Arrays;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * @author long
  */
@@ -52,10 +50,12 @@ public class Shape extends BaseDisplayObject {
     // XML attributes
     protected static final String ATT_ASYNC = "async";
     protected static final String ATT_SOURCE = "source";
+    protected static final String ATT_TEXTURE_REPEAT = "textureRepeat";
 
     protected VertexBuffer mVertexBuffer;
 
     protected Texture mTexture;
+    private boolean mTextureRepeat;
     private boolean mTextureLoaded;
     protected TextureCoordBuffer mTextureCoordBuffer;
     protected TextureCoordBuffer mTextureCoordBufferScaled;
@@ -86,7 +86,27 @@ public class Shape extends BaseDisplayObject {
         mTexture = texture;
         mTextureLoaded = mTexture != null ? mTexture.isLoaded() : false;
 
+        if (mTextureRepeat && texture != null && !texture.isRepeating()) {
+            // auto set repeat
+            texture.setRepeat(GL10.GL_REPEAT, GL10.GL_REPEAT);
+        }
+
         invalidate(mTextureLoaded ? (TEXTURE | TEXTURE_COORDS) : TEXTURE);
+    }
+
+    public boolean isTextureRepeat() {
+        return mTextureRepeat;
+    }
+
+    public Shape setTextureRepeat(final boolean textureRepeat) {
+        mTextureRepeat = textureRepeat;
+
+        if (textureRepeat && mTexture != null && !mTexture.isRepeating()) {
+            // auto set repeat
+            mTexture.setRepeat(GL10.GL_REPEAT, GL10.GL_REPEAT);
+        }
+
+        return this;
     }
 
     @Override
@@ -114,6 +134,16 @@ public class Shape extends BaseDisplayObject {
         super.drawStart(glState);
     }
 
+    @Override
+    public void setSize(final float w, final float h) {
+        super.setSize(w, h);
+
+        // repeating texture?
+        if (mTextureRepeat && mTexture != null) {
+            invalidate(TEXTURE_COORDS);
+        }
+    }
+
     /**
      * validate texture coords
      */
@@ -127,10 +157,20 @@ public class Shape extends BaseDisplayObject {
 
         // scale to match with the Texture scale, for optimization
         if (mTexture != null && mTextureCoordBuffer != null) {
-            if ((mTexture.mCoordScaleX != 1 || mTexture.mCoordScaleY != 1)) {
+            if (mTexture.mCoordScaleX != 1 || mTexture.mCoordScaleY != 1 || mTextureRepeat) {
                 // scale the values
                 final float[] scaledValues = mTextureCoordBuffer.getValues().clone();
-                TextureCoordBuffer.scale(scaledValues, mTexture.mCoordScaleX, mTexture.mCoordScaleY);
+                float sx = mTexture.mCoordScaleX;
+                float sy = mTexture.mCoordScaleY;
+                if (mTextureRepeat) {
+                    if (mTexture.isRepeatingS()) {
+                        sx *= mSize.x / mTexture.getSize().x;
+                    }
+                    if (mTexture.isRepeatingT()) {
+                        sy *= mSize.y / mTexture.getSize().y;
+                    }
+                }
+                TextureCoordBuffer.scale(scaledValues, sx, sy);
 
                 if (mTextureCoordBufferScaled != null && mTextureCoordBufferScaled != mTextureCoordBuffer) {
                     mTextureCoordBufferScaled.setValues(scaledValues);
@@ -277,7 +317,6 @@ public class Shape extends BaseDisplayObject {
 
     /**
      * @param flips can be #DisplayObject.FLIP_X and/or #DisplayObject.FLIP_Y
-     * @see #DisplayObject
      */
     public void flipTextureCoordBuffer(final int flips) {
         // null check
@@ -310,6 +349,11 @@ public class Shape extends BaseDisplayObject {
         if (source != null && !source.endsWith(UIConfig.FILE_JSON)) {
             final String async = xmlParser.getAttributeValue(null, ATT_ASYNC);
             setTexture(manager.getTextureManager().getUriTexture(manager.evalString(source), null, async != null ? Boolean.valueOf(async) : UIConfig.DEFAULT_ASYNC));
+        }
+
+        final String repeating = xmlParser.getAttributeValue(null, ATT_TEXTURE_REPEAT);
+        if (repeating != null) {
+            setTextureRepeat(Boolean.valueOf(repeating));
         }
     }
 

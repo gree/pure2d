@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,31 +18,32 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
-/**
- * 
  */
-package com.funzio.pure2D.containers;
-
-import java.util.ArrayList;
+/**
+ *
+ */
+package com.funzio.pure2D.uni;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UIObject;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+
 /**
  * @author long
  */
-public class VGroup extends LinearGroup implements UIObject {
+public class UniVGroup extends UniLinearGroup implements UIObject {
 
     // xml attributes
     protected static final String ATT_SWIPE_ENABLED = "swipeEnabled";
@@ -66,7 +67,7 @@ public class VGroup extends LinearGroup implements UIObject {
     // positive orientation should be true by default
     protected boolean mPositiveOrientation = true;
 
-    public VGroup() {
+    public UniVGroup() {
         super();
     }
 
@@ -122,7 +123,7 @@ public class VGroup extends LinearGroup implements UIObject {
     }
 
     @Override
-    public void scrollTo(final DisplayObject child) {
+    public void scrollTo(final StackableObject child) {
         mScrollPosition.y = child.getPosition().y;
 
         // reposition the children
@@ -138,7 +139,7 @@ public class VGroup extends LinearGroup implements UIObject {
             return 0;
         }
 
-        final DisplayObject startChild = getChildAt(mStartIndex);
+        final StackableObject startChild = getChildAt(mStartIndex);
         final float y = startChild.getY();
 
         if (y < 0) {
@@ -152,7 +153,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 return y;
             } else {
                 int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
-                final DisplayObject newChild = getChildAt(newIndex);
+                final StackableObject newChild = getChildAt(newIndex);
                 return y - (getChildHeight(newChild) + mGap);
             }
         }
@@ -169,7 +170,7 @@ public class VGroup extends LinearGroup implements UIObject {
         }
 
         // draw the children
-        DisplayObject child;
+        StackableObject child;
         final int numChildren = mChildrenDisplayOrder.size();
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
@@ -181,20 +182,20 @@ public class VGroup extends LinearGroup implements UIObject {
                 }
 
                 // draw frame
-                child.draw(glState);
+                //child.draw(glState);
 
                 // stack the visible child
                 if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
                     float childZ = child.getZ();
                     int j = mVisibleTouchables.size();
-                    while (j > 0 && ((DisplayObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
+                    while (j > 0 && ((StackableObject) mVisibleTouchables.get(j - 1)).getZ() > childZ) {
                         j--;
                     }
                     mVisibleTouchables.add(j, (Touchable) child);
                 }
             } else {
                 if (mAutoSleepChildren) {
-                    // send child to slepp
+                    // send child to sleep
                     child.setAlive(false);
                 }
             }
@@ -207,7 +208,7 @@ public class VGroup extends LinearGroup implements UIObject {
         // if (index < 0) {
         // index += mNumChildren;
         // }
-        // DisplayObject child = mChildren.get(index);
+        // StackableObject child = mChildren.get(index);
         // PointF oldPos = child.getPosition();
         // float oldX = oldPos.x;
         // float oldY = oldPos.y;
@@ -216,7 +217,7 @@ public class VGroup extends LinearGroup implements UIObject {
         // child.setPosition(oldX, oldY);
         // }
 
-        return true;
+        return super.drawChildren(glState);
     }
 
     protected float convertY(final float y, final float size) {
@@ -227,7 +228,7 @@ public class VGroup extends LinearGroup implements UIObject {
     protected void positionChildren() {
         float nextX = -mScrollPosition.x;
         float alignedX = 0;
-        DisplayObject child;
+        StackableObject child;
         PointF childSize;
 
         final int oldStartIndex = mStartIndex;
@@ -318,7 +319,7 @@ public class VGroup extends LinearGroup implements UIObject {
     // }
 
     @Override
-    protected void onAddedChild(final DisplayObject child) {
+    protected void onAddedChild(final StackableObject child) {
         final PointF childSize = child.getSize();
         mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
         mContentSize.y += getChildHeight(child) + mGap;
@@ -331,7 +332,7 @@ public class VGroup extends LinearGroup implements UIObject {
     }
 
     @Override
-    protected void onRemovedChild(final DisplayObject child) {
+    protected void onRemovedChild(final StackableObject child) {
         //final PointF childSize = child.getSize();
         mContentSize.y -= getChildHeight(child) + mGap;
 
@@ -396,8 +397,8 @@ public class VGroup extends LinearGroup implements UIObject {
 
     /**
      * Change display order of the children
-     * 
-     * @param positiveOrder
+     *
+     * @param positive
      */
     public void setPositiveOrientation(final boolean positive) {
         mPositiveOrientation = positive;
@@ -415,8 +416,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
         // swipe enabled?
         if (mSwipeEnabled) {
-            final Scene scene = mScene;
-            if (scene == null) {
+            if (mScene == null) {
                 return controlled;
             }
 
@@ -425,7 +425,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 final RectF bounds = (mClippingEnabled && mClipStageRect != null) ? mClipStageRect : mBounds;
-                final PointF global = scene.getTouchedPoint(pointerIndex);
+                final PointF global = mScene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
                         mSwipeAnchor = global.y;
@@ -440,8 +440,8 @@ public class VGroup extends LinearGroup implements UIObject {
             } else if (action == MotionEvent.ACTION_MOVE) {
                 final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
                 if (swipePointerIndex >= 0) {
-                    float deltaY = scene.getTouchedPoint(swipePointerIndex).y - mSwipeAnchor;
-                    if (scene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
+                    float deltaY = mScene.getTouchedPoint(swipePointerIndex).y - mSwipeAnchor;
+                    if (mScene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
                         // flip
                         deltaY = -deltaY;
                     }
@@ -454,7 +454,7 @@ public class VGroup extends LinearGroup implements UIObject {
                         if (!mSwiping) {
                             if (Math.abs(deltaY) >= mSwipeMinThreshold) {
                                 // re-anchor
-                                mSwipeAnchor = scene.getTouchedPoint(swipePointerIndex).y;
+                                mSwipeAnchor = mScene.getTouchedPoint(swipePointerIndex).y;
 
                                 startSwipe();
                             }
@@ -482,7 +482,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
     /**
      * This is called when a touch down
-     * 
+     *
      * @param event
      */
     protected void onTouchDown(final MotionEvent event) {

@@ -29,8 +29,8 @@ package com.funzio.pure2D.ui;
 import android.graphics.PointF;
 
 import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Scene;
-import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.containers.DisplayGroup;
 import com.funzio.pure2D.containers.LinearGroup;
 import com.funzio.pure2D.containers.VGroup;
@@ -318,7 +318,7 @@ public class UIConstraint {
         return mHasAttributes;
     }
 
-    public void apply(final DisplayObject target, final Container container) {
+    public void apply(final DisplayObject target, final Parentable container) {
         if (container == null || !mHasAttributes) {
             return;
         }

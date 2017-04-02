@@ -98,6 +98,9 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
 
     public BmfTextObject() {
         super();
+
+        /*setAutoUpdateBounds(true);
+        setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS);*/
     }
 
     /**
@@ -129,8 +132,13 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         return mBitmapFont;
     }
 
-    protected float getLetterSpacing() {
+    public float getLetterSpacing() {
         return mLetterSpacing != 0.0123f || mFontMetrics == null ? mLetterSpacing : mFontMetrics.letterSpacing;
+    }
+
+    public BmfTextObject setLetterSpacing(final float letterSpacing) {
+        mLetterSpacing = letterSpacing;
+        return this;
     }
 
     public void setBitmapFont(final BitmapFont bitmapFont) {
@@ -174,6 +182,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         // find the bounds, this is not 100% precised, so we need the below logic
         mFontMetrics.getTextBounds(mText, mTextBounds);
 
+        final float strokePadding = (mTextOptions.inStrokePaint != null) ? mTextOptions.inStrokePaint.getStrokeWidth() * 2 : 0;
         final int length = mText.length();
         float nextX = 0;
         float width = 0;
@@ -196,7 +205,6 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                     mLineWidths.set(lineIndex, lineWidth);
                 }
                 lineIndex++;
-                lineWidth = 0;
             } else {
                 frame = mBitmapFont.getCharFrame(ch);
                 if (frame != null) {
@@ -220,14 +228,16 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         }
 
         // NOTE: there is a floating error in the native logic. So we need this for precision
-        mTextBounds.right = mTextBounds.left + width - 1;
+        mTextBounds.right = mTextBounds.left + width + strokePadding;
 
         // auto update size
-        setSize((mTextBounds.right - mTextBounds.left + 1) * mTextScale, (mTextBounds.bottom - mTextBounds.top + 1) * mTextScale);
+        setSize(mTextBounds.width() * mTextScale, mTextBounds.height() * mTextScale);
     }
 
     @Override
-    public boolean update(final int deltaTime) {
+    protected void updateChildren(final int deltaTime) {
+        super.updateChildren(deltaTime);
+
         // find axis system
         if (mScene != null && mSceneAxis < 0) {
             mSceneAxis = mScene.getAxisSystem();
@@ -236,6 +246,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
         // update text bounds
         if ((mInvalidateFlags & (CHILDREN | BOUNDS)) != 0 || mSize.x <= 1 || mSize.y <= 1) {
             updateTextBounds();
+
+            // re-apply constaint
+            if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0) {
+                mUIConstraint.apply(this, getParent());
+            }
         }
 
         // check if texture size changed? it happens when new Characters added.
@@ -247,8 +262,11 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
                 invalidate(CHILDREN);
             }
         }
+    }
 
-        return super.update(deltaTime);
+    @Override
+    public boolean shouldDraw(final RectF globalViewRect) {
+        return super.shouldDraw(globalViewRect) && mText != null && !mText.isEmpty();
     }
 
     @Override
@@ -257,7 +275,7 @@ public class BmfTextObject extends BaseDisplayObject implements Cacheable {
             mBitmapFont.validate();
         }
 
-        if (mText == null || mText.length() == 0) {
+        if (mText == null || mText.isEmpty() || !mVisible) {
             return false;
         }
 

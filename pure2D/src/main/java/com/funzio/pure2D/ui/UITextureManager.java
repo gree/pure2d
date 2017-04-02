@@ -61,6 +61,7 @@ public class UITextureManager extends TextureManager {
 
     protected HashMap<String, BitmapFont> mBitmapFonts = new HashMap<String, BitmapFont>();
     protected final HashMap<String, Texture> mGeneralTextures;
+    protected final HashMap<String, JsonAtlas> mAtlases;
     protected final HashMap<String, AtlasFrameSet> mAtlasFrames;
     protected final HashMap<String, NovaFactory> mNovaFactories;
 
@@ -77,6 +78,7 @@ public class UITextureManager extends TextureManager {
         super(scene, res);
 
         mGeneralTextures = new HashMap<String, Texture>();
+        mAtlases = new HashMap<String, JsonAtlas>();
         mAtlasFrames = new HashMap<String, AtlasFrameSet>();
         mNovaFactories = new HashMap<String, NovaFactory>();
     }
@@ -211,28 +213,16 @@ public class UITextureManager extends TextureManager {
         }
     }
 
-    /**
-     * Load a Json atlas file
-     *
-     * @param assets
-     * @param jsonUri
-     * @return
-     */
-    public AtlasFrameSet getUriAtlas(String jsonUri, final boolean async) {
+    public JsonAtlas getUriJsonAtlas(final String jsonUri, final boolean async) {
         if (Texture.LOG_ENABLED) {
-            Log.v(TAG, "getUriAtlas(): " + jsonUri);
+            Log.v(TAG, "getUriJsonAtlas(): " + jsonUri);
         }
 
-        // XXX HACK for bingo backward compatibility
-        if (UIConfig.isUnknownUri(jsonUri)) {
-            jsonUri = Pure2DURI.ASSET + jsonUri; // make it asset://
-        }
         final String actualPath = Pure2DURI.getPathFromUri(jsonUri);
-
-        if (mAtlasFrames.containsKey(actualPath)) {
+        if (mAtlases.containsKey(actualPath)) {
             // reuse cache
-            return mAtlasFrames.get(actualPath);
-        } else if (actualPath.endsWith(UIConfig.FILE_JSON)) {
+            return mAtlases.get(actualPath);
+        } else {
             try {
                 // create new
                 final JsonAtlas atlas = new JsonAtlas(mScene.getAxisSystem());
@@ -264,24 +254,77 @@ public class UITextureManager extends TextureManager {
                     }
                 }
 
-                // now load texture
-                final AtlasFrameSet multiFrames = atlas.getMasterFrameSet();
-                multiFrames.setTexture(getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), null, async));
-
                 // cache it
-                mAtlasFrames.put(actualPath, multiFrames);
-                return multiFrames;
+                mAtlases.put(actualPath, atlas);
+                return atlas;
 
             } catch (Exception e) {
                 Log.e(TAG, "Atlas Loading Error! " + actualPath, e);
                 return null;
             }
+        }
+    }
+
+    /**
+     * Load a Json atlas file
+     *
+     * @param jsonUri
+     * @param async
+     * @param subFrameSet - optional
+     * @return
+     */
+    public AtlasFrameSet getUriAtlas(String jsonUri, final boolean async, final String subFrameSet) {
+        if (Texture.LOG_ENABLED) {
+            Log.v(TAG, "getUriAtlas(): " + jsonUri + ", " + subFrameSet);
+        }
+
+        final String rawUri = jsonUri;
+        // XXX HACK for bingo backward compatibility
+        if (UIConfig.isUnknownUri(jsonUri)) {
+            jsonUri = Pure2DURI.ASSET + jsonUri; // make it asset://
+        }
+        final String actualPath = Pure2DURI.getPathFromUri(jsonUri);
+        final String key = actualPath + (subFrameSet == null ? "" : "/" + subFrameSet);
+
+        if (mAtlasFrames.containsKey(key)) {
+            // reuse cache
+            return mAtlasFrames.get(key);
+        } else if (actualPath.endsWith(UIConfig.FILE_JSON)) {
+            final JsonAtlas atlas = getUriJsonAtlas(rawUri, async);
+            if (atlas != null) {
+                // now load texture
+                final AtlasFrameSet multiFrames = (subFrameSet == null) ? atlas.getMasterFrameSet() : atlas.getSubFrameSet(subFrameSet);
+                if (multiFrames != null) {
+                    multiFrames.setTexture(getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), null, async));
+                } else {
+                    Log.e(TAG, "Frame Set Not Found! " + key);
+                }
+
+                // cache it
+                mAtlasFrames.put(key, multiFrames);
+
+                return multiFrames;
+            } else {
+                return null;
+            }
+
         } else {
             final SingleFrameSet singleFrame = new SingleFrameSet(actualPath, getUriTexture(jsonUri.replace(UIConfig.FILE_JSON, UIConfig.FILE_PNG), null, async));
             // cache it
-            mAtlasFrames.put(actualPath, singleFrame);
+            mAtlasFrames.put(key, singleFrame);
             return singleFrame;
         }
+    }
+
+    /**
+     * Load a Json atlas file
+     *
+     * @param jsonUri
+     * @param async
+     * @return
+     */
+    public AtlasFrameSet getUriAtlas(String jsonUri, final boolean async) {
+        return getUriAtlas(jsonUri, async, null);
     }
 
     public NovaFactory getUriNova(final String jsonUri, final boolean async) {
@@ -392,11 +435,16 @@ public class UITextureManager extends TextureManager {
     public void reset() {
         Log.w(TAG, "reset()");
 
+        mAtlases.clear();
+
         synchronized (mAtlasFrames) {
             // also release the textures
             final Set<String> keys = mAtlasFrames.keySet();
             for (String key : keys) {
-                mAtlasFrames.get(key).setTexture(null);
+                final AtlasFrameSet frameSet = mAtlasFrames.get(key);
+                if (frameSet != null) {
+                    frameSet.setTexture(null);
+                }
             }
 
             mAtlasFrames.clear();

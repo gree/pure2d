@@ -2,8 +2,11 @@
 	<!ENTITY % TEXT_ALIGN "textAlign (center|left|right)  #IMPLIED">
 	<!ENTITY % SOURCE "source (asset:|file:|http:|cache:)  #IMPLIED">
 	<!ENTITY % BLEND_MODE "blendMode (interpolate|add|screen|premultiplied_alpha|multiply)  #IMPLIED">
+	<!ENTITY % TEXTURE_REPEAT "textureRepeat (true|false)  #IMPLIED">
 	<!ENTITY % ASYNC "async (true|false)  #IMPLIED">
 	<!ENTITY % SELECTED "selected (true|false)  #IMPLIED">
+	<!ENTITY % FLIP_X "flipX (true|false)  #IMPLIED">
+	<!ENTITY % FLIP_Y "flipY (true|false)  #IMPLIED">
 
 	<!ENTITY % OBJ_ATTRS
 		"id CDATA #IMPLIED
@@ -23,6 +26,7 @@
 	alpha CDATA #IMPLIED
 	visible (false|true) #IMPLIED
 	%BLEND_MODE;
+	%TEXTURE_REPEAT;
 	touchable (false|true) #IMPLIED
 	originAtCenter (false|true) #IMPLIED
 	pivotAtCenter (false|true) #IMPLIED
@@ -103,6 +107,7 @@
 		%OBJ_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		frameSet CDATA #IMPLIED
 		playAt CDATA #IMPLIED
 		stopAt CDATA #IMPLIED>
 
@@ -132,6 +137,8 @@
 		%GROUP_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		%FLIP_X;
+		%FLIP_Y;
 		patches CDATA #IMPLIED>
 
 	<!ELEMENT ToggleButton ANY>
@@ -139,5 +146,7 @@
 		%GROUP_ATTRS;
 		%SOURCE;
 		%ASYNC;
+		%FLIP_X;
+		%FLIP_Y;
 		%SELECTED;
 		patches CDATA #IMPLIED>

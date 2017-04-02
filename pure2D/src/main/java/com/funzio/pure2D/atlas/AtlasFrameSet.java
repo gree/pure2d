@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,18 +18,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.atlas;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 import android.graphics.PointF;
 
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author long
@@ -41,6 +41,7 @@ public class AtlasFrameSet {
     protected Texture mTexture;
     protected int mFps = 0;
     protected int mLoopMode = -1; // ignored
+    protected int mLoopCount = -1; // forever
 
     public AtlasFrameSet(final String name) {
         mName = name;
@@ -85,7 +86,7 @@ public class AtlasFrameSet {
     }
 
     public AtlasFrame getFrame(final int index) {
-        return index < mFrames.size() ? mFrames.get(index) : null;
+        return index >= 0 && index < mFrames.size() ? mFrames.get(index) : null;
     }
 
     public AtlasFrame getFrame(final String name) {
@@ -145,7 +146,7 @@ public class AtlasFrameSet {
 
     /**
      * Extract the frame set's name from a full frame name
-     * 
+     *
      * @param full
      * @param delimiter
      * @return
@@ -200,6 +201,15 @@ public class AtlasFrameSet {
         mLoopMode = loopMode;
     }
 
+    public int getLoopCount() {
+        return mLoopCount;
+    }
+
+    public AtlasFrameSet setLoopCount(final int loopCount) {
+        mLoopCount = loopCount;
+        return this;
+    }
+
     public static AtlasFrameSet createReversedFrameSet(final AtlasFrameSet frameSet) {
         final AtlasFrameSet reversed = new AtlasFrameSet(frameSet.mName);
         reversed.setTexture(frameSet.getTexture());
@@ -208,5 +218,31 @@ public class AtlasFrameSet {
         }
 
         return reversed;
+    }
+
+    public static AtlasFrameSet createHorizontalFlippedFrameSet(final AtlasFrameSet frameSet) {
+        final AtlasFrameSet flipped = new AtlasFrameSet(frameSet.mName);
+        flipped.setTexture(frameSet.getTexture());
+        final int num = frameSet.getNumFrames();
+        for (int i = 0; i < num; i++) {
+            final AtlasFrame frame = frameSet.getFrame(i).clone();
+            frame.flipHorizontal();
+            flipped.addFrame(frame);
+        }
+
+        return flipped;
+    }
+
+    public static AtlasFrameSet createVerticalFlippedFrameSet(final AtlasFrameSet frameSet) {
+        final AtlasFrameSet flipped = new AtlasFrameSet(frameSet.mName);
+        flipped.setTexture(frameSet.getTexture());
+        final int num = frameSet.getNumFrames();
+        for (int i = 0; i < num; i++) {
+            final AtlasFrame frame = frameSet.getFrame(i).clone();
+            frame.flipVertical();
+            flipped.addFrame(frame);
+        }
+
+        return flipped;
     }
 }

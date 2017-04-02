@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 17
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.longo.pure2D.demo"
         minSdkVersion 8
-        targetSdkVersion 10
+        targetSdkVersion 17
     }
 
     buildTypes {
@@ -20,6 +20,4 @@ android {
 
 dependencies {
     compile project(':pure2D')
-    compile files('libs/jbox2d-library-2.1.2.2.jar')
-    compile files('libs/slf4j-android-1.5.8.jar')
 }

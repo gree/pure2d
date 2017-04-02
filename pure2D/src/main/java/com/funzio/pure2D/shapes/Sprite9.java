@@ -58,6 +58,8 @@ public class Sprite9 extends UniGroup {
             sprite.setSizeToTexture(false);
             sprite.setSizeToFrame(false);
             sprite.setAtlasFrame(new AtlasFrame(mTexture, i, null));
+            sprite.setVisible(false);
+            sprite.setAlive(false);
             // sprite.setDebugFlags(Pure2D.DEBUG_FLAG_GLOBAL_BOUNDS | Pure2D.DEBUG_FLAG_WIREFRAME);
             addChild(sprite);
         }
@@ -72,7 +74,7 @@ public class Sprite9 extends UniGroup {
 
         mHasPatches = left > 0 || right > 0 || top > 0 || bottom > 0;
 
-        invalidate(CHILDREN);
+        invalidate(VERTICES);
     }
 
     public RectF get9Patches() {
@@ -86,7 +88,7 @@ public class Sprite9 extends UniGroup {
     public void set9PatchEnabled(final boolean value) {
         m9PatchEnabled = value;
 
-        invalidate(CHILDREN);
+        invalidate(VERTICES);
     }
 
     public boolean isSizeToTexture() {
@@ -121,25 +123,26 @@ public class Sprite9 extends UniGroup {
             setSize(texture.getSize());
         } else {
             // invalidate the 9 patches
-            invalidate(CHILDREN);
+            invalidate(VERTICES);
         }
     }
 
     @Override
     protected void updateChildren(final int deltaTime) {
-        if ((mInvalidateFlags & (CHILDREN | TEXTURE | SIZE)) != 0) {
+        if ((mInvalidateFlags & (VERTICES | TEXTURE | SIZE)) != 0) {
             if (mTexture == null) {
                 super.updateChildren(deltaTime);
                 return;
             }
 
             // some constants
+            final boolean patching = m9PatchEnabled && mHasPatches;
             final float textureW = mTexture.getSize().x;
             final float textureH = mTexture.getSize().y;
-            float left = m9PatchEnabled ? m9Patches.left : 0;
-            float right = m9PatchEnabled ? m9Patches.right : 0;
-            float top = m9PatchEnabled ? m9Patches.top : 0;
-            float bottom = m9PatchEnabled ? m9Patches.bottom : 0;
+            float left = patching ? m9Patches.left : 0;
+            float right = patching ? m9Patches.right : 0;
+            float top = patching ? m9Patches.top : 0;
+            float bottom = patching ? m9Patches.bottom : 0;
             float middleW = mSize.x - left - right;
             float middleH = mSize.y - top - bottom;
             // if width is too small
@@ -201,6 +204,7 @@ public class Sprite9 extends UniGroup {
                     // set the coordinates
                     if (tw != 0 && th != 0) {
                         sprite.setVisible(true);
+                        sprite.setAlive(true);
                         sprite.setPosition(vx, vy);
                         sprite.setSize(vw, vh);
                         frame = sprite.getAtlasFrame();
@@ -215,6 +219,7 @@ public class Sprite9 extends UniGroup {
                         // Log.e("long", mTexture + " " + sprite.getAtlasFrame().toString());
                     } else {
                         sprite.setVisible(false);
+                        sprite.setAlive(false);
                     }
 
                     vx += vw;
@@ -236,7 +241,7 @@ public class Sprite9 extends UniGroup {
         super.setSize(w, h);
 
         // also invalidate coordinates
-        invalidate(CHILDREN);
+        invalidate(VERTICES);
     }
 
     /*@Override

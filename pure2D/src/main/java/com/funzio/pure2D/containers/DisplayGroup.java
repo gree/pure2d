@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,21 +18,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
-/**
- * 
  */
-package com.funzio.pure2D.containers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+package com.funzio.pure2D.containers;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
@@ -47,6 +40,11 @@ import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.shapes.DummyDrawer;
 import com.funzio.pure2D.ui.UIManager;
+
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author long
@@ -100,7 +98,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
         final boolean forceChildrenConstraints = ((mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0);
 
         DisplayObject child;
-        float temp, sx = mSize.x, sy = mSize.y;
+        float sx = 0, sy = 0;
         for (int i = 0; i < mNumChildren; i++) {
             child = mChildren.get(i);
 
@@ -120,29 +118,25 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
             // match content size
             if (mWrapContentWidth) {
-                temp = child.getX() + child.getWidth() - child.getOrigin().x;
-                if (temp > sx) {
-                    sx = temp;
-                }
+                sx = Math.max(sx, child.getX() + child.getWidth() - child.getOrigin().x);
             }
             if (mWrapContentHeight) {
-                temp = child.getY() + child.getHeight() - child.getOrigin().y;
-                if (temp > sy) {
-                    sy = temp;
-                }
+                sy = Math.max(sy, child.getY() + child.getHeight() - child.getOrigin().y);
             }
         }
 
         // diff check
-        if (sx != mSize.x || sy != mSize.y) {
+        final boolean changedW = mWrapContentWidth && sx != mSize.x;
+        final boolean changedH = mWrapContentHeight && sy != mSize.y;
+        if (changedW || changedH) {
             // apply
-            setSize(sx, sy);
+            setSize(changedW ? sx : mSize.x, changedH ? sy : mSize.y);
 
             // size changed? need to re-update bounds, in the same frame
             if ((mAutoUpdateBounds || Pure2D.AUTO_UPDATE_BOUNDS)) {
                 // check constraints first, only apply it when size or parent changed
                 if (mUIConstraint != null) {
-                    mUIConstraint.apply(this, mParent);
+                    mUIConstraint.apply(this, getParent());
                 }
 
                 // re-cal the matrix
@@ -167,6 +161,12 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
         // NOTE: this clipping method doesn't work for Rotation!!!
         if (mClippingEnabled) {
+            if ((mInvalidateFlags & BOUNDS) != 0) {
+                // hmm we need this
+                updateBounds();
+                //mInvalidateFlags &= ~BOUNDS;
+            }
+
             mOriginalScissorEnabled = glState.isScissorTestEnabled();
             if (mOriginalScissorEnabled) {
                 // backup the current scissor
@@ -310,7 +310,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Test to see if a child can be seen in this container.
-     * 
+     *
      * @param child
      * @return true if at least one of the corners of the child is in this container's rect.
      */
@@ -346,7 +346,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Clear cache manually when it is no longer needed.
-     * 
+     *
      * @see {@link #setCacheEnabled(boolean)}
      */
     public void clearCache() {
@@ -519,7 +519,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
-     * 
+     *
      * @param child1
      * @param child2
      * @return
@@ -545,7 +545,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
-     * 
+     *
      * @param index1
      * @param index2
      * @return
@@ -611,7 +611,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Get the number of children, not including grand children
-     * 
+     *
      * @see #getNumGrandChildren()
      */
     public int getNumChildren() {
@@ -620,7 +620,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Get number of children including grand children
-     * 
+     *
      * @see #getNumChildren()
      */
     public int getNumGrandChildren() {
@@ -682,7 +682,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Enable/Disable Bound-clipping. Note this does not work for rotation.
-     * 
+     *
      * @param clippingEnabled
      */
     public void setClippingEnabled(final boolean clippingEnabled) {
@@ -697,7 +697,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
-     * 
+     *
      * @param cacheEnabled
      * @see {@link #setCachePolicy(int)}
      * @see {@link #setCacheProjection(int)}
@@ -725,7 +725,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * Set how to you want to cache
-     * 
+     *
      * @param cachePolicy
      * @see {@link #setCacheEnabled(boolean)}
      * @see {@link #setCacheProjection(int)}
@@ -858,7 +858,7 @@ public class DisplayGroup extends BaseDisplayObject implements Container, Cachea
 
     /**
      * for Debugging
-     * 
+     *
      * @return a string that has all the children in Tree format
      */
     @Override

@@ -24,11 +24,12 @@
 /**
  *
  */
-package com.funzio.pure2D.containers;
+package com.funzio.pure2D.uni;
 
 import android.graphics.PointF;
 
-import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.StackableObject;
+import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.ui.UIConfig;
 import com.funzio.pure2D.ui.UIManager;
 
@@ -37,7 +38,7 @@ import org.xmlpull.v1.XmlPullParser;
 /**
  * @author long
  */
-public abstract class LinearGroup extends DisplayGroup {
+public abstract class UniLinearGroup extends UniGroup {
 
     protected static final String ATT_ALIGN = "align";
     protected static final String ATT_REPEATING = "repeating";
@@ -118,21 +119,13 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
-    public void scrollTo(final DisplayObject child) {
+    public void scrollTo(final StackableObject child) {
         PointF pos = child.getPosition();
         mScrollPosition.x = pos.x;
         mScrollPosition.y = pos.y;
 
         // reposition the children
         invalidateChildrenPosition();
-    }
-
-    public void scrollToChildAt(final int childIndex) {
-        if (childIndex >= mNumChildren) {
-            return;
-        }
-
-        scrollTo(getChildAt(childIndex));
     }
 
     public void scrollBy(final float dx, final float dy) {
@@ -159,14 +152,14 @@ public abstract class LinearGroup extends DisplayGroup {
     }
 
     @Override
-    protected void onAddedChild(final DisplayObject child) {
+    protected void onAddedChild(final StackableObject child) {
         super.onAddedChild(child);
 
         invalidateChildrenPosition();
     }
 
     @Override
-    protected void onRemovedChild(final DisplayObject child) {
+    protected void onRemovedChild(final StackableObject child) {
         super.onRemovedChild(child);
 
         invalidateChildrenPosition();
@@ -220,11 +213,11 @@ public abstract class LinearGroup extends DisplayGroup {
         invalidateChildrenPosition();
     }
 
-    protected float getChildWidth(final DisplayObject child) {
+    protected float getChildWidth(final StackableObject child) {
         return Math.max(child.getWidth(), mMinCellSize);
     }
 
-    protected float getChildHeight(final DisplayObject child) {
+    protected float getChildHeight(final StackableObject child) {
         return Math.max(child.getHeight(), mMinCellSize);
     }
 

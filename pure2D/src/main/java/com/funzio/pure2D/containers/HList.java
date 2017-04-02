@@ -20,11 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * ****************************************************************************
+ *
  */
 
 
 /**
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ * This Horizontal List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
  */
 package com.funzio.pure2D.containers;
 
@@ -56,6 +57,7 @@ public class HList<T> extends HWheel implements List<T> {
 
     private boolean mRepeating = false;
     private boolean mChildrenNumInvalidated = false;
+    protected float mOOBTraction = SCROLL_OOB_FRICTION;
 
     public HList() {
         super();
@@ -93,9 +95,9 @@ public class HList<T> extends HWheel implements List<T> {
         // add friction when scroll out of bounds
         if (!mRepeating) {
             if (x < 0) {
-                x *= SCROLL_OOB_FRICTION;
+                x *= mOOBTraction;
             } else if (x > mVirtualScrollMax.x) {
-                x = mVirtualScrollMax.x + (x - mVirtualScrollMax.x) * SCROLL_OOB_FRICTION;
+                x = mVirtualScrollMax.x + (x - mVirtualScrollMax.x) * mOOBTraction;
             }
         }
 
@@ -246,40 +248,27 @@ public class HList<T> extends HWheel implements List<T> {
         mDataStartIndex = itemIndex;
         // Log.v(TAG, newStartIndex + " --- " + itemIndex);
 
-        ItemRenderer<T> child;
-        for (int i = 0; i < mNumChildren; i++) {
-            child = (ItemRenderer<T>) mChildren.get((newStartIndex + i) % mNumChildren);
-            // re-set data for child
-            itemIndex = mDataStartIndex + i;
-
-            if (mRepeating) {
-                // looping index
-                itemIndex = (itemIndex % dataSize + dataSize) % dataSize;
-                child.setData(itemIndex, mData.get(itemIndex));
-                // always show
-                child.setVisible(true);
-            } else {
-                // check range
-                if (itemIndex >= 0 && itemIndex < dataSize) {
-                    child.setData(itemIndex, mData.get(itemIndex));
-                    child.setVisible(true);
-                } else {
-                    child.setVisible(false);
-                }
-            }
-        }
-
-        // base on VGroup logic
+        // base on HGroup logic, first the first child index
+        int firstChildIndex = -1;
         if (getStartX() > mGap) {
             // fill the first item in to fill the space
-            int index = newStartIndex - 1;
-            if (index < 0) {
-                index += mNumChildren;
+            firstChildIndex = newStartIndex - 1;
+            if (firstChildIndex < 0) {
+                firstChildIndex += mNumChildren;
             }
-            child = (ItemRenderer<T>) mChildren.get(index);
+        }
+        // now apply data to all children
+        for (int i = 0; i < mNumChildren; i++) {
+            final int childIndex = (newStartIndex + i) % mNumChildren;
+            if (firstChildIndex >= 0 && childIndex == firstChildIndex) {
+                // draw the first item to fill the space
+                itemIndex = mDataStartIndex - 1;
+            } else {
+                // re-set data for child
+                itemIndex = mDataStartIndex + i;
+            }
 
-            // draw the first item to fill the space
-            itemIndex = mDataStartIndex - 1;
+            final ItemRenderer<T> child = (ItemRenderer<T>) mChildren.get(childIndex);
 
             if (mRepeating) {
                 // looping index
@@ -293,11 +282,11 @@ public class HList<T> extends HWheel implements List<T> {
                     child.setData(itemIndex, mData.get(itemIndex));
                     child.setVisible(true);
                 } else {
+                    child.setData(itemIndex, null);
                     child.setVisible(false);
                 }
             }
         }
-        //}
     }
 
     protected void updateVirtualContentSize() {
@@ -435,7 +424,16 @@ public class HList<T> extends HWheel implements List<T> {
     }
 
     public T setItem(final int index, T item) {
-       return mData.set(index, item);
+        return mData.set(index, item);
+    }
+
+    public float getOOBTraction() {
+        return mOOBTraction;
+    }
+
+    public HList setOOBTraction(final float OOBTraction) {
+        mOOBTraction = OOBTraction;
+        return this;
     }
 
     @Override

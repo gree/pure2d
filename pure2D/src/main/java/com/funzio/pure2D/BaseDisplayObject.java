@@ -308,9 +308,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
     @Override
     public boolean update(final int deltaTime) {
-        // check constraints first ,only apply it when size or parent changed
+        // check constraints first, only apply it when size or parent changed
         if (mUIConstraint != null && (mInvalidateFlags & (SIZE | PARENT | PARENT_BOUNDS)) != 0) {
-            mUIConstraint.apply(this, mParent);
+            mUIConstraint.apply(this, getParent());
         }
 
         // update the manipulators if there's any
@@ -366,12 +366,14 @@ public abstract class BaseDisplayObject implements DisplayObject {
     /**
      * @hide
      */
+    @Deprecated
     final public void invalidate() {
         // invalidate generally, NOT!
         // mInvalidateFlags = ALL;
 
-        if (mParent != null) {
-            mParent.invalidate(CHILDREN);
+        final Parentable parent = getParent();
+        if (parent != null) {
+            parent.invalidate(CHILDREN);
         }
     }
 
@@ -381,8 +383,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
     public void invalidate(final int flags) {
         mInvalidateFlags |= flags;
 
-        if (mParent != null) {
-            mParent.invalidate(CHILDREN);
+        final Parentable parent = getParent();
+        if (parent != null) {
+            parent.invalidate(CHILDREN);
         }
     }
 
@@ -443,12 +446,24 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param position the position to set
      */
     public void setPosition(final float x, final float y) {
+        // diff check
+        if (mPosition.x == x && mPosition.y == y) {
+            return;
+        }
+
         mPosition.x = x;
         mPosition.y = y;
         invalidate(POSITION);
+
+
     }
 
     public void setX(final float x) {
+        // diff check
+        if (mPosition.x == x) {
+            return;
+        }
+
         mPosition.x = x;
         invalidate(POSITION);
     }
@@ -458,6 +473,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setY(final float y) {
+        // diff check
+        if (mPosition.y == y) {
+            return;
+        }
+
         mPosition.y = y;
         invalidate(POSITION);
     }
@@ -472,6 +492,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @see #setAlphaTestEnabled(boolean)
      */
     public void setZ(final float z) {
+        // diff check
+        if (mZ == z) {
+            return;
+        }
+
         mZ = z;
         invalidate(POSITION);
     }
@@ -481,15 +506,11 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void moveTo(final float x, final float y) {
-        mPosition.x = x;
-        mPosition.y = y;
-        invalidate(POSITION);
+        setPosition(x, y);
     }
 
     public void move(final float dx, final float dy) {
-        mPosition.x += dx;
-        mPosition.y += dy;
-        invalidate(POSITION);
+        setPosition(mPosition.x + dx, mPosition.y + dy);
     }
 
     /**
@@ -538,15 +559,20 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setPivot(final PointF pivot) {
-        mPivot.x = pivot.x;
-        mPivot.y = pivot.y;
-
-        invalidate(PIVOT);
+        setPivot(pivot.x, pivot.y);
     }
 
     public void setPivot(final float x, final float y) {
         mPivot.x = x;
         mPivot.y = y;
+
+        // check center
+        if (mPivotAtCenter) {
+            if (Math.abs(x - mSize.x * 0.5f) >= 1 || Math.abs(y - mSize.y * 0.5f) >= 1) {
+                // no longer center
+                mPivotAtCenter = false;
+            }
+        }
 
         invalidate(PIVOT);
     }
@@ -559,6 +585,10 @@ public abstract class BaseDisplayObject implements DisplayObject {
         mPivotAtCenter = true;
 
         invalidate(PIVOT);
+    }
+
+    public boolean isPivotAtCenter() {
+        return mPivotAtCenter;
     }
 
     /**
@@ -739,9 +769,9 @@ public abstract class BaseDisplayObject implements DisplayObject {
         }
 
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof Displayable) {
-            final Displayable parent = (Displayable) mParent;
-            final GLColor parentColor = parent.getInheritedColor();
+        final Parentable parent = getParent();
+        if (parent instanceof Displayable) {
+            final GLColor parentColor = ((Displayable) parent).getInheritedColor();
             if (parentColor != null) {
                 mBlendColor.multiply(parentColor);
             }
@@ -750,13 +780,16 @@ public abstract class BaseDisplayObject implements DisplayObject {
         return mBlendColor;
     }
 
-    final public BlendFunc getInheritedBlendFunc() {
+    public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
-        } else if (mParent != null && mParent instanceof Displayable) {
-            return ((Displayable) mParent).getInheritedBlendFunc();
         } else {
-            return null;
+            final Parentable parent = getParent();
+            if (parent instanceof Displayable) {
+                return ((Displayable) parent).getInheritedBlendFunc();
+            } else {
+                return null;
+            }
         }
     }
 
@@ -948,12 +981,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
     final public void localToGlobal(final PointF local, final PointF result) {
         result.x = (local == null ? 0 : local.x) + mPosition.x;
         result.y = (local == null ? 0 : local.y) + mPosition.y;
-        if (mParent != null && !(mParent instanceof Scene)) {
-            mParent.localToGlobal(result, result);
+        final Parentable parent = getParent();
+        if (parent != null && !(parent instanceof Scene)) {
+            parent.localToGlobal(result, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (parent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) parent).getOrigin();
                 result.x -= parentOrigin.x;
                 result.y -= parentOrigin.y;
             }
@@ -967,12 +1001,13 @@ public abstract class BaseDisplayObject implements DisplayObject {
      * @param result
      */
     final public void globalToLocal(final PointF global, final PointF result) {
-        if (mParent != null && !(mParent instanceof Scene)) {
-            mParent.globalToLocal(global, result);
+        final Parentable parent = getParent();
+        if (parent != null && !(parent instanceof Scene)) {
+            parent.globalToLocal(global, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (parent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) parent).getOrigin();
                 result.x += parentOrigin.x;
                 result.y += parentOrigin.y;
             }
@@ -1101,7 +1136,8 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     protected Matrix getParentMatrix() {
-        return mParent != null ? mParent.getMatrix() : null;
+        final Parentable parent = getParent();
+        return parent != null ? parent.getMatrix() : null;
     }
 
     /**
@@ -1234,7 +1270,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
     }
 
     public void setId(final String id) {
-        if (mParent != null) {
+        if (getParent() != null) {
             throw new Pure2DException("Object is already contained. ID cannot be changed!");
         }
 
@@ -1292,7 +1328,7 @@ public abstract class BaseDisplayObject implements DisplayObject {
 
         final String color = xmlParser.getAttributeValue(null, ATT_COLOR);
         if (color != null) {
-            mColor = new GLColor(Color.parseColor(color));
+            mColor = new GLColor(Color.parseColor(manager.evalString(color)));
         }
 
         final String alpha = xmlParser.getAttributeValue(null, ATT_ALPHA);

@@ -154,6 +154,7 @@
         android:id="@+id/btn_3d"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="onClickButton"
         android:text="@string/simple_3d" />
 
@@ -161,6 +162,7 @@
         android:id="@+id/btn_loaders"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="onClickButton"
         android:text="@string/loaders" />
 

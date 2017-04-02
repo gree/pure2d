@@ -114,7 +114,7 @@ public abstract class URLTask implements IntentTask {
                     final String cookies = conn.getHeaderField("Set-Cookie");
                     if (!TextUtils.isEmpty(cookies)) {
                         if (properties == null) {
-                            properties = new HashMap<>();
+                            properties = new HashMap<String, String>();
                         }
                         properties.put("Cookie", cookies); // add cookie
                     }

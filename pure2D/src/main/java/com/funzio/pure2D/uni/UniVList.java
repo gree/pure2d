@@ -20,21 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * ****************************************************************************
- *
  */
 
 
 /**
- * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers
+ * This Vertical List is a UI Component that can handle LARGE amount of data by recycling its ItemRenderers.
+ * This is a clone from VList but derives from UniGroup instead for batch drawing.
  */
-package com.funzio.pure2D.containers;
+package com.funzio.pure2D.uni;
 
 import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.animators.Animator;
+import com.funzio.pure2D.containers.Alignment;
+import com.funzio.pure2D.containers.List;
 import com.funzio.pure2D.containers.renderers.ItemRenderer;
 
 import java.util.ArrayList;
@@ -44,8 +46,8 @@ import java.util.ArrayList;
  *
  * @author long
  */
-public class VList<T> extends VWheel implements List<T> {
-    protected static final String TAG = VList.class.getSimpleName();
+public class UniVList<T> extends UniVWheel implements List<T> {
+    protected static final String TAG = UniVList.class.getSimpleName();
 
     protected Class<? extends ItemRenderer<T>> mItemRenderer;
     protected java.util.List<T> mData;
@@ -59,7 +61,7 @@ public class VList<T> extends VWheel implements List<T> {
     private boolean mChildrenNumInvalidated = false;
     protected float mOOBTraction = SCROLL_OOB_FRICTION;
 
-    public VList() {
+    public UniVList() {
         super();
 
         // default values
@@ -174,7 +176,7 @@ public class VList<T> extends VWheel implements List<T> {
                     final ItemRenderer<T> child = mItemRenderer.newInstance();
                     // auto set size
                     child.setSize(mSize.x, child.getHeight());
-                    addChild((DisplayObject) child);
+                    addChild((StackableObject) child);
                 } catch (InstantiationException e) {
                     Log.e(TAG, "", e);
                     break;
@@ -306,7 +308,7 @@ public class VList<T> extends VWheel implements List<T> {
     }
 
     @Override
-    protected float getChildHeight(DisplayObject child) {
+    protected float getChildHeight(StackableObject child) {
         // complete override parent's and assume all the cells are equal
         return Math.max(mItemSize.y, mMinCellSize);
     }
@@ -431,7 +433,7 @@ public class VList<T> extends VWheel implements List<T> {
         return mOOBTraction;
     }
 
-    public VList setOOBTraction(final float OOBTraction) {
+    public UniVList setOOBTraction(final float OOBTraction) {
         mOOBTraction = OOBTraction;
         return this;
     }

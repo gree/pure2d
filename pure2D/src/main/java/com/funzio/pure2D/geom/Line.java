@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,13 +18,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.geom;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 /**
  * @author long
@@ -69,7 +70,7 @@ public class Line {
 
     /**
      * Detect if 2 line segments intersect. Copied from java.awt.geom.Line2D
-     * 
+     *
      * @param x1
      * @param y1
      * @param x2
@@ -138,8 +139,25 @@ public class Line {
     }
 
     /**
+     * Detect if a line intersects with a Rectangle
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param rect
+     * @return
+     */
+    public static boolean lineIntersectsRect(final float x1, final float y1, final float x2, final float y2, final RectF rect) {
+        return linesIntersect(x1, y1, x2, y2, rect.left, rect.top, rect.left, rect.bottom)
+                || linesIntersect(x1, y1, x2, y2, rect.right, rect.top, rect.right, rect.bottom)
+                || linesIntersect(x1, y1, x2, y2, rect.left, rect.top, rect.right, rect.top)
+                || linesIntersect(x1, y1, x2, y2, rect.left, rect.bottom, rect.right, rect.bottom);
+    }
+
+    /**
      * Find the parallel line that is shifted "delta" units from the given line
-     * 
+     *
      * @param p1
      * @param p2
      * @param delta
@@ -161,7 +179,7 @@ public class Line {
 
     /**
      * Find the parallel line that is shifted "delta" units from the given line and angle
-     * 
+     *
      * @param p1
      * @param p2
      * @param angle

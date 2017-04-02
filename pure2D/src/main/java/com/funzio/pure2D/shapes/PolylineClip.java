@@ -34,6 +34,9 @@ import com.funzio.pure2D.atlas.AtlasFrameSet;
  */
 public class PolylineClip extends Polyline implements Playable {
     private int mLoop = LOOP_REPEAT;
+    private int mLoopCount = -1; // forever
+    private int mTripCount = 0;
+
     private boolean mPlaying = true;
     private int mCurrentFrame = 0;
     private int mPreviousFrame = -1;
@@ -53,7 +56,13 @@ public class PolylineClip extends Polyline implements Playable {
     }
 
     public void setAtlasFrameSet(final AtlasFrameSet frameSet) {
+        // diff check
+        if (mFrameSet == frameSet) {
+            return;
+        }
+
         mFrameSet = frameSet;
+        mTripCount = 0;
 
         if (frameSet != null) {
             mNumFrames = frameSet.getNumFrames();
@@ -63,6 +72,8 @@ public class PolylineClip extends Polyline implements Playable {
             if (loopMode >= 0) {
                 setLoop(loopMode);
             }
+            setLoopCount(frameSet.getLoopCount());
+
 
             // start from first frame
             mCurrentFrame = 0;
@@ -115,13 +126,38 @@ public class PolylineClip extends Polyline implements Playable {
                 mCurrentFrame += frames;
                 if (mLoop == LOOP_REPEAT) {
                     if (mCurrentFrame >= mNumFrames) {
-                        mCurrentFrame %= mNumFrames;
+                        mTripCount++;
+                        if (mLoopCount >= 0 && mTripCount > mLoopCount) {
+                            stopAt(mNumFrames - 1);
+
+                            // callback
+                            onClipEnd(mFrameSet);
+                        } else {
+                            mCurrentFrame %= mNumFrames;
+
+                            // callback
+                            onClipLoop(mFrameSet);
+                        }
                     }
                 } else if (mLoop == LOOP_REVERSE) {
                     final int cycle = (mNumFrames - 1) * 2;
                     mCurrentFrame = mAccumulatedFrames % cycle;
                     if (mCurrentFrame >= mNumFrames) {
                         mCurrentFrame = cycle - mCurrentFrame;
+                    }
+
+                    final int trips = mAccumulatedFrames / mNumFrames;
+                    if (trips > mTripCount) {
+                        mTripCount = trips;
+                        if (mLoopCount >= 0 && mTripCount > mLoopCount) {
+                            stop();
+
+                            // callback
+                            onClipEnd(mFrameSet);
+                        } else {
+                            // callback
+                            onClipLoop(mFrameSet);
+                        }
                     }
                 } else {
                     if (mCurrentFrame >= mNumFrames) {
@@ -141,6 +177,7 @@ public class PolylineClip extends Polyline implements Playable {
 
     public void play() {
         mPlaying = true;
+        mTripCount = 0;
     }
 
     public void playAt(final int frame) {
@@ -173,6 +210,15 @@ public class PolylineClip extends Polyline implements Playable {
         mLoop = type;
     }
 
+    public int getLoopCount() {
+        return mLoopCount;
+    }
+
+    public PolylineClip setLoopCount(final int loopCount) {
+        mLoopCount = loopCount;
+        return this;
+    }
+
     /**
      * @return the currentFrame
      */
@@ -192,6 +238,10 @@ public class PolylineClip extends Polyline implements Playable {
     }
 
     protected void onClipEnd(final AtlasFrameSet frameSet) {
+        // TODO
+    }
+
+    protected void onClipLoop(final AtlasFrameSet frameSet) {
         // TODO
     }
 }

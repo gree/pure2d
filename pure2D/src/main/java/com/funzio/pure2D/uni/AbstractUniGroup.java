@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,14 +18,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
-/**
- * 
  */
-package com.funzio.pure2D.uni;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+package com.funzio.pure2D.uni;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -33,11 +28,8 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import com.funzio.pure2D.BaseDisplayObject;
 import com.funzio.pure2D.Cacheable;
-import com.funzio.pure2D.Displayable;
 import com.funzio.pure2D.Parentable;
 import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
@@ -46,7 +38,6 @@ import com.funzio.pure2D.Touchable;
 import com.funzio.pure2D.containers.Container;
 import com.funzio.pure2D.exceptions.Pure2DException;
 import com.funzio.pure2D.geom.Rectangle;
-import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.ColorBuffer;
 import com.funzio.pure2D.gl.gl10.FrameBuffer;
 import com.funzio.pure2D.gl.gl10.GLState;
@@ -55,6 +46,11 @@ import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.shapes.DummyDrawer;
 import com.funzio.pure2D.ui.UIManager;
+
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author long
@@ -175,7 +171,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
             }
         }
 
-        setNumDrawingChildren(numDrawingChildren);
+        if (mNumDrawingChildren != numDrawingChildren) {
+            setNumDrawingChildren(numDrawingChildren);
+        }
 
         // diff check
         if (sx != mSize.x || sy != mSize.y) {
@@ -218,6 +216,12 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
         // NOTE: this clipping method doesn't work for Rotation!!!
         if (mClippingEnabled) {
+            if ((mInvalidateFlags & BOUNDS) != 0) {
+                // hmm we need this
+                updateBounds();
+                //mInvalidateFlags &= ~BOUNDS;
+            }
+
             mOriginalScissorEnabled = glState.isScissorTestEnabled();
             if (mOriginalScissorEnabled) {
                 // backup the current scissor
@@ -385,24 +389,14 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         if (mTextureLoaded) {
             onTextureLoaded(texture);
         }
-    }
 
-    @Override
-    public GLColor getInheritedColor() {
-        final GLColor color = super.getInheritedColor();
-
-        if (mParent == null) {
-            // multiply by parent's attributes
-            if (mUniParent != null && mUniParent instanceof Displayable) {
-                final Displayable parent = (Displayable) mUniParent;
-                final GLColor parentColor = parent.getInheritedColor();
-                if (parentColor != null) {
-                    color.multiply(parentColor);
-                }
+        // apply texture to children as well
+        for (int i = 0; i < mNumChildren; i++) {
+            final StackableObject child = mChildren.get(i);
+            if (child instanceof AbstractUniGroup) {
+                ((AbstractUniGroup) child).setTexture(texture);
             }
         }
-
-        return color;
     }
 
     @Override
@@ -420,18 +414,9 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
         return super.update(deltaTime);
     }
 
-    @Override
-    public final void invalidate(final int flags) {
-        super.invalidate(flags);
-
-        if (mUniParent != null) {
-            mUniParent.invalidate(CHILDREN);
-        }
-    }
-
     /**
      * Test to see if a child can be seen in this container.
-     * 
+     *
      * @param child
      * @return true if at least one of the corners of the child is in this container's rect.
      */
@@ -623,7 +608,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
-     * 
+     *
      * @param child1
      * @param child2
      * @return
@@ -649,7 +634,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Swap the indeces of 2 children. This can be used for display ordering.
-     * 
+     *
      * @param index1
      * @param index2
      * @return
@@ -715,7 +700,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Get the number of children, not including grand children
-     * 
+     *
      * @see #getNumGrandChildren()
      */
     public int getNumChildren() {
@@ -724,7 +709,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Get number of children including grand children
-     * 
+     *
      * @see #getNumChildren()
      */
     public int getNumGrandChildren() {
@@ -794,7 +779,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Enable/Disable Bound-clipping. Note this does not work for rotation.
-     * 
+     *
      * @param clippingEnabled
      */
     public void setClippingEnabled(final boolean clippingEnabled) {
@@ -809,7 +794,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Enable/disable cache. Use this when there are many static children to improve performance. This also clips the children inside the bounds.
-     * 
+     *
      * @param cacheEnabled
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
@@ -829,7 +814,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * Set how to you want to cache
-     * 
+     *
      * @param cachePolicy
      * @see #Cacheable
      */
@@ -1001,12 +986,8 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     @Override
     final public Parentable getParent() {
+        // IMPORTANT!
         return mParent != null ? mParent : mUniParent;
-    }
-
-    @Override
-    protected Matrix getParentMatrix() {
-        return mParent != null ? mParent.getMatrix() : (mUniParent != null ? mUniParent.getMatrix() : null);
     }
 
     /**
@@ -1019,7 +1000,7 @@ abstract public class AbstractUniGroup extends BaseDisplayObject implements UniC
 
     /**
      * for Debugging
-     * 
+     *
      * @return a string that has all the children in Tree format
      */
     @Override

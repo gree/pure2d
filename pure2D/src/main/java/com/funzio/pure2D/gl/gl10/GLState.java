@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,14 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.gl.gl10;
-
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLU;
@@ -39,6 +36,9 @@ import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 /**
  * @author long
@@ -67,7 +67,7 @@ public class GLState {
     private boolean mAlphaTestEnabled = false;
     private GLColor mColor;
     // blending
-    private BlendFunc mDefaultBlendFunc = BlendFunc.getInterpolate();
+    private BlendFunc mDefaultBlendFunc = BlendModes.DEFAULT_FUNC;
     private BlendFunc mBlendFunc;
     // masking
     private Maskable mMask;
@@ -149,7 +149,7 @@ public class GLState {
 
     /**
      * Set Projection mode
-     * 
+     *
      * @param projection
      * @param right
      * @param top
@@ -549,21 +549,20 @@ public class GLState {
 
     /**
      * For internal use only
-     * 
-     * @hide
+     *
      * @param camera the camera to set
+     * @hide
      */
     // public void setCamera(final Camera camera) {
     // mCamera = camera;
     // }
-
     public Maskable getMask() {
         return mMask;
     }
 
     /**
      * This does not work like it's supposed to yet :(
-     * 
+     *
      * @param mask
      */
     @Deprecated
@@ -647,9 +646,9 @@ public class GLState {
 
     /**
      * For internal use only
-     * 
-     * @hide
+     *
      * @param textureManager
+     * @hide
      */
     public void setTextureManager(final TextureManager textureManager) {
         mTextureManager = textureManager;

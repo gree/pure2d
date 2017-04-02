@@ -83,6 +83,7 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
 
     /**
      * Override this for the actual animation
+     *
      * @param pushing
      */
     protected void animateIn(final boolean pushing) {
@@ -100,6 +101,7 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
 
     /**
      * Override this for the actual animation
+     *
      * @param pushing
      */
     protected void animateOut(final boolean pushing) {
@@ -149,6 +151,16 @@ public class Page extends DisplayGroup implements Pageable, AnimatorListener {
     public void onAnimationUpdate(final Animator animator, final float value) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onBroughtUp() {
+        // TODO
+    }
+
+    @Override
+    public void onBroughtDown() {
+        // TODO
     }
 
     @Override

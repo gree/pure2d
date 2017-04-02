@@ -25,7 +25,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Displayable;
 import com.funzio.pure2D.InvalidateFlags;
 import com.funzio.pure2D.Parentable;
@@ -86,7 +85,8 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     protected float mAlpha = 1;
 
     protected boolean mHasOrigin = false;
-    protected boolean mOriginAtCenter = false;
+    private boolean mOriginAtCenter = false;
+    private boolean mPivotAtCenter = false;
 
     protected ArrayList<Manipulator> mManipulators;
     protected int mNumManipulators = 0;
@@ -149,6 +149,15 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
             mInvalidateFlags |= VERTICES;
         }
 
+        updateChildren(deltaTime);
+
+        // validate transform AFTER updateMatrix()
+        mInvalidateFlags &= ~(BOUNDS);
+
+        return mNumManipulators > 0;
+    }
+
+    protected void updateChildren(final int deltaTime) {
         // apply to the vertices
         if ((mInvalidateFlags & VERTICES) != 0) {
             // check visibility
@@ -160,16 +169,12 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
                 mInvalidateFlags &= ~VERTICES;
             }
         }
-
-        // validate transform AFTER updateMatrix()
-        mInvalidateFlags &= ~(BOUNDS);
-
-        return mNumManipulators > 0;
     }
 
     /**
      * @hide
      */
+    @Deprecated
     final public void invalidate() {
         // invalidate generally, NOT!
         // mInvalidateFlags = ALL;
@@ -258,12 +263,22 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
      * @param position the position to set
      */
     public void setPosition(final float x, final float y) {
+        // diff check
+        if (mPosition.x == x && mPosition.y == y) {
+            return;
+        }
+
         mPosition.x = x;
         mPosition.y = y;
         invalidate(POSITION);
     }
 
     public void setX(final float x) {
+        // diff check
+        if (mPosition.x == x) {
+            return;
+        }
+
         mPosition.x = x;
         invalidate(POSITION);
     }
@@ -273,6 +288,11 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     public void setY(final float y) {
+        // diff check
+        if (mPosition.y == y) {
+            return;
+        }
+
         mPosition.y = y;
         invalidate(POSITION);
     }
@@ -287,6 +307,11 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
      * @see #setAlphaTestEnabled(boolean)
      */
     public void setZ(final float z) {
+        // diff check
+        if (mZ == z) {
+            return;
+        }
+
         mZ = z;
         invalidate(POSITION);
     }
@@ -296,15 +321,11 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     public void moveTo(final float x, final float y) {
-        mPosition.x = x;
-        mPosition.y = y;
-        invalidate(POSITION);
+        setPosition(x, y);
     }
 
     public void move(final float dx, final float dy) {
-        mPosition.x += dx;
-        mPosition.y += dy;
-        invalidate(POSITION);
+        setPosition(mPosition.x + dx, mPosition.y + dy);
     }
 
     /**
@@ -353,15 +374,20 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     }
 
     public void setPivot(final PointF pivot) {
-        mPivot.x = pivot.x;
-        mPivot.y = pivot.y;
-
-        invalidate(PIVOT);
+        setPivot(pivot.x, pivot.y);
     }
 
     public void setPivot(final float x, final float y) {
         mPivot.x = x;
         mPivot.y = y;
+
+        // check center
+        if (mPivotAtCenter) {
+            if (Math.abs(x - mSize.x * 0.5f) >= 1 || Math.abs(y - mSize.y * 0.5f) >= 1) {
+                // no longer center
+                mPivotAtCenter = false;
+            }
+        }
 
         invalidate(PIVOT);
     }
@@ -370,7 +396,14 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         mPivot.x = mSize.x * 0.5f;
         mPivot.y = mSize.y * 0.5f;
 
+        // flag
+        mPivotAtCenter = true;
+
         invalidate(PIVOT);
+    }
+
+    public boolean isPivotAtCenter() {
+        return mPivotAtCenter;
     }
 
     /**
@@ -405,6 +438,10 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         if (mOriginAtCenter) {
             // auto center
             setOrigin(w * 0.5f, h * 0.5f);
+        }
+
+        if (mPivotAtCenter) {
+            setPivot(w * 0.5f, h * 0.5f);
         }
 
         invalidate(SIZE);
@@ -498,7 +535,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
     /**
      * @return the final color which takes parent's color and alpha into account
      */
-    final public GLColor getInheritedColor() {
+    public GLColor getInheritedColor() {
         if (BlendModes.isInterpolate(mBlendFunc)) {
             if (mBlendColor == null) {
                 // init
@@ -526,7 +563,7 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         }
 
         // multiply by parent's attributes
-        if (mParent != null && mParent instanceof Displayable) {
+        if (mParent instanceof Displayable) {
             final Displayable parent = (Displayable) mParent;
             final GLColor parentColor = parent.getInheritedColor();
             if (parentColor != null) {
@@ -537,10 +574,10 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         return mBlendColor;
     }
 
-    final public BlendFunc getInheritedBlendFunc() {
+    public BlendFunc getInheritedBlendFunc() {
         if (mBlendFunc != null) {
             return mBlendFunc;
-        } else if (mParent != null && mParent instanceof Displayable) {
+        } else if (mParent instanceof Displayable) {
             return ((Displayable) mParent).getInheritedBlendFunc();
         } else {
             return null;
@@ -665,9 +702,9 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         if (mParent != null && !(mParent instanceof Scene)) {
             mParent.localToGlobal(result, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (mParent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) mParent).getOrigin();
                 result.x -= parentOrigin.x;
                 result.y -= parentOrigin.y;
             }
@@ -684,9 +721,9 @@ public abstract class UniObject implements StackableObject, InvalidateFlags {
         if (mParent != null && !(mParent instanceof Scene)) {
             mParent.globalToLocal(global, result);
 
-            if (mParent instanceof DisplayObject) {
+            if (mParent instanceof Displayable) {
                 // apply parent's origin
-                final PointF parentOrigin = ((DisplayObject) mParent).getOrigin();
+                final PointF parentOrigin = ((Displayable) mParent).getOrigin();
                 result.x += parentOrigin.x;
                 result.y += parentOrigin.y;
             }

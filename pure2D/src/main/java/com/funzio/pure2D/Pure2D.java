@@ -157,10 +157,17 @@ public class Pure2D {
         DEBUG_VERTICES[1] = vertices[1];
         DEBUG_VERTICES[2] = vertices[2];
         DEBUG_VERTICES[3] = vertices[3];
-        DEBUG_VERTICES[4] = vertices[4];
-        DEBUG_VERTICES[5] = vertices[5];
-        DEBUG_VERTICES[6] = vertices[6];
-        DEBUG_VERTICES[7] = vertices[7];
+        if (vertices.length >= 8) {
+            DEBUG_VERTICES[4] = vertices[4];
+            DEBUG_VERTICES[5] = vertices[5];
+            DEBUG_VERTICES[6] = vertices[6];
+            DEBUG_VERTICES[7] = vertices[7];
+        } else {
+            DEBUG_VERTICES[4] = vertices[0];
+            DEBUG_VERTICES[5] = vertices[1];
+            DEBUG_VERTICES[6] = vertices[2];
+            DEBUG_VERTICES[7] = vertices[3];
+        }
 
         DEBUG_VERTEX_BUFFER.setValues(DEBUG_VERTICES);
 

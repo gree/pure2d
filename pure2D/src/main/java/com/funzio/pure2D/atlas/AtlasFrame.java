@@ -1,16 +1,16 @@
-/*******************************************************************************
+/**
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,9 +18,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package com.funzio.pure2D.atlas;
 
@@ -114,7 +114,7 @@ public class AtlasFrame {
         }
     }
 
-    protected void rotateCCW() {
+    public void rotateCCW() {
         // start from TL
         final float x0 = mTextureCoords[0];
         final float y0 = mTextureCoords[1];
@@ -138,7 +138,7 @@ public class AtlasFrame {
         mSize.y = temp;
     }
 
-    protected void rotateCW() {
+    public void rotateCW() {
         // start from TR
         final float x2 = mTextureCoords[4];
         final float y2 = mTextureCoords[5];
@@ -160,6 +160,46 @@ public class AtlasFrame {
         final float temp = mSize.x;
         mSize.x = mSize.y;
         mSize.y = temp;
+    }
+
+    public void flipHorizontal() {
+        float x0 = mTextureCoords[0];
+        float y0 = mTextureCoords[1];
+        // TL -> TR
+        mTextureCoords[0] = mTextureCoords[4];
+        mTextureCoords[1] = mTextureCoords[5];
+        // TR -> TL
+        mTextureCoords[4] = x0;
+        mTextureCoords[5] = y0;
+
+        x0 = mTextureCoords[2];
+        y0 = mTextureCoords[3];
+        // BL -> BR
+        mTextureCoords[2] = mTextureCoords[6];
+        mTextureCoords[3] = mTextureCoords[7];
+        // BR -> BL
+        mTextureCoords[6] = x0;
+        mTextureCoords[7] = y0;
+    }
+
+    public void flipVertical() {
+        float x0 = mTextureCoords[0];
+        float y0 = mTextureCoords[1];
+        // TL -> BL
+        mTextureCoords[0] = mTextureCoords[2];
+        mTextureCoords[1] = mTextureCoords[3];
+        // BL -> TL
+        mTextureCoords[2] = x0;
+        mTextureCoords[3] = y0;
+
+        x0 = mTextureCoords[4];
+        y0 = mTextureCoords[5];
+        // TR -> BR
+        mTextureCoords[4] = mTextureCoords[6];
+        mTextureCoords[5] = mTextureCoords[7];
+        // BR -> TR
+        mTextureCoords[6] = x0;
+        mTextureCoords[7] = y0;
     }
 
     public void setRect(final RectF rect) {
@@ -223,5 +263,20 @@ public class AtlasFrame {
     @TargetApi(14)
     public String toString() {
         return String.format("AtlasFrame( %s, %s )", mName, mRect.toShortString());
+    }
+
+    public AtlasFrame clone() {
+        AtlasFrame frame;
+        if (mTexture != null) {
+            frame = new AtlasFrame(mTexture, mIndex, mName, mRect);
+        } else {
+            frame = new AtlasFrame(mAtlas, mIndex, mName, mRect);
+        }
+
+        if (mOffset != null) {
+            frame.mOffset = new PointF(mOffset.x, mOffset.y);
+        }
+
+        return frame;
     }
 }

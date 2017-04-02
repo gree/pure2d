@@ -55,6 +55,10 @@ public interface Pageable extends DisplayObject {
 
     public boolean isModal();
 
+    public void onBroughtUp();
+
+    public void onBroughtDown();
+
     public boolean onKeyDown(final int keyCode, final KeyEvent event);
 
     public boolean onKeyUp(final int keyCode, final KeyEvent event);

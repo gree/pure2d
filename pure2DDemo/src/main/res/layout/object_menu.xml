@@ -38,6 +38,7 @@
         android:id="@+id/btn_lwf_character"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="onClickButton"
         android:text="@string/lwf_character" />
 
@@ -45,6 +46,7 @@
         android:id="@+id/btn_lwf_cinematic"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="onClickButton"
         android:text="@string/lwf_cinematic" />
 

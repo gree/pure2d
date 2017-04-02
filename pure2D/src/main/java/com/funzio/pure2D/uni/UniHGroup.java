@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,42 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
-/**
- * 
- */
-package com.funzio.pure2D.containers;
 
-import java.util.ArrayList;
+package com.funzio.pure2D.uni;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import com.funzio.pure2D.DisplayObject;
 import com.funzio.pure2D.Scene;
+import com.funzio.pure2D.StackableObject;
 import com.funzio.pure2D.Touchable;
+import com.funzio.pure2D.containers.Alignment;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.ui.UIManager;
 import com.funzio.pure2D.ui.UIObject;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+
 /**
  * @author long
  */
-public class VGroup extends LinearGroup implements UIObject {
-
+public class UniHGroup extends UniLinearGroup implements UIObject {
     // xml attributes
     protected static final String ATT_SWIPE_ENABLED = "swipeEnabled";
-    protected static final String ATT_REVERSED = "reversed";
 
     protected PointF mContentSize = new PointF();
     protected PointF mScrollMax = new PointF();
 
     private int mStartIndex = 0;
-    private float mStartY = 0;
+    private float mStartX = 0;
 
-    // swiping
     protected boolean mSwipeEnabled = false;
     protected float mSwipeMinThreshold = 0;
     protected boolean mSwiping = false;
@@ -63,21 +60,18 @@ public class VGroup extends LinearGroup implements UIObject {
     private float mAnchoredScroll = -1;
     private int mSwipePointerID = -1;
 
-    // positive orientation should be true by default
-    protected boolean mPositiveOrientation = true;
-
-    public VGroup() {
+    public UniHGroup() {
         super();
     }
 
     private void findStartIndex() {
-        mStartY = mStartIndex = 0;
-        if (mContentSize.y <= 0) {
+        mStartX = mStartIndex = 0;
+        if (mContentSize.x <= 0) {
             return;
         }
 
-        float offset = mScrollPosition.y % mContentSize.y; // needs to be rounded up?
-        offset += (offset < 0) ? mContentSize.y : 0;
+        float offset = mScrollPosition.x % mContentSize.x; // needs to be rounded up?
+        offset += (offset < 0) ? mContentSize.x : 0;
         // easy case
         if (offset == 0) {
             return;
@@ -87,14 +81,14 @@ public class VGroup extends LinearGroup implements UIObject {
         for (int i = 0; i < mNumChildren; i++) {
             if (offset <= itemPos) {
                 mStartIndex = i;
-                mStartY = itemPos - offset;
+                mStartX = itemPos - offset;
                 return;
             }
             if (i == mNumChildren - 1) {
-                mStartY = mContentSize.y - offset;
-                // Log.v("long", ">>>i: " + i + " mStartIndex: " + mStartIndex + " mStartY: " + mStartY + " offset: " + offset + " itemPos: " + itemPos);
+                mStartX = mContentSize.x - offset;
             } else {
-                itemPos += getChildHeight(mChildren.get(i)) + mGap;
+
+                itemPos += getChildWidth(mChildren.get(i)) + mGap;
             }
         }
     }
@@ -102,9 +96,10 @@ public class VGroup extends LinearGroup implements UIObject {
     protected void updateContentSize() {
         mContentSize.x = mContentSize.y = 0;
         for (int i = 0; i < mNumChildren; i++) {
-            final PointF childSize = mChildren.get(i).getSize();
-            mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
-            mContentSize.y += getChildHeight(mChildren.get(i)) + mGap;
+            final StackableObject child = mChildren.get(i);
+            final PointF childSize = child.getSize();
+            mContentSize.x += getChildWidth(child) + mGap;
+            mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
         }
 
         // update scroll max
@@ -117,13 +112,13 @@ public class VGroup extends LinearGroup implements UIObject {
         return mStartIndex;
     }
 
-    public float getStartY() {
-        return mStartY;
+    public float getStartX() {
+        return mStartX;
     }
 
     @Override
-    public void scrollTo(final DisplayObject child) {
-        mScrollPosition.y = child.getPosition().y;
+    public void scrollTo(final StackableObject child) {
+        mScrollPosition.x = child.getPosition().x;
 
         // reposition the children
         invalidateChildrenPosition();
@@ -138,22 +133,22 @@ public class VGroup extends LinearGroup implements UIObject {
             return 0;
         }
 
-        final DisplayObject startChild = getChildAt(mStartIndex);
-        final float y = startChild.getY();
+        final StackableObject startChild = getChildAt(mStartIndex);
+        final float x = startChild.getX();
 
-        if (y < 0) {
+        if (x < 0) {
             if (positive) {
-                return y + (getChildHeight(startChild) + mGap);
+                return x + (getChildWidth(startChild) + mGap);
             } else {
-                return y;
+                return x;
             }
         } else {
             if (positive) {
-                return y;
+                return x;
             } else {
                 int newIndex = mStartIndex == 0 ? mNumChildren - 1 : mStartIndex - 1;
-                final DisplayObject newChild = getChildAt(newIndex);
-                return y - (getChildHeight(newChild) + mGap);
+                final StackableObject newChild = getChildAt(newIndex);
+                return x - (getChildWidth(newChild) + mGap);
             }
         }
     }
@@ -169,7 +164,7 @@ public class VGroup extends LinearGroup implements UIObject {
         }
 
         // draw the children
-        DisplayObject child;
+        StackableObject child;
         final int numChildren = mChildrenDisplayOrder.size();
         for (int i = 0; i < numChildren; i++) {
             child = mChildrenDisplayOrder.get(i);
@@ -181,7 +176,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 }
 
                 // draw frame
-                child.draw(glState);
+                //child.draw(glState);
 
                 // stack the visible child
                 if (mTouchable && child instanceof Touchable && ((Touchable) child).isTouchable()) {
@@ -201,7 +196,7 @@ public class VGroup extends LinearGroup implements UIObject {
         }
 
         // if there's an empty space at the beginning
-        // if (mRepeating && mStartY > mGap) {
+        // if (mRepeating && mStartX > mGap) {
         // // draw the first item to fill the space
         // int index = mStartIndex - 1;
         // if (index < 0) {
@@ -211,7 +206,7 @@ public class VGroup extends LinearGroup implements UIObject {
         // PointF oldPos = child.getPosition();
         // float oldX = oldPos.x;
         // float oldY = oldPos.y;
-        // child.setPosition(oldX, mStartY - child.getSize().y - mGap);
+        // child.setPosition(mStartX - child.getSize().x - mGap, oldY);
         // child.draw(glState);
         // child.setPosition(oldX, oldY);
         // }
@@ -219,15 +214,11 @@ public class VGroup extends LinearGroup implements UIObject {
         return true;
     }
 
-    protected float convertY(final float y, final float size) {
-        return mPositiveOrientation ? y : mSize.y - y - size;
-    }
-
     @Override
     protected void positionChildren() {
-        float nextX = -mScrollPosition.x;
-        float alignedX = 0;
-        DisplayObject child;
+        float nextY = -mScrollPosition.y;
+        float alignedY = 0;
+        StackableObject child;
         PointF childSize;
 
         final int oldStartIndex = mStartIndex;
@@ -237,55 +228,55 @@ public class VGroup extends LinearGroup implements UIObject {
             onStartIndexChange(oldStartIndex);
         }
         if (mRepeating) {
-            float nextY = mStartY;
+            float nextX = mStartX;
             for (int i = 0; i < mNumChildren; i++) {
                 child = mChildren.get((i + mStartIndex) % mNumChildren);
                 childSize = child.getSize();
-                if ((mAlignment & Alignment.HORIZONTAL_CENTER) != 0) {
-                    alignedX = (mSize.x - childSize.x) * 0.5f;
-                } else if ((mAlignment & Alignment.RIGHT) != 0) {
-                    alignedX = (mSize.x - childSize.x);
+                if ((mAlignment & Alignment.VERTICAL_CENTER) != 0) {
+                    alignedY = (mSize.y - childSize.y) * 0.5f;
+                } else if ((mAlignment & Alignment.TOP) != 0) {
+                    alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
-                // find nextY
-                nextY += getChildHeight(child) + mGap;
+                // find nextX
+                nextX += getChildWidth(child) + mGap;
             }
 
-            if (mStartY > mGap) {
+            if (mStartX > mGap) {
                 // draw the first item to fill the space
                 int index = mStartIndex - 1;
                 if (index < 0) {
                     index += mNumChildren;
                 }
                 child = mChildren.get(index);
-                child.setPosition(child.getPosition().x, convertY(mStartY - getChildHeight(child) - mGap, child.getSize().y));
+                child.setPosition(mStartX - getChildWidth(child) - mGap, child.getPosition().y);
             }
         } else {
             // update content size
             updateContentSize();
 
-            float nextY = -mScrollPosition.y;
+            float nextX = -mScrollPosition.x;
             // alignment
-            final float actualHeight = mContentSize.y - (mNumChildren > 0 ? mGap : 0); // remove the extra gap
-            if ((mAlignment & Alignment.VERTICAL_CENTER) > 0) {
-                nextY += (mSize.y - actualHeight) * 0.5f;
-            } else if ((mAlignment & Alignment.TOP) > 0) {
-                nextY += (mSize.y - actualHeight);
+            final float actualWidth = mContentSize.x - (mNumChildren > 0 ? mGap : 0); // remove the extra gap
+            if ((mAlignment & Alignment.HORIZONTAL_CENTER) > 0) {
+                nextX += (mSize.x - actualWidth) * 0.5f;
+            } else if ((mAlignment & Alignment.RIGHT) > 0) {
+                nextX += (mSize.x - actualWidth);
             }
 
             for (int i = 0; i < mNumChildren; i++) {
                 child = mChildren.get(i);
                 childSize = child.getSize();
-                if ((mAlignment & Alignment.HORIZONTAL_CENTER) != 0) {
-                    alignedX = (mSize.x - childSize.x) * 0.5f;
-                } else if ((mAlignment & Alignment.RIGHT) != 0) {
-                    alignedX = (mSize.x - childSize.x);
+                if ((mAlignment & Alignment.VERTICAL_CENTER) != 0) {
+                    alignedY = (mSize.y - childSize.y) * 0.5f;
+                } else if ((mAlignment & Alignment.TOP) != 0) {
+                    alignedY = (mSize.y - childSize.y);
                 }
-                child.setPosition(mOffsetX + nextX + alignedX, mOffsetY + convertY(nextY, childSize.y));
+                child.setPosition(mOffsetX + nextX, mOffsetY + nextY + alignedY);
 
                 // update sizes
-                nextY += getChildHeight(child) + mGap;
+                nextX += getChildWidth(child) + mGap;
             }
         }
     }
@@ -318,10 +309,10 @@ public class VGroup extends LinearGroup implements UIObject {
     // }
 
     @Override
-    protected void onAddedChild(final DisplayObject child) {
+    protected void onAddedChild(final StackableObject child) {
         final PointF childSize = child.getSize();
-        mContentSize.x = childSize.x > mContentSize.x ? childSize.x : mContentSize.x;
-        mContentSize.y += getChildHeight(child) + mGap;
+        mContentSize.x += getChildWidth(child) + mGap;
+        mContentSize.y = childSize.y > mContentSize.y ? childSize.y : mContentSize.y;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
@@ -331,9 +322,9 @@ public class VGroup extends LinearGroup implements UIObject {
     }
 
     @Override
-    protected void onRemovedChild(final DisplayObject child) {
-        //final PointF childSize = child.getSize();
-        mContentSize.y -= getChildHeight(child) + mGap;
+    protected void onRemovedChild(final StackableObject child) {
+        final PointF childSize = child.getSize();
+        mContentSize.x -= getChildWidth(child) + mGap;
 
         // update scroll max
         mScrollMax.x = Math.max(0, mContentSize.x - mSize.x);
@@ -372,37 +363,22 @@ public class VGroup extends LinearGroup implements UIObject {
     }
 
     protected void startSwipe() {
-        mAnchoredScroll = mScrollPosition.y;
+        mAnchoredScroll = mScrollPosition.x;
         mSwiping = true;
     }
 
     protected void stopSwipe() {
         mSwipeAnchor = -1;
-        mSwipePointerID = -1;
         mSwiping = false;
+        mSwipePointerID = -1;
     }
 
     protected void swipe(final float delta) {
-        scrollTo(0, mAnchoredScroll - delta);
+        scrollTo(mAnchoredScroll - delta, 0);
     }
 
     public boolean isSwiping() {
         return mSwiping;
-    }
-
-    public boolean isPositiveOrientation() {
-        return mPositiveOrientation;
-    }
-
-    /**
-     * Change display order of the children
-     * 
-     * @param positiveOrder
-     */
-    public void setPositiveOrientation(final boolean positive) {
-        mPositiveOrientation = positive;
-
-        invalidateChildrenPosition();
     }
 
     @Override
@@ -428,7 +404,7 @@ public class VGroup extends LinearGroup implements UIObject {
                 final PointF global = scene.getTouchedPoint(pointerIndex);
                 if (bounds.contains(global.x, global.y)) {
                     if (!mSwiping) {
-                        mSwipeAnchor = global.y;
+                        mSwipeAnchor = global.x;
                         // keep pointer id
                         mSwipePointerID = event.getPointerId(pointerIndex);
                     }
@@ -440,26 +416,17 @@ public class VGroup extends LinearGroup implements UIObject {
             } else if (action == MotionEvent.ACTION_MOVE) {
                 final int swipePointerIndex = event.findPointerIndex(mSwipePointerID);
                 if (swipePointerIndex >= 0) {
-                    float deltaY = scene.getTouchedPoint(swipePointerIndex).y - mSwipeAnchor;
-                    if (scene.getAxisSystem() == Scene.AXIS_TOP_LEFT) {
-                        // flip
-                        deltaY = -deltaY;
-                    }
-
-                    if (!mPositiveOrientation) {
-                        // flip again
-                        deltaY = -deltaY;
-                    }
+                    final float deltaX = scene.getTouchedPoint(swipePointerIndex).x - mSwipeAnchor;
                     if (mSwipeAnchor >= 0) {
                         if (!mSwiping) {
-                            if (Math.abs(deltaY) >= mSwipeMinThreshold) {
+                            if (Math.abs(deltaX) >= mSwipeMinThreshold) {
                                 // re-anchor
-                                mSwipeAnchor = scene.getTouchedPoint(swipePointerIndex).y;
+                                mSwipeAnchor = scene.getTouchedPoint(swipePointerIndex).x;
 
                                 startSwipe();
                             }
                         } else {
-                            swipe(deltaY);
+                            swipe(deltaX);
                         }
                     }
                 }
@@ -482,7 +449,7 @@ public class VGroup extends LinearGroup implements UIObject {
 
     /**
      * This is called when a touch down
-     * 
+     *
      * @param event
      */
     protected void onTouchDown(final MotionEvent event) {
@@ -498,14 +465,10 @@ public class VGroup extends LinearGroup implements UIObject {
     public void setXMLAttributes(final XmlPullParser xmlParser, final UIManager manager) {
         super.setXMLAttributes(xmlParser, manager);
 
-        final String reversed = xmlParser.getAttributeValue(null, ATT_REVERSED);
-        if (reversed != null) {
-            setPositiveOrientation(!Boolean.valueOf(reversed));
-        }
-
         final String swipeEnabled = xmlParser.getAttributeValue(null, ATT_SWIPE_ENABLED);
         if (swipeEnabled != null) {
             setSwipeEnabled(Boolean.valueOf(swipeEnabled));
         }
     }
+
 }

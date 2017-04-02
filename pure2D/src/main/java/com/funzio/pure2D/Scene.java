@@ -33,6 +33,7 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.view.MotionEvent;
 
 import com.funzio.pure2D.containers.Container;
+import com.funzio.pure2D.gl.GLColor;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 
@@ -42,74 +43,80 @@ import com.funzio.pure2D.gl.gl10.textures.TextureManager;
 public interface Scene extends Renderer, Container {
 
     // projection methods
-    public static final int AXIS_BOTTOM_LEFT = 0; // orthor projection from bottom-left
-    public static final int AXIS_TOP_LEFT = 1; // othor prjection from top-left
-    public static final int PROJECTION_PERSPECTIVE = 2; // perspective projection
+    int AXIS_BOTTOM_LEFT = 0; // orthor projection from bottom-left
+    int AXIS_TOP_LEFT = 1; // othor prjection from top-left
+    int PROJECTION_PERSPECTIVE = 2; // perspective projection
 
-    public static final int DEFAULT_FPS = 60; // frame per second
-    public static final int DEFAULT_MSPF = 1000 / DEFAULT_FPS; // ms per frame
+    int DEFAULT_FPS = 60; // frame per second
+    int DEFAULT_MSPF = 1000 / DEFAULT_FPS; // ms per frame
 
-    public void setStage(Stage stage);
+    void setStage(Stage stage);
 
-    public Stage getStage();
+    Stage getStage();
 
-    public void setAxisSystem(int value);
+    void setColor(final GLColor color);
 
-    public int getAxisSystem();
+    GLColor getColor();
 
-    public Camera getCamera();
+    void setAxisSystem(int value);
 
-    public void setCamera(final Camera camera);
+    int getAxisSystem();
 
-    public RectF getCameraRect();
+    int getCurrentFps();
 
-    public void setDepthRange(final float zNear, final float zFar);
+    Camera getCamera();
 
-    public GLState getGLState();
+    void setCamera(final Camera camera);
 
-    public TextureManager getTextureManager();
+    RectF getCameraRect();
 
-    public void globalToScreen(final float globalX, final float globalY, PointF result);
+    void setDepthRange(final float zNear, final float zFar);
 
-    public void globalToStage(final float globalX, float globalY, final PointF result);
+    GLState getGLState();
 
-    public void globalToStage(final RectF globalRect, final RectF result);
+    TextureManager getTextureManager();
 
-    public void screenToGlobal(final float screenX, final float screenY, PointF result);
+    void globalToScreen(final float globalX, final float globalY, PointF result);
 
-    public void screenToGlobal(final PointF screen, PointF result);
+    void globalToStage(final float globalX, float globalY, final PointF result);
 
-    public Bitmap createBitmap(final int x, final int y, final int w, final int h) throws OutOfMemoryError;
+    void globalToStage(final RectF globalRect, final RectF result);
 
-    public boolean queueEvent(Runnable r);
+    void screenToGlobal(final float screenX, final float screenY, PointF result);
 
-    public Runnable queueEvent(final Runnable r, final int delayMillis);
+    void screenToGlobal(final PointF screen, PointF result);
 
-    public boolean removeEvents(final Runnable r);
+    Bitmap createBitmap(final int x, final int y, final int w, final int h) throws OutOfMemoryError;
 
-    public void pause();
+    boolean queueEvent(Runnable r);
 
-    public void resume();
+    Runnable queueEvent(final Runnable r, final int delayMillis);
 
-    public void dispose();
+    boolean removeEvents(final Runnable r);
 
-    public boolean isUIEnabled();
+    void pause();
 
-    public void setUIEnabled(final boolean enabled);
+    void resume();
 
-    public PointF getTouchedPoint();
+    void dispose();
 
-    public PointF getTouchedPoint(final int pointerIndex);
+    boolean isUIEnabled();
 
-    public int getPointerCount();
+    void setUIEnabled(final boolean enabled);
 
-    public boolean onTouchEvent(final MotionEvent event);
+    PointF getTouchedPoint();
 
-    public void onSurfacePaused();
+    PointF getTouchedPoint(final int pointerIndex);
 
-    public void onSurfaceResumed();
+    int getPointerCount();
 
-    public interface Listener {
+    boolean onTouchEvent(final MotionEvent event);
+
+    void onSurfacePaused();
+
+    void onSurfaceResumed();
+
+    interface Listener {
         void onSurfaceCreated(final GLState glState, final boolean firstTime);
     }
 }

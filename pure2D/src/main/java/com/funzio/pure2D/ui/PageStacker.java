@@ -73,14 +73,20 @@ public class PageStacker implements Pageable.TransitionListener {
                 public void run() {
                     if (!page.isPageFloating()) {
                         // slide out the previous page
+                        final Pageable previousPage = findPreviousPageOf(page);
                         if (previousPage != null) {
                             previousPage.transitionOut(true);
                         }
                     } else {
-                        if (previousPage != null && page.isModal()) {
-                            // dim
-                            mDimmedStack.add(previousPage.getColor());
-                            previousPage.setColor(mDimmedColor);
+                        if (previousPage != null) {
+                            if (page.isModal()) {
+                                // dim
+                                mDimmedStack.add(previousPage.getColor());
+                                previousPage.setColor(mDimmedColor);
+                            }
+
+                            // callback
+                            previousPage.onBroughtDown();
                         }
                     }
 
@@ -98,6 +104,23 @@ public class PageStacker implements Pageable.TransitionListener {
         return false;
     }
 
+    /**
+     * Find the previous non-floating page in the stack
+     *
+     * @return
+     */
+    protected Pageable findPreviousPageOf(final Pageable page) {
+        final int index = page != null ? mPages.indexOf(page) - 1 : mPages.size() - 1;
+        for (int i = index; i >= 0; i--) {
+            final Pageable previous = mPages.get(i);
+            if (!previous.isPageFloating()) {
+                return previous;
+            }
+        }
+
+        return null;
+    }
+
     protected Pageable dismissPage() {
         final Pageable currentPage = popPage();
         if (currentPage != null) {
@@ -109,6 +132,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
     /**
      * Pop the last page
+     *
      * @return
      */
     public Pageable popPage() {
@@ -136,16 +160,20 @@ public class PageStacker implements Pageable.TransitionListener {
 
                 // slide in the previous page
                 if (!currentPage.isPageFloating()) {
+                    final Pageable previousPage = findPreviousPageOf(null);
                     if (previousPage != null) {
                         mContainer.addChild(previousPage);
                         previousPage.transitionIn(false);
                     }
                 } else {
-                    if (previousPage != null && currentPage.isModal()) {
+                    if (previousPage != null) {
                         // undim
-                        if (mDimmedStack.size() > 0) {
+                        if (currentPage.isModal() && mDimmedStack.size() > 0) {
                             previousPage.setColor(mDimmedStack.remove(mDimmedStack.size() - 1));
                         }
+
+                        // callback
+                        previousPage.onBroughtUp();
                     }
                 }
             }
@@ -156,6 +184,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
     /**
      * Pop all the way to the specified page
+     *
      * @param page
      * @return
      */
@@ -208,6 +237,16 @@ public class PageStacker implements Pageable.TransitionListener {
         mDimmedColor = dimmedColor;
     }
 
+    /**
+     * Should be called when Activity/Scene resumes
+     */
+    public void onResume() {
+        if (mCurrentPage != null) {
+            // callback, simulate the brought up event
+            mCurrentPage.onBroughtUp();
+        }
+    }
+
     @Override
     public void onTransitionInComplete(final Pageable page) {
         Log.v(TAG, "onTransitionInComplete(): " + page);
@@ -242,7 +281,7 @@ public class PageStacker implements Pageable.TransitionListener {
 
             if (mCurrentPage.onBackPressed()) {
                 // let page completely take control
-                return true;
+                //return true;
             } else if (mCurrentPage.isDismissible()) {
                 // sync on GL Thread
                 mContainer.queueEvent(new Runnable() {
@@ -253,8 +292,11 @@ public class PageStacker implements Pageable.TransitionListener {
                     }
                 });
 
-                return true;
+                //return true;
             }
+
+            // maybe also take control?
+            return true;
         }
 
         return false;

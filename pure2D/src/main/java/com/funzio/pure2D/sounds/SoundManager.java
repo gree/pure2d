@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2012-2014 GREE, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,6 +36,8 @@ import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+
+import java.io.IOException;
 
 public class SoundManager extends Thread implements SoundPool.OnLoadCompleteListener, OnPreparedListener, OnErrorListener {
     protected static final String TAG = SoundManager.class.getSimpleName();
@@ -119,11 +121,10 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public void play(final int key) {
         // Log.v(TAG, "play(" + key + ")");
 
-        final Soundable soundable = mSoundMap.get(key);
-        if (soundable != null) {
+        final Soundable sound = mSoundMap.get(key);
+        if (sound != null) {
             Message msg = new Message();
-            msg.arg1 = soundable.getSoundID();
-            msg.arg2 = soundable.getLoop();
+            msg.obj = sound;
             mHandler.sendMessage(msg);
         } else {
             Log.e(TAG, "Unable to play sound: " + key);
@@ -133,8 +134,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
     public void play(final Soundable sound) {
         if (sound != null) {
             Message msg = new Message();
-            msg.arg1 = sound.getSoundID();
-            msg.arg2 = sound.getLoop();
+            msg.obj = sound;
             mHandler.sendMessage(msg);
         } else {
             Log.e(TAG, "Unable to play sound: " + sound);
@@ -171,6 +171,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     /**
      * Play synchronously instead of queueing. Not ideal for common usage.
+     *
      * @param key
      * @param loop
      * @return stream ID
@@ -180,7 +181,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
         final Soundable soundable = mSoundMap.get(key);
         if (soundable != null) {
-            final int streamID =  privatePlay(soundable.getSoundID(), loop);
+            final int streamID = privatePlay(soundable, loop);
             if (streamID != 0) {
                 mStreamIds.put(soundable.getSoundID(), streamID);
             }
@@ -192,18 +193,27 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
-    private int privatePlay(final int soundID, final int loop) {
+    private int privatePlay(final Soundable sound) {
+        // Log.v(TAG, "privatePlay(" + sound + ")");
+        return privatePlay(sound, sound.getLoop());
+    }
+
+    private int privatePlay(final Soundable sound, final int loop) {
         // Log.v(TAG, "privatePlay(" + sound + ")");
 
-        if (mSoundEnabled && soundID > 0) {
-            final float volume = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            return mSoundPool.play(soundID, volume, volume, 1, loop, 1f);
+        if (mSoundEnabled && sound.getSoundID() > 0) {
+            final float volDefault = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            float volLeft = sound.getVolumeLeft();
+            if (volLeft < 0) volLeft = volDefault;
+            float volRight = sound.getVolumeRight();
+            if (volRight < 0) volRight = volDefault;
+            return mSoundPool.play(sound.getSoundID(), volLeft, volRight, sound.getPriority(), loop, sound.getRate());
         }
 
         return 0;
     }
 
-    public void play(final Media media) throws IllegalStateException {
+    public void play(final Media media) throws IllegalStateException, IOException {
         // initialize
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
@@ -223,6 +233,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setVolume(mMediaVolume, mMediaVolume);
 
+        // this can also throw IOException
         mMediaPlayer.prepareAsync();
     }
 
@@ -330,9 +341,23 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
         }
     }
 
+    public int unloadAll() {
+        synchronized (mSoundMap) {
+            final int len = mSoundMap.size();
+            for (int i = 0; i < len; i++) {
+                final Soundable sound = mSoundMap.get(mSoundMap.keyAt(i));
+                mSoundPool.unload(sound.getSoundID());
+            }
+
+            mSoundMap.clear();
+
+            return len;
+        }
+    }
+
     /**
      * Find a sound by the sound ID
-     * 
+     *
      * @param soundID
      * @return
      * @see #getSound(int)
@@ -354,7 +379,7 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
     /**
      * Find a sound by Key
-     * 
+     *
      * @param key
      * @return
      * @see #getSoundByID(int)
@@ -414,12 +439,10 @@ public class SoundManager extends Thread implements SoundPool.OnLoadCompleteList
 
         @Override
         public void handleMessage(final Message msg) {
-            final int soundID = msg.arg1;
-            final int soundLoop = msg.arg2;
-
-            int streamId = privatePlay(soundID, soundLoop);
+            final Soundable sound = (Soundable) msg.obj;
+            int streamId = privatePlay(sound);
             if (streamId != 0) {
-                mStreamIds.put(soundID, streamId);
+                mStreamIds.put(sound.getSoundID(), streamId);
             }
         }
     }

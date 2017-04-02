@@ -31,6 +31,7 @@ import android.view.MotionEvent;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.funzio.pure2D.Pure2D;
+import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.QuadBuffer;
 import com.funzio.pure2D.gl.gl10.textures.TextureCoordBuffer;
@@ -132,13 +133,15 @@ public class Rectangular extends Shape implements UIObject {
      */
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (!mTouchable || !mAlive || mScene == null) {
+        // cache scene
+        final Scene scene = mScene;
+        if (!mTouchable || !mAlive || scene == null) {
             return false;
         }
 
         final int action = event.getActionMasked();
         final int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final PointF touchedPoint = mScene.getTouchedPoint(pointerIndex);
+        final PointF touchedPoint = scene.getTouchedPoint(pointerIndex);
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (!mFocus && hitTest(touchedPoint.x, touchedPoint.y)) {
